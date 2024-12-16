@@ -271,6 +271,7 @@ function loadMap(mapId) {
   map.options.maxZoom = 19;
 
   markersLayer = L.markerClusterGroup({
+    chunkedLoading: true,
     disableClusteringAtZoom: 8,
     showCoverageOnHover: false,
     //spiderfyOnMaxZoom: false,
@@ -434,7 +435,7 @@ function loadMarkers(data) {
 }
 
 function clearFilter() {
-  markersLayer.addLayers(markers, {chunkedLoading: true});
+  markersLayer.addLayers(markers);
   settings.searchText = '';
   saveSettings();
 }
@@ -459,7 +460,7 @@ function filterItems() {
   }
 
   markersLayer.removeLayers(removeList);
-  markersLayer.addLayers(addList, {chunkedLoading: true});
+  markersLayer.addLayers(addList);
 
   console.log(`keyword: "${s}", 'markers: ${count}`);
 
