@@ -131,6 +131,9 @@ let defaultLocalData = { 's2hoc': {} };
 let localData = JSON.parse(localStorage.getItem(localDataName)) || defaultLocalData;
 let settings = localData[mapId];
 let lang=[];
+let icons = {};
+let popup = null;
+let tooltip = null;
 
 function getIconHTML(options, size=48) {
   let bg = options.bg || 'dimgrey';
@@ -285,26 +288,11 @@ function loadMap(mapId) {
   L.control.mousePosition({numDigits: 0, lngFirst: true, wrapLng: false }).addTo(map);
 
   // use dynamic tooltip and popup
-  let popup = L.popup({offset:[0,0], minWidth:330, maxWidth:500}).setContent('popup text');
-  let tooltip = L.tooltip({offset:[0,0]}).setLatLng([0,0]).setContent('tooltip text');
+  popup = L.popup({offset:[0,0], minWidth:330, maxWidth:500}).setContent('popup text');
+  tooltip = L.tooltip({offset:[0,0]}).setLatLng([0,0]).setContent('tooltip text');
 
   markersLayer.bindPopup(popup);
   markersLayer.bindTooltip(tooltip);
-
-  function onMarkerClick(e) {
-    let p = e.target.feature;
-    let text = '<pre>'+JSON.stringify(p, null, 2)+'</pre>';
-    popup.setContent(text);
-    popup.setLatLng(e.target.getLatLng());
-  }
-
-  function onMarkerHover(e) {
-    let p = e.target.feature.properties;
-    //let text = (lang.length>0 && lang[0][p.title]) || p.title || p.ContextualActionSID || p.SpawnType;
-    let text = p.title + ' (' + p.description + ')';
-    tooltip.setContent(text);
-    tooltip.setLatLng(e.target.getLatLng());
-  }
 
   searchControl = new L.Control.Search({
       layer: markersLayer,
@@ -369,72 +357,84 @@ function loadMap(mapId) {
   });
 
   // prerender all icons
-  let icons = {};
   for (const iconName of Object.keys(types)) {
     icons[iconName] = baseIcon(types[iconName]);
   }
 
-  function loadMarkers(data) {
-    L.geoJSON(data, {
-      //filter: feature => feature.properties.form_id=='00000010',
-      pointToLayer: (feature, latlng) => {
-        let o = feature.properties;
-        if (ignoreDescriptions.includes(o.description)) return;
-        let iconName = getIconName(o);
-        let marker = L.marker(latlng, { icon: icons[iconName] || icons['Question'] }).addTo(markersLayer);
-        markers.push(marker);
-        marker.on('click',onMarkerClick);
-        marker.on('mouseover', onMarkerHover);
-        return marker;
-      }
-    })
-    console.log('loaded', markers.length, 'markers')
-  }
-
-  async function fetchAndDecompressGz(url) {
-      try {
-          // Fetch the .gz file
-          const response = await fetch(url);
-          if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
-        
-          // Read the response as an ArrayBuffer
-          const buffer = await response.arrayBuffer();
-        
-          // Create a ReadableStream from the ArrayBuffer
-          const readableStream = new Response(buffer).body;
-        
-          // Decompress the data using CompressionStream
-          const decompressionStream = new DecompressionStream('gzip');
-          const decompressedStream = readableStream.pipeThrough(decompressionStream);
-        
-          // Decode the decompressed data to text
-          const reader = decompressedStream.getReader();
-          const textDecoder = new TextDecoder();
-          let result = '';
-          let done, value;
-        
-          while ({ done, value } = await reader.read(), !done) {
-              result += textDecoder.decode(value, { stream: true });
-          }
-          result += textDecoder.decode(); // finish the decoding
-
-          let data = JSON.parse(result);
-          loadMarkers(data);
-
-      } catch (error) {
-          console.error('Error:', error);
-      }
-  }
-
-  fetchAndDecompressGz('markers.gz');
+  setTimeout(function(){fetchAndDecompressGz('markers.gz')}, 250);
 
   //fetch('markers.json').then(r=>r.json()).then(data=>loadMarkers(data))
 }
 
+async function fetchAndDecompressGz(url) {
+    try {
+        // Fetch the .gz file
+        const response = await fetch(url);
+        if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+        
+        // Read the response as an ArrayBuffer
+        const buffer = await response.arrayBuffer();
+        
+        // Create a ReadableStream from the ArrayBuffer
+        const readableStream = new Response(buffer).body;
+        
+        // Decompress the data using CompressionStream
+        const decompressionStream = new DecompressionStream('gzip');
+        const decompressedStream = readableStream.pipeThrough(decompressionStream);
+        
+        // Decode the decompressed data to text
+        const reader = decompressedStream.getReader();
+        const textDecoder = new TextDecoder();
+        let result = '';
+        let done, value;
+        
+        while ({ done, value } = await reader.read(), !done) {
+            result += textDecoder.decode(value, { stream: true });
+        }
+        result += textDecoder.decode(); // finish the decoding
+
+        let data = JSON.parse(result);
+        loadMarkers(data);
+
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
+function onMarkerClick(e) {
+  let p = e.target.feature;
+  let text = '<pre>'+JSON.stringify(p, null, 2)+'</pre>';
+  popup.setContent(text);
+  popup.setLatLng(e.target.getLatLng());
+}
+
+function onMarkerHover(e) {
+  let p = e.target.feature.properties;
+  //let text = (lang.length>0 && lang[0][p.title]) || p.title || p.ContextualActionSID || p.SpawnType;
+  let text = p.title + ' (' + p.description + ')';
+  tooltip.setContent(text);
+  tooltip.setLatLng(e.target.getLatLng());
+}
+
+function loadMarkers(data) {
+  L.geoJSON(data, {
+    //filter: feature => feature.properties.form_id=='00000010',
+    pointToLayer: (feature, latlng) => {
+      let o = feature.properties;
+      if (ignoreDescriptions.includes(o.description)) return;
+      let iconName = getIconName(o);
+      let marker = L.marker(latlng, { icon: icons[iconName] || icons['Question'] }).addTo(markersLayer);
+      markers.push(marker);
+      marker.on('click',onMarkerClick);
+      marker.on('mouseover', onMarkerHover);
+      return marker;
+    }
+  })
+  console.log('loaded', markers.length, 'markers')
+}
+
 function clearFilter() {
-  for (marker of markers) {
-    markersLayer.addLayer(marker);
-  }
+  markersLayer.addLayers(markers);
   settings.searchText = '';
   saveSettings();
 }
@@ -443,16 +443,24 @@ function filterItems() {
   // filter by settings.searchText. caching is unreliable, just perform a full search here
   let s = settings.searchText && settings.searchText.toLowerCase() || '';
   let count = 0;
+
+  let addList = [];
+  let removeList = [];
+
   for (marker of markers) {
     let o = marker.feature.properties;
     let w = [o.title||'', o.description||'', o.sid||''].join(' ').toLowerCase();
     if (s!='' && !w.includes(s)) {
-      markersLayer.removeLayer(marker);
+      removeList.push(marker);
     } else {
       count += 1;
-      markersLayer.addLayer(marker);
+      addList.push(marker);
     }
   }
+
+  markersLayer.addLayers(addList);
+  markersLayer.removeLayers(removeList);
+
   console.log(`keyword: "${s}", 'markers: ${count}`);
 
   //map.invalidateSize();
