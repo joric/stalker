@@ -492,49 +492,6 @@ function addGrid(mapId) {
   drawGrid();
 }
 
-function renderIcons() {
-  let gw = 8;
-  let size = 48;
-  let sw = size;
-  let sh = size;
-  let j = 0;
-  let i = 0;
-
-  let pane = document.createElement('div');
-  pane.classList.add('leaflet-pane','leaflet-marker-pane');
-
-  for (icon of Object.values(types)) {
-    let div = document.createElement('div');
-    div.innerHTML = getIconHTML(icon);
-    div.classList.add('leaflet-marker-icon','divIcon','leaflet-zoom-animated','leaflet-interactive');
-
-//<div class="leaflet-marker-icon divIcon leaflet-zoom-animated leaflet-interactive"
-//tabindex="0" style="margin-left: -24px; margin-top: -48px; 
-//width: 48px; height: 48px; transform: translate3d(557px, 134px, 0px); 
-//z-index: 134; outline: none;">
-//<span class="icon-base icon-48" style="color:steelblue"><i class="fa fa-toolbox"></i>
-//</span></div>
-
-    div.style.marginLeft = (-size/2) + 'px';
-    div.style.marginTop = (-size) + 'px';
-    div.style.width = size + 'px';
-    div.style.height = size + 'px';
-    //div.style.left = (j * size) + 'px';
-    //div.style.top = (i * size + size/2) + 'px';
-    div.style.transform = `translate3d(${j*size + size/2}px, ${i*size + size + size/2}px, 0px)`;
-    div.style.zIndex = 500;
-    div.style.outline = 'none';
-    j += 1;
-    if (j>=gw) {
-      j = 0;
-      i += 1;
-    }
-    pane.appendChild(div);
-  }
-
-  document.body.appendChild(pane);
-}
-
 window.onload = function() {
   let files = [
     'types.json',
