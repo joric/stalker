@@ -321,10 +321,13 @@ function loadMap(mapId) {
   searchControl._handleSubmit = function(){
     settings.searchText = this._input.value;
     this._input.select();
-    searchControl.collapse();
+    //searchControl.collapse();
     map.closePopup();
     saveSettings();
     filterItems();
+    map.options.maxZoom = 7;
+    map.fitBounds(markersLayer.getBounds());
+    map.options.maxZoom = 19;
   }
 
   document.querySelector('.search-cancel').addEventListener('click', clearFilter);
@@ -423,9 +426,9 @@ function loadMap(mapId) {
       }
   }
 
-  fetchAndDecompressGz('markers.gz');
+  //fetchAndDecompressGz('markers.gz');
 
-  //fetch('markers.json').then(r=>r.json()).then(data=>loadMarkers(data))
+  fetch('markers.json').then(r=>r.json()).then(data=>loadMarkers(data))
 }
 
 function clearFilter() {
@@ -439,15 +442,19 @@ function clearFilter() {
 function filterItems() {
   // filter by settings.searchText. caching is unreliable, just perform a full search here
   let s = settings.searchText && settings.searchText.toLowerCase() || '';
+  let count = 0;
   for (marker of markers) {
     let o = marker.feature.properties;
     let w = [o.title||'', o.description||'', o.sid||''].join(' ').toLowerCase();
     if (s!='' && !w.includes(s)) {
       markersLayer.removeLayer(marker);
     } else {
+      count += 1;
       markersLayer.addLayer(marker);
     }
   }
+  console.log('keyword:', s, 'markers:', count);
+
   //map.invalidateSize();
 }
 
