@@ -453,7 +453,7 @@ function filterItems() {
       markersLayer.addLayer(marker);
     }
   }
-  console.log('keyword:', s, 'markers:', count);
+  console.log(`keyword: "${s}", 'markers: ${count}`);
 
   //map.invalidateSize();
 }
@@ -542,7 +542,9 @@ window.onload = function() {
   Promise.all(files).then(data => {
     types = JSON.parse(data[0]);
     loadMap(mapId);
+
     //addGrid(mapId); // grid fucks up dragging for some reason
+
   }).catch(e=>{console.log(e);})
 }
 
