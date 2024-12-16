@@ -33,7 +33,7 @@
   "Note": { "fa": "book", "bg": "steelblue", "match": "Note" },
   "PDA": { "fa": "tablet-screen-button", "bg": "steelblue", "match": "(PDA)(?=.*ESpawnType::Item)" },
   "Personal Stash": { "fa": "box-archive", "bg": "darkslategrey", "match": "PersonalStash" },
-  "Radiation": { "fa": "radiation", "bg": "dimgrey", "fg": "orange", "match": "Radiation" },
+  "Radiation": { "fa": "radiation", "bg": "dimgrey", "fg": "darkorange", "match": "Radiation" },
   
   "Squad": { "fa": "person-rifle", "bg": "darkslategrey", "match": "Squad|Patrol" },
   "Repair": { "fa": "screwdriver-wrench", "bg": "darkslategrey", "match": "Repair" },
@@ -49,11 +49,11 @@
   "Technician": { "fa": "screwdriver-wrench", "bg": "cornflowerblue", "match": "Technician" },
   "Trader": { "fa": "person", "bg": "cornflowerblue", "match": "(Trader|Bartender)(?=.*ESpawnType::Obj)" },
   "Trap": { "fa": "burst", "bg": "brown" },
-  "Underground Access": { "fa": "person-shelter", "bg": "darkslategrey", "match": "Shelter" },
+  "Underground Access": { "fa": "stairs", "bg": "darkslategrey" },
   "Unique Gear": { "fa": "shirt", "bg": "saddlebrown" },
   "Unique Weapon": { "fa": "gun", "bg": "saddlebrown" },
 
-  "Upgrade": { "fa": "arrow-up", "bg": "cornflowerblue", "match": "Parts" },
+  "Shelter": { "fa": "person-shelter", "bg": "grey", "fg": "darkorange", "match": "Shelter" },
   "Weapon": { "fa": "gun", "bg": "steelblue", "match": "Gun|Grenade(?=.*::Item)" },
   "Guitar": { "fa": "guitar", "bg": "cornflowerblue", "match": "Guitar" },
   "EnemySpawner": { "fa": "skull", "bg": "black", "match": "(?=.*CA_Jerboa|CA_Flesh|CA_Blinddog|CA_Pseudodog|CA_Boar|CA_Cat|CA_Bloodsucker|CA_Snork|CA_Tushkan)(?=.*::ContextualAction)" },
