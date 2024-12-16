@@ -314,9 +314,9 @@ function loadMap(mapId) {
     map.closePopup();
     saveSettings();
     filterItems();
-    map.options.maxZoom = 7;
-    map.fitBounds(markersLayer.getBounds());
-    map.options.maxZoom = 19;
+    //map.options.maxZoom = 7;
+    //map.fitBounds(markersLayer.getBounds());
+    //map.options.maxZoom = 19;
   }
 
   document.querySelector('.search-cancel').addEventListener('click', clearFilter);
@@ -362,8 +362,7 @@ function loadMap(mapId) {
     icons[iconName] = baseIcon(types[iconName]);
   }
 
-  setTimeout(function(){fetchAndDecompressGz('markers.gz')}, 250);
-
+  fetchAndDecompressGz('markers.gz');
   //fetch('markers.json').then(r=>r.json()).then(data=>loadMarkers(data))
 }
 
