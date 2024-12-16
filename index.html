@@ -426,9 +426,9 @@ function loadMap(mapId) {
       }
   }
 
-  //fetchAndDecompressGz('markers.gz');
+  fetchAndDecompressGz('markers.gz');
 
-  fetch('markers.json').then(r=>r.json()).then(data=>loadMarkers(data))
+  //fetch('markers.json').then(r=>r.json()).then(data=>loadMarkers(data))
 }
 
 function clearFilter() {
