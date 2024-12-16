@@ -49,7 +49,7 @@
   "Technician": { "fa": "screwdriver-wrench", "bg": "cornflowerblue", "match": "Technician" },
   "Trader": { "fa": "person", "bg": "cornflowerblue", "match": "(Trader|Bartender)(?=.*ESpawnType::Obj)" },
   "Trap": { "fa": "burst", "bg": "brown" },
-  "Underground Access": { "fa": "stairs", "bg": "darkslategrey" },
+  "Underground Access": { "fa": "stairs", "bg": "darkslategrey", "match": "Shelter" },
   "Unique Gear": { "fa": "shirt", "bg": "saddlebrown" },
   "Unique Weapon": { "fa": "gun", "bg": "saddlebrown" },
 
