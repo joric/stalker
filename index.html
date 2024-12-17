@@ -417,8 +417,7 @@ function updateCount() {
     if (el) el.textContent = markersLayer.getLayers().length;
   }
   update();
-  setTimeout(update, 100);
-  setTimeout(update, 500);
+  for(let i=100; i<2000; i*=2) setTimeout(update, i);
 }
 
 function onMarkerClick(e) {
