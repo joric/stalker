@@ -18,7 +18,7 @@
   "Easter Egg": { "fa": "egg", "bg": "darkslategrey", "match": "EasterEgg" },
   
   "Enemy": { "fa": "skull", "bg": "brown", "match": "(PseudoDog|Bayun|Bloodsucker|Flesh|Blinddog|Tushkan|Boar|ZombieFoster|Rat|Snork|Zombie)(?=.*ESpawnType::Obj)" },
-  "Gear": { "fa": "shirt", "bg": "steelblue", "match": "Gear" },
+  "Gear": { "fa": "shirt", "bg": "steelblue", "match": "Gear|Armor" },
   "Guide": { "fa": "location-crosshairs", "bg": "cornflowerblue", "match": "Custom::FastTravel" },
   "Key": { "fa": "key", "bg": "saddlebrown", "match": "Key" },
   "Location": { "fa": "location-crosshairs", "bg": "darkslategrey", "match": "Location" },
