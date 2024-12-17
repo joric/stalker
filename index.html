@@ -555,10 +555,11 @@ function filterItems() {
   let addList = [];
   let removeList = [];
 
+  let terms = s.split(' ');
   for (marker of markers) {
     let o = marker.feature.properties;
-    let w = [o.title||'', o.description||'', o.sid||''].join(' ').toLowerCase();
-    if (s!='' && !w.includes(s)) {
+    let g = [o.title||'', o.description||'', o.sid||''].join(' ').toLowerCase();
+    if (s!='' && !terms.every(t=>g.includes(t))) {
       removeList.push(marker);
     } else {
       count += 1;
