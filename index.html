@@ -157,22 +157,6 @@ let types = {};
 let markers = [];
 let markersLayer = null;
 
-let ignoreDescriptions = [
-/*
-  'ESpawnType::Radiation',
-  'ESpawnType::Squad',
-  'ESpawnType::ALifeGroup',
-  'ESpawnType::Patrol',
-  'ESpawnType::SafeZone',
-  'ESpawnType::Shelter',
-  'ESpawnType::DestructibleObject',
-  'ESpawnType::WeatherSelection',
-  'ESpawnType::MoveToPath',
-  'ESpawnType::PackOfItems', // maybe uncomment later
-  'ESpawnType::DailyScheduleZone',
-*/
-];
-
 function getIconIndex(iconName) {
   return Math.max(0, Object.keys(types).indexOf(iconName));
 }
@@ -369,38 +353,38 @@ function loadMap(mapId) {
 }
 
 async function fetchAndDecompressGz(url) {
-    try {
-        // Fetch the .gz file
-        const response = await fetch(url);
-        if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
-        
-        // Read the response as an ArrayBuffer
-        const buffer = await response.arrayBuffer();
-        
-        // Create a ReadableStream from the ArrayBuffer
-        const readableStream = new Response(buffer).body;
-        
-        // Decompress the data using CompressionStream
-        const decompressionStream = new DecompressionStream('gzip');
-        const decompressedStream = readableStream.pipeThrough(decompressionStream);
-        
-        // Decode the decompressed data to text
-        const reader = decompressedStream.getReader();
-        const textDecoder = new TextDecoder();
-        let result = '';
-        let done, value;
-        
-        while ({ done, value } = await reader.read(), !done) {
-            result += textDecoder.decode(value, { stream: true });
-        }
-        result += textDecoder.decode(); // finish the decoding
-
-        let data = JSON.parse(result);
-        loadMarkers(data);
-
-    } catch (error) {
-        console.error('Error:', error);
+  try {
+    // Fetch the .gz file
+    const response = await fetch(url);
+    if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+    
+    // Read the response as an ArrayBuffer
+    const buffer = await response.arrayBuffer();
+    
+    // Create a ReadableStream from the ArrayBuffer
+    const readableStream = new Response(buffer).body;
+    
+    // Decompress the data using CompressionStream
+    const decompressionStream = new DecompressionStream('gzip');
+    const decompressedStream = readableStream.pipeThrough(decompressionStream);
+    
+    // Decode the decompressed data to text
+    const reader = decompressedStream.getReader();
+    const textDecoder = new TextDecoder();
+    let result = '';
+    let done, value;
+    
+    while ({ done, value } = await reader.read(), !done) {
+        result += textDecoder.decode(value, { stream: true });
     }
+    result += textDecoder.decode(); // finish the decoding
+
+    let data = JSON.parse(result);
+    loadMarkers(data);
+
+  } catch (error) {
+      console.error('Error:', error);
+  }
 }
 
 function onMarkerClick(e) {
@@ -418,13 +402,11 @@ function onMarkerHover(e) {
   tooltip.setLatLng(e.target.getLatLng());
 }
 
-function loadMarkers(data) {
+function loadMarkersOld(data) {
+  // this is inherently slow
   L.geoJSON(data, {
-    //filter: feature => feature.properties.form_id=='00000010',
     pointToLayer: (feature, latlng) => {
-      let o = feature.properties;
-      if (ignoreDescriptions.includes(o.description)) return;
-      let iconName = getIconName(o);
+      let iconName = getIconName(feature.properties);
       let marker = L.marker(latlng, { icon: icons[iconName] || icons['Question'] }).addTo(markersLayer);
       markers.push(marker);
       marker.on('click',onMarkerClick);
@@ -433,6 +415,45 @@ function loadMarkers(data) {
     }
   })
   console.log('loaded', markers.length, 'markers')
+}
+
+function loadMarkers(data) {
+  const features = data.features;
+  const batchSize = 1000; // Number of features to process per batch
+  let currentIndex = 0;
+
+  function processBatch() {
+    let batch = [];
+    const end = Math.min(currentIndex + batchSize, features.length);
+
+    for (let i = currentIndex; i < end; i++) {
+      const feature = features[i];
+      const latlng = L.latLng(feature.geometry.coordinates[1], feature.geometry.coordinates[0]);
+      let iconName = getIconName(feature.properties);
+      let marker = L.marker(latlng, { icon: icons[iconName] || icons['Question'] } );
+      marker.feature = feature;
+      batch.push(marker);
+      marker.on('click', onMarkerClick);
+      marker.on('mouseover', onMarkerHover);
+    }
+
+    currentIndex = end;
+    //console.log(`Processed ${currentIndex}/${features.length} markers`);
+
+    if (currentIndex < features.length) {
+      markers.push(...batch);
+      //markersLayer.addLayers(batch);
+      setTimeout(processBatch, 0); // Schedule the next batch
+    } else {
+      markers.push(...batch);
+      //markersLayer.addLayers(batch);
+
+      markersLayer.addLayers(markers);
+      console.log('loaded', markers.length, 'markers')
+    }
+  }
+
+  processBatch();
 }
 
 function clearFilter() {
