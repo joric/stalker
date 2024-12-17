@@ -113,7 +113,7 @@ img.leaflet-tile { image-rendering: pixelated; }
   pointer-events: none;
   top: 7px;
   text-align: right;
-  left: 185px;
+  left: 189px;
   display: none;
 }
 
@@ -416,8 +416,7 @@ function updateCount() {
     let el = document.querySelector('.search-count');
     if (el) el.textContent = markersLayer.getLayers().length;
   }
-  update();
-  setTimeout(update, 1000);
+  setTimeout(update, 500);
 }
 
 function onMarkerClick(e) {
