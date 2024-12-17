@@ -315,6 +315,8 @@ function loadMap(mapId) {
       propertyName: 'search',
   }).addTo(map);
 
+  settings.searchText = ''; // we don't want it on loading
+
   searchControl._handleSubmit = function(){
     settings.searchText = this._input.value;
     this._input.select();
