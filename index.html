@@ -105,6 +105,18 @@ img.leaflet-tile { image-rendering: pixelated; }
   margin-top: 2px;
 }
 
+.search-count {
+  color: grey;
+  width: 75px;
+  height: 20px;
+  position: absolute;
+  pointer-events: none;
+  top: 7px;
+  text-align: right;
+  left: 185px;
+  display: none;
+}
+
 </style>
 
 <div id="map"></div>
@@ -325,6 +337,10 @@ function loadMap(mapId) {
     }, 1500)
   }
 
+  searchControl.on('search:collapsed', function (e) {
+    document.querySelector('.search-count').style.display = 'none';
+  });
+
   // fired when input control is expanded (not the dropdown list)
   searchControl.on('search:expanded', function (e) {
     searchControl._input.value = settings.searchText;
@@ -332,8 +348,16 @@ function loadMap(mapId) {
 
     //searchControl.searchText(settings.searchText);
     addSearchCallbacks();
+    document.querySelector('.search-count').style.display = 'block';
+    updateCount();
   });
   // end of search
+
+  // create a found tooltip, add it to search control
+  let div = document.createElement('div');
+  div.className = "search-count";
+  document.querySelector('.leaflet-control-search').appendChild(div);
+  div.textContent = markers.length;
 
 
   window.addEventListener("keydown", function (e) {
@@ -387,6 +411,15 @@ async function fetchAndDecompressGz(url) {
   }
 }
 
+function updateCount() {
+  let update = ()=> {
+    let el = document.querySelector('.search-count');
+    if (el) el.textContent = markersLayer.getLayers().length;
+  }
+  update();
+  setTimeout(update, 1000);
+}
+
 function onMarkerClick(e) {
   let p = e.target.feature;
   let text = '<pre>'+JSON.stringify(p, null, 2)+'</pre>';
@@ -419,6 +452,7 @@ function loadMarkersGeo(data) {
   markersLayer.addLayers(markers);
   console.log('All markers loaded:', markers.length);
   console.timeEnd("markers");
+  updateCount();
 }
 
 function loadMarkersBatched(data, animated=false) {
@@ -455,6 +489,7 @@ function loadMarkersBatched(data, animated=false) {
       !animated && markersLayer.addLayers(markers);
       console.log('All markers loaded:', markers.length);
       console.timeEnd("markers");
+      updateCount();
     }
   }
 
@@ -492,6 +527,7 @@ function loadMarkersIdle(data, animated=false) {
       animated && markersLayer.addLayers(batch);
       !animated && markersLayer.addLayers(markers);
       console.log('All markers loaded:', markers.length);
+      updateCount();
       console.timeEnd("markers");
     }
   }
@@ -509,6 +545,7 @@ function clearFilter() {
   markersLayer.addLayers(markers);
   settings.searchText = '';
   saveSettings();
+  updateCount();
 }
 
 function filterItems() {
@@ -533,8 +570,9 @@ function filterItems() {
   markersLayer.removeLayers(removeList);
   markersLayer.addLayers(addList);
 
-  console.log(`keyword: "${s}", 'markers: ${count}`);
+  //console.log(`keyword: "${s}", 'markers: ${count}`);
 
+  updateCount();
   //map.invalidateSize();
 }
 
