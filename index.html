@@ -437,9 +437,9 @@ function loadMarkersBatched(data, animated=false) {
       let iconName = getIconName(feature.properties);
       let marker = L.marker(latlng, { icon: icons[iconName] || icons['Question'] } );
       marker.feature = feature;
-      batch.push(marker);
       marker.on('click', onMarkerClick);
       marker.on('mouseover', onMarkerHover);
+      batch.push(marker);
     }
 
     currentIndex = end;
@@ -476,9 +476,9 @@ function loadMarkersIdle(data, animated=false) {
       let iconName = getIconName(o);
       let marker = L.marker(latlng, { icon: icons[iconName] || icons['Question'] });
       marker.feature = feature;
-      batch.push(marker);
       marker.on('click', onMarkerClick);
       marker.on('mouseover', onMarkerHover);
+      batch.push(marker);
     }
 
     //console.log(`Processed ${currentIndex}/${features.length} markers`);
@@ -496,7 +496,7 @@ function loadMarkersIdle(data, animated=false) {
     }
   }
 
-  requestIdleCallback(processBatch);
+  requestIdleCallback(processBatch, { timeout: 1000 });
 }
 
 function loadMarkers(data) {
