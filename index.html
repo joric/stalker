@@ -27,12 +27,11 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/leaflet.markercluster.js" integrity="sha512-OFs3W4DIZ5ZkrDhBFtsCP6JXtMEDGmhl0QPlmWYBJay40TT1n3gt2Xuw8Pf/iezgW9CdabjkNChRqozl/YADmg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/leaflet-edgebuffer@1.0.6/src/leaflet.edgebuffer.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/tilelayer-canvas@1.1.5/index.min.js" comment="only matters if lots of layers"></script>
 
 <!--
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/MarkerCluster.css" comment="enable markercluster animation"/>
-
-<script src="https://cdn.jsdelivr.net/npm/tilelayer-canvas@1.1.5/index.min.js" comment="only matters if lots of layers"></script>
 
 <link rel="stylesheet" href="js/lib/font-awesome/css/all.min.css" />
 
@@ -258,7 +257,7 @@ function loadMap(mapId) {
   let baseLayers = {};
   let overlayLayers = {};
 
-  baseLayers['PDA'] = L.tileLayer(maps[mapId].tiles, {
+  baseLayers['PDA'] = L.tileLayer.canvas(maps[mapId].tiles, {
       tileSize: 512,
       maxNativeZoom: 7,
       //maxZoom: 7,
