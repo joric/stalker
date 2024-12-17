@@ -416,6 +416,7 @@ function updateCount() {
     let el = document.querySelector('.search-count');
     if (el) el.textContent = markersLayer.getLayers().length;
   }
+  update();
   setTimeout(update, 500);
 }
 
