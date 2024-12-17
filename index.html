@@ -276,6 +276,10 @@ function loadMap(mapId) {
     //maxClusterRadius: 64,
   });
 
+  markersLayer.on('clustermouseover', function(a) {
+    if (a.layer && a.layer._childCount < 10) a.layer.spiderfy();
+  });
+
   overlayLayers['Markers'] = markersLayer;
 
   markersLayer.addTo(map);
