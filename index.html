@@ -461,7 +461,7 @@ function loadMarkersBatched(data, animated=false) {
   processBatch();
 }
 
-function loadMarkersIdle(data, animated) {
+function loadMarkersIdle(data, animated=false) {
   // ought to be fastest
   console.time("markers");
   const features = data.features;
