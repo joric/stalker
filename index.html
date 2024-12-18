@@ -182,10 +182,6 @@ function getIconName(o) {
     if (regex && s.match(new RegExp(regex, "i"))) return key;
   }
 
-  if (o.title && o.title.match(/A\d+[\w]+/)) {
-    return 'Ammo';
-  }
-
   return 'Question';
 }
 
@@ -463,6 +459,7 @@ function Marker(feature) {
   marker.feature = feature;
   marker.on('click', onMarkerClick);
   marker.on('mouseover', onMarkerHover);
+  marker.alt = iconName;
   return marker;
 }
 
@@ -570,7 +567,7 @@ function filterItems() {
   let terms = s.split(' ');
   for (marker of markers) {
     let o = marker.feature.properties;
-    let g = [o.title||'', o.description||'', o.sid||''].join(' ').toLowerCase();
+    let g = [marker.alt||'', o.title||'', o.description||'', o.sid||''].join(' ').toLowerCase();
     if (s!='' && !terms.every(t=>g.includes(t))) {
       removeList.push(marker);
     } else {
