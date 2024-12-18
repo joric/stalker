@@ -558,17 +558,17 @@ function clearFilter() {
 
 function filterItems() {
   // filter by settings.searchText. caching is unreliable, just perform a full search here
-  let s = settings.searchText && settings.searchText.toLowerCase() || '';
+  let text = settings.searchText && settings.searchText.toLowerCase() || '';
   let count = 0;
 
   let addList = [];
   let removeList = [];
 
-  let terms = s.split(' ');
+  let terms = text.split(' ');
   for (marker of markers) {
     let o = marker.feature.properties;
-    let g = [marker.alt||'', o.title||'', o.description||'', o.sid||''].join(' ').toLowerCase();
-    if (s!='' && !terms.every(t=>g.includes(t))) {
+    let title = [marker.alt||'', o.title||'', o.description||'', o.sid||''].join(' ').toLowerCase();
+    if (text!='' && !terms.every(term=>title.includes(term))) {
       removeList.push(marker);
     } else {
       count += 1;
