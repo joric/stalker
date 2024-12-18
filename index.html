@@ -32,6 +32,7 @@
 <!--
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/MarkerCluster.css" comment="enable markercluster animation"/>
+<link rel="stylesheet" href="js/lib/leaflet-markercluster/MarkerCluster.css" />
 
 <link rel="stylesheet" href="js/lib/font-awesome/css/all.min.css" />
 
@@ -435,6 +436,12 @@ function updateCount() {
   for(let i=200; i<2000; i*=2) setTimeout(update, i);
 }
 
+function markersLoadedCallback() {
+  console.log('Markers loaded:', markers.length);
+  updateCount();
+  console.timeEnd("markers");
+}
+
 function onMarkerClick(e) {
   let p = e.target.feature;
   let text = '<pre>'+JSON.stringify(p, null, 2)+'</pre>';
@@ -444,7 +451,6 @@ function onMarkerClick(e) {
 
 function onMarkerHover(e) {
   let p = e.target.feature.properties;
-  //let text = (lang.length>0 && lang[0][p.title]) || p.title || p.ContextualActionSID || p.SpawnType;
   let text = p.title + ' (' + p.description + ')';
   tooltip.setContent(text);
   tooltip.setLatLng(e.target.getLatLng());
@@ -462,26 +468,16 @@ function Marker(feature) {
 
 function loadMarkersGeo(data) {
   // this is blocking, not nice
-  console.time("markers");
   L.geoJSON(data, {
     pointToLayer: (feature, latlng) => {
-      let iconName = getIconName(feature.properties);
-      let marker = L.marker(latlng, { icon: icons[iconName] || icons['Question'] });
-      markers.push(marker);
-      marker.on('click',onMarkerClick);
-      marker.on('mouseover', onMarkerHover);
-      return marker;
+      return Marker(feature);
     }
   })
-
   markersLayer.addLayers(markers);
-  console.log('All markers loaded:', markers.length);
-  console.timeEnd("markers");
-  updateCount();
+  markersLoadedCallback();
 }
 
 function loadMarkersBatched(data, animated=false) {
-  console.time("markers");
   const features = data.features;
   const batchSize = 1000; // Number of features to process per batch
   let currentIndex = 0;
@@ -505,9 +501,7 @@ function loadMarkersBatched(data, animated=false) {
       markers.push(...batch);
       animated && markersLayer.addLayers(batch);
       !animated && markersLayer.addLayers(markers);
-      console.log('All markers loaded:', markers.length);
-      console.timeEnd("markers");
-      updateCount();
+      markersLoadedCallback();
     }
   }
 
@@ -516,7 +510,6 @@ function loadMarkersBatched(data, animated=false) {
 
 function loadMarkersIdle(data, animated=false) {
   // ought to be fastest
-  console.time("markers");
   const features = data.features;
   let currentIndex = 0;
 
@@ -536,9 +529,7 @@ function loadMarkersIdle(data, animated=false) {
       markers.push(...batch);
       animated && markersLayer.addLayers(batch);
       !animated && markersLayer.addLayers(markers);
-      console.log('All markers loaded:', markers.length);
-      updateCount();
-      console.timeEnd("markers");
+      markersLoadedCallback();
     }
   }
 
@@ -546,17 +537,15 @@ function loadMarkersIdle(data, animated=false) {
 }
 
 function loadMarkersSimple(data, animated=false) {
-  console.time("markers");
   for (feature of data.features) {
       markers.push(Marker(feature));
   }
   markersLayer.addLayers(markers);
-  console.log('All markers loaded:', markers.length);
-  updateCount();
-  console.timeEnd("markers");
+  markersLoadedCallback();
 }
 
 function loadMarkers(data) {
+  console.time("markers");
   //loadMarkersSimple(data);
   //loadMarkersGeo(data);
   //loadMarkersBatched(data, animated=true);
