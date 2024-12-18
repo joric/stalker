@@ -451,6 +451,16 @@ function onMarkerHover(e) {
   tooltip.setLatLng(e.target.getLatLng());
 }
 
+function Marker(feature) {
+  const latlng = L.latLng(feature.geometry.coordinates[1], feature.geometry.coordinates[0]);
+  let iconName = getIconName(feature.properties);
+  let marker = L.marker(latlng, { icon: icons[iconName] || icons['Question'] } );
+  marker.feature = feature;
+  marker.on('click', onMarkerClick);
+  marker.on('mouseover', onMarkerHover);
+  return marker;
+}
+
 function loadMarkersGeo(data) {
   // this is blocking, not nice
   console.time("markers");
@@ -482,14 +492,7 @@ function loadMarkersBatched(data, animated=false) {
     const end = Math.min(currentIndex + batchSize, features.length);
 
     for (let i = currentIndex; i < end; i++) {
-      const feature = features[i];
-      const latlng = L.latLng(feature.geometry.coordinates[1], feature.geometry.coordinates[0]);
-      let iconName = getIconName(feature.properties);
-      let marker = L.marker(latlng, { icon: icons[iconName] || icons['Question'] } );
-      marker.feature = feature;
-      marker.on('click', onMarkerClick);
-      marker.on('mouseover', onMarkerHover);
-      batch.push(marker);
+      batch.push(Marker(features[i]));
     }
 
     currentIndex = end;
@@ -521,15 +524,7 @@ function loadMarkersIdle(data, animated=false) {
   function processBatch(deadline) {
     batch = [];
     while (deadline.timeRemaining() > 0 && currentIndex < features.length) {
-      const feature = features[currentIndex++];
-      const latlng = L.latLng(feature.geometry.coordinates[1], feature.geometry.coordinates[0]);
-      const o = feature.properties;
-      let iconName = getIconName(o);
-      let marker = L.marker(latlng, { icon: icons[iconName] || icons['Question'] });
-      marker.feature = feature;
-      marker.on('click', onMarkerClick);
-      marker.on('mouseover', onMarkerHover);
-      batch.push(marker);
+      batch.push(Marker(features[currentIndex++]));
     }
 
     //console.log(`Processed ${currentIndex}/${features.length} markers`);
@@ -554,14 +549,7 @@ function loadMarkersIdle(data, animated=false) {
 function loadMarkersSimple(data, animated=false) {
   console.time("markers");
   for (feature of data.features) {
-      const latlng = L.latLng(feature.geometry.coordinates[1], feature.geometry.coordinates[0]);
-      const o = feature.properties;
-      let iconName = getIconName(o);
-      let marker = L.marker(latlng, { icon: icons[iconName] || icons['Question'] }); // blocking
-      marker.feature = feature;
-      marker.on('click', onMarkerClick);
-      marker.on('mouseover', onMarkerHover);
-      markers.push(marker);
+      markers.push(Marker(feature));
   }
   markersLayer.addLayers(markers);
   console.log('All markers loaded:', markers.length);
