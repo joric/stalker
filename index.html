@@ -326,7 +326,13 @@ function loadMap(mapId) {
   map.options.maxZoom = 19;
 
   markersLayer = L.markerClusterGroup({
-    chunkedLoading: true, // need this to use addLayers without blocking
+    // need chunkedLoading to use addLayers without blocking, see https://github.com/Leaflet/Leaflet.markercluster
+    // note that we also have to use chunked JSON loading because creating DOM markers is blocking as well
+    // see loadMarkersSimple,loadMarkersGeo, loadMarkersBatched, loadMarkersIdle implementations below
+    chunkedLoading: true, 
+    //chunkInterval: 200,
+    //chunkDelay: 50,
+
     disableClusteringAtZoom: 8,
     showCoverageOnHover: false,
     //spiderfyOnMaxZoom: false,
