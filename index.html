@@ -368,6 +368,7 @@ function loadMap(mapId) {
       tooltipLimit: -1,
       textPlaceholder: 'Search (Enter to Filter Markers)',
       propertyName: 'search',
+      position: 'topleft',
   }).addTo(map);
 
   settings.searchText = ''; // we don't want it on loading
@@ -767,7 +768,7 @@ window.onload = function() {
     // add layers control
     layersControl = L.control.layers(baseLayers, overlayLayers, {
       collapsed: false,
-      //position: 'topleft',
+      position: 'topright',
     }).addTo(map);
 
 
