@@ -100,11 +100,11 @@ canvas { image-rendering: pixelated; }
 }
 
 .leaflet-control-search .search-input {
-  width: 260px;
+  width: 180px;
 }
 
 .leaflet-control-search .search-tooltip {
-  width: 315px;
+  width: 235px;
   max-height: 207px;
   margin-top: 2px;
 }
@@ -293,14 +293,14 @@ function loadMap(mapId) {
         attribution: '<a href="https://github.com/joric/stalker2_tileset/wiki" target="_blank">Stalker 2 Tileset</a>',
     }),
 
-    'World Base': L.tileLayer('https://joric.github.io/stalker2_tileset/extras/wb/{z}/{x}/{y}.jpg', {
+    'Base': L.tileLayer('https://joric.github.io/stalker2_tileset/extras/wb/{z}/{x}/{y}.jpg', {
       tileSize: 512,
       maxNativeZoom: 5,
       bounds: bounds,
       attribution: '<a href="https://github.com/joric/stalker2_tileset/wiki" target="_blank">Stalker 2 Tileset</a>',
     }),
 
-    'LD Scheme': L.tileLayer('https://joric.github.io/stalker2_tileset/extras/ld/{z}/{x}/{y}.png', {
+    'LD': L.tileLayer('https://joric.github.io/stalker2_tileset/extras/ld/{z}/{x}/{y}.png', {
       tileSize: 512,
       maxNativeZoom: 3,
       bounds: bounds,
@@ -309,7 +309,7 @@ function loadMap(mapId) {
   }
 
   let overlayLayers = {
-    'Stalker 1': L.tileLayer('https://joric.github.io/stalker2_tileset/extras/s1/{z}/{x}/{y}.png', {
+    'Stalker1': L.tileLayer('https://joric.github.io/stalker2_tileset/extras/s1/{z}/{x}/{y}.png', {
       tileSize: 512,
       maxNativeZoom: 4,
       bounds: bounds,
@@ -360,7 +360,7 @@ function loadMap(mapId) {
       autoCollapse: false,
       tipAutoSubmit: false, //auto map panTo when click on tooltip
       tooltipLimit: -1,
-      textPlaceholder: 'Search (Enter to Filter Markers)',
+      textPlaceholder: 'Search for anything...',
       propertyName: 'search',
       position: 'topleft',
   }).addTo(map);
@@ -646,9 +646,9 @@ function hideElements(className, hide) {
 function updateZoom(e) {
   let zoom = map.getZoom();
   hideElements('.grid-label', zoom > 4 || zoom < 1);
-  hideElements('.grid-cell', zoom > 4 || zoom < 1);
+  hideElements('.grid-cell', zoom > 4 || zoom < 0);
   hideElements('.region-label', zoom > 4 || zoom < 1);
-  hideElements('.region-cell', zoom > 4 || zoom < 1);
+  hideElements('.region-cell', zoom > 4 || zoom < 0);
 }
 
 function zoomToFeature(e) {
