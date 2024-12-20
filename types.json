@@ -1,5 +1,5 @@
 {
-  "Ammo": { "fa": "list", "bg": "steelblue", "match": "(?=A\\d+[\\w]+)(?=.*ESpawnType::Item)" },
+  "Ammo": { "fa": "list", "bg": "steelblue", "match": "(?=Ammo_|AGA|AHEDP|AVOG|APG7V|(A\\d{3}[\\w]+))(?=.*ESpawnType::Item)" },
   "Anomaly": { "fa": "tornado", "bg": "brown", "match": "Anomaly" },
   "Arch Anomaly": { "fa": "disease", "bg": "darkslategrey", "match": "ArchAnomaly" },
   "Artifact": { "fa": "virus", "bg": "saddlebrown", "match": "Artifact" },
