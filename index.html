@@ -212,12 +212,6 @@ function getIconName(o) {
   return 'Question';
 }
 
-function hideElements(className, hide) {
-  document.querySelectorAll(className).forEach(el => {
-    el.style.opacity = hide ? 0: 1;
-  });
-}
-
 function loadMap(mapId) {
 
   if (!settings.activeLayers) {
@@ -642,11 +636,17 @@ function filterItems() {
   updateCount();
 }
 
+function hideElements(className, hide) {
+  document.querySelectorAll(className).forEach(el => {
+    //el.style.opacity = hide ? 0: 1;
+    el.style.visibility =  hide ? 'hidden': 'visible';
+  });
+}
+
 function updateZoom(e) {
   let zoom = map.getZoom();
   hideElements('.grid-label', zoom > 4 || zoom < 1);
   hideElements('.grid-cell', zoom > 4 || zoom < 1);
-
   hideElements('.region-label', zoom > 4 || zoom < 1);
   hideElements('.region-cell', zoom > 4 || zoom < 1);
 }
