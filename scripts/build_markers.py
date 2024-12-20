@@ -168,9 +168,11 @@ for folder in folders:
                 'Custom::FastTravel','Region::'
                 ]
 
-            #add_properties = True
+            #add_properties = True # adds config data to markers (disabled, because it's really a lot of data)
             add_properties = False
-            if all(s not in description for s in allowed_types): continue
+
+            #if all(s not in description for s in allowed_types): continue # filter markers (20k with this line, 60k without)
+
 
             if spawnType =='ESpawnType::DestructibleObject': continue # fuck destructible objects, too many
 
@@ -189,7 +191,7 @@ for folder in folders:
                 prop['sid'] = sid
 
             '''
-            dataCleanup(data)
+            dataCleanup(data) # remove unnecessary keys from config data
 
             if add_properties:
                 for key in data.keys():
