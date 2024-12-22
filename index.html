@@ -786,9 +786,9 @@ window.onload = function() {
       map.removeLayer(markersLayer);
     }
 
+    //fetchAndDecompressGz('markers.gz'); // github pages already compress jsons
 
-    fetchAndDecompressGz('markers.gz');
-    //fetch('markers.json').then(r=>r.json()).then(data=>loadMarkers(data))
+    fetch('markers.json').then(r=>r.json()).then(data=>loadMarkers(data))
 
     map.on('baselayerchange', function(e) {
       //console.log('base layer changed', e);
