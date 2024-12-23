@@ -329,12 +329,19 @@ function loadMap(mapId) {
     //chunkDelay: 50,
 
     disableClusteringAtZoom: 8,
-    showCoverageOnHover: false,
+    //showCoverageOnHover: false,
     //spiderfyOnMaxZoom: false,
     //removeOutsideVisibleBounds: true,
     //zoomToBoundsOnClick: false,
     //maxClusterRadius: 50,
     //animateAddingMarkers: true,
+    polygonOptions: {
+      color: 'white',        // Sets the border color of the polygon
+      weight: 2,           // Sets the width of the polygon border
+      opacity: 0.5,        // Sets the opacity of the polygon border
+      fillColor: 'white',   // Sets the fill color of the polygon
+      fillOpacity: 0.2     // Sets the opacity of the polygon fill
+    }
   });
 
   L.control.mousePosition({numDigits: 0, lngFirst: true, wrapLng: false }).addTo(map);
