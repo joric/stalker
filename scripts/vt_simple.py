@@ -45,7 +45,7 @@ def MortonCode2(x):
     return x
 
 def get_tile(x, y):
-    if h == 65536: y = (y + 8192//th) % (65536//th)  # wrapping fix
+    if h == 65536: y = (y + 64) % 512  # wrapping fix
     i = MortonCode2(x) | (MortonCode2(y) << 1)
     f.seek(4 + i * span_size, os.SEEK_SET)
     data = f.read(span_size)
