@@ -1,4 +1,3 @@
-# https://gist.github.com/joric/6d86c6f9e20c64a448e49e5eb9e96698
 # https://github.com/joric/maps/wiki/Stalker-2
 
 from quicktex.s3tc.bc1 import * # pip install quicktex
