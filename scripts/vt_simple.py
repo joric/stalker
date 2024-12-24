@@ -31,7 +31,6 @@ tb = asset['tile_border']
 tiles_count = w//tw * h//th
 
 f = open(fname, 'rb')
-f.read(4) # first 4 bytes are reserved
 
 bw = tw + tb*2
 bh = th + tb*2
@@ -46,44 +45,44 @@ def ReverseMortonCode2(x):
     x = (x ^ (x >> 8)) & 0x0000ffff
     return x
 
-image = Image.new('RGB', (w, h))
+lookup = [[0]*(w//tw) for _ in range(h//th)]
 
 for i in range(tiles_count):
-    sys.stderr.write(f'processing tile {i+1} of {tiles_count}...   \r')
+    x = ReverseMortonCode2(i)
+    y = ReverseMortonCode2(i >> 1)
+    if h==65536: y = (y + (65536 - 8192)//th) % (65536//th) # wrapping fix
+    lookup[y][x] = i
 
+def get_tile(x, y):
+    i = lookup[y][x]
+    f.seek(4 + i * span_size, os.SEEK_SET)
     data = f.read(span_size)
     texture = BC1Texture.from_bytes(data, bw, bh)
     image_bytes = BC1Decoder().decode(texture).tobytes()
-
     tile = Image.frombytes('RGBA', (bw, bh), image_bytes).convert('RGB')
-    tile = tile.crop((tb, tb, bw-tb, bh-tb))
-
-    x = ReverseMortonCode2(i) * tw
-    y = ReverseMortonCode2(i >> 1) * th
-
-    if h==65536: y = (y + 65536 - 8192) % 65536 # wrapping fix
-
-    image.paste(tile, (x, y))
-
-print()
-
-print('saving preview...')
-image.resize((1024,1024)).save('preview.jpg')
-
-print('saving half-size image...')
-image.resize((w//2,h//2)).save('half-size.jpg', quality=90)
+    return tile.crop((tb, tb, bw-tb, bh-tb))
 
 # PIL cannot save 64k image in one piece. split in chunks
 
-cw = w//512 # horizontal number of chunks
-ch = h//512 # vertical number of chunks
+cw = 4 # horizontal number of chunks
+ch = 4 # vertical number of chunks
 
 iw = w//cw
 ih = h//ch
 
-for y in range(ch):
-    for x in range(cw):
-        name = f'chunks/{y}/{x}.jpg'
+nw = iw//tw
+nh = ih//th
+
+for cy in range(ch):
+    for cx in range(cw):
+        image = Image.new('RGB', (iw, ih))
+        for tx in range(nw):
+            for ty in range(nh):
+                x = cx * nw + tx
+                y = cy * nh + ty
+                image.paste(get_tile(x, y), (tx * tw, ty * th))
+
+        name = f'chunks/{cy}/{cx}.jpg'
         os.makedirs(os.path.dirname(name), exist_ok = True)
-        sys.stderr.write(f'saving {name}...  \r')
-        image.crop((x * iw, y * ih, x * iw + iw, y * ih + ih)).save(name, quality=75)
+        sys.stderr.write(f'saving {name} ({iw}x{ih})...  \r')
+        image.save(name, quality=75)
