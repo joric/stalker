@@ -71,17 +71,21 @@ print()
 print('saving preview...')
 image.resize((1024,1024)).save('preview.jpg')
 
+# save preview
+print('saving half-size image...')
+image.resize((w//2,h//2)).save('half-size.jpg', quality=95)
+
 # PIL cannot save 64k image in one piece. split in chunks
 
-cw = 8 # horizontal number of chunks
-ch = 8 # vertical number of chunks
+cw = w//512 # horizontal number of chunks
+ch = h//512 # vertical number of chunks
 
 iw = w//cw
 ih = h//ch
 
 for y in range(ch):
     for x in range(cw):
-        name = f'chunks/{y}/{x}.png'
+        name = f'chunks/{y}/{x}.jpg'
         os.makedirs(os.path.dirname(name), exist_ok = True)
         sys.stderr.write(f'saving {name}...  \r')
         image.crop((x * iw, y * ih, x * iw + iw, y * ih + ih)).save(name)
