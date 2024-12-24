@@ -59,23 +59,20 @@ def get_tile(x, y):
 nw = 4 # horizontal number of chunks
 nh = 4 # vertical number of chunks
 
-cw = w // nw
-ch = h // nh
-
 def get_chunk(i, j, cw, ch):
     chunk = Image.new('RGB', (cw, ch))
     gw = cw // tw
     gh = ch // th
-    for x in range(gw):
-        for y in range(gh):
+    for y in range(gh):
+      for x in range(gw):
             tile = get_tile(x + i * gw, y + j * gh)
             chunk.paste(tile, (x * tw, y * th))
     return chunk
 
-for i in range(nw):
-    for j in range(nh):
-        chunk = get_chunk(i, j, cw, ch)
-        name = f'chunks/{j}/{i}.jpg'
+for y in range(nh):
+    for x in range(nw):
+        chunk = get_chunk(x, y, w // nw, h // nh)
+        name = f'chunks/{y}/{x}.jpg'
         os.makedirs(os.path.dirname(name), exist_ok = True)
-        sys.stderr.write(f'saving {name} ({cw}x{ch})...  \r')
+        sys.stderr.write(f'saving {name} ({chunk.size[0]}x{chunk.size[1]})...  \r')
         chunk.save(name, quality=85)
