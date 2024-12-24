@@ -56,25 +56,26 @@ def get_tile(x, y):
 
 # PIL cannot save 64k image in one piece. split in chunks
 
-cw = 4 # horizontal number of chunks
-ch = 4 # vertical number of chunks
+nw = 4 # horizontal number of chunks
+nh = 4 # vertical number of chunks
 
-iw = w//cw
-ih = h//ch
+cw = w // nw
+ch = h // nh
 
-nw = iw//tw
-nh = ih//th
+def get_chunk(i, j, cw, ch):
+    chunk = Image.new('RGB', (cw, ch))
+    gw = cw // tw
+    gh = ch // th
+    for x in range(gw):
+        for y in range(gh):
+            tile = get_tile(x + i * gw, y + j * gh)
+            chunk.paste(tile, (x * tw, y * th))
+    return chunk
 
-for cy in range(ch):
-    for cx in range(cw):
-        image = Image.new('RGB', (iw, ih))
-        for tx in range(nw):
-            for ty in range(nh):
-                x = cx * nw + tx
-                y = cy * nh + ty
-                image.paste(get_tile(x, y), (tx * tw, ty * th))
-
-        name = f'chunks/{cy}/{cx}.jpg'
+for i in range(nw):
+    for j in range(nh):
+        chunk = get_chunk(i, j, cw, ch)
+        name = f'chunks/{j}/{i}.jpg'
         os.makedirs(os.path.dirname(name), exist_ok = True)
-        sys.stderr.write(f'saving {name} ({iw}x{ih})...  \r')
-        image.save(name, quality=85)
+        sys.stderr.write(f'saving {name} ({cw}x{ch})...  \r')
+        chunk.save(name, quality=85)
