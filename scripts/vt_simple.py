@@ -85,4 +85,4 @@ for cy in range(ch):
         name = f'chunks/{cy}/{cx}.jpg'
         os.makedirs(os.path.dirname(name), exist_ok = True)
         sys.stderr.write(f'saving {name} ({iw}x{ih})...  \r')
-        image.save(name, quality=75)
+        image.save(name, quality=85)
