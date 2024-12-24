@@ -61,6 +61,8 @@ for i in range(tiles_count):
     x = ReverseMortonCode2(i) * tw
     y = ReverseMortonCode2(i >> 1) * th
 
+    if h==65536: y = (y + 65536 - 8192) % 65536 # wrapping fix
+
     image.paste(tile, (x, y))
 
 print()
