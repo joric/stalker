@@ -67,11 +67,9 @@ for i in range(tiles_count):
 
 print()
 
-# save preview
 print('saving preview...')
 image.resize((1024,1024)).save('preview.jpg')
 
-# save preview
 print('saving half-size image...')
 image.resize((w//2,h//2)).save('half-size.jpg', quality=95)
 
