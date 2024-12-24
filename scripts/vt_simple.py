@@ -37,24 +37,16 @@ bh = th + tb*2
 
 span_size = bw * bh * 4 // 8 # lossy PX_DXT1 encoding, 4 bits per pixel
 
-def ReverseMortonCode2(x):
-    x &= 0x55555555;
-    x = (x ^ (x >> 1)) & 0x33333333
-    x = (x ^ (x >> 2)) & 0x0f0f0f0f
-    x = (x ^ (x >> 4)) & 0x00ff00ff
-    x = (x ^ (x >> 8)) & 0x0000ffff
+def MortonCode2(x):
+    x = (x | (x << 8)) & 0x00FF00FF
+    x = (x | (x << 4)) & 0x0F0F0F0F
+    x = (x | (x << 2)) & 0x33333333
+    x = (x | (x << 1)) & 0x55555555
     return x
 
-lookup = [[0]*(w//tw) for _ in range(h//th)]
-
-for i in range(tiles_count):
-    x = ReverseMortonCode2(i)
-    y = ReverseMortonCode2(i >> 1)
-    if h==65536: y = (y + (65536 - 8192)//th) % (65536//th) # wrapping fix
-    lookup[y][x] = i
-
 def get_tile(x, y):
-    i = lookup[y][x]
+    if h == 65536: y = (y + 8192//th) % (65536//th)  # wrapping fix
+    i = MortonCode2(x) | (MortonCode2(y) << 1)
     f.seek(4 + i * span_size, os.SEEK_SET)
     data = f.read(span_size)
     texture = BC1Texture.from_bytes(data, bw, bh)
