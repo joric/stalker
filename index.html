@@ -347,7 +347,7 @@ function loadMap(mapId) {
   L.control.mousePosition({numDigits: 0, lngFirst: true, wrapLng: false }).addTo(map);
 
   // use global tooltip and popup
-  popup = L.popup({offset:[0,0], minWidth:330, maxWidth:500}).setContent('popup text');
+  popup = L.popup({offset:[0,0], minWidth:330, maxWidth:400}).setContent('popup text');
   tooltip = L.tooltip({offset:[0,0]}).setLatLng([0,0]).setContent('tooltip text');
 
   markersLayer.bindPopup(popup);
@@ -589,7 +589,8 @@ function passesFilter(marker) {
   let text = settings.searchText && settings.searchText.toLowerCase() || '';
   let terms = text.split(' ');
   let o = marker.feature.properties;
-  let title = [marker.alt||'', o.title||'', o.description||'', o.sid||''].join(' ').toLowerCase();
+  let tags = o.spawns || [''];
+  let title = [marker.alt||'', o.title||'', o.description||'', o.sid||'', ...tags].join(' ').toLowerCase();
   return !(text!='' && !terms.every(term=>title.includes(term)));
 }
 

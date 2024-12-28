@@ -1,8 +1,8 @@
 import os,sys,json,glob,re
-cache_dir = 'C:/Temp/Exports'
 import re
+from collections import defaultdict
 
-out = []
+cache_dir = 'C:/Temp/Exports'
 
 class UnrealCFGParser:
     def __init__(self, filepath):
@@ -90,136 +90,189 @@ class UnrealCFGParser:
 
 # -----------------------------------------------------------------
 
+def export_markers():
 
-folders = [
-    'Stalker2/Content/GameLite/DLCGameData',
-    'Stalker2/Content/GameLite/GameData',
-]
+    out = []
 
-def getCoordinates(data):
-    pts = data
-    coord = [pts[k] for k in('PositionX','PositionY','PositionZ')if k in pts]
-    if coord: return coord
 
-    pts = data.get('WorldPosition',{}).get('data',{})
-    coord =  [pts[k] for k in('X','Y','Z')if k in pts]
-    if coord: return coord
+    folders = [
+        'Stalker2/Content/GameLite/DLCGameData',
+        'Stalker2/Content/GameLite/GameData',
+    ]
 
-    pts = data.get('PlayerLocation',{}).get('data',{})
-    coord =  [pts[k] for k in('X','Y','Z')if k in pts]
-    if coord: return coord
+    def getCoordinates(data):
+        pts = data
+        coord = [pts[k] for k in('PositionX','PositionY','PositionZ')if k in pts]
+        if coord: return coord
 
-def dataCleanup(data):
-    # remove already used keys
-    rk = ('PositionX','PositionY','PositionZ')
-    if all(k in data for k in rk):
+        pts = data.get('WorldPosition',{}).get('data',{})
+        coord =  [pts[k] for k in('X','Y','Z')if k in pts]
+        if coord: return coord
+
+        pts = data.get('PlayerLocation',{}).get('data',{})
+        coord =  [pts[k] for k in('X','Y','Z')if k in pts]
+        if coord: return coord
+
+    def dataCleanup(data):
+        # remove already used keys
+        rk = ('PositionX','PositionY','PositionZ')
+        if all(k in data for k in rk):
+            for k in rk:
+                del data[k]
+
+        # remove scale section with default values
+        rk = ('ScaleX','ScaleY','ScaleZ')
+        if all(k in data and data[k]==1 for k in rk):
+            for k in rk:
+                del data[k]
+
+        # remove zero rotators
+        rk = ('RotatorAngleYaw','RotatorAnglePitch','RotatorAngleRoll')
         for k in rk:
-            del data[k]
+            if k in data and data[k]==1:
+                del data[k]
 
-    # remove scale section with default values
-    rk = ('ScaleX','ScaleY','ScaleZ')
-    if all(k in data and data[k]==1 for k in rk):
-        for k in rk:
-            del data[k]
+    ### Parse
 
-    # remove zero rotators
-    rk = ('RotatorAngleYaw','RotatorAnglePitch','RotatorAngleRoll')
-    for k in rk:
-        if k in data and data[k]==1:
-            del data[k]
+    features = []
 
-### Parse
+    for folder in folders:
+        g = list(glob.glob(os.path.join(cache_dir, f'{folder}/**/*.cfg'),recursive=True))
+        processed = 0
+        total = len(g)
+        rejected = [];
 
-features = []
+        print('found', total, '.cfg files in', folder)
 
-for folder in folders:
-    g = list(glob.glob(os.path.join(cache_dir, f'{folder}/**/*.cfg'),recursive=True))
-    processed = 0
-    total = len(g)
-    rejected = [];
+        for filename in g:
 
-    print('found', total, '.cfg files in', folder)
+            #if 'C1EEB89C4D27EE16CAC1A2BC85378947' not in filename: continue
+            #if 'D9D900F442E53F6922A64E939CB27E3B.cfg' not in filename: continue
+            #if 'MarkerPrototypes.cfg' not in filename: continue
+            #if 'FastTravelLocationPrototypes.cfg' not in filename: continue
+            #if '105F11AB4ED95DD96B4D8BA45A8F2EB8.cfg' not in filename: continue
 
-    for filename in g:
+            parser = UnrealCFGParser(filename)
+            cfg = parser.parse()
+            #print(json.dumps(cfg, indent=2))
 
-        #if 'D9D900F442E53F6922A64E939CB27E3B.cfg' not in filename: continue
-        #if 'MarkerPrototypes.cfg' not in filename: continue
-        #if 'FastTravelLocationPrototypes.cfg' not in filename: continue
-        #if '105F11AB4ED95DD96B4D8BA45A8F2EB8.cfg' not in filename: continue
+            for cfg_id, config in cfg.items():
 
-        parser = UnrealCFGParser(filename)
-        cfg = parser.parse()
-        #print(json.dumps(cfg, indent=2))
+                data = type(config) is dict and config.get('data')
+                if not data:
+                    continue
 
-        for cfg_id, config in cfg.items():
+                spawnType = data.get('SpawnType')
+                shortName = spawnType and spawnType.split('::').pop() or data.get('Name') or data.get('SID') or 'Unnamed'
 
-            data = type(config) is dict and config.get('data')
-            if not data:
-                continue
+                title = data.get('PackOfItemsPrototypeSID') or data.get('SpawnedPrototypeSID') or data.get('ContextualActionSID') or data.get('LairPrototypeSID') or data.get('TriggerShape') or shortName
 
-            spawnType = data.get('SpawnType')
-            shortName = spawnType and spawnType.split('::').pop() or data.get('Name') or data.get('SID') or 'Unnamed'
-            title = data.get('SpawnedPrototypeSID') or data.get('ContextualActionSID') or data.get('LairPrototypeSID') or data.get('TriggerShape') or shortName
-            description = spawnType or data.get('RegionType') or ('FastTravel' in filename and 'Custom::FastTravel') or 'Unknown'
+                description = spawnType or data.get('RegionType') or ('FastTravel' in filename and 'Custom::FastTravel') or 'Unknown'
 
-            allowed_types = ['ESpawnType::Item','ESpawnType::Obj','ESpawnType::Marker','ESpawnType::Anomaly',
-                'ESpawnType::ElectroAnomaly','ESpawnType::AnomalySpawner','ESpawnType::SoapBubbleAnomaly'
-                'ESpawnType::LairSpawner','ESpawnType::Obj','ESpawnType::DeadBody','ESpawnType::ItemContainer'
-                'Custom::FastTravel','Region::'
-                ]
+                allowed_types = ['ESpawnType::Item','ESpawnType::Obj','ESpawnType::Marker','ESpawnType::Anomaly',
+                    'ESpawnType::ElectroAnomaly','ESpawnType::AnomalySpawner','ESpawnType::SoapBubbleAnomaly'
+                    'ESpawnType::LairSpawner','ESpawnType::Obj','ESpawnType::DeadBody','ESpawnType::ItemContainer'
+                    'Custom::FastTravel','Region::'
+                    ]
 
-            #add_properties = True # adds config data to markers (disabled, because it's really a lot of data)
-            add_properties = False
+                #add_properties = True # adds config data to markers (disabled, because it's really a lot of data)
+                add_properties = False
 
-            #if all(s not in description for s in allowed_types): continue # filter markers (20k with this line, 60k without)
+                #if all(s not in description for s in allowed_types): continue # filter markers (20k with this line, 60k without)
 
 
-            if spawnType =='ESpawnType::DestructibleObject': continue # fuck destructible objects, too many
+                if spawnType =='ESpawnType::DestructibleObject': continue # fuck destructible objects, too many
 
 
-            coord = getCoordinates(data)
-            if not coord or all(x==0 for x in coord):
-                rejected.append(1) # collect rejected later
-                continue
+                coord = getCoordinates(data)
+                if not coord or all(x==0 for x in coord):
+                    rejected.append(1) # collect rejected later
+                    continue
 
-            name = os.path.split(filename)[1]
+                name = os.path.split(filename)[1]
 
-            prop = { 'title': title, 'description': description }
+                prop = { 'title': title, 'description': description }
 
-            sid = data.get('SID')
-            if sid:
-                prop['sid'] = sid
+                sid = data.get('SID')
+                if sid:
+                    prop['sid'] = sid
 
-            '''
-            dataCleanup(data) # remove unnecessary keys from config data
+                '''
+                dataCleanup(data) # remove unnecessary keys from config data
 
-            if add_properties:
-                for key in data.keys():
-                    s = data.get(key)
-                    if s and type(s) is not dict:
-                        prop[key] =  s
+                if add_properties:
+                    for key in data.keys():
+                        s = data.get(key)
+                        if s and type(s) is not dict:
+                            prop[key] =  s
 
-            #print(json.dumps(v, indent=2))
+                #print(json.dumps(v, indent=2))
 
-            #prop['config'] = config
-            prop['file'] = filename.replace("\\","/").replace(cache_dir + '/Stalker2/Content/GameLite/','')
-            '''
+                #prop['config'] = config
+                prop['file'] = filename.replace("\\","/").replace(cache_dir + '/Stalker2/Content/GameLite/','')
+                '''
 
-            o = {'type':'Feature','geometry':{'type':'Point', 'coordinates': coord }, 'properties': prop};
+                clue = data.get('ClueVariablePrototypeSID')
+                if clue and clue != 'EmptyInherited':
+                    prop['clue'] = clue
 
-            features.append(o)
+                # ----------------
+                # export references for item generators
 
-        processed += 1
-        sys.stderr.write(f'file {processed} of {total}, {len(features)} markers, {len(rejected)} rejected (no coordinates)   \r')
+                ranks = defaultdict(list)
 
-print()
-print('collected %d markers, %d rejected' % (len(features), len(rejected)))
-print()
+                # don't need 'ItemSID', 'PackOfItemsPrototypeSID' - it's in the title
+                for stash_sid in ('StashPrototypeSID', 'CorpseStashSID'):
+                    stash = data.get(stash_sid)
+                    if stash:
+                        for x in stash.split(','):
+                            ranks['any'].append(x.strip())
 
-out.extend(features)
+                gs = data.get('ItemGeneratorSettings',{}).get('data',{})
+                for g in gs.values():
+                    d = g.get('data',{}).get('ItemGenerators',{}).get('data',{})
+                    rank = g.get('data',{}).get('PlayerRank','any')
+                    if d:
+                        protos = []
+                        for t in d.values():
+                            x = t.get('data',[]).get('PrototypeSID')
+                            if x:
+                                ranks[rank].append(x.strip())
 
-json_file = 'markers.json'
-print('writing "%s" ...' % json_file)
-json.dump({'type':'FeatureCollection','features': out}, open(json_file,'w'), indent=2)
+                # let's encode it to tags
 
+                rank_prefix = {
+                    'ERank::Newbie':'0:',
+                    'ERank::Experienced':'1:',
+                    'ERank::Veteran':'2:',
+                    'ERank::Master':'3:',
+                }
 
+                tags = []
+                for rank, ids in ranks.items():
+                    for s in ids:
+                        tags.append( rank_prefix.get(rank,'')+s )
+
+                if tags: prop['spawns'] = tags
+
+                # ------------------
+
+                o = {'type':'Feature','geometry':{'type':'Point', 'coordinates': coord }, 'properties': prop};
+
+                features.append(o)
+
+            processed += 1
+            sys.stderr.write(f'file {processed} of {total}, {len(features)} markers, {len(rejected)} rejected (no coordinates)   \r')
+
+    print()
+    print('collected %d markers, %d rejected' % (len(features), len(rejected)))
+    print()
+
+    out.extend(features)
+
+    json_file = 'markers.json'
+    print('writing "%s" ...' % json_file)
+    json.dump({'type':'FeatureCollection','features': out}, open(json_file,'w'), indent=2)
+
+if __name__ == '__main__':
+    export_markers()

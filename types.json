@@ -1,5 +1,5 @@
 {
-  "Ammo": { "fa": "list", "bg": "steelblue", "match": "(?=Ammo_|AGA|AHEDP|AVOG|APG7V|(A\\d{3}[\\w]+))(?=.*ESpawnType::Item)" },
+  "Ammo": { "fa": "list", "bg": "steelblue", "match": "(?=Ammo|AGA|AHEDP|AVOG|APG7V|(A\\d{3}[\\w]+))(?=.*ESpawnType::(Item|PackOfItems))" },
   "Anomaly": { "fa": "tornado", "bg": "brown", "match": "Anomaly" },
   "Arch Anomaly": { "fa": "disease", "bg": "darkslategrey", "match": "ArchAnomaly" },
   "Artifact": { "fa": "virus", "bg": "saddlebrown", "match": "Artifact" },
@@ -13,7 +13,7 @@
   "Unique Enemy": { "fa": "skull-crossbones", "bg": "brown", "match": "(Deer|Pseudogiant|Burer|Poltergeist|Controller|Chimera)(?=.*ESpawnType::Obj)" },
   "Box": { "fa": "box", "bg": "steelblue", "match": "(?=Box)(?=.*::Obj)" },
   "Character": { "fa": "person", "bg": "cornflowerblue", "match": "(Mityaj|Sniper|Noon|Batya|Pripoy|Varta|Neutral|Scientist|NPC|Freedom|Military|Spark|Kardan|Captain|Doctor|Mercenaries|Scar|Lejtenant|Duty|Radovoj|Bandit|Monolith|Mercenary)(?=.*ESpawnType::Obj)" },
-  "Chest": { "fa": "box-archive", "bg": "steelblue", "match": "Bluebox|BP_PlayerStash" },
+  "Chest": { "fa": "box-archive", "bg": "steelblue", "match": "Bluebox|BP_PlayerStash|Cabinet_metal_big" },
   "City": { "fa": "city", "bg": "darkslategrey", "match": "City" },
   "Easter Egg": { "fa": "egg", "bg": "darkslategrey", "match": "EasterEgg" },
   
@@ -27,7 +27,7 @@
   "Main Mission": { "fa": "diamond-turn-right", "bg": "black", "fg": "darkorange", "match": "MainMission" },
   
   "Medic": { "fa": "plus", "bg": "cornflowerblue", "match": "Medic" },
-  "Medical": { "fa": "suitcase-medical", "bg": "steelblue", "match": "ArmyMedkit|Medkit|PSYBlocker|AntiRad|Hercules|Bandage" },
+  "Medical": { "fa": "suitcase-medical", "bg": "steelblue", "match": "Stimulator|ArmyMedkit|Medkit|PSYBlocker|AntiRad|Hercules|Bandage" },
   "Question": { "fa": "question", "bg": "darkslategrey", "match": "Question" },
   "Unique Artifact": { "fa": "disease", "bg": "saddlebrown", "match": "UniqueArtifact" },
   "Note": { "fa": "book", "bg": "steelblue", "match": "Note" },
@@ -45,7 +45,7 @@
   "Fight": { "fa": "hand-fist", "bg": "brown", "match": "Fight" },
   
   "Stash": { "fa": "cubes", "bg": "saddlebrown", "match": "(Stash|Bag|Backpack)(?=.*ESpawnType::ItemContainer)" },
-  "Sustenance": { "fa": "drumstick-bite", "bg": "steelblue", "match": "(Bread|Food|Sausage|Energetic|Vodka|Water|Beer|Milk)(?=.*ESpawnType::Item)" },
+  "Sustenance": { "fa": "drumstick-bite", "bg": "steelblue", "match": "(Drink|Bread|Food|Sausage|Energetic|Vodka|Water|Beer|Milk)(?=.*(ESpawnType::Item|ESpawnType::PackOfItems))" },
   "Technician": { "fa": "screwdriver-wrench", "bg": "cornflowerblue", "match": "Technician" },
   "Trader": { "fa": "sack-dollar", "bg": "cornflowerblue", "match": "(Trader|Bartender)(?=.*ESpawnType::Obj)" },
   "Trap": { "fa": "burst", "bg": "brown" },
@@ -54,7 +54,7 @@
   "Unique Weapon": { "fa": "gun", "bg": "saddlebrown" },
 
   "Shelter": { "fa": "person-shelter", "bg": "grey", "fg": "darkorange", "match": "Shelter" },
-  "Weapon": { "fa": "gun", "bg": "steelblue", "match": "Gun|Grenade(?=.*::Item)" },
+  "Weapon": { "fa": "gun", "bg": "steelblue", "match": "Scope|Gun|Grenade(?=.*::(Item|PackOfItems))" },
   "Guitar": { "fa": "guitar", "bg": "cornflowerblue", "match": "Guitar" },
   "EnemySpawner": { "fa": "skull", "bg": "black", "match": "(?=.*CA_Jerboa|CA_Flesh|CA_Blinddog|CA_Pseudodog|CA_Boar|CA_Cat|CA_Bloodsucker|CA_Snork|CA_Tushkan)(?=.*::ContextualAction)" },
   "Chair": { "fa": "chair", "bg": "black", "match": "(lie|sit|stand)(?=.*ESpawnType::ContextualAction)" },
