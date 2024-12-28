@@ -457,8 +457,17 @@ function markersLoadedCallback() {
 function onMarkerClick(e) {
   let p = e.target.feature;
   let text = '<pre>'+JSON.stringify(p, null, 2)+'</pre>';
+
+  let latlng = e.target.getLatLng();
+
+  let w = getMapSize(mapId)
+  let x = Math.floor((latlng.lng / w - 0.5) * 128);
+  let y = Math.floor((latlng.lat / w - 0.5) * 128);
+
+  //console.log(`marker cell: MainGrid_L0_X${x}Y${y}_DL0`); // this matches the personal items cell
+
   popup.setContent(text);
-  popup.setLatLng(e.target.getLatLng());
+  popup.setLatLng(latlng);
 }
 
 function onMarkerHover(e) {
