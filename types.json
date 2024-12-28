@@ -47,7 +47,7 @@
   "Stash": { "fa": "cubes", "bg": "saddlebrown", "match": "(Stash)(?=.*ESpawnType::ItemContainer)" },
   "Sustenance": { "fa": "drumstick-bite", "bg": "steelblue", "match": "(Bread|Food|Sausage|Energetic|Vodka|Water|Beer|Milk)(?=.*ESpawnType::Item)" },
   "Technician": { "fa": "screwdriver-wrench", "bg": "cornflowerblue", "match": "Technician" },
-  "Trader": { "fa": "person", "bg": "cornflowerblue", "match": "(Trader|Bartender)(?=.*ESpawnType::Obj)" },
+  "Trader": { "fa": "sack-dollar", "bg": "cornflowerblue", "match": "(Trader|Bartender)(?=.*ESpawnType::Obj)" },
   "Trap": { "fa": "burst", "bg": "brown" },
   "Underground Access": { "fa": "stairs", "bg": "darkslategrey" },
   "Unique Gear": { "fa": "shirt", "bg": "saddlebrown" },
