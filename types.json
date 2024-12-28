@@ -60,5 +60,5 @@
   "Chair": { "fa": "chair", "bg": "black", "match": "(lie|sit|stand)(?=.*ESpawnType::ContextualAction)" },
   "Lair": { "fa": "dungeon", "bg": "black", "match": "Lair" },
   "Trigger": { "fa": "cube", "bg": "black", "match": "ESpawnType::Trigger", "priority": -1 },
-  "Action": { "fa": "toggle-off", "bg": "black", "match": "ESpawnType::(ContextualAction|MoveToPath)", "priority": -1 }
+  "Action": { "fa": "toggle-off", "bg": "black", "match": "ESpawnType::ContextualAction", "priority": -1 }
 }
