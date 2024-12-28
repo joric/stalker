@@ -787,14 +787,12 @@ window.onload = function() {
       saveSettings();
     });
 
-    /*
     markersLayer.on('clustermouseover', function(a) {
       if (a.layer && (
         a.layer._childCount < 10
         //|| map.getZoom() >= 7
         )) a.layer.spiderfy();
     });
-    */
 
   }).catch(e=>{console.log(e);})
 }
