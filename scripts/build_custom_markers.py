@@ -1,6 +1,8 @@
 import os
 import json
 
+classes = ['BP_PlayerStash_C','BP_Bed_OnBed_C']
+
 def get_partitions(package_path):
     out = []
     filename = os.path.normpath(os.path.join(cache_dir, package_path)) + '.json'
@@ -10,7 +12,7 @@ def get_partitions(package_path):
         r = p.get('SubObjectsToCellRemapping',{})
         for t in r:
             k,v = t['Key'], t['Value']
-            if 'BP_PlayerStash_C' in k:
+            if any(x in k for x in classes):
                 out.append(v)
     return out
 
@@ -25,12 +27,10 @@ def get_markers(partitions):
             type = o['Type']
             if type == 'SkeletalMeshComponent' or type == 'StaticMeshComponent':
                 outer = o['Outer']
-                if 'BP_PlayerStash_C' in outer or 'BP_Bed_OnBed_C' in outer:
+                if any(x in outer for x in classes):
                     c = o.get('Properties',{}).get('RelativeLocation',{})
                     coord = [float(c[a]) for a in ('X','Y','Z')]
-
-                    print('found', outer)
-
+                    print('found', outer, 'in', p)
                     features.append({
                         'type': 'Feature',
                         'geometry': {'type':'Point', 'coordinates': coord},
@@ -43,29 +43,14 @@ def get_markers(partitions):
                     })
     return features
 
-# partitions exported with FModel as json
-
-t='''MainGrid_L0_X2Y0_DL0
-MainGrid_L0_X-48Y10_DL0
-MainGrid_L0_X-2Y21_DLA8129FC2
-MainGrid_L0_X-1Y22_DLC6C35766
-MainGrid_L0_X12Y17_DL0
-MainGrid_L0_X-16Y17_DL0
-MainGrid_L0_X13Y-6_DL0
-MainGrid_L0_X-15Y1_DL0
-MainGrid_L0_X-28Y-39_DL0
-MainGrid_L0_X31Y30_DL0
-MainGrid_L0_X40Y33_DL0
-MainGrid_L0_X37Y37_DL0
-MainGrid_L0_X6Y38_DL0
-MainGrid_L0_X-31Y-22_DL0'''
-
-partitions = t.splitlines()
+# partitions are read from WorldMap_WP and then exported with FModel as json (one by one)
 
 cache_dir = 'C:/Temp/Exports'
 package_path = 'Stalker2/Content/_Stalker_2/maps/_Stalker2_WorldMap/WorldMap_WP'
 
-#partitions = get_partitions(package_path)
+partitions = set(get_partitions(package_path))
+
+for p in partitions: print(p)
 
 features = get_markers(partitions)
 
