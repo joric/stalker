@@ -45,7 +45,7 @@
   "Fight": { "fa": "hand-fist", "bg": "brown", "match": "Fight" },
   
   "Stash": { "fa": "cubes", "bg": "saddlebrown", "match": "(Stash)(?=.*ESpawnType::ItemContainer)" },
-  "Sustenance": { "fa": "drumstick-bite", "bg": "steelblue", "match": "Bread|Food|Sausage|Energetic|Vodka|Water|Beer|Milk" },
+  "Sustenance": { "fa": "drumstick-bite", "bg": "steelblue", "match": "(Bread|Food|Sausage|Energetic|Vodka|Water|Beer|Milk)(?=.*ESpawnType::Item)" },
   "Technician": { "fa": "screwdriver-wrench", "bg": "cornflowerblue", "match": "Technician" },
   "Trader": { "fa": "person", "bg": "cornflowerblue", "match": "(Trader|Bartender)(?=.*ESpawnType::Obj)" },
   "Trap": { "fa": "burst", "bg": "brown" },
@@ -57,8 +57,8 @@
   "Weapon": { "fa": "gun", "bg": "steelblue", "match": "Gun|Grenade(?=.*::Item)" },
   "Guitar": { "fa": "guitar", "bg": "cornflowerblue", "match": "Guitar" },
   "EnemySpawner": { "fa": "skull", "bg": "black", "match": "(?=.*CA_Jerboa|CA_Flesh|CA_Blinddog|CA_Pseudodog|CA_Boar|CA_Cat|CA_Bloodsucker|CA_Snork|CA_Tushkan)(?=.*::ContextualAction)" },
-  "Chair": { "fa": "chair", "bg": "black", "match": "(lie|sit|stand)(?=.*ESpawnType::ContextualAction)" },  
+  "Chair": { "fa": "chair", "bg": "black", "match": "(lie|sit|stand)(?=.*ESpawnType::ContextualAction)" },
   "Lair": { "fa": "dungeon", "bg": "black", "match": "Lair" },
   "Trigger": { "fa": "cube", "bg": "black", "match": "ESpawnType::Trigger", "priority": -1 },
-  "Action": { "fa": "toggle-off", "bg": "black", "match": "ESpawnType::ContextualAction", "priority": -1 }
+  "Action": { "fa": "toggle-off", "bg": "black", "match": "ESpawnType::(ContextualAction|MoveToPath)", "priority": -1 }
 }
