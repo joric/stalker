@@ -454,25 +454,26 @@ function markersLoadedCallback() {
   updateCount();
 }
 
+function getCell(feature) {
+  let c = feature.geometry.coordinates;
+  let w = getMapSize(mapId);
+  let x = Math.floor((c[0] / w - 0.5) * 128);
+  let y = Math.floor((c[1] / w - 0.5) * 128);
+  return `X${x}:Y${y}`;
+}
+
 function onMarkerClick(e) {
   let p = e.target.feature;
   let text = '<pre>'+JSON.stringify(p, null, 2)+'</pre>';
-
   let latlng = e.target.getLatLng();
-
-  let w = getMapSize(mapId)
-  let x = Math.floor((latlng.lng / w - 0.5) * 128);
-  let y = Math.floor((latlng.lat / w - 0.5) * 128);
-
-  //console.log(`marker cell: MainGrid_L0_X${x}Y${y}_DL0`); // this matches the personal items cell
-
   popup.setContent(text);
   popup.setLatLng(latlng);
 }
 
 function onMarkerHover(e) {
   let p = e.target.feature.properties;
-  let text = p.title + ' (' + p.description + ')';
+  let cell = getCell(e.target.feature);
+  let text = p.title + ' (' + p.description + ') [' + cell + ']';
   tooltip.setContent(text);
   tooltip.setLatLng(e.target.getLatLng());
 }
@@ -636,9 +637,11 @@ function zoomToFeature(e) {
 let getGridSize = (mapId) => 16;
 
 function getGridLabel(mapId, x, y) {
-  let cellSize = getMapSize(mapId) / getGridSize(mapId);
-  let gridSize = getGridSize(mapId);
-  return `X${ ~~(x / cellSize - gridSize/2)} | Y${~~(y / cellSize - gridSize/2)}`;
+  let w = getMapSize(mapId);
+  let cw = getGridSize(mapId);
+  let rx = Math.floor((x/w - 0.5) * 128);
+  let ry = Math.floor((y/w - 0.5) * 128);
+  return `X ${rx}..${rx+7}<br>Y ${ry}..${ry+7}`;
 }
 
 function addGrid(mapId) {
