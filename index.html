@@ -164,7 +164,6 @@ img.leaflet-tile { image-rendering: pixelated; }
 <script>
 
 let getMapSize = (mapId) => 812900; // 8129x8129 (largest landscape) x 100
-let getGridSize = (mapId) => 16;
 let localDataName = 'joricsStalkerMaps';
 let mapId = 's2hoc';
 let defaultLocalData = { 's2hoc': {} };
@@ -367,7 +366,7 @@ function loadMap(mapId) {
       position: 'topleft',
   }).addTo(map);
 
-  settings.searchText = ''; // we don't want it on loading
+  //settings.searchText = ''; // maybe we don't want it on loading
 
   searchControl._handleSubmit = function(){
     settings.searchText = this._input.value;
@@ -433,6 +432,11 @@ function loadMap(mapId) {
     }
   });
 
+  // prerender all icons
+  for (const iconName of Object.keys(types)) {
+    icons[iconName] = baseIcon(types[iconName]);
+  }
+
   return [baseLayers, overlayLayers];
 }
 
@@ -447,6 +451,11 @@ function updateCount() {
 function markersLoadedCallback() {
   //console.log('Markers loaded:', markers.length);
   //console.timeEnd("markers");
+
+  //if (settings.searchText!='')
+  //  setTimeout(filterItems,500);
+  //filterItems();
+
   updateCount();
 }
 
@@ -482,7 +491,7 @@ function loadMarkersGeo(data) {
       return Marker(feature);
     }
   })
-  markersLayer.addLayers(markers);
+  markersLayer.addLayers(markers.filter(passesFilter));
   markersLoadedCallback();
 }
 
@@ -504,12 +513,12 @@ function loadMarkersBatched(data, animated=false) {
 
     if (currentIndex < features.length) {
       markers.push(...batch);
-      animated && markersLayer.addLayers(batch);
+      animated && markersLayer.addLayers(batch.filter(passesFilter));
       setTimeout(processBatch, 0); // Schedule the next batch
     } else {
       markers.push(...batch);
       animated && markersLayer.addLayers(batch);
-      !animated && markersLayer.addLayers(markers);
+      !animated && markersLayer.addLayers(markers.filter(passesFilter));
       markersLoadedCallback();
     }
   }
@@ -532,12 +541,12 @@ function loadMarkersIdle(data, animated=false) {
 
     if (currentIndex < features.length) {
       markers.push(...batch);
-      animated && markersLayer.addLayers(batch);
+      animated && markersLayer.addLayers(batch.filter(passesFilter));
       requestIdleCallback(processBatch); // Schedule the next batch during idle time
     } else {
       markers.push(...batch);
       animated && markersLayer.addLayers(batch);
-      !animated && markersLayer.addLayers(markers);
+      !animated && markersLayer.addLayers(markers.filter(passesFilter));
       markersLoadedCallback();
     }
   }
@@ -549,17 +558,11 @@ function loadMarkersSimple(data, animated=false) {
   for (feature of data.features) {
       markers.push(Marker(feature));
   }
-  markersLayer.addLayers(markers);
+  markersLayer.addLayers(markers.filter(passesFilter));
   markersLoadedCallback();
 }
 
 function loadMarkers(data) {
-
-  // prerender all icons
-  for (const iconName of Object.keys(types)) {
-    icons[iconName] = baseIcon(types[iconName]);
-  }
-
   console.time("markers");
 
   // true/false: animated or not. non-animated version may be blocking
@@ -577,23 +580,27 @@ function clearFilter() {
   updateCount();
 }
 
+function passesFilter(marker) {
+  let text = settings.searchText && settings.searchText.toLowerCase() || '';
+  let terms = text.split(' ');
+  let o = marker.feature.properties;
+  let title = [marker.alt||'', o.title||'', o.description||'', o.sid||''].join(' ').toLowerCase();
+  return !(text!='' && !terms.every(term=>title.includes(term)));
+}
+
 function filterItems() {
   // filter by settings.searchText. caching is unreliable, just perform a full search here
-  let text = settings.searchText && settings.searchText.toLowerCase() || '';
   let count = 0;
 
   let addList = [];
   let removeList = [];
 
-  let terms = text.split(' ');
   for (marker of markers) {
-    let o = marker.feature.properties;
-    let title = [marker.alt||'', o.title||'', o.description||'', o.sid||''].join(' ').toLowerCase();
-    if (text!='' && !terms.every(term=>title.includes(term))) {
-      removeList.push(marker);
-    } else {
+    if (passesFilter(marker)) {
       count += 1;
       addList.push(marker);
+    } else {
+      removeList.push(marker);
     }
   }
 
@@ -622,9 +629,12 @@ function zoomToFeature(e) {
   map.fitBounds(e.target.getBounds());
 }
 
+let getGridSize = (mapId) => 16;
+
 function getGridLabel(mapId, x, y) {
   let cellSize = getMapSize(mapId) / getGridSize(mapId);
-  return `X${x / cellSize - 8} | Y${y / cellSize - 8}`;
+  let gridSize = getGridSize(mapId);
+  return `X${ ~~(x / cellSize - gridSize/2)} | Y${~~(y / cellSize - gridSize/2)}`;
 }
 
 function addGrid(mapId) {
@@ -752,7 +762,16 @@ window.onload = function() {
       map.removeLayer(markersLayer);
     }
 
-    fetch('markers.json').then(r=>r.json()).then(data=>loadMarkers(data))
+    let marker_files = [
+      'markers.json',
+      'markers_custom.json',
+    ].map(url=>fetch(url).then(r=>r.json()));
+
+    Promise.all(marker_files).then(results => {
+      for (data of results) {
+        loadMarkers(data);
+      }
+    });
 
     map.on('baselayerchange', function(e) {
       //console.log('base layer changed', e);

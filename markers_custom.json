@@ -1,0 +1,430 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          421131.56,
+          411747.53,
+          2020.6703
+        ]
+      },
+      "properties": {
+        "title": "BP_PlayerStash_C",
+        "description": "Custom::PersonalItems",
+        "sid": "BP_PlayerStash_C_UAID_18C04D7E62A1B1E201_1392030010",
+        "cell": "MainGrid_L0_X2Y0_DL0"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          419719.84,
+          410475.44,
+          2072.7468
+        ]
+      },
+      "properties": {
+        "title": "BP_Bed_OnBed_C",
+        "description": "Custom::PersonalItems",
+        "sid": "BP_Bed_OnBed_C_UAID_18C04D7E62A1B1E201_1674865012",
+        "cell": "MainGrid_L0_X2Y0_DL0"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107660.6,
+          473491.44,
+          629.32294
+        ]
+      },
+      "properties": {
+        "title": "BP_PlayerStash_C",
+        "description": "Custom::PersonalItems",
+        "sid": "BP_PlayerStash_C_UAID_00D86159F049D7C501_1691512292",
+        "cell": "MainGrid_L0_X-48Y10_DL0"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107605.3,
+          473599.62,
+          678.52374
+        ]
+      },
+      "properties": {
+        "title": "BP_Bed_OnBed_C",
+        "description": "Custom::PersonalItems",
+        "sid": "BP_Bed_OnBed_C_UAID_00D86159F049FBE301_1318812108",
+        "cell": "MainGrid_L0_X-48Y10_DL0"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          397584.16,
+          544803.8,
+          896.65393
+        ]
+      },
+      "properties": {
+        "title": "BP_PlayerStash_C",
+        "description": "Custom::PersonalItems",
+        "sid": "BP_PlayerStash_C_UAID_F43BD864B6C0C81902_1198135257",
+        "cell": "MainGrid_L0_X-2Y21_DLA8129FC2"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          404036.75,
+          546702.8,
+          513.89453
+        ]
+      },
+      "properties": {
+        "title": "BP_PlayerStash_C",
+        "description": "Custom::PersonalItems",
+        "sid": "BP_PlayerStash_C_UAID_D8BBC11C280DF4DD01_1510016301",
+        "cell": "MainGrid_L0_X-1Y22_DLC6C35766"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          403865.2,
+          546720.3,
+          560.98505
+        ]
+      },
+      "properties": {
+        "title": "BP_Bed_OnBed_C",
+        "description": "Custom::PersonalItems",
+        "sid": "BP_Bed_OnBed_C_UAID_D8BBC11C280DF4DD01_1455071299",
+        "cell": "MainGrid_L0_X-1Y22_DLC6C35766"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          488357.06,
+          517389.5,
+          251.5235
+        ]
+      },
+      "properties": {
+        "title": "BP_PlayerStash_C",
+        "description": "Custom::PersonalItems",
+        "sid": "BP_PlayerStash_C_UAID_00D861FD685406C601_2081831329",
+        "cell": "MainGrid_L0_X12Y17_DL0"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          307090.62,
+          515636.78,
+          637.5253
+        ]
+      },
+      "properties": {
+        "title": "BP_PlayerStash_C",
+        "description": "Custom::PersonalItems",
+        "sid": "BP_PlayerStash_C_UAID_00D861FD676703DE01_1833198539",
+        "cell": "MainGrid_L0_X-16Y17_DL0"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          307094.38,
+          515771.5,
+          685.10535
+        ]
+      },
+      "properties": {
+        "title": "BP_Bed_OnBed_C",
+        "description": "Custom::PersonalItems",
+        "sid": "BP_Bed_OnBed_C_UAID_00D861FD6767782302_1449640076",
+        "cell": "MainGrid_L0_X-16Y17_DL0"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          491994.25,
+          372874.5,
+          2102.0579
+        ]
+      },
+      "properties": {
+        "title": "BP_PlayerStash_C",
+        "description": "Custom::PersonalItems",
+        "sid": "BP_PlayerStash_C_UAID_00D861FD6767F9DD01_2049378364",
+        "cell": "MainGrid_L0_X13Y-6_DL0"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          492074.38,
+          372738.3,
+          2151.2354
+        ]
+      },
+      "properties": {
+        "title": "BP_Bed_OnBed_C",
+        "description": "Custom::PersonalItems",
+        "sid": "BP_Bed_OnBed_C_UAID_00D861FD6767F9E301_1820183566",
+        "cell": "MainGrid_L0_X13Y-6_DL0"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          317452.97,
+          415673.0,
+          256.89584
+        ]
+      },
+      "properties": {
+        "title": "BP_PlayerStash_C",
+        "description": "Custom::PersonalItems",
+        "sid": "BP_PlayerStash_C_UAID_00D861D9738D09C601_1213254834",
+        "cell": "MainGrid_L0_X-15Y1_DL0"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          317332.5,
+          415674.97,
+          306.89587
+        ]
+      },
+      "properties": {
+        "title": "BP_Bed_OnBed_C",
+        "description": "Custom::PersonalItems",
+        "sid": "BP_Bed_OnBed_C_UAID_2CF05D1FE304082F02_2019080601",
+        "cell": "MainGrid_L0_X-15Y1_DL0"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          231134.64,
+          159246.58,
+          1021.00006
+        ]
+      },
+      "properties": {
+        "title": "BP_PlayerStash_C",
+        "description": "Custom::PersonalItems",
+        "sid": "BP_PlayerStash_C_UAID_2CF05D1FE3040FC601_1708880888",
+        "cell": "MainGrid_L0_X-28Y-39_DL0"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          231093.45,
+          159359.2,
+          1070.0
+        ]
+      },
+      "properties": {
+        "title": "BP_Bed_OnBed_C",
+        "description": "Custom::PersonalItems",
+        "sid": "BP_Bed_OnBed_C_UAID_2CF05D1FE304B8E101_1264665019",
+        "cell": "MainGrid_L0_X-28Y-39_DL0"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          608157.25,
+          599559.1,
+          3098.792
+        ]
+      },
+      "properties": {
+        "title": "BP_PlayerStash_C",
+        "description": "Custom::PersonalItems",
+        "sid": "BP_PlayerStash_C_UAID_D8BBC11C280DE9DE01_1680322025",
+        "cell": "MainGrid_L0_X31Y30_DL0"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          608272.8,
+          599628.56,
+          3140.55
+        ]
+      },
+      "properties": {
+        "title": "BP_Bed_OnBed_C",
+        "description": "Custom::PersonalItems",
+        "sid": "BP_Bed_OnBed_C_UAID_D8BBC11C280DE6DE01_2070544273",
+        "cell": "MainGrid_L0_X31Y30_DL0"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          662855.94,
+          618891.7,
+          486.79898
+        ]
+      },
+      "properties": {
+        "title": "BP_PlayerStash_C",
+        "description": "Custom::PersonalItems",
+        "sid": "BP_PlayerStash_C_UAID_D8BBC11C280DA1DD01_1261487134",
+        "cell": "MainGrid_L0_X40Y33_DL0"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          663011.7,
+          618878.6,
+          535.2367
+        ]
+      },
+      "properties": {
+        "title": "BP_Bed_OnBed_C",
+        "description": "Custom::PersonalItems",
+        "sid": "BP_Bed_OnBed_C_UAID_D8BBC11C280DA1DD01_1132430132",
+        "cell": "MainGrid_L0_X40Y33_DL0"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          644137.1,
+          646271.6,
+          573.74817
+        ]
+      },
+      "properties": {
+        "title": "BP_PlayerStash_C",
+        "description": "Custom::PersonalItems",
+        "sid": "BP_PlayerStash_C_UAID_D8BBC11C280DA7DD01_1326677760",
+        "cell": "MainGrid_L0_X37Y37_DL0"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          447012.34,
+          653230.0,
+          -2798.65
+        ]
+      },
+      "properties": {
+        "title": "BP_PlayerStash_C",
+        "description": "Custom::PersonalItems",
+        "sid": "BP_PlayerStash_C_UAID_00D861D9738D0AC601_1932023010",
+        "cell": "MainGrid_L0_X6Y38_DL0"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          446750.28,
+          653219.3,
+          -2748.65
+        ]
+      },
+      "properties": {
+        "title": "BP_Bed_OnBed_C",
+        "description": "Custom::PersonalItems",
+        "sid": "BP_Bed_OnBed_C_UAID_00D861D9738D0AC601_1977297011",
+        "cell": "MainGrid_L0_X6Y38_DL0"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          214915.73,
+          270725.9,
+          853.0
+        ]
+      },
+      "properties": {
+        "title": "BP_PlayerStash_C",
+        "description": "Custom::PersonalItems",
+        "sid": "BP_PlayerStash_C_UAID_2CF05D1FE304F0C701_1393880809",
+        "cell": "MainGrid_L0_X-31Y-22_DL0"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          214926.67,
+          270860.6,
+          903.0
+        ]
+      },
+      "properties": {
+        "title": "BP_Bed_OnBed_C",
+        "description": "Custom::PersonalItems",
+        "sid": "BP_Bed_OnBed_C_UAID_2CF05D1FE304F0C701_1314587808",
+        "cell": "MainGrid_L0_X-31Y-22_DL0"
+      }
+    }
+  ]
+}

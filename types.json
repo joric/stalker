@@ -8,12 +8,12 @@
   "Base": { "fa": "star", "bg": "darkslategrey", "match": "ESpawnType::Hub", "priority": -1 },
   "Headquarters": { "fa": "mountain", "bg": "brown", "match": "Headquarters" },
 
-  "Bed": { "fa": "bed", "bg": "darkslategrey", "match": "(CA_lie_bed|CA_lie_ground)(?=.*ESpawnType::ContextualAction)" },
+  "Bed": { "fa": "bed", "bg": "darkslategrey", "match": "(CA_lie_bed|CA_lie_ground|BP_Bed_OnBed)(?=.*(ESpawnType::ContextualAction|Custom::PersonalItems))" },
   "Body": { "fa": "face-dizzy", "bg": "steelblue", "match": "Body" },
   "Unique Enemy": { "fa": "skull-crossbones", "bg": "brown", "match": "(Deer|Pseudogiant|Burer|Poltergeist|Controller|Chimera)(?=.*ESpawnType::Obj)" },
-  "Box": { "fa": "box", "bg": "steelblue", "match": "(?=Box)(?=::Obj)" },
+  "Box": { "fa": "box", "bg": "steelblue", "match": "(?=Box)(?=.*::Obj)" },
   "Character": { "fa": "person", "bg": "cornflowerblue", "match": "(Mityaj|Sniper|Noon|Batya|Pripoy|Varta|Neutral|Scientist|NPC|Freedom|Military|Spark|Kardan|Captain|Doctor|Mercenaries|Scar|Lejtenant|Duty|Radovoj|Bandit|Monolith|Mercenary)(?=.*ESpawnType::Obj)" },
-  "Chest": { "fa": "box-archive", "bg": "steelblue", "match": "Bluebox" },
+  "Chest": { "fa": "box-archive", "bg": "steelblue", "match": "Bluebox|BP_PlayerStash" },
   "City": { "fa": "city", "bg": "darkslategrey", "match": "City" },
   "Easter Egg": { "fa": "egg", "bg": "darkslategrey", "match": "EasterEgg" },
   
