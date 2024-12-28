@@ -8,7 +8,7 @@
   "Base": { "fa": "star", "bg": "darkslategrey", "match": "ESpawnType::Hub", "priority": -1 },
   "Headquarters": { "fa": "mountain", "bg": "brown", "match": "Headquarters" },
 
-  "Bed": { "fa": "bed", "bg": "darkslategrey", "match": "(CA_lie_bed)(?=.*ESpawnType::ContextualAction)" },
+  "Bed": { "fa": "bed", "bg": "darkslategrey", "match": "(CA_lie_bed|CA_lie_ground)(?=.*ESpawnType::ContextualAction)" },
   "Body": { "fa": "face-dizzy", "bg": "steelblue", "match": "Body" },
   "Unique Enemy": { "fa": "skull-crossbones", "bg": "brown", "match": "(Deer|Pseudogiant|Burer|Poltergeist|Controller|Chimera)(?=.*ESpawnType::Obj)" },
   "Box": { "fa": "box", "bg": "steelblue", "match": "(?=Box)(?=::Obj)" },
