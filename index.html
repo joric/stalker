@@ -166,7 +166,7 @@ img.leaflet-tile { image-rendering: pixelated; }
 let getMapSize = (mapId) => 812900; // 8129x8129 (largest landscape) x 100
 let localDataName = 'joricsStalkerMaps';
 let mapId = 's2hoc';
-let defaultLocalData = { 's2hoc': {} };
+let defaultLocalData = { 's2hoc': { searchText:'' } };
 let localData = JSON.parse(localStorage.getItem(localDataName)) || defaultLocalData;
 let settings = localData[mapId];
 let lang=[];
@@ -451,11 +451,6 @@ function updateCount() {
 function markersLoadedCallback() {
   //console.log('Markers loaded:', markers.length);
   //console.timeEnd("markers");
-
-  //if (settings.searchText!='')
-  //  setTimeout(filterItems,500);
-  //filterItems();
-
   updateCount();
 }
 
