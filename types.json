@@ -4,7 +4,7 @@
   "Arch Anomaly": { "fa": "disease", "bg": "darkslategrey", "match": "ArchAnomaly" },
   "Artifact": { "fa": "virus", "bg": "saddlebrown", "match": "Artifact" },
   "Attachment": { "fa": "wrench", "bg": "steelblue", "match": "Attachment" },
-  "Bag": { "fa": "briefcase", "bg": "steelblue", "match": "(Bag|Backpack)(?=.*ESpawnType::ItemContainer)" },
+  "Bag": { "fa": "briefcase", "bg": "steelblue", "match": "(see_stash)(?=.*ESpawnType::ItemContainer)" },
   "Base": { "fa": "star", "bg": "darkslategrey", "match": "ESpawnType::Hub", "priority": -1 },
   "Headquarters": { "fa": "mountain", "bg": "brown", "match": "Headquarters" },
 
@@ -44,7 +44,7 @@
   "Side Mission": { "fa": "diamond-turn-right", "bg": "black", "fg": "dodgerblue", "match": "SideMission" },
   "Fight": { "fa": "hand-fist", "bg": "brown", "match": "Fight" },
   
-  "Stash": { "fa": "cubes", "bg": "saddlebrown", "match": "(Stash)(?=.*ESpawnType::ItemContainer)" },
+  "Stash": { "fa": "cubes", "bg": "saddlebrown", "match": "(Stash|Bag|Backpack)(?=.*ESpawnType::ItemContainer)" },
   "Sustenance": { "fa": "drumstick-bite", "bg": "steelblue", "match": "(Bread|Food|Sausage|Energetic|Vodka|Water|Beer|Milk)(?=.*ESpawnType::Item)" },
   "Technician": { "fa": "screwdriver-wrench", "bg": "cornflowerblue", "match": "Technician" },
   "Trader": { "fa": "sack-dollar", "bg": "cornflowerblue", "match": "(Trader|Bartender)(?=.*ESpawnType::Obj)" },
