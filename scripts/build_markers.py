@@ -165,7 +165,8 @@ def export_markers():
                 spawnType = data.get('SpawnType')
                 shortName = spawnType and spawnType.split('::').pop() or data.get('Name') or data.get('SID') or 'Unnamed'
 
-                title = data.get('PackOfItemsPrototypeSID') or data.get('SpawnedPrototypeSID') or data.get('ContextualActionSID') or data.get('LairPrototypeSID') or data.get('TriggerShape') or shortName
+                titles = ('PackOfItemsPrototypeSID','SpawnedPrototypeSID','MarkerSID','ContextualActionSID','LairPrototypeSID','TriggerShape')
+                title = next((data[t] for t in titles if t in data), shortName)
 
                 description = spawnType or data.get('RegionType') or ('FastTravel' in filename and 'Custom::FastTravel') or 'Unknown'
 
