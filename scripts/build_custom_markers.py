@@ -1,58 +1,72 @@
 import os
 import json
+from collections import Counter
 
-classes = ['BP_PlayerStash_C','BP_Bed_OnBed_C']
+cache_dir = 'C:/Temp/Exports'
+world_path = 'Stalker2/Content/_Stalker_2/maps/_Stalker2_WorldMap/WorldMap_WP'
+classes = ['BP_PlayerStash_C','BP_Bed_OnBed_C','BP_TopazScanner']
 
-def get_partitions(package_path):
+counter = Counter()
+
+def get_filename(package_path):
+    return os.path.normpath(os.path.join(cache_dir,package_path))+'.json'
+
+def get_cells(package_path):
     out = []
-    filename = os.path.normpath(os.path.join(cache_dir, package_path)) + '.json'
+    filename = get_filename(package_path)
     data = json.load(open(filename, 'r'))
     for o in data:
         p = o.get('Properties',{})
         r = p.get('SubObjectsToCellRemapping',{})
         for t in r:
-            k,v = t['Key'], t['Value']
-            if any(x in k for x in classes):
-                out.append(v)
+            key, cell = t['Key'], t['Value']
+            for name in classes:
+                if name in key:
+                    out.append(cell)
+                    counter[key.split('_UAID')[0]] += 1
+
+    print('found items', counter)
     return out
 
 
-def get_markers(partitions):
+def get_markers(cells):
     features = []
-    for p in partitions:
-        package_path = 'Stalker2/Content/_Stalker_2/maps/_Stalker2_WorldMap/WorldMap_WP/_Generated_/' + p
+    for cell in cells:
+        package_path = os.path.join(world_path,'_Generated_', cell)
         filename = os.path.normpath(os.path.join(cache_dir, package_path)) + '.json'
         data = json.load(open(filename, 'r'))
         for o in data:
             type = o['Type']
-            if type == 'SkeletalMeshComponent' or type == 'StaticMeshComponent':
+            if type in ('SkeletalMeshComponent','StaticMeshComponent','SceneComponent'):
                 outer = o['Outer']
                 if any(x in outer for x in classes):
                     c = o.get('Properties',{}).get('RelativeLocation',{})
-                    coord = [float(c[a]) for a in ('X','Y','Z')]
-                    print('found', outer, 'in', p)
-                    features.append({
-                        'type': 'Feature',
-                        'geometry': {'type':'Point', 'coordinates': coord},
-                        'properties': {
-                            'title': outer.split('_UAID')[0],
-                            'description': 'Custom::PersonalItems',
-                            'sid': outer,
-                            'cell': p,
-                        }
-                    })
+                    if c:
+                        coord = [float(c[a]) for a in ('X','Y','Z')]
+                        #print('found', outer, 'in', cell)
+                        features.append({
+                            'type': 'Feature',
+                            'geometry': {'type':'Point', 'coordinates': coord},
+                            'properties': {
+                                'title': outer.split('_UAID')[0],
+                                'description': 'Custom::CustomItems',
+                                'sid': outer,
+                                'cell': cell,
+                            }
+                        })
     return features
 
 # partitions are read from WorldMap_WP and then exported with FModel as json (one by one)
 
-cache_dir = 'C:/Temp/Exports'
-package_path = 'Stalker2/Content/_Stalker_2/maps/_Stalker2_WorldMap/WorldMap_WP'
+cells = set(get_cells(world_path))
 
-partitions = set(get_partitions(package_path))
+for cell in cells:
+    package_path = os.path.join(world_path,'_Generated_', cell)
+    filename = get_filename(package_path)
+    if not os.path.exists(filename):
+        print('NOT CACHED', cell)
 
-for p in partitions: print(p)
-
-features = get_markers(partitions)
+features = get_markers(cells)
 
 j = {"type": "FeatureCollection", 'features': features }
 

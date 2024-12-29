@@ -461,12 +461,16 @@ function getCell(feature) {
   let w = getMapSize(mapId);
   let x = Math.floor((c[0] / w - 0.5) * 128);
   let y = Math.floor((c[1] / w - 0.5) * 128);
-  return `X${x}:Y${y}`;
+  return {x:x, y:y};
 }
 
 function onMarkerClick(e) {
   let p = e.target.feature;
-  let text = '<pre>'+JSON.stringify(p, null, 2)+'</pre>';
+  let c = getCell(p);
+  let cell = `MainGrid_L0_X${c.x}Y${c.y}`;
+  let json = JSON.stringify(p, null, 2);
+  //let text = `<b>${p.properties.title}</b><br/>${p.properties.description}<br/><small>${cell}</small><pre>${json}</pre>`;
+  let text = `<pre>${json}</pre>${cell}`;
   let latlng = e.target.getLatLng();
   popup.setContent(text);
   popup.setLatLng(latlng);
@@ -474,8 +478,7 @@ function onMarkerClick(e) {
 
 function onMarkerHover(e) {
   let p = e.target.feature.properties;
-  let cell = getCell(e.target.feature);
-  let text = p.title + ' (' + p.description + ') [' + cell + ']';
+  let text = `${p.title} (${p.description})`;
   tooltip.setContent(text);
   tooltip.setLatLng(e.target.getLatLng());
 }
