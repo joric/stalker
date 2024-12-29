@@ -94,6 +94,23 @@ def export_markers():
 
     out = []
 
+    lookup = {}
+
+    # preload marker prototypes for names/radius
+    package_path = 'Stalker2/Content/GameLite/GameData/MarkerPrototypes.cfg'
+    filename = os.path.normpath(os.path.join(cache_dir, package_path))
+    parser = UnrealCFGParser(filename)
+    cfg = parser.parse()
+    for cfg_id, config in cfg.items():
+        data = config.get('data',{})
+        sid = data.get('SID')
+        if sid:
+            lookup[sid] = {}
+            e = lookup[sid]
+            remap = {'MarkerRadius':'radius', 'Title':'title', 'Description':'info'}
+            for k,v in remap.items():
+                if k in data and data[k]!=0 and data[k]!='Empty':
+                    e[v] = data[k]
 
     folders = [
         'Stalker2/Content/GameLite/DLCGameData',
@@ -146,6 +163,7 @@ def export_markers():
 
         for filename in g:
 
+            #if '4B56C32544C5470C2D7DFD89F59BBB8F' not in filename: continue
             #if 'C1EEB89C4D27EE16CAC1A2BC85378947' not in filename: continue
             #if 'D9D900F442E53F6922A64E939CB27E3B.cfg' not in filename: continue
             #if 'MarkerPrototypes.cfg' not in filename: continue
@@ -257,6 +275,13 @@ def export_markers():
                 if tags: prop['spawns'] = tags
 
                 # ------------------
+
+
+                # update marker properties from lookup
+                for key in ('MarkerSID', 'SpawnedPrototypeSID'):
+                    if key in data and data[key] in lookup:
+                        prop |= lookup[ data[key] ]
+                        #print(prop)
 
                 o = {'type':'Feature','geometry':{'type':'Point', 'coordinates': coord }, 'properties': prop};
 
