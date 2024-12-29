@@ -1,4 +1,7 @@
 {
+  "Upgrade": { "fa": "bed", "bg": "darkslategrey", "match": "Upgrade" },
+  "Weather": { "fa": "snowflake", "bg": "black", "match": "WeatherSelection" },
+
   "Ammo": { "fa": "list", "bg": "steelblue", "match": "(?=Ammo|AGA|AHEDP|AVOG|APG7V|(A\\d{3}[\\w]+))(?=.*ESpawnType::(Item|PackOfItems))" },
   "Arch Anomaly": { "fa": "hurricane", "bg": "darkorange", "match": "ArchAnomaly" },
   "Anomaly": { "fa": "hurricane", "bg": "brown", "match": "Anomaly" },
@@ -52,9 +55,6 @@
   "Underground Access": { "fa": "stairs", "bg": "darkslategrey" },
   "Unique Gear": { "fa": "shirt", "bg": "saddlebrown" },
   "Unique Weapon": { "fa": "gun", "bg": "saddlebrown" },
-
-  "Upgrade": { "fa": "bed", "bg": "darkslategrey", "match": "Upgrade" },
-  "Weather": { "fa": "snowflake", "bg": "black", "match": "WeatherSelection" },
 
   "Shelter": { "fa": "person-shelter", "bg": "grey", "fg": "darkorange", "match": "Shelter" },
   "Weapon": { "fa": "gun", "bg": "steelblue", "match": "Scope|Gun|Grenade(?=.*::(Item|PackOfItems))" },
