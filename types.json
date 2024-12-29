@@ -1,6 +1,6 @@
 {
   "Ammo": { "fa": "list", "bg": "steelblue", "match": "(?=Ammo|AGA|AHEDP|AVOG|APG7V|(A\\d{3}[\\w]+))(?=.*ESpawnType::(Item|PackOfItems))" },
-  "Arch Anomaly": { "fa": "tornado", "bg": "darkorange", "match": "ArchAnomaly" },
+  "Arch Anomaly": { "fa": "hurricane", "bg": "darkorange", "match": "ArchAnomaly" },
   "Anomaly": { "fa": "hurricane", "bg": "brown", "match": "Anomaly" },
   "Artifact": { "fa": "virus", "bg": "saddlebrown", "match": "Artifact" },
   "Attachment": { "fa": "wrench", "bg": "steelblue", "match": "Attachment" },
