@@ -466,11 +466,13 @@ function getCell(feature) {
 
 function onMarkerClick(e) {
   let p = e.target.feature;
-  let c = getCell(p);
-  let cell = `MainGrid_L0_X${c.x}Y${c.y}`;
+  let t = getCell(p);
+  let cell = `MainGrid_L0_X${t.x}Y${t.y}`;
   let json = JSON.stringify(p, null, 2);
   //let text = `<b>${p.properties.title}</b><br/>${p.properties.description}<br/><small>${cell}</small><pre>${json}</pre>`;
-  let text = `<pre>${json}</pre>${cell}`;
+  let c = p.geometry.coordinates;
+  let teleport = `UETools_TeleportTo ${~~c[0]}, ${~~c[1]}, ${~~c[2]}`;
+  let text = `<pre>${json}</pre>${cell}<br/>${teleport}`;
   let latlng = e.target.getLatLng();
   popup.setContent(text);
   popup.setLatLng(latlng);
