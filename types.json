@@ -35,7 +35,7 @@
   "Personal Stash": { "fa": "box-archive", "bg": "darkslategrey", "match": "BP_PlayerStash_C" },
   "Radiation": { "fa": "radiation", "bg": "dimgrey", "fg": "darkorange", "match": "Radiation" },
   
-  "Squad": { "fa": "person-rifle", "bg": "darkslategrey", "match": "Squad|Patrol" },
+  "Squad": { "fa": "person-rifle", "bg": "black", "match": "Squad|Patrol" },
   "Repair": { "fa": "screwdriver-wrench", "bg": "darkslategrey", "match": "Repair" },
   "Point of Interest": { "fa": "flag", "bg": "darkslategrey", "match": "ERegion::" },
   "Safe": { "fa": "vault", "bg": "steelblue", "match": "SmallSafe|BigSafe" },
