@@ -54,6 +54,7 @@
   "Unique Weapon": { "fa": "gun", "bg": "saddlebrown" },
 
   "Upgrade": { "fa": "bed", "bg": "darkslategrey", "match": "Upgrade" },
+  "Weather": { "fa": "snowflake", "bg": "black", "match": "WeatherSelection" },
 
   "Shelter": { "fa": "person-shelter", "bg": "grey", "fg": "darkorange", "match": "Shelter" },
   "Weapon": { "fa": "gun", "bg": "steelblue", "match": "Scope|Gun|Grenade(?=.*::(Item|PackOfItems))" },
