@@ -409,7 +409,9 @@ function loadMap(mapId) {
   // fired when input control is expanded (not the dropdown list)
   searchControl.on('search:expanded', function (e) {
     searchControl._input.value = settings.searchText;
-    document.querySelector('.search-cancel').style.display = 'block';
+
+    if (settings.searchText)
+      document.querySelector('.search-cancel').style.display = 'block';
 
     //searchControl.searchText(settings.searchText);
     addSearchCallbacks();
