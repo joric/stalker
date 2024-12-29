@@ -591,11 +591,12 @@ function clearFilter() {
 }
 
 function passesFilter(marker) {
+  // will be replaced with fuzzy search
   let text = settings.searchText && settings.searchText.toLowerCase() || '';
   let terms = text.split(' ');
   let o = marker.feature.properties;
   let tags = o.spawns || [''];
-  let title = [marker.alt||'', o.title||'', o.description||'', o.sid||'', ...tags].join(' ').toLowerCase();
+  let title = [marker.alt||'', o.title||'', o.description||'', o.sid||'', o.clue||'', ...tags].join(' ').toLowerCase();
   return !(text!='' && !terms.every(term=>title.includes(term)));
 }
 
