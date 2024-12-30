@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<base target="_top">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">  
+
+<title>Joric's Stalker - Maptalks GL</title>
+<link rel="shortcut icon" type="image/x-icon" href="data:," />
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/maptalks/1.0.1/maptalks.min.css" integrity="sha512-DgQNythEg69g9pToBBZQZMXn/xM8ZF/96sutg5c6ODgxargtpteM9+HxACffdWzrzK5YgAdVs8CfucHm5dvbIA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/maptalks/1.0.1/maptalks.min.js" integrity="sha512-nMJHLgEm7hUp/e10n9R/xUz3yMmvx98LQlddhCZl3g0b4JO8NG1SjmcOA1JiFNuxRgseKDzdABcGy4qGZlGwEQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<!--
+<link href="js/lib/maptalks-gl/maptalks.css" rel="stylesheet">
+<script type="text/javascript" src="js/lib/maptalks-gl/maptalks-gl.js"></script>
+<script type="text/javascript" src="https://unpkg.com/maptalks.markercluster/dist/maptalks.markercluster.min.js"></script>
+-->
+
+
+<style>
+html, body {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  background-color: #222;
+  font-family:sans-serif;
+}
+#map {
+  height: 100%;
+  width:  100%;
+}
+
+.maptalks-tooltip {
+  display: block;
+  background: #fff;
+  padding: 0px 4px 0px 4px;
+  height:24px;
+  line-height:24px;
+  font-size:14px;
+  white-space: nowrap;
+}
+
+/* ----------------------------------------------- */
+
+.search-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  // left: 50%; ransform: translateX(-50%);
+  padding: 20px;
+  z-index: 9999;
+}
+
+.search-box {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 240px;
+  opacity: 0.85;
+  transition: all 0.3s ease;
+}
+
+.search-box:has(input:focus) {
+  width: 450px;
+  opacity: 1;
+}
+
+@media (max-width: 460px) {
+  .search-box:has(input:focus) {
+    width: 90vw;
+    opacity: 1;
+  }
+}
+
+.search-box input {
+  width: 100%;
+  padding: 12px 24px;
+  border: 1px solid #ddd;
+  border-radius: 24px;
+  outline: none;
+  background: white;
+  font-size: 17px;
+}
+
+.search-icon {
+  position: absolute;
+  font-size: 20px;
+  cursor: pointer;
+  opacity: 0.5;
+}
+
+.search-icon:hover {
+  opacity: 1;
+}
+
+.search-submit {
+  right: 48px;
+  margin-top: -3px;
+}
+
+.search-cancel {
+  font-size: 30px;
+  right: 15px;
+}
+
+</style>
+
+</head>
+<body>
+
+<div  tabindex=0 id="map"></div>
+
+<div class="search-container">
+  <div class="search-box">
+    <input tabindex=1 type="text" placeholder="Search...">
+    <span class="search-icon search-submit" title="Search">&#128269;&#xFE0E;</span>
+    <span class="search-icon search-cancel" title="Cancel">&times;</span>
+  </div>
+</div>
+
+<script>
+
+let enableAltitude = true;
+let heightFactor = 1.0;
+
+let iconSize = 75;
+
+let startPitch = 0;
+let startZoom = 2;
+let defaultPitch = 45;
+let autoAltitude = true;
+let markerLayer = null;
+let regionsLayer = null;
+let map = null;
+let types = null;
+let lang = null;
+
+let localDataName = 'joricsStalkerMaps';
+let localData = JSON.parse(localStorage.getItem(localDataName)) || {};
+let settings = {};
+let mapId = 's2hoc';
+
+let searchControl = null;
+
+function loadMap() {
+
+  searchControl = document.querySelector('.search-box input');
+
+  settings = localData[mapId] || settings;
+
+  let w = h = 812900;
+
+  let mapSize = {width: 65536, height: 65536};
+
+  let mapWorldSize = w;
+  let scale = mapWorldSize / mapSize.width;
+
+  let mapWorldCenter = { X: w/2, Y: h/2, Z: 0.0 };
+
+  let mapWorldUpperLeft = { X: 0, Y: 0, Z: 0.0 };
+  let mapWorldLowerRight = { X: w, Y: h, Z: 0.0 };
+
+  mapCenter = [mapWorldCenter.X, mapWorldCenter.Y];
+  mapBounds = [mapWorldUpperLeft.X, mapWorldUpperLeft.Y, mapWorldLowerRight.X, mapWorldLowerRight.Y];
+
+  let [left,top,right,bottom] = mapBounds;
+
+  let extent = new maptalks.Extent(left, top, right, bottom);
+
+  if (!settings.center) {
+    [settings.zoom, settings.pitch, settings.bearing, settings.center] = [startZoom, startPitch, 0, mapCenter];
+  }
+
+  map = new maptalks.Map('map', {
+
+    heightFactor: heightFactor,
+
+    zoom: settings.zoom,
+    pitch: settings.pitch,
+    bearing: settings.bearing,
+    center: settings.center,
+    maxExtent: extent,
+    maxPitch: 80,
+
+    maxZoom: 8,
+
+    spatialReference : {
+      projection : 'identity',
+
+      resolutions: [128,64,32,16,8,4,2,1,1/2,1/4,1/8,1/16,1/32,1/64,1/128].map(x=>x*scale),
+
+      fullExtent : { top: top, left: left, bottom: bottom, right: right },
+    },
+
+    baseLayer: new maptalks.TileLayer('base', {
+      maxAvailableZoom: 7,
+      urlTemplate: 'https://joric.github.io/stalker2_tileset/tiles/{z}/{x}/{y}.jpg',
+      repeatWorld: false,
+      tileSize: 512,
+    }),
+
+    /*
+    zoomControl: {
+      //position  : 'bottom-right',
+      //position  : 'top-right',
+      position  : {bottom: 70, right: 20},
+      zoomLevel : false,
+    },
+    */
+
+    attribution: {
+      content: '', position: {top: -50, left: 0},
+    },
+
+    //seamlessZoom: true,
+    doubleClickZoom: true,
+
+  });
+
+  map.setMaxExtent(extent);
+
+  regionsLayer = new maptalks.VectorLayer('vector',{interactive: false, cursor: 'default' }).addTo(map);
+
+  markerLayer = new maptalks.VectorLayer('markers',{
+    sortByDistanceToCamera: true,
+    forceRenderOnMoving: true,
+    forceRenderOnRotating: true,
+
+    enableAltitude : enableAltitude,
+    // draw altitude
+    drawAltitude : {
+      lineWidth : 2,
+      lineColor : '#fff',
+      lineOpacity: 0.5,
+    },
+
+  }).addTo(map);
+
+  map.on('viewchange', e=> {
+    settings.center = [e.new.center[0],e.new.center[1]];
+    settings.bearing = e.new.bearing;
+    settings.pitch = e.new.pitch;
+    settings.zoom = e.new.zoom;
+
+    if (enableAltitude && autoAltitude) {
+      markerLayer.setOptions({enableAltitude: map.getPitch()!=0});
+    }
+    saveSettings();
+
+  });
+
+  setTimeout(function() {
+    if (enableAltitude && autoAltitude) {
+      markerLayer.setOptions({enableAltitude: map.getPitch()!=0});
+    }
+  },500);
+
+  document.querySelector('.search-cancel').onclick = e=> {
+    clearFilter();
+  };
+
+  map.on('mousedown', function(e) {
+    document.getElementById('map').focus(); // needs tabindex on the map element
+  });
+
+}
+
+function getIconName(o) {
+  let tags = o.spawns || [''];
+  let s = [o.title, o.description, ...tags].join('/');
+  for (const key of Object.keys(types).sort((a,b)=>(types[b].priority || 0) - (types[a].priority || 0)) ) {
+    let regex = types[key].match;
+    if (regex && s.match(new RegExp(regex, "i"))) return key;
+  }
+  return 'Question';
+}
+
+
+function loadMarkers(data) {
+
+  //D:\Projects\github\stalker\trunk\data\Markers\itr8\NotActive\NoShadow\Texture_Anomaly_NotActive_General_noShadow.png
+
+  /*
+  images = {
+    //'Base':      'data/Markers/itr6/Active/Shadow/Texture_HabLead_Active_General_Shadow.png',
+    'Location':      'data/Markers/itr6/Active/Shadow/T_LocationOrigin_Active_Shadow.png',
+    'Arch Anomaly':      'data/Markers/itr6/Active/Shadow/Texture_Archianomaly_Active_General_Shadow.png',
+    'Guide':      'data/Markers/itr6/Active/Shadow/Texture_Guide_Active_General_Shadow.png',
+    'Technician':      'data/Markers/itr6/Active/Shadow/Texture_Mechanical_Active_General_Shadow.png',
+    'Trader':      'data/Markers/itr6/Active/Shadow/Texture_Trader_Active_General_Shadow.png',
+    'Personal Stash':      'data/Markers/itr6/Active/Shadow/Texture_Storage_Active_General_Shadow.png',
+    'Bed':        'data/Markers/itr6/Active/Shadow/Texture_Bed_Active_General_Shadow.png',
+    'Medic':      'data/Markers/itr6/Active/Shadow/Texture_Medecine_Active_General_Shadow.png',
+    'Stash':      'data/Markers/itr6/Active/Shadow/Texture_Stahes_Active_General_Shadow.png',
+    'Safe':'data/Markers/itr6/Active/Shadow/Texture_Stahes_Active_General_Shadow.png',
+    'Stash': 'data/Markers/Itr5/Map/Texture_Stahes_Active_General_Shadow.png',
+    //'Upgrade':      'data/Markers/itr6/Active/Shadow/Texture_Habar_Active_General_Shadow.png',
+    'Upgrade':      'data/Markers/itr6/Active/Shadow/Texture_Stahes_Active_General_Shadow.png',
+    'Scanner':      'data/Markers/itr7/NotActive/Shadow/Texture_Signal_NotActive_General_Shadow.png',
+  }
+  */
+
+  images = {
+    'Location':      'T_LocationOrigin_NotActive_Shadow.png',
+
+    'Base':      'Texture_Camp',
+
+    'Arch Anomaly':      'Texture_Archianomaly',
+    'Guide':      'Texture_Guide',
+    'Technician':      'Texture_Mechanical',
+    'Trader':      'Texture_Trader',
+    'Personal Stash':      'Texture_Storage',
+    'Bed':        'Texture_Bed',
+    'Medic':      'Texture_Medecine',
+
+    'Stash':      'Texture_Stahes',
+    'Safe':       'Texture_Stahes',
+    'Upgrade':      'Texture_Stahes',
+
+    'Scanner':      'data/Markers/itr7/NotActive/Shadow/Texture_Signal_NotActive_General_Shadow.png',
+
+    'Teleport': 'Texture_Archianomaly'
+  }
+
+  let prefix = 'data/Stalker2/Content/GameLite/FPS_Game/UI/UIIcons/Markers/itr6/NotActive/Shadow/';
+  let postfix = '_NotActive_General_Shadow.png'
+
+
+  let markers = [];
+
+  for (feature of data.features) {
+    let o = feature.properties;
+    let name = getIconName(o);
+
+    let image = images[name];
+
+    if (!image) continue;
+
+    image = (image.includes('/') ? '':prefix) + image + (image.includes('.png') ? '' :postfix);
+
+    let coordinates = feature.geometry.coordinates;
+
+    var marker = new maptalks.Marker(coordinates,
+      {
+        'symbol' : {
+          'markerFile'   : image,
+          'markerWidth'  : iconSize,
+          'markerHeight' : iconSize,
+          'markerDx'     : 0,
+          'markerDy'     : 0,
+          markerVerticalAlignment: 'middle',
+        },
+        checkTransparent: false,
+      }
+    ).addTo(markerLayer);
+
+    marker.feature = feature;
+
+    let title = lang[o.title] || lang['sid_stashes_'+o.clue+'_name'] || o.title
+
+    let header = `<b>${title}</b>`;
+
+    let height = 24;
+    let lines = [header];
+
+    if (o.clue) {
+      lines = [...lines, 'clue: ' + o.clue];
+    }
+
+    if (o.spawns) {
+      lines = [...lines, ...o.spawns];
+    }
+
+    const tooltip = new maptalks.ui.ToolTip( lines.join('<br/>'), {
+      showTimeout: 50,
+      height: height * lines.length,
+      cssName: 'maptalks-tooltip',
+    }).addTo(marker);
+
+    let c = feature.geometry.coordinates;
+    let teleport = `XTeleportTo ${c[0]} ${c[1]} ${c[2]}`;
+
+    var popup = new maptalks.ui.InfoWindow({
+      content: '<pre>' + JSON.stringify(feature, null, 2) + '</pre>' + teleport,
+      title: o.title,
+      autoOpenOn: 'click',
+      autoCloseOn: 'click',
+      dy: iconSize/4,
+    });
+    
+    popup.addTo(marker);
+ 
+    markers.push(marker);
+  }
+
+  console.log('markers:', markers.length);
+}
+
+
+function scaleCoordinates(coordinates, scaleFactor, origin) {
+  return coordinates.map(coord => {
+    const [x, y] = coord;
+    return [
+      origin[0] + (x - origin[0]) * scaleFactor,
+      origin[1] + (y - origin[1]) * scaleFactor
+    ];
+  });
+}
+
+function scaleGeoJSON(geojson, scaleFactor, origin) {
+  geojson.features.forEach(feature => {
+    feature.geometry.coordinates = feature.geometry.coordinates.map(ring =>
+      scaleCoordinates(ring, scaleFactor, origin)
+    );
+  });
+  return geojson;
+}
+
+function loadRegions(geojson) {
+
+  const defaultSymbol = {
+    'lineColor': '#fff',    // Border color
+    'lineWidth': 0.75,            // Border width
+    'polygonFill': '#fff',  // Fill color
+    'polygonOpacity': 0.1      // Fill opacity
+  };
+
+  // Define the hover style
+  const hoverSymbol = {
+    'polygonOpacity': 0.0 // Increased opacity
+  };
+
+  const geometries = maptalks.GeoJSON.toGeometry(scaleGeoJSON(geojson, 812900/8192, [0,0]));
+
+  geometries.forEach(geometry => {
+    if (geometry.getType() === 'Polygon') { // Ensure it's a polygon
+
+      geometry.setSymbol(defaultSymbol);
+      //geometry.setOptions({ interactive: false, cursor: 'default', }); 
+
+      /*
+      // Add event listeners for hover effect
+      geometry.on('mousemove', () => {
+        geometry.updateSymbol(hoverSymbol); // Apply hover style
+      });
+
+      geometry.on('mouseout', () => {
+        geometry.updateSymbol(defaultSymbol); // Reset to default
+      });
+      */
+
+    }
+  });
+
+
+  let polygons = geometries;
+
+  // Store a reference to the currently "hovered" polygon
+  let hoveredPolygon = null;
+
+  // Add mousemove listener to the map
+  map.on('mousemove', e => {
+    const mouseCoord = e.coordinate; // Geographic coordinate of the mouse
+    let found = false;
+
+    // Iterate through polygons to find if the point is inside any
+    for (const polygon of polygons) {
+      if (polygon.containsPoint(mouseCoord)) {
+        found = true;
+
+        if (hoveredPolygon !== polygon) {
+          // New polygon hovered, update appearance
+          if (hoveredPolygon) {
+            // Reset the previous polygon
+            hoveredPolygon.updateSymbol(defaultSymbol);
+          }
+
+          // Highlight the currently hovered polygon
+          polygon.updateSymbol(hoverSymbol);
+          hoveredPolygon = polygon; // Update reference
+        }
+        break; // Stop checking once a match is found
+      }
+    }
+
+    if (!found && hoveredPolygon) {
+      // Mouse is not over any polygon, reset the previous one
+      hoveredPolygon.updateSymbol(defaultSymbol);
+      hoveredPolygon = null; // Clear reference
+    }
+  });
+
+
+  regionsLayer.addGeometry(geometries);
+}
+
+function saveSettings() {
+  localStorage.setItem(localDataName, JSON.stringify(localData));
+}
+
+function passesFilter(marker) {
+  // will be replaced with fuzzy search
+  let text = settings.searchText && settings.searchText.toLowerCase() || '';
+  let terms = text.split(' ');
+  let o = marker.feature.properties;
+  let tags = o.spawns || [''];
+  let t = lang[o.title]||'';
+  let d = lang[o.description]||'';
+  let title = [t, d, o.title||'', o.description||'', o.sid||'', o.clue||'', ...tags].join(' ').toLowerCase();
+  return !(text!='' && !terms.every(term=>title.includes(term)));
+}
+
+function filterItems() {
+  // update markers
+  for (marker of markerLayer._geoList) {
+    if (passesFilter(marker)) {
+      marker.show();
+    } else {
+      marker.hide();
+    }
+  }
+}
+
+function clearFilter() {
+  searchControl.value = '';
+  settings.searchText = '';
+  filterItems();
+}
+
+window.onload = function() {
+
+  loadMap();
+
+  let compassControl = new maptalks.control.Compass({position  : 'bottom-right'}).addTo(map)
+    ._compass.onclick = (e)=>map.getBearing()==0 && map.animateTo({ pitch: map.getPitch()==0 ? defaultPitch : 0 })
+
+  window.addEventListener("keydown",function (e) {
+
+    if (e.code == 'Escape' || e.code == 'Enter') {
+      if (e.code=='Escape') {
+        document.querySelector('#map').focus();
+      }
+
+      settings.searchText = searchControl.value;
+      filterItems();
+
+      return;
+    }
+
+    if (document.activeElement != document.querySelector('#map')) {
+      return;
+    }
+
+    if (e.code=='KeyF' && e.ctrlKey) {
+      searchControl.focus();
+      e.preventDefault();
+      return;
+    }
+
+    switch (e.code) {
+      case 'KeyR':
+        if (map.getBearing()!=0) {
+          map.animateTo({ bearing: 0 });
+        } else {
+          map.animateTo({ pitch: map.getPitch()==0 ? defaultPitch : 0 });
+        }
+      break;
+    }
+  });
+
+  fetch('data/Stalker2/Content/_Stalker_2/Localization/language_02.json').then(r=>r.json().then(data=>{
+    lang = data;
+
+    searchControl.setAttribute('placeholder', lang['sid_misc_hint_loot']+'...');
+
+    fetch('types.json').then(r=>r.json().then(data=>{
+      types = data;
+
+      fetch('markers_custom.json').then(r=>r.json().then(loadMarkers));
+      fetch('markers.json').then(r=>r.json().then(loadMarkers));
+      fetch('regions.json').then(r=>r.json().then(loadRegions));
+
+    }));
+
+  }));
+
+}
+
+</script>
+
+
+
