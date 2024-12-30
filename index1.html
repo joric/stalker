@@ -326,7 +326,13 @@ function loadMarkers(data) {
 
     'Scanner':      markers_dir + 'itr7/NotActive/Shadow/Texture_Signal_NotActive_General_Shadow.png',
 
-    'Teleport': 'Texture_Archianomaly'
+    'Teleport': 'Texture_Archianomaly',
+
+    'Clue': markers_dir+'/Itr5/Map/Texture_Stahes_Active_General_Shadow.png',
+
+    'Body': 'Texture_Stahes', //  filter bodies without stash
+
+    // 'Weapon': 'Texture_Stahes', // too many
   }
 
   let markers = [];
@@ -340,6 +346,12 @@ function loadMarkers(data) {
     if (!image) continue;
 
     image = (image.includes('/') ? '':prefix) + image + (image.includes('.png') ? '' :postfix);
+
+    //if (o.clue) image = images['Clue'];
+
+    if (name=='Body' && (!o.spawns || o.spawns[0]=='EmptyQuest' || o.spawns[0]=='NeutralMasterItemGenerator')) continue;
+
+
 
     let coordinates = feature.geometry.coordinates;
 
@@ -547,6 +559,8 @@ window.onload = function() {
       settings.searchText = searchControl.value;
       filterItems();
 
+      saveSettings();
+
       return;
     }
 
@@ -582,6 +596,10 @@ window.onload = function() {
       fetch('markers_custom.json').then(r=>r.json().then(loadMarkers));
       fetch('markers.json').then(r=>r.json().then(loadMarkers));
       fetch('regions.json').then(r=>r.json().then(loadRegions));
+
+      searchControl.value = settings.searchText;
+
+      setTimeout(filterItems, 1000);
 
     }));
 
