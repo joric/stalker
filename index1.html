@@ -624,11 +624,20 @@ window.onload = function() {
 
         localImages['purpleStash'] = URL.createObjectURL(blob);
 
-        fetch('markers_custom.json').then(r=>r.json().then(loadMarkers));
-        fetch('markers.json').then(r=>r.json().then(loadMarkers));
+        let marker_files = [
+          'markers.json',
+          'markers_custom.json',
+        ].map(url=>fetch(url).then(r=>r.json()));
 
-        searchControl.value = settings.searchText;
-        setTimeout(filterItems, 1000);
+        Promise.all(marker_files).then(results => {
+          for (data of results) {
+            loadMarkers(data);
+          }
+
+          searchControl.value = settings.searchText;
+          filterItems();
+
+        });
 
       });
 
