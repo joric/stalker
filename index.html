@@ -470,7 +470,7 @@ function onMarkerClick(e) {
   let json = JSON.stringify(p, null, 2);
   //let text = `<b>${p.properties.title}</b><br/>${p.properties.description}<br/><small>${cell}</small><pre>${json}</pre>`;
   let c = p.geometry.coordinates;
-  let teleport = `UETools_TeleportTo ${~~c[0]}, ${~~c[1]}, ${~~c[2]}`;
+  let teleport = `XTeleportTo ${~~c[0]} ${~~c[1]} ${~~c[2]}`;
   let text = `<pre>${json}</pre>${cell}<br/>${teleport}`;
   let latlng = e.target.getLatLng();
   popup.setContent(text);
