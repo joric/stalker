@@ -1,6 +1,5 @@
 {
   "Upgrade": { "fa": "bed", "bg": "darkslategrey", "match": "Upgrade" },
-  "Weather": { "fa": "sun", "bg": "black", "match": "WeatherSelection|DailyScheduleZone" },
 
   "Ammo": { "fa": "list", "bg": "steelblue", "match": "(?=Ammo|AGA|AHEDP|AVOG|APG7V|(A\\d{3}[\\w]+))(?=.*ESpawnType::(Item|PackOfItems))" },
   "Arch Anomaly": { "fa": "hurricane", "bg": "darkorange", "match": "ArchAnomaly" },
@@ -62,6 +61,6 @@
   "EnemySpawner": { "fa": "skull", "bg": "black", "match": "(?=.*CA_Jerboa|CA_Flesh|CA_Blinddog|CA_Pseudodog|CA_Boar|CA_Cat|CA_Bloodsucker|CA_Snork|CA_Tushkan)(?=.*::ContextualAction)" },
   "Chair": { "fa": "chair", "bg": "black", "match": "(lie|sit|stand)(?=.*ESpawnType::ContextualAction)" },
   "Lair": { "fa": "dungeon", "bg": "black", "match": "Lair" },
-  "Trigger": { "fa": "cube", "bg": "black", "match": "ESpawnType::Trigger", "priority": -1 },
+  "Trigger": { "fa": "cube", "bg": "black", "match": "ESpawnType::Trigger|WeatherSelection|SafeZone|DailyScheduleZone", "priority": -1 },
   "Action": { "fa": "toggle-off", "bg": "black", "match": "ESpawnType::ContextualAction", "priority": -1 }
 }

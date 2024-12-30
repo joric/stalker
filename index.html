@@ -252,7 +252,6 @@ function loadMap(mapId) {
   // a set of coefficients a, b, c, d for transforming a point of a form (x,y) into (a*x + b, c*y + d)
   crs.transformation = new L.Transformation(factor, dx, (m.flip_y ? -1 : 1) *  factor, dy); // Invert the y-axis
 
-
   map = L.map('map', {
     crs: crs,
     zoom: 1, // mandatory, need to set zoom and center first (c)
