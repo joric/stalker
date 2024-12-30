@@ -301,6 +301,12 @@ function loadMarkers(data) {
   }
   */
 
+  let markers_dir = 'data/Stalker2/Content/GameLite/FPS_Game/UI/UIIcons/Markers/';
+
+  let prefix = markers_dir+'itr6/NotActive/Shadow/';
+
+  let postfix = '_NotActive_General_Shadow.png'
+
   images = {
     'Location':      'T_LocationOrigin_NotActive_Shadow.png',
 
@@ -318,14 +324,10 @@ function loadMarkers(data) {
     'Safe':       'Texture_Stahes',
     'Upgrade':      'Texture_Stahes',
 
-    'Scanner':      'data/Markers/itr7/NotActive/Shadow/Texture_Signal_NotActive_General_Shadow.png',
+    'Scanner':      markers_dir + 'itr7/NotActive/Shadow/Texture_Signal_NotActive_General_Shadow.png',
 
     'Teleport': 'Texture_Archianomaly'
   }
-
-  let prefix = 'data/Stalker2/Content/GameLite/FPS_Game/UI/UIIcons/Markers/itr6/NotActive/Shadow/';
-  let postfix = '_NotActive_General_Shadow.png'
-
 
   let markers = [];
 
