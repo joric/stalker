@@ -4,7 +4,7 @@ from collections import Counter
 
 cache_dir = 'C:/Temp/Exports'
 world_path = 'Stalker2/Content/_Stalker_2/maps/_Stalker2_WorldMap/WorldMap_WP'
-classes = ['BP_PlayerStash_C','BP_Bed_OnBed_C','BP_TopazScanner']
+classes = ['BP_PlayerStash_C','BP_Bed_OnBed_C','BP_TopazScanner', 'BP_Teleport']
 
 counter = Counter()
 
@@ -25,6 +25,14 @@ def get_cells(package_path):
                     out.append(cell)
                     counter[key.split('_UAID')[0]] += 1
 
+                    package_path = os.path.join(world_path,'_Generated_', cell)
+                    filename = os.path.normpath(os.path.join(cache_dir, package_path)) + '.json'
+
+                    if not os.path.exists(filename):
+                        print('NOT CACHED', cell, 'need for', key)
+                        continue
+
+
     print('found items', counter)
     return out
 
@@ -34,6 +42,10 @@ def get_markers(cells):
     for cell in cells:
         package_path = os.path.join(world_path,'_Generated_', cell)
         filename = os.path.normpath(os.path.join(cache_dir, package_path)) + '.json'
+
+        if not os.path.exists(filename):
+            continue
+
         data = json.load(open(filename, 'r'))
         for o in data:
             type = o['Type']
@@ -59,13 +71,6 @@ def get_markers(cells):
 # partitions are read from WorldMap_WP and then exported with FModel as json (one by one)
 
 cells = set(get_cells(world_path))
-
-for cell in cells:
-    package_path = os.path.join(world_path,'_Generated_', cell)
-    filename = get_filename(package_path)
-    if not os.path.exists(filename):
-        print('NOT CACHED', cell)
-
 features = get_markers(cells)
 
 j = {"type": "FeatureCollection", 'features': features }
