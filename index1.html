@@ -143,6 +143,12 @@ let mapId = 's2hoc';
 
 let searchControl = null;
 
+let markersDir = 'data/Stalker2/Content/GameLite/FPS_Game/UI/UIIcons/Markers/';
+let markersPrefix = markersDir+'itr6/NotActive/Shadow/';
+let markersPostfix = '_NotActive_General_Shadow.png'
+
+let localImages = {};
+
 function loadMap() {
 
   searchControl = document.querySelector('.search-box input');
@@ -301,12 +307,6 @@ function loadMarkers(data) {
   }
   */
 
-  let markers_dir = 'data/Stalker2/Content/GameLite/FPS_Game/UI/UIIcons/Markers/';
-
-  let prefix = markers_dir+'itr6/NotActive/Shadow/';
-
-  let postfix = '_NotActive_General_Shadow.png'
-
   images = {
     'Location':      'T_LocationOrigin_NotActive_Shadow.png',
 
@@ -324,11 +324,11 @@ function loadMarkers(data) {
     'Safe':       'Texture_Stahes',
     'Upgrade':      'Texture_Stahes',
 
-    'Scanner':      markers_dir + 'itr7/NotActive/Shadow/Texture_Signal_NotActive_General_Shadow.png',
+    'Scanner':      markersDir + 'itr7/NotActive/Shadow/Texture_Signal_NotActive_General_Shadow.png',
 
     'Teleport': 'Texture_Archianomaly',
 
-    'Clue': markers_dir+'/Itr5/Map/Texture_Stahes_Active_General_Shadow.png',
+    'Clue': markersDir+'/Itr5/Map/Texture_Stahes_Active_General_Shadow.png',
 
     'Body': 'Texture_Stahes', //  filter bodies without stash
 
@@ -345,15 +345,13 @@ function loadMarkers(data) {
 
     if (!image) continue;
 
-    image = (image.includes('/') ? '':prefix) + image + (image.includes('.png') ? '' :postfix);
-
-    //if (o.clue) image = images['Clue'];
+    image = (image.includes('/') ? '': markersPrefix) + image + (image.includes('.png') ? '' : markersPostfix);
 
     if (name=='Body' && (!o.spawns || o.spawns[0]=='EmptyQuest' || o.spawns[0]=='NeutralMasterItemGenerator')) continue;
 
-
-
     let coordinates = feature.geometry.coordinates;
+
+    if (o.clue) image = localImages['purpleStash'];
 
     var marker = new maptalks.Marker(coordinates,
       {
@@ -542,6 +540,33 @@ function clearFilter() {
   filterItems();
 }
 
+
+function applyTint(src, r,g,b, callback) {
+  const canvas = document.createElement('canvas');
+  const ctx = canvas.getContext('2d');
+  const img = new Image();
+  img.crossOrigin = 'Anonymous';
+  img.src = src;
+  img.onload = () => {
+    canvas.width = img.width;
+    canvas.height = img.height;
+    ctx.drawImage(img, 0, 0);
+    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const data = imageData.data;
+    for (let i = 0; i < data.length; i += 4) {
+
+      data[i + 0] = data[i + 0] * r / 255;
+      data[i + 1] = data[i + 1] * g / 255;
+      data[i + 2] = data[i + 2] * b / 255;
+
+    }
+    ctx.putImageData(imageData, 0, 0);
+    canvas.toBlob((blob) => {
+      callback(blob);
+    }, 'image/png');
+  };
+}
+
 window.onload = function() {
 
   loadMap();
@@ -590,16 +615,24 @@ window.onload = function() {
 
     searchControl.setAttribute('placeholder', lang['sid_misc_hint_loot']+'...');
 
+    fetch('regions.json').then(r=>r.json().then(loadRegions));
+
     fetch('types.json').then(r=>r.json().then(data=>{
       types = data;
 
-      fetch('markers_custom.json').then(r=>r.json().then(loadMarkers));
-      fetch('markers.json').then(r=>r.json().then(loadMarkers));
-      fetch('regions.json').then(r=>r.json().then(loadRegions));
+      let src = markersPrefix + 'Texture_Stahes' + markersPostfix;
 
-      searchControl.value = settings.searchText;
+      applyTint(src, 179, 128, 255, blob => {
 
-      setTimeout(filterItems, 1000);
+        localImages['purpleStash'] = URL.createObjectURL(blob);
+
+        fetch('markers_custom.json').then(r=>r.json().then(loadMarkers));
+        fetch('markers.json').then(r=>r.json().then(loadMarkers));
+
+        searchControl.value = settings.searchText;
+        setTimeout(filterItems, 1000);
+
+      });
 
     }));
 
