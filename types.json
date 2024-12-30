@@ -59,7 +59,10 @@
   "Unique Weapon": { "fa": "gun", "bg": "saddlebrown" },
 
   "Shelter": { "fa": "person-shelter", "bg": "grey", "fg": "darkorange", "match": "Shelter" },
-  "Weapon": { "fa": "gun", "bg": "steelblue", "match": "Scope|Gun|Grenade(?=.*::(Item|PackOfItems))" },
+
+  "Weapon": { "fa": "gun", "bg": "steelblue", "match": "Scope|Gun(?=.*::(Item|PackOfItems))" },
+  "Grenade": { "fa": "gun", "bg": "steelblue", "match": "Grenade(?=.*::(Item|PackOfItems))" },
+
   "Guitar": { "fa": "guitar", "bg": "cornflowerblue", "match": "Guitar(?=.*ESpawnType::Item)" },
   "EnemySpawner": { "fa": "skull", "bg": "black", "match": "(?=.*CA_Jerboa|CA_Flesh|CA_Blinddog|CA_Pseudodog|CA_Boar|CA_Cat|CA_Bloodsucker|CA_Snork|CA_Tushkan)(?=.*::ContextualAction)" },
   "Chair": { "fa": "chair", "bg": "black", "match": "(lie|sit|stand)(?=.*ESpawnType::ContextualAction)" },
