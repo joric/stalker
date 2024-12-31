@@ -459,7 +459,9 @@ function loadMarkers(data) {
     });
     
     popup.addTo(marker);
- 
+
+    popup.addEventListener('contextmenu', function(e) { e.stopPropagation()}, true); // enable default context menu
+
     markers.push(marker);
 
   /*
