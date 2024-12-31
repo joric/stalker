@@ -59,11 +59,12 @@ html, body {
 
   //opacity: 0.85;
 
-  border-radius: 0.5em;
-  border: 1px #333 solid;
+  border-radius: 5px;
   padding: 0.75em;
 
   max-width: 300px;
+
+  //box-shadow: 3px 3px 20px black;
 
 }
 
@@ -390,7 +391,7 @@ function showTooltip(e) {
   var spaceRight = mapRect.width - screenPosition.x;
   var spaceLeft = screenPosition.x;
 
-  let gap = iconSize/4;
+  let gap = iconSize/3;
 
   // Position the tooltip
   if (spaceRight > tooltipWidth) {
