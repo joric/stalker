@@ -316,6 +316,22 @@ function loadMap() {
 
 }
 
+function clearSelection() {
+  if (window.getSelection) {
+    // Modern browsers
+    const selection = window.getSelection();
+    if (selection.removeAllRanges) {
+      selection.removeAllRanges();
+    } else if (selection.collapseToEnd) {
+      // For older WebKit browsers
+      selection.collapseToEnd();
+    }
+  } else if (document.selection) {
+    // Older versions of Internet Explorer
+    document.selection.empty();
+  }
+}
+
 tmTooltip = null;
 
 // Function to show the tooltip
@@ -410,6 +426,7 @@ function showTooltip(e) {
 function hideTooltip() {
   var tooltip = document.getElementById('map-tooltip');
   tooltip.style.display = 'none';
+  clearSelection();
 }
 
 function getIconName(o) {
