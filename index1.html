@@ -47,6 +47,31 @@ html, body {
   white-space: nowrap;
 }
 
+#map-tooltip {
+  background-color: white;
+  color: black;
+
+  display:none;
+  position:absolute;
+  border:1px solid black;
+  padding:5px;
+  border-radius:3px;
+  max-width: 300px;
+  opacity: 0.85;
+  border-radius: 0.5em;
+  border: 1px #333 solid;
+  padding: 0.5em;
+}
+
+.overflow-container {
+  width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+
+
 /* ----------------------------------------------- */
 
 .search-container {
@@ -125,8 +150,7 @@ html, body {
   </div>
 </div>
 
-<div id="map-tooltip" style="display:none; position:absolute; pointer-events:none; background-color:white; border:1px solid black; padding:5px; border-radius:3px;"></div>
-
+<div id="map-tooltip"></div>
 
 <script>
 
@@ -283,9 +307,22 @@ function loadMap() {
 
 }
 
+tmTooltip = null;
+
 // Function to show the tooltip
 function showTooltip(e) {
   var tooltip = document.getElementById('map-tooltip');
+
+  clearTimeout(tmTooltip);
+
+  tooltip.onmouseover = function(e) {
+    clearTimeout(tmTooltip);
+  };
+
+  tooltip.onmouseout = function(e) {
+    tmTooltip = setTimeout(hideTooltip, 25);
+  };
+
 
   // Show the tooltip to calculate the size
   // Since browsers do not repaint the screen during synchronous JavaScript execution,
@@ -294,11 +331,39 @@ function showTooltip(e) {
 
   let marker = e.target;
 
-  let data = marker.feature.properties;
+  let o = marker.feature.properties;
+
+
+  let title = o.title;
+  let subtitle = o.description;//'sid_misc_pda_Map_MarkerCache';
+
+  if (o.clue) {
+    title = 'sid_stashes_'+o.clue+'_name'
+    subtitle = 'sid_stashes_'+o.clue+'_description';
+  }
+
+  title = lang[title] || title;
+  subtitle = lang[subtitle] || subtitle;
+
+  let content = `<b>${title}</b><hr/>${subtitle}`;
+  
+  //+'<pre>' + JSON.stringify(o, null, 2) + '</pre>';
+
+  if (o.spawns) {
+    content +='<hr/><div class="overflow-container">';
+
+    for (spawn of o.spawns) {
+      content += spawn + '<br/>';
+    }
+
+    content +='</div>';
+  }
+
+
+  tooltip.innerHTML = content;
+
 
   let c = marker.getCoordinates();
-
-  tooltip.innerHTML = '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
 
 
   // Get the screen coordinates of the event
@@ -328,7 +393,7 @@ function showTooltip(e) {
     tooltip.style.left =  mapRect.left + screenPosition.x - tooltipWidth - gap + 'px';
   }
 
-  tooltip.style.top = mapRect.top + screenPosition.y - (tooltipHeight/2) + 'px';
+  tooltip.style.top = mapRect.top + screenPosition.y - tooltipHeight/2 + 'px';
 
 }
 
@@ -477,9 +542,9 @@ function loadMarkers(data) {
     });
 
     marker.on('mouseout', function () {
-      hideTooltip();
+      clearTimeout(tmTooltip);
+      tmTooltip = setTimeout(hideTooltip, 25);
     });
-
   }
 
   map.on('moving', hideTooltip);
