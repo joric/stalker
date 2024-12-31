@@ -30,6 +30,7 @@ html, body {
   margin: 0;
   background-color: #222;
   font-family:sans-serif;
+  overflow: hidden;
 }
 #map {
   height: 100%;
@@ -123,6 +124,9 @@ html, body {
     <span class="search-icon search-cancel" title="Cancel">&times;</span>
   </div>
 </div>
+
+<div id="map-tooltip" style="display:none; position:absolute; pointer-events:none; background-color:white; border:1px solid black; padding:5px; border-radius:3px;"></div>
+
 
 <script>
 
@@ -279,6 +283,61 @@ function loadMap() {
 
 }
 
+// Function to show the tooltip
+function showTooltip(e) {
+  var tooltip = document.getElementById('map-tooltip');
+
+  // Show the tooltip to calculate the size
+  // Since browsers do not repaint the screen during synchronous JavaScript execution,
+  // temporarily changing the display property within a script will not cause the element to flash visibly on the screen.
+  tooltip.style.display = 'block';
+
+  let marker = e.target;
+
+  let data = marker.feature.properties;
+
+  let c = marker.getCoordinates();
+
+  tooltip.innerHTML = '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
+
+
+  // Get the screen coordinates of the event
+  var screenPosition = map.coordinateToContainerPoint(c);
+
+
+  // Determine the tooltip position
+  var mapContainer = map.getContainer();
+  var mapRect = mapContainer.getBoundingClientRect();
+  var tooltipWidth = tooltip.offsetWidth;
+  var tooltipHeight = tooltip.offsetHeight;
+
+  //console.log('tooltip size', tooltipWidth, tooltipHeight);
+
+  // Calculate available space
+  var spaceRight = mapRect.width - screenPosition.x;
+  var spaceLeft = screenPosition.x;
+
+  let gap = iconSize/4;
+
+  // Position the tooltip
+  if (spaceRight > tooltipWidth) {
+    // Place tooltip to the right
+    tooltip.style.left = mapRect.left + screenPosition.x + gap + 'px';
+  } else {
+    // Place tooltip to the left
+    tooltip.style.left =  mapRect.left + screenPosition.x - tooltipWidth - gap + 'px';
+  }
+
+  tooltip.style.top = mapRect.top + screenPosition.y - (tooltipHeight/2) + 'px';
+
+}
+
+// Function to hide the tooltip
+function hideTooltip() {
+  var tooltip = document.getElementById('map-tooltip');
+  tooltip.style.display = 'none';
+}
+
 function getIconName(o) {
   let tags = o.spawns || [''];
   let s = [o.title, o.description, ...tags].join('/');
@@ -388,12 +447,6 @@ function loadMarkers(data) {
       lines = [...lines, ...o.spawns];
     }
 
-    const tooltip = new maptalks.ui.ToolTip( lines.join('<br/>'), {
-      showTimeout: 50,
-      height: height * lines.length,
-      cssName: 'maptalks-tooltip',
-    }).addTo(marker);
-
     let c = feature.geometry.coordinates;
     let teleport = `XTeleportTo ${c[0]} ${c[1]} ${c[2]}`;
 
@@ -408,7 +461,26 @@ function loadMarkers(data) {
     popup.addTo(marker);
  
     markers.push(marker);
+
+  /*
+      const tooltip = new maptalks.ui.ToolTip( lines.join('<br/>'), {
+        showTimeout: 50,
+        height: height * lines.length,
+        cssName: 'maptalks-tooltip',
+      }).addTo(marker);
+  */
+
+    marker.on('mouseover', function (e) {
+      showTooltip(e);
+    });
+
+    marker.on('mouseout', function () {
+      hideTooltip();
+    });
+
   }
+
+  map.on('moving', hideTooltip);
 
   console.log('markers:', markers.length);
 }
