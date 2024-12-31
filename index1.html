@@ -17,7 +17,9 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/maptalks/1.0.1/maptalks.min.js" integrity="sha512-nMJHLgEm7hUp/e10n9R/xUz3yMmvx98LQlddhCZl3g0b4JO8NG1SjmcOA1JiFNuxRgseKDzdABcGy4qGZlGwEQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 <!--
+<script type="text/javascript" src="https://unpkg.com/maptalks-gl/dist/maptalks-gl.js"></script>
 <link href="js/lib/maptalks-gl/maptalks.css" rel="stylesheet">
+<script type="text/javascript" src="https://unpkg.com/maptalks-gl/dist/maptalks-gl.js"></script>
 <script type="text/javascript" src="js/lib/maptalks-gl/maptalks-gl.js"></script>
 <script type="text/javascript" src="https://unpkg.com/maptalks.markercluster/dist/maptalks.markercluster.min.js"></script>
 -->
@@ -241,6 +243,7 @@ function loadMap() {
       fullExtent : { top: top, left: left, bottom: bottom, right: right },
     },
 
+
     baseLayer: new maptalks.TileLayer('base', {
       maxAvailableZoom: 7,
       urlTemplate: 'https://joric.github.io/stalker2_tileset/tiles/{z}/{x}/{y}.jpg',
@@ -270,8 +273,13 @@ function loadMap() {
 
   map.setMaxExtent(extent);
 
-  regionsLayer = new maptalks.VectorLayer('vector',{interactive: false, cursor: 'default' }).addTo(map);
+  //regionsLayer = new maptalks.PolygonLayer('regions',{ // containsPoint doesn't work for PolygonLayer
+  regionsLayer = new maptalks.VectorLayer('regions',{
+    interactive: false,
+    cursor: 'default'
+  }).addTo(map);
 
+  //markerLayer = new maptalks.VectorLayer('markers',{
   markerLayer = new maptalks.VectorLayer('markers',{
     sortByDistanceToCamera: true,
     forceRenderOnMoving: true,
@@ -367,6 +375,11 @@ function showTooltip(e) {
     subtitle = 'sid_stashes_'+o.clue+'_description';
   }
 
+  if (o.description=='ESpawnType::Item') {
+    title = 'sid_items_' + title + '_name';
+  }
+
+
   title = lang[title] || title;
   subtitle = lang[subtitle] || subtitle;
 
@@ -388,12 +401,11 @@ function showTooltip(e) {
   tooltip.innerHTML = content;
 
 
-  let c = marker.getCoordinates();
-
-
   // Get the screen coordinates of the event
-  var screenPosition = map.coordinateToContainerPoint(c);
+  let c = marker.getCoordinates();
+  //var screenPosition = coordinateToContainerPoint(map, c);
 
+  var screenPosition = map.coordinateToContainerPoint(c);
 
   // Determine the tooltip position
   var mapContainer = map.getContainer();
@@ -421,6 +433,41 @@ function showTooltip(e) {
   tooltip.style.top = mapRect.top + screenPosition.y - tooltipHeight/2 + 'px';
 
 }
+
+function coordinateToContainerPoint(map, coordinate) {
+    // Convert the coordinate to a container point at ground level
+    const groundPoint = map.coordinateToContainerPoint(coordinate);
+
+    let altitude = coordinate.z;
+
+    // Get the map's pitch (tilt) in degrees
+    const pitch = map.getPitch();
+
+    // Convert pitch to radians for trigonometric calculations
+    const pitchRad = (pitch * Math.PI) / 180;
+
+    // Get the map's current zoom level
+    const zoom = map.getZoom();
+
+    // Calculate the scale factor based on the zoom level
+    // This is an approximation; adjust as needed
+    const scale = Math.pow(2, zoom);
+
+    let cs = (altitude * scale * Math.cos(pitchRad));
+    let ss = (altitude * scale * Math.sin(pitchRad));
+
+    console.log(pitchRad, cs, ss);
+
+    // Adjust the y position based on altitude and pitch
+    const adjustedY = groundPoint.y - cs;
+
+    // Adjust the x position based on altitude and pitch (optional, for horizontal shifts)
+    const adjustedX = groundPoint.x + ss;
+
+    // Return the adjusted point
+    return new maptalks.Point(adjustedX, adjustedY);
+}
+
 
 // Function to hide the tooltip
 function hideTooltip() {
@@ -602,7 +649,7 @@ function loadRegions(geojson) {
 
   const defaultSymbol = {
     'lineColor': '#fff',    // Border color
-    'lineWidth': 0.75,            // Border width
+    'lineWidth': 1,            // Border width
     'polygonFill': '#fff',  // Fill color
     'polygonOpacity': 0.1      // Fill opacity
   };
@@ -648,6 +695,7 @@ function loadRegions(geojson) {
     // Iterate through polygons to find if the point is inside any
     for (const polygon of polygons) {
       if (polygon.containsPoint(mouseCoord)) {
+
         found = true;
 
         if (hoveredPolygon !== polygon) {
