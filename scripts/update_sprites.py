@@ -28,12 +28,12 @@ def crop_and_resize(img, size, resize=True):
 
     if resize:
         # Resize the image, maintaining aspect ratio
-        return ImageOps.pad(img_cropped, (iconSize, iconSize), method=Image.Resampling.LANCZOS, centering=(0.5, 1.0))
+        return ImageOps.pad(img_cropped, (size, size), method=Image.Resampling.LANCZOS, centering=(0.5, 1.0))
 
     original_image = img_cropped
 
     original_width, original_height = original_image.size
-    target_width, target_height = iconSize, iconSize
+    target_width, target_height = size, size
 
     # Calculate padding
     padding_left = max((target_width - original_width) // 2, 0)
@@ -75,12 +75,13 @@ gw = 44
 gh = 46
 tw = 40
 th = 44
+iconSize2 = 32
 with Image.open(filename) as img_atlas:
     for i in range(5):
         for j in range(4):
             img = img_atlas.crop((i*gw, j*gh, i*gw + tw, j*gh+th))
 
-            img_resized = crop_and_resize(img, iconSize, False)
+            img_resized = crop_and_resize(img, iconSize2, False)
 
             base_name = f'CompassMarker_{i}_{j}.png'
             output_path = os.path.normpath(os.path.join(out_dir, base_name))

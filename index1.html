@@ -596,16 +596,19 @@ function Marker(feature) {
   let targetLayer = markerLayer;
   let opacity = 1.0;
 
+  let size = iconSize;
+
   if (image.includes('CompassMarker')) {
     opacity = 0.5;
+    size = 32;
   }
 
   var marker = new maptalks.Marker(coordinates,
     {
       'symbol' : {
         'markerFile'   : image,
-        'markerWidth'  : iconSize,
-        'markerHeight' : iconSize,
+        'markerWidth'  : size,
+        'markerHeight' : size,
         'markerDx'     : 0,
         'markerDy'     : 0,
         'markerOpacity': opacity,
@@ -849,7 +852,7 @@ window.onload = function() {
 
   fetch('regions.json').then(r=>r.json()).then(loadRegions);
   fetch('data/Localization/language_02.json').then(r=>r.json()).then(data => {lang = data});
-
+  
   // need types to load markers, the rest can be loaded asyncronously
   fetch('types.json').then(r=>r.json()).then(data =>{
     types = data;
