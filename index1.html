@@ -293,7 +293,7 @@ function loadMap() {
   map.setMaxExtent(extent);
 
   //regionsLayer = new maptalks.PolygonLayer('regions',{ // containsPoint doesn't work for PolygonLayer
-  regionsLayer = new maptalks.VectorLayer('regions',{
+  regionsLayer = new maptalks.PolygonLayer('regions',{
     interactive: false,
     cursor: 'default'
   }).addTo(map);
@@ -537,6 +537,7 @@ function loadMarkers(data) {
     let image = images[name];
 
     if (!image) continue;
+    //if (!image) image = 'T_LocationOrigin_NotActive_Shadow.png'; // reveal all markers (60k+)
 
     image = (image.includes('/') ? '': markersPrefix) + image + (image.includes('.png') ? '' : markersPostfix);
 
