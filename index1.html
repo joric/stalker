@@ -423,10 +423,14 @@ function showTooltip(e) {
 
 
   // Get the screen coordinates of the event
-  let c = marker.getCoordinates();
+  //let c = marker.getCoordinates();
   //var screenPosition = coordinateToContainerPoint(map, c);
+  //var screenPosition = map.coordinateToContainerPoint(c);
 
-  var screenPosition = map.coordinateToContainerPoint(c);
+  //console.log('tooltip size', tooltipWidth, tooltipHeight);
+
+  let c = marker.getContainerExtent();
+  let screenPosition = {x: c.pxmin, y: c.pymin};
 
   // Determine the tooltip position
   var mapContainer = map.getContainer();
@@ -434,7 +438,6 @@ function showTooltip(e) {
   var tooltipWidth = tooltip.offsetWidth;
   var tooltipHeight = tooltip.offsetHeight;
 
-  //console.log('tooltip size', tooltipWidth, tooltipHeight);
 
   // Calculate available space
   var spaceRight = mapRect.width - screenPosition.x;
@@ -456,41 +459,6 @@ function showTooltip(e) {
   tooltip.style.top = mapRect.top + screenPosition.y - tooltipHeight/2 + 'px';
 
 }
-
-function coordinateToContainerPoint(map, coordinate) {
-    // Convert the coordinate to a container point at ground level
-    const groundPoint = map.coordinateToContainerPoint(coordinate);
-
-    let altitude = coordinate.z;
-
-    // Get the map's pitch (tilt) in degrees
-    const pitch = map.getPitch();
-
-    // Convert pitch to radians for trigonometric calculations
-    const pitchRad = (pitch * Math.PI) / 180;
-
-    // Get the map's current zoom level
-    const zoom = map.getZoom();
-
-    // Calculate the scale factor based on the zoom level
-    // This is an approximation; adjust as needed
-    const scale = Math.pow(2, zoom);
-
-    let cs = (altitude * scale * Math.cos(pitchRad));
-    let ss = (altitude * scale * Math.sin(pitchRad));
-
-    console.log(pitchRad, cs, ss);
-
-    // Adjust the y position based on altitude and pitch
-    const adjustedY = groundPoint.y - cs;
-
-    // Adjust the x position based on altitude and pitch (optional, for horizontal shifts)
-    const adjustedX = groundPoint.x + ss;
-
-    // Return the adjusted point
-    return new maptalks.Point(adjustedX, adjustedY);
-}
-
 
 // Function to hide the tooltip
 function hideTooltip() {
