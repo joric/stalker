@@ -183,10 +183,10 @@ html, body {
 
 <script>
 
-let enableAltitude = true;
-let heightFactor = 1.0;
+let enableAltitude = false;
+let heightFactor = 0.0;
 
-let iconSize = 48;
+let iconSize = 42;
 
 let startPitch = 0;
 let startZoom = 2;
@@ -540,6 +540,11 @@ function loadMarkers(data) {
     'Weapon':   'Texture_Stahes', // no grenades, only guns and scopes
 
     // 'Weapon': 'Texture_Stahes', // too many
+
+    'Anomaly': 'tile_3_2.png',
+    'Enemy': 'tile_0_1.png',
+    'Character': 'tile_2_1.png',
+    'Radiation': 'tile_1_2.png',
   }
 
   let markers = [];
