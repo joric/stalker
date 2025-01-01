@@ -206,10 +206,10 @@ let searchControl = null;
 let localImages = {};
 
 function loadMap() {
+  settings = localData[mapId] || settings;
 
   searchControl = document.querySelector('.search-box input');
-
-  settings = localData[mapId] || settings;
+  searchControl.value = settings.searchText;
 
   let w = h = 812900;
 
@@ -351,7 +351,7 @@ function loadMarkersIdle(data, animated=false) {
       requestIdleCallback(processBatch); // Schedule the next batch during idle time
     } else {
       markers.push(...batch);
-      animated && markerLayer.addGeometry(batch);
+      animated && markerLayer.addGeometry(batch.filter(passesFilter));
       !animated && markerLayer.addGeometry(markers.filter(passesFilter));
       markersLoadedCallback();
     }
@@ -765,13 +765,23 @@ function passesFilter(marker) {
 }
 
 function filterItems() {
-  for (marker of markerLayer._geoList) {
+
+  let count = 0;
+
+  let addList = [];
+  let removeList = [];
+
+  for (marker of markers) {
     if (passesFilter(marker)) {
-      marker.show();
+      count += 1;
+      addList.push(marker);
     } else {
-      marker.hide();
+      removeList.push(marker);
     }
   }
+
+  markerLayer.removeGeometry(removeList);
+  markerLayer.addGeometry(addList);
 }
 
 function clearFilter() {
