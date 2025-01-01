@@ -450,8 +450,6 @@ function showTooltip(e) {
   
   //+'<pre>' + JSON.stringify(o, null, 2) + '</pre>';
 
-  content += `<br/><small>${marker.feature.properties.sid}</small>`;
-
   if (o.spawns) {
     content +='<hr/><div class="overflow-container">';
 
@@ -462,11 +460,14 @@ function showTooltip(e) {
     content +='</div>';
   }
 
+
+  content += `<hr/><small>SID: ${marker.feature.properties.sid}</small>`;
+
   let t = marker.feature.geometry.coordinates;
-  let teleport = `XTeleportTo ${t[0]} ${t[1]} ${t[2]}`;
+  let teleport = `${t[0]} ${t[1]} ${t[2]}`;
 
 
-  content += `<hr/><small>${teleport}</small>`;
+  content += `<br/><small>XTeleportTo ${teleport}</small>`;
 
   tooltip.innerHTML = content;
 
