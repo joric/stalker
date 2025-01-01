@@ -70,7 +70,6 @@ html, body {
 }
 
 .overflow-container {
-
   max-width: 300px;
   width: 100%;
   overflow: hidden;
@@ -78,6 +77,27 @@ html, body {
   text-overflow: ellipsis;
 }
 
+.popup-left::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: 100%; /* Position the triangle to the left of the popup */
+  margin-top: -8px; /* Half the height of the triangle */
+  border-width: 8px;
+  border-style: solid;
+  border-color: transparent #f9f9f9 transparent transparent;
+}
+
+.popup-right::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 100%; /* Position the triangle to the right of the popup */
+  margin-top: -8px; /* Half the height of the triangle */
+  border-width: 8px;
+  border-style: solid;
+  border-color: transparent transparent transparent #f9f9f9;
+}
 
 
 /* ----------------------------------------------- */
@@ -160,7 +180,7 @@ html, body {
   </div>
 </div>
 
-<div id="map-tooltip"></div>
+<div id="map-tooltip" class="popup-left"></div>
 
 <script>
 
@@ -399,6 +419,8 @@ function showTooltip(e) {
 
   tooltip.innerHTML = content;
 
+  //console.log(e);
+
 
   // Get the screen coordinates of the event
   let c = marker.getCoordinates();
@@ -418,15 +440,17 @@ function showTooltip(e) {
   var spaceRight = mapRect.width - screenPosition.x;
   var spaceLeft = screenPosition.x;
 
-  let gap = iconSize/3;
+  let gap = iconSize/3+2;
 
   // Position the tooltip
   if (spaceRight > tooltipWidth) {
     // Place tooltip to the right
     tooltip.style.left = mapRect.left + screenPosition.x + gap + 'px';
+    tooltip.className = 'popup-left';
   } else {
     // Place tooltip to the left
     tooltip.style.left =  mapRect.left + screenPosition.x - tooltipWidth - gap + 'px';
+    tooltip.className = 'popup-right';
   }
 
   tooltip.style.top = mapRect.top + screenPosition.y - tooltipHeight/2 + 'px';
