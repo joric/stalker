@@ -493,7 +493,9 @@ function showTooltip(e) {
   var spaceRight = mapRect.width - screenPosition.x;
   var spaceLeft = screenPosition.x;
 
-  let gap = iconSize/2+5;
+  //let gap = iconSize/2+5;
+
+  let gap = marker._sizeSymbol.markerWidth/2+5;
 
   // Position the tooltip
   if (spaceRight > tooltipWidth) {
