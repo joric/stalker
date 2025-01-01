@@ -54,7 +54,6 @@ html, body {
 
   display:none;
   position:absolute;
-  border:1px solid black;
   padding:5px;
   border-radius:3px;
 
@@ -187,7 +186,7 @@ html, body {
 let enableAltitude = true;
 let heightFactor = 1.0;
 
-let iconSize = 75;
+let iconSize = 48;
 
 let startPitch = 0;
 let startZoom = 2;
@@ -205,10 +204,6 @@ let settings = {};
 let mapId = 's2hoc';
 
 let searchControl = null;
-
-let markersDir = 'data/Stalker2/Content/GameLite/FPS_Game/UI/UIIcons/Markers/';
-let markersPrefix = markersDir+'itr6/NotActive/Shadow/';
-let markersPostfix = '_NotActive_General_Shadow.png'
 
 let localImages = {};
 
@@ -444,7 +439,7 @@ function showTooltip(e) {
   var spaceRight = mapRect.width - screenPosition.x;
   var spaceLeft = screenPosition.x;
 
-  let gap = iconSize/3+2;
+  let gap = iconSize/2+5;
 
   // Position the tooltip
   if (spaceRight > tooltipWidth) {
@@ -481,6 +476,16 @@ function getIconName(o) {
 
 function loadMarkers(data) {
 
+  //let markersDir = 'data/Stalker2/Content/GameLite/FPS_Game/UI/UIIcons/Markers/';
+  //let markersPrefix = markersDir+'itr6/NotActive/Shadow/';
+  //let markersPostfix = '_NotActive_General_Shadow.png'
+
+  let markersDir = 'data/sprites/';
+  let markersPrefix = markersDir+'';
+  let markersPostfix = '_NotActive_General_Shadow.png'
+
+
+
   //D:\Projects\github\stalker\trunk\data\Markers\itr8\NotActive\NoShadow\Texture_Anomaly_NotActive_General_noShadow.png
 
   /*
@@ -516,7 +521,7 @@ function loadMarkers(data) {
     'Bed':        'Texture_Bed',
     'Medic':      'Texture_Medecine',
     'Stash':      'Texture_Stahes',
-    'Scanner':      markersDir + 'itr7/NotActive/Shadow/Texture_Signal_NotActive_General_Shadow.png',
+    'Scanner':    'Texture_Signal',
     'Teleport': 'Texture_Archianomaly',
 
     'Safe':     'Texture_Stahes',
@@ -596,7 +601,7 @@ var marker = new maptalks.GLTFMarker(coordinates, {
       title: o.title,
       autoOpenOn: 'click',
       autoCloseOn: 'click',
-      dy: iconSize/4,
+      dy: iconSize/2+5,
     });
     
     popup.addTo(marker);
@@ -831,44 +836,27 @@ window.onload = function() {
     }
   });
 
-  fetch('data/Stalker2/Content/_Stalker_2/Localization/language_02.json').then(r=>r.json().then(data=>{
-    lang = data;
+  let promises = [
+    'data/Localization/language_02.json',
+    'regions.json',
+    'types.json',
+    'markers.json',
+    'markers_custom.json',
+  ].map(url=>fetch(url).then(r=>r.json()));
 
-    searchControl.setAttribute('placeholder', lang['sid_misc_hint_loot']+'...');
+  Promise.all(promises).then(results => {
 
-    fetch('regions.json').then(r=>r.json().then(loadRegions));
+    [lang, regions, types, markers, markers_custom] = results;
 
-    fetch('types.json').then(r=>r.json().then(data=>{
-      types = data;
+    loadRegions(regions);
+    loadMarkers(markers);
+    loadMarkers(markers_custom);
 
-      let src = markersPrefix + 'Texture_Stahes' + markersPostfix;
+    searchControl.value = settings.searchText;
+    filterItems();
 
-      applyTint(src, 179, 128, 255, blob => {
-
-        localImages['purpleStash'] = URL.createObjectURL(blob);
-
-        let marker_files = [
-          'markers.json',
-          'markers_custom.json',
-        ].map(url=>fetch(url).then(r=>r.json()));
-
-        Promise.all(marker_files).then(results => {
-          for (data of results) {
-            loadMarkers(data);
-          }
-
-          searchControl.value = settings.searchText;
-          filterItems();
-
-        });
-
-      });
-
-    }));
-
-  }));
-
-}
+  });
+};
 
 </script>
 
