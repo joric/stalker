@@ -229,8 +229,6 @@ function loadMap() {
 
   let [left,top,right,bottom] = mapBounds;
 
-  let extent = new maptalks.Extent(left, top, right, bottom);
-
   if (!settings.center) {
     [settings.zoom, settings.pitch, settings.bearing, settings.center] = [startZoom, startPitch, 0, mapCenter];
   }
@@ -243,7 +241,6 @@ function loadMap() {
     pitch: settings.pitch,
     bearing: settings.bearing,
     center: settings.center,
-    maxExtent: extent,
     maxPitch: 80,
 
     maxZoom: 19,
@@ -282,9 +279,13 @@ function loadMap() {
     //seamlessZoom: true,
     doubleClickZoom: true,
 
+    //maxExtent: extent,
+
   });
 
-  map.setMaxExtent(extent);
+  //let gap = 25000;
+  //let extent = new maptalks.Extent(left-gap, top-gap, right+gap, bottom+gap);
+  //map.setMaxExtent(extent);
 
   groupLayer = new maptalks.GroupGLLayer('group', []).addTo(map);
   regionsLayer = new maptalks.PolygonLayer('regions').addTo(map);
