@@ -582,7 +582,7 @@ function Marker(feature) {
   let o = feature.properties;
   let name = getIconName(o);
 
-  if (o.spawns) name = 'Stash';
+  if (o.spawns && o.spawns.length>0) name = 'Stash';
 
   let image = images[name] || compass_images[name] || misc_images[name] || compass_images['Question'];
 
