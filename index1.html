@@ -188,6 +188,7 @@ let startZoom = 2;
 let defaultPitch = 45;
 let autoAltitude = true;
 let markerLayer = null;
+let markerLayer2 = null;
 let lineLayer = null;
 let regionsLayer = null;
 let map = null;
@@ -295,24 +296,19 @@ function loadMap() {
   }).addTo(map);
   */
 
+  markerLayer2 = new maptalks.PointLayer('markers2',{
+    sortByDistanceToCamera: true,
+    forceRenderOnMoving: true,
+    forceRenderOnRotating: true,
+    enableAltitude : enableAltitude,
+  }).addTo(map);
 
-  //markerLayer = new maptalks.GLTFLayer('markers',{
-  //markerLayer = new maptalks.VectorLayer('markers',{
   markerLayer = new maptalks.PointLayer('markers',{
     sortByDistanceToCamera: true,
     forceRenderOnMoving: true,
     forceRenderOnRotating: true,
-
     enableAltitude : enableAltitude,
-    // draw altitude
-    drawAltitude : {
-      lineWidth : 2,
-      lineColor : '#fff',
-      lineOpacity: 0.5,
-    },
-
   }).addTo(map);
-
 
   map.on('viewchange', e=> {
     settings.center = [e.new.center[0],e.new.center[1]];
@@ -323,6 +319,15 @@ function loadMap() {
     if (enableAltitude && autoAltitude) {
       markerLayer.setOptions({enableAltitude: map.getPitch()!=0});
     }
+
+    /*
+    if (e.new.zoom > 6) {
+      console.log('adding layer 2');
+      markerLayer2.addTo(map);
+    } else {
+      map.removeLayer(markerLayer2);
+    } */
+
     saveSettings();
 
   });
@@ -563,6 +568,14 @@ function loadMarkers(data) {
 
     coordinates = [coordinates[0], coordinates[1], coordinates[2]*0.1]; // cannot disable altitude for now
 
+    let targetLayer = markerLayer;
+    let opacity = 1.0;
+
+    if (image.includes('CompassMarker')) {
+      opacity = 0.5;
+      targetLayer = markerLayer2;
+    }
+
     var marker = new maptalks.Marker(coordinates,
       {
         'symbol' : {
@@ -571,21 +584,11 @@ function loadMarkers(data) {
           'markerHeight' : iconSize,
           'markerDx'     : 0,
           'markerDy'     : 0,
-          'markerOpacity': image.includes('CompassMarker_') ? 0.5 : 1.0,
+          'markerOpacity': opacity,
           markerVerticalAlignment: 'middle',
         },
       }
-    ).addTo(markerLayer);
-
-/*
-var marker = new maptalks.GLTFMarker(coordinates, {
-    symbol : {
-        rotation: [90, 0, 0],
-        scale: [2.0, 2.0, 2.0],
-    }
-}).addTo(markerLayer);
-*/
-
+    ).addTo(targetLayer);
 
     marker.feature = feature;
 
@@ -763,11 +766,14 @@ function passesFilter(marker) {
 
 function filterItems() {
   // update markers
-  for (marker of markerLayer._geoList) {
-    if (passesFilter(marker)) {
-      marker.show();
-    } else {
-      marker.hide();
+
+  for (layer of [markerLayer, markerLayer2]) {
+    for (marker of layer._geoList) {
+      if (passesFilter(marker)) {
+        marker.show();
+      } else {
+        marker.hide();
+      }
     }
   }
 }
