@@ -541,10 +541,10 @@ function loadMarkers(data) {
 
     // 'Weapon': 'Texture_Stahes', // too many
 
-    'Anomaly': 'tile_3_2.png',
-    'Enemy': 'tile_0_1.png',
-    'Character': 'tile_2_1.png',
-    'Radiation': 'tile_1_2.png',
+    'Anomaly':   'CompassMarker_3_2.png',
+    'Enemy':     'CompassMarker_0_1.png',
+    'Character': 'CompassMarker_2_1.png',
+    'Radiation': 'CompassMarker_1_2.png',
   }
 
   let markers = [];
@@ -576,7 +576,7 @@ function loadMarkers(data) {
           'markerHeight' : iconSize,
           'markerDx'     : 0,
           'markerDy'     : 0,
-          'markerOpacity': image.includes('tile_') ? 0.5 : 1.0,
+          'markerOpacity': image.includes('CompassMarker_') ? 0.5 : 1.0,
           markerVerticalAlignment: 'middle',
         },
       }

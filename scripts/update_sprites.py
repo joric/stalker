@@ -71,8 +71,8 @@ for folder in folders:
 # cut the compass atlas
 img_path = 'Stalker2/Content/GameLite/FPS_Game/UI/UIIcons/Markers/Textures/CompassMarker.png'
 filename = os.path.normpath(os.path.join(cache_dir, img_path))
-gw = 47
-gh = 47
+gw = 44
+gh = 46
 tw = 40
 th = 44
 with Image.open(filename) as img_atlas:
@@ -82,7 +82,7 @@ with Image.open(filename) as img_atlas:
 
             img_resized = crop_and_resize(img, iconSize, False)
 
-            base_name = f'tile_{i}_{j}.png'
+            base_name = f'CompassMarker_{i}_{j}.png'
             output_path = os.path.normpath(os.path.join(out_dir, base_name))
             img_resized.save(output_path, format='PNG')
             print(f"Saved: {output_path}")
