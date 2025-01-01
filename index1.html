@@ -16,6 +16,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/maptalks/1.0.1/maptalks.min.css" integrity="sha512-DgQNythEg69g9pToBBZQZMXn/xM8ZF/96sutg5c6ODgxargtpteM9+HxACffdWzrzK5YgAdVs8CfucHm5dvbIA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 <script type="text/javascript" src="https://unpkg.com/maptalks-gl/dist/maptalks-gl.js"></script>
 
+
 <!--
 <script src="https://cdnjs.cloudflare.com/ajax/libs/maptalks/1.0.1/maptalks.min.js" integrity="sha512-nMJHLgEm7hUp/e10n9R/xUz3yMmvx98LQlddhCZl3g0b4JO8NG1SjmcOA1JiFNuxRgseKDzdABcGy4qGZlGwEQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <link href="js/lib/maptalks-gl/maptalks.css" rel="stylesheet">
@@ -188,7 +189,7 @@ let startZoom = 2;
 let defaultPitch = 45;
 let autoAltitude = true;
 let markerLayer = null;
-let markerLayer2 = null;
+let groupLayer = null;
 let lineLayer = null;
 let regionsLayer = null;
 let map = null;
@@ -284,31 +285,8 @@ function loadMap() {
 
   map.setMaxExtent(extent);
 
-  //regionsLayer = new maptalks.PolygonLayer('regions',{ // containsPoint doesn't work for PolygonLayer
-  regionsLayer = new maptalks.PolygonLayer('regions',{
-    interactive: false,
-    cursor: 'default'
-  }).addTo(map);
-
-  /*
-  lineLayer = new maptalks.LineLayer('lines',{
-    sortByDistanceToCamera: true,
-  }).addTo(map);
-  */
-
-  markerLayer2 = new maptalks.PointLayer('markers2',{
-    sortByDistanceToCamera: true,
-    forceRenderOnMoving: true,
-    forceRenderOnRotating: true,
-    enableAltitude : enableAltitude,
-  }).addTo(map);
-
-  markerLayer = new maptalks.PointLayer('markers',{
-    sortByDistanceToCamera: true,
-    forceRenderOnMoving: true,
-    forceRenderOnRotating: true,
-    enableAltitude : enableAltitude,
-  }).addTo(map);
+  groupLayer = new maptalks.GroupGLLayer('group', []).addTo(map);
+  regionsLayer = new maptalks.PolygonLayer('regions').addTo(map);
 
   map.on('viewchange', e=> {
     settings.center = [e.new.center[0],e.new.center[1]];
@@ -320,22 +298,17 @@ function loadMap() {
       markerLayer.setOptions({enableAltitude: map.getPitch()!=0});
     }
 
-    /*
-    if (e.new.zoom > 6) {
-      console.log('adding layer 2');
-      markerLayer2.addTo(map);
-    } else {
-      map.removeLayer(markerLayer2);
-    } */
-
     saveSettings();
 
   });
 
   setTimeout(function() {
+    /*
     if (enableAltitude && autoAltitude) {
       markerLayer.setOptions({enableAltitude: map.getPitch()!=0});
     }
+    */
+
   },500);
 
   document.querySelector('.search-cancel').onclick = e=> {
@@ -346,7 +319,51 @@ function loadMap() {
     document.getElementById('map').focus(); // needs tabindex on the map element
   });
 
+  map.on('moving', hideTooltip);
+
+  markerLayer = new maptalks.PointLayer('points').addTo(groupLayer);
 }
+
+function markersLoadedCallback() {
+  //console.log('Markers loaded:', markers.length);
+  //console.timeEnd("markers");
+  //updateCount();
+}
+
+let markers = [];
+
+function loadMarkersIdle(data, animated=false) {
+  // ought to be fastest
+  const features = data.features;
+  let currentIndex = 0;
+
+  function processBatch(deadline) {
+    batch = [];
+    while (deadline.timeRemaining() > 0 && currentIndex < features.length) {
+      batch.push(Marker(features[currentIndex++]));
+    }
+
+    //console.log(`Processed ${currentIndex}/${features.length} markers`);
+
+    if (currentIndex < features.length) {
+      markers.push(...batch);
+      animated && markerLayer.addGeometry(batch.filter(passesFilter));
+      requestIdleCallback(processBatch); // Schedule the next batch during idle time
+    } else {
+      markers.push(...batch);
+      animated && markerLayer.addGeometry(batch);
+      !animated && markerLayer.addGeometry(markers.filter(passesFilter));
+      markersLoadedCallback();
+    }
+  }
+
+  requestIdleCallback(processBatch, { timeout: 1000 });
+}
+
+function loadMarkers(data) {
+  loadMarkersIdle(data, false); // animation is really slow on gl layers
+}
+
 
 function clearSelection() {
   if (window.getSelection) {
@@ -362,6 +379,27 @@ function clearSelection() {
     // Older versions of Internet Explorer
     document.selection.empty();
   }
+}
+
+function showPopup(e) {
+
+  showTooltip(e);
+
+  console.log(e.target.feature.geometry.coordinates);
+  console.log(e.target.feature.properties);
+
+  /*
+  var popup = new maptalks.ui.InfoWindow({
+    content: '<pre>' + JSON.stringify(feature, null, 2) + '</pre>' + teleport,
+    title: o.title,
+    autoOpenOn: 'click',
+    autoCloseOn: 'click',
+    dy: iconSize/2+5,
+  });
+    
+  popup.addTo(marker);
+  popup.addEventListener('contextmenu', function(e) { e.stopPropagation()}, true); // enable default context menu
+  */
 }
 
 tmTooltip = null;
@@ -421,6 +459,12 @@ function showTooltip(e) {
     content +='</div>';
   }
 
+
+  let t = marker.feature.geometry.coordinates;
+  let teleport = `XTeleportTo ${t[0]} ${t[1]} ${t[2]}`;
+
+
+  content += `<hr/><small>${teleport}</small>`;
 
   tooltip.innerHTML = content;
 
@@ -483,45 +527,14 @@ function getIconName(o) {
 }
 
 
-function loadMarkers(data) {
-
-  //let markersDir = 'data/Stalker2/Content/GameLite/FPS_Game/UI/UIIcons/Markers/';
-  //let markersPrefix = markersDir+'itr6/NotActive/Shadow/';
-  //let markersPostfix = '_NotActive_General_Shadow.png'
-
+function Marker(feature) {
   let markersDir = 'data/sprites/';
   let markersPrefix = markersDir+'';
   let markersPostfix = '_NotActive_General_Shadow.png'
 
-
-
-  //D:\Projects\github\stalker\trunk\data\Markers\itr8\NotActive\NoShadow\Texture_Anomaly_NotActive_General_noShadow.png
-
-  /*
-  images = {
-    //'Base':      'data/Markers/itr6/Active/Shadow/Texture_HabLead_Active_General_Shadow.png',
-    'Location':      'data/Markers/itr6/Active/Shadow/T_LocationOrigin_Active_Shadow.png',
-    'Arch Anomaly':      'data/Markers/itr6/Active/Shadow/Texture_Archianomaly_Active_General_Shadow.png',
-    'Guide':      'data/Markers/itr6/Active/Shadow/Texture_Guide_Active_General_Shadow.png',
-    'Technician':      'data/Markers/itr6/Active/Shadow/Texture_Mechanical_Active_General_Shadow.png',
-    'Trader':      'data/Markers/itr6/Active/Shadow/Texture_Trader_Active_General_Shadow.png',
-    'Personal Stash':      'data/Markers/itr6/Active/Shadow/Texture_Storage_Active_General_Shadow.png',
-    'Bed':        'data/Markers/itr6/Active/Shadow/Texture_Bed_Active_General_Shadow.png',
-    'Medic':      'data/Markers/itr6/Active/Shadow/Texture_Medecine_Active_General_Shadow.png',
-    'Stash':      'data/Markers/itr6/Active/Shadow/Texture_Stahes_Active_General_Shadow.png',
-    'Safe':'data/Markers/itr6/Active/Shadow/Texture_Stahes_Active_General_Shadow.png',
-    'Stash': 'data/Markers/Itr5/Map/Texture_Stahes_Active_General_Shadow.png',
-    //'Upgrade':      'data/Markers/itr6/Active/Shadow/Texture_Habar_Active_General_Shadow.png',
-    'Upgrade':      'data/Markers/itr6/Active/Shadow/Texture_Stahes_Active_General_Shadow.png',
-    'Scanner':      'data/Markers/itr7/NotActive/Shadow/Texture_Signal_NotActive_General_Shadow.png',
-  }
-  */
-
   images = {
     'Location':      'T_LocationOrigin_NotActive_Shadow.png',
-
     'Base':      'Texture_Camp',
-
     'Arch Anomaly':      'Texture_Archianomaly',
     'Guide':      'Texture_Guide',
     'Technician':      'Texture_Mechanical',
@@ -532,119 +545,99 @@ function loadMarkers(data) {
     'Stash':      'Texture_Stahes',
     'Scanner':    'Texture_Signal',
     'Teleport': 'Texture_Archianomaly',
-
     'Safe':     'Texture_Stahes',
-    'Body':     'Texture_Stahes', //  filter bodies without stash
-
     'Upgrade':  'Texture_Storage',
     'Weapon':   'Texture_Stahes', // no grenades, only guns and scopes
+  }
 
-    // 'Weapon': 'Texture_Stahes', // too many
-
-    'Anomaly':   'CompassMarker_3_2.png',
-    'Enemy':     'CompassMarker_0_1.png',
-    'Character': 'CompassMarker_2_1.png',
+  let compass_images = {
+    'Enemy': 'CompassMarker_0_0.png',
+    'Body': 'CompassMarker_0_1.png',
+    'Sustenance': 'CompassMarker_0_2.png',
+    'Compass_Empty': 'CompassMarker_0_3.png',
+    'Compass_Target': 'CompassMarker_1_0.png',
+    'Fire': 'CompassMarker_1_1.png',
     'Radiation': 'CompassMarker_1_2.png',
+    'Lock': 'CompassMarker_1_3.png',
+    'Action': 'CompassMarker_2_0.png',
+    'Character': 'CompassMarker_2_1.png',
+    'Compass_Locked': 'CompassMarker_2_2.png',
+    'Question': 'CompassMarker_2_3.png',
+    'Box': 'CompassMarker_3_0.png',
+    'Unlocked': 'CompassMarker_3_1.png',
+    'Anomaly': 'CompassMarker_3_2.png',
+    'Cave': 'CompassMarker_3_3.png',
+    'Money': 'CompassMarker_4_0.png',
+    'Repair': 'CompassMarker_4_1.png',
+    'Rest': 'CompassMarker_4_2.png',
+    'Misc': 'CompassMarker_4_3.png',
+  };
+
+
+  let o = feature.properties;
+  let name = getIconName(o);
+
+  if (o.spawns) name = 'Stash';
+
+  let image = images[name] || compass_images[name] || compass_images['Question'];
+
+  image = (image.includes('/') ? '': markersPrefix) + image + (image.includes('.png') ? '' : markersPostfix);
+
+  let coordinates = feature.geometry.coordinates;
+
+  //if (o.clue) image = localImages['purpleStash'];
+
+  coordinates = [coordinates[0], coordinates[1], coordinates[2]*0.1]; // cannot disable altitude for now
+
+  let targetLayer = markerLayer;
+  let opacity = 1.0;
+
+  if (image.includes('CompassMarker')) {
+    opacity = 0.5;
   }
 
-  let markers = [];
-
-  for (feature of data.features) {
-    let o = feature.properties;
-    let name = getIconName(o);
-
-    let image = images[name];
-
-    if (!image) continue;
-    //if (!image) image = 'T_LocationOrigin_NotActive_Shadow.png'; // reveal all markers (60k+)
-
-    image = (image.includes('/') ? '': markersPrefix) + image + (image.includes('.png') ? '' : markersPostfix);
-
-    if (name=='Body' && (!o.spawns || o.spawns[0]=='EmptyQuest' || o.spawns[0]=='NeutralMasterItemGenerator')) continue;
-
-    let coordinates = feature.geometry.coordinates;
-
-    //if (o.clue) image = localImages['purpleStash'];
-
-    coordinates = [coordinates[0], coordinates[1], coordinates[2]*0.1]; // cannot disable altitude for now
-
-    let targetLayer = markerLayer;
-    let opacity = 1.0;
-
-    if (image.includes('CompassMarker')) {
-      opacity = 0.5;
-      targetLayer = markerLayer2;
+  var marker = new maptalks.Marker(coordinates,
+    {
+      'symbol' : {
+        'markerFile'   : image,
+        'markerWidth'  : iconSize,
+        'markerHeight' : iconSize,
+        'markerDx'     : 0,
+        'markerDy'     : 0,
+        'markerOpacity': opacity,
+        markerVerticalAlignment: 'middle',
+      },
     }
+  );
 
-    var marker = new maptalks.Marker(coordinates,
-      {
-        'symbol' : {
-          'markerFile'   : image,
-          'markerWidth'  : iconSize,
-          'markerHeight' : iconSize,
-          'markerDx'     : 0,
-          'markerDy'     : 0,
-          'markerOpacity': opacity,
-          markerVerticalAlignment: 'middle',
-        },
-      }
-    ).addTo(targetLayer);
+  marker.feature = feature;
 
-    marker.feature = feature;
+  let title = lang[o.title] || lang['sid_stashes_'+o.clue+'_name'] || o.title
 
-    let title = lang[o.title] || lang['sid_stashes_'+o.clue+'_name'] || o.title
+  let header = `<b>${title}</b>`;
 
-    let header = `<b>${title}</b>`;
+  let height = 24;
+  let lines = [header];
 
-    let height = 24;
-    let lines = [header];
-
-    if (o.clue) {
-      lines = [...lines, 'clue: ' + o.clue];
-    }
-
-    if (o.spawns) {
-      lines = [...lines, ...o.spawns];
-    }
-
-    let c = feature.geometry.coordinates;
-    let teleport = `XTeleportTo ${c[0]} ${c[1]} ${c[2]}`;
-
-    var popup = new maptalks.ui.InfoWindow({
-      content: '<pre>' + JSON.stringify(feature, null, 2) + '</pre>' + teleport,
-      title: o.title,
-      autoOpenOn: 'click',
-      autoCloseOn: 'click',
-      dy: iconSize/2+5,
-    });
-    
-    popup.addTo(marker);
-
-    popup.addEventListener('contextmenu', function(e) { e.stopPropagation()}, true); // enable default context menu
-
-    markers.push(marker);
-
-  /*
-      const tooltip = new maptalks.ui.ToolTip( lines.join('<br/>'), {
-        showTimeout: 50,
-        height: height * lines.length,
-        cssName: 'maptalks-tooltip',
-      }).addTo(marker);
-  */
-
-    marker.on('mouseover', function (e) {
-      showTooltip(e);
-    });
-
-    marker.on('mouseout', function () {
-      clearTimeout(tmTooltip);
-      tmTooltip = setTimeout(hideTooltip, 25);
-    });
+  if (o.clue) {
+    lines = [...lines, 'clue: ' + o.clue];
   }
 
-  map.on('moving', hideTooltip);
+  if (o.spawns) {
+    lines = [...lines, ...o.spawns];
+  }
 
-  //console.log('markers:', markers.length);
+  let c = feature.geometry.coordinates;
+  let teleport = `XTeleportTo ${c[0]} ${c[1]} ${c[2]}`;
+
+  marker.on('click', showPopup);
+  marker.on('mouseover', showTooltip);
+  marker.on('mouseout', function () {
+    clearTimeout(tmTooltip);
+    tmTooltip = setTimeout(hideTooltip, 25);
+  });
+
+  return marker;
 }
 
 
@@ -765,15 +758,11 @@ function passesFilter(marker) {
 }
 
 function filterItems() {
-  // update markers
-
-  for (layer of [markerLayer, markerLayer2]) {
-    for (marker of layer._geoList) {
-      if (passesFilter(marker)) {
-        marker.show();
-      } else {
-        marker.hide();
-      }
+  for (marker of markerLayer._geoList) {
+    if (passesFilter(marker)) {
+      marker.show();
+    } else {
+      marker.hide();
     }
   }
 }
@@ -854,13 +843,19 @@ window.onload = function() {
     }
   });
 
+  fetch('regions.json').then(r=>r.json()).then(loadRegions);
+  fetch('data/Localization/language_02.json').then(r=>r.json()).then(data => {lang = data});
+
   // need types to load markers, the rest can be loaded asyncronously
   fetch('types.json').then(r=>r.json()).then(data =>{
     types = data;
-    fetch('markers.json').then(r=>r.json()).then(loadMarkers);
-    fetch('markers_custom.json').then(r=>r.json()).then(loadMarkers);
-    fetch('regions.json').then(r=>r.json()).then(loadRegions);
-    fetch('data/Localization/language_02.json').then(r=>r.json()).then(data => {lang = data});
+
+    Promise.all(['markers.json', 'markers_custom.json'].map(url=>fetch(url).then(r=>r.json()))).then(results => {
+      // merge features
+      let data = results[0];
+      data.features = [...data.features, ...results[1].features];
+      loadMarkers(data);
+    });
   });
 
 };
