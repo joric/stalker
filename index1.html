@@ -183,8 +183,8 @@ html, body {
 
 <script>
 
-let enableAltitude = false;
-let heightFactor = 0.0;
+let enableAltitude = true;
+let heightFactor = 1.0;
 
 let iconSize = 42;
 
@@ -565,6 +565,8 @@ function loadMarkers(data) {
     let coordinates = feature.geometry.coordinates;
 
     //if (o.clue) image = localImages['purpleStash'];
+
+    coordinates = [coordinates[0], coordinates[1], coordinates[2]*0.1]; // cannot disable altitude for now
 
     var marker = new maptalks.Marker(coordinates,
       {
