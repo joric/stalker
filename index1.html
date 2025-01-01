@@ -576,9 +576,9 @@ function loadMarkers(data) {
           'markerHeight' : iconSize,
           'markerDx'     : 0,
           'markerDy'     : 0,
+          'markerOpacity': image.includes('tile_') ? 0.5 : 1.0,
           markerVerticalAlignment: 'middle',
         },
-        checkTransparent: false,
       }
     ).addTo(markerLayer);
 
