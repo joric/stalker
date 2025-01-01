@@ -14,10 +14,10 @@
 <meta property="og:description" content="Interactive Map" />
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/maptalks/1.0.1/maptalks.min.css" integrity="sha512-DgQNythEg69g9pToBBZQZMXn/xM8ZF/96sutg5c6ODgxargtpteM9+HxACffdWzrzK5YgAdVs8CfucHm5dvbIA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-<script src="https://cdnjs.cloudflare.com/ajax/libs/maptalks/1.0.1/maptalks.min.js" integrity="sha512-nMJHLgEm7hUp/e10n9R/xUz3yMmvx98LQlddhCZl3g0b4JO8NG1SjmcOA1JiFNuxRgseKDzdABcGy4qGZlGwEQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script type="text/javascript" src="https://unpkg.com/maptalks-gl/dist/maptalks-gl.js"></script>
 
 <!--
-<script type="text/javascript" src="https://unpkg.com/maptalks-gl/dist/maptalks-gl.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/maptalks/1.0.1/maptalks.min.js" integrity="sha512-nMJHLgEm7hUp/e10n9R/xUz3yMmvx98LQlddhCZl3g0b4JO8NG1SjmcOA1JiFNuxRgseKDzdABcGy4qGZlGwEQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <link href="js/lib/maptalks-gl/maptalks.css" rel="stylesheet">
 <script type="text/javascript" src="js/lib/maptalks-gl/maptalks-gl.js"></script>
 <script type="text/javascript" src="https://unpkg.com/maptalks.markercluster/dist/maptalks.markercluster.min.js"></script>
@@ -299,7 +299,8 @@ function loadMap() {
   }).addTo(map);
 
   //markerLayer = new maptalks.GLTFLayer('markers',{
-  markerLayer = new maptalks.VectorLayer('markers',{
+  //markerLayer = new maptalks.VectorLayer('markers',{
+  markerLayer = new maptalks.PointLayer('markers',{
     sortByDistanceToCamera: true,
     forceRenderOnMoving: true,
     forceRenderOnRotating: true,
@@ -402,7 +403,7 @@ function showTooltip(e) {
   title = lang[title] || title;
   subtitle = lang[subtitle] || subtitle;
 
-  let content = `<b>${title}</b><hr/>${subtitle}`;
+  let content = `<b>${title}</b><br/>${subtitle}`;
   
   //+'<pre>' + JSON.stringify(o, null, 2) + '</pre>';
 
