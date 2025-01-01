@@ -192,8 +192,8 @@ let markerLayer2 = null;
 let lineLayer = null;
 let regionsLayer = null;
 let map = null;
-let types = null;
-let lang = null;
+let types = {};
+let lang = {};
 
 let localDataName = 'joricsStalkerMaps';
 let localData = JSON.parse(localStorage.getItem(localDataName)) || {};
@@ -644,7 +644,7 @@ function loadMarkers(data) {
 
   map.on('moving', hideTooltip);
 
-  console.log('markers:', markers.length);
+  //console.log('markers:', markers.length);
 }
 
 
@@ -854,26 +854,15 @@ window.onload = function() {
     }
   });
 
-  let promises = [
-    'data/Localization/language_02.json',
-    'regions.json',
-    'types.json',
-    'markers.json',
-    'markers_custom.json',
-  ].map(url=>fetch(url).then(r=>r.json()));
-
-  Promise.all(promises).then(results => {
-
-    [lang, regions, types, markers, markers_custom] = results;
-
-    loadRegions(regions);
-    loadMarkers(markers);
-    loadMarkers(markers_custom);
-
-    searchControl.value = settings.searchText;
-    filterItems();
-
+  // need types to load markers, the rest can be loaded asyncronously
+  fetch('types.json').then(r=>r.json()).then(data =>{
+    types = data;
+    fetch('markers.json').then(r=>r.json()).then(loadMarkers);
+    fetch('markers_custom.json').then(r=>r.json()).then(loadMarkers);
+    fetch('regions.json').then(r=>r.json()).then(loadRegions);
+    fetch('data/Localization/language_02.json').then(r=>r.json()).then(data => {lang = data});
   });
+
 };
 
 </script>
