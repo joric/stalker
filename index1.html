@@ -193,6 +193,7 @@ let startZoom = 2;
 let defaultPitch = 45;
 let autoAltitude = true;
 let markerLayer = null;
+let lineLayer = null;
 let regionsLayer = null;
 let map = null;
 let types = null;
@@ -293,6 +294,13 @@ function loadMap() {
     cursor: 'default'
   }).addTo(map);
 
+  /*
+  lineLayer = new maptalks.LineLayer('lines',{
+    sortByDistanceToCamera: true,
+  }).addTo(map);
+  */
+
+
   //markerLayer = new maptalks.GLTFLayer('markers',{
   //markerLayer = new maptalks.VectorLayer('markers',{
   markerLayer = new maptalks.PointLayer('markers',{
@@ -309,6 +317,7 @@ function loadMap() {
     },
 
   }).addTo(map);
+
 
   map.on('viewchange', e=> {
     settings.center = [e.new.center[0],e.new.center[1]];
@@ -659,7 +668,7 @@ function loadRegions(geojson) {
     'lineColor': '#fff',    // Border color
     'lineWidth': 1,            // Border width
     'polygonFill': '#fff',  // Fill color
-    'polygonOpacity': 0.1      // Fill opacity
+    'polygonOpacity': 0.0      // Fill opacity
   };
 
   // Define the hover style
