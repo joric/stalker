@@ -71,7 +71,7 @@ html, body {
   text-overflow: ellipsis;
 }
 
-.popup-left::before {
+.arrow-left::before {
   content: "";
   position: absolute;
   top: 50%;
@@ -82,7 +82,7 @@ html, body {
   border-color: transparent white transparent transparent;
 }
 
-.popup-right::after {
+.arrow-right::after {
   content: "";
   position: absolute;
   top: 50%;
@@ -174,7 +174,7 @@ html, body {
   </div>
 </div>
 
-<div id="map-tooltip" class="popup-left"></div>
+<div id="map-tooltip" class="arrow-left"></div>
 
 <script>
 
@@ -449,11 +449,11 @@ function showTooltip(e) {
   if (spaceRight > tooltipWidth) {
     // Place tooltip to the right
     tooltip.style.left = mapRect.left + screenPosition.x + gap + 'px';
-    tooltip.className = 'popup-left';
+    tooltip.className = 'arrow-left';
   } else {
     // Place tooltip to the left
     tooltip.style.left =  mapRect.left + screenPosition.x - tooltipWidth - gap + 'px';
-    tooltip.className = 'popup-right';
+    tooltip.className = 'arrow-right';
   }
 
   tooltip.style.top = mapRect.top + screenPosition.y - tooltipHeight/2 + 'px';
