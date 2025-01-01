@@ -568,9 +568,14 @@ function Marker(feature) {
     'Anomaly': 'CompassMarker_3_2.png',
     'Cave': 'CompassMarker_3_3.png',
     'Money': 'CompassMarker_4_0.png',
-    'Repair': 'CompassMarker_4_1.png',
+    'Medical': 'CompassMarker_4_1.png',
     'Rest': 'CompassMarker_4_2.png',
     'Misc': 'CompassMarker_4_3.png',
+  };
+
+  let misc_images = {
+    'Chair': 'CompassMarker_2_0.png',
+    'Unique Enemy': 'CompassMarker_0_0.png',
   };
 
 
@@ -579,7 +584,7 @@ function Marker(feature) {
 
   if (o.spawns) name = 'Stash';
 
-  let image = images[name] || compass_images[name] || compass_images['Question'];
+  let image = images[name] || compass_images[name] || misc_images[name] || compass_images['Question'];
 
   image = (image.includes('/') ? '': markersPrefix) + image + (image.includes('.png') ? '' : markersPostfix);
 
