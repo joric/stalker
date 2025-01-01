@@ -328,6 +328,8 @@ function markersLoadedCallback() {
   //console.log('Markers loaded:', markers.length);
   //console.timeEnd("markers");
   //updateCount();
+
+  filterItems();
 }
 
 let markers = [];
@@ -347,12 +349,12 @@ function loadMarkersIdle(data, animated=false) {
 
     if (currentIndex < features.length) {
       markers.push(...batch);
-      animated && markerLayer.addGeometry(batch.filter(passesFilter));
+      animated && markerLayer.addGeometry(batch);
       requestIdleCallback(processBatch); // Schedule the next batch during idle time
     } else {
       markers.push(...batch);
-      animated && markerLayer.addGeometry(batch.filter(passesFilter));
-      !animated && markerLayer.addGeometry(markers.filter(passesFilter));
+      animated && markerLayer.addGeometry(batch);
+      !animated && markerLayer.addGeometry(markers);
       markersLoadedCallback();
     }
   }
@@ -765,23 +767,13 @@ function passesFilter(marker) {
 }
 
 function filterItems() {
-
-  let count = 0;
-
-  let addList = [];
-  let removeList = [];
-
-  for (marker of markers) {
-    if (passesFilter(marker)) {
-      count += 1;
-      addList.push(marker);
+  for (marker of markerLayer._geoList) {
+    if (passesFilter(marker)){
+      marker.show();
     } else {
-      removeList.push(marker);
+      marker.hide();
     }
   }
-
-  markerLayer.removeGeometry(removeList);
-  markerLayer.addGeometry(addList);
 }
 
 function clearFilter() {
