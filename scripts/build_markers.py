@@ -171,6 +171,10 @@ def export_markers():
             #if 'FastTravelLocationPrototypes.cfg' not in filename: continue
             #if '105F11AB4ED95DD96B4D8BA45A8F2EB8.cfg' not in filename: continue
 
+            # ignore all the files that don't have WorldMap_WP in the name
+            if 'WorldMap_WP' not in filename: continue
+
+
             parser = UnrealCFGParser(filename)
             cfg = parser.parse()
             #print(json.dumps(cfg, indent=2))
@@ -212,6 +216,12 @@ def export_markers():
                 name = os.path.split(filename)[1]
 
                 prop = { 'title': title, 'description': description }
+
+                #area = data.get('LevelName')
+                #if area and 'WorldMap_WP' not in area:
+                #    continue
+                #if area: prop['area'] = area
+
 
                 sid = data.get('SID')
                 if sid:
