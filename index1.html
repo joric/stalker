@@ -13,14 +13,19 @@
 <meta property="og:title" content="Joric's Stalker" />
 <meta property="og:description" content="Interactive Map" />
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/maptalks/1.0.1/maptalks.min.css" integrity="sha512-DgQNythEg69g9pToBBZQZMXn/xM8ZF/96sutg5c6ODgxargtpteM9+HxACffdWzrzK5YgAdVs8CfucHm5dvbIA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-<script type="text/javascript" src="https://unpkg.com/maptalks-gl/dist/maptalks-gl.js"></script>
+<link href="js/lib/maptalks-gl/maptalks.css" rel="stylesheet">
+<script type="text/javascript" src="js/lib/maptalks-gl/maptalks-gl.js"></script>
 
 
 <!--
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/maptalks/1.0.1/maptalks.min.css" integrity="sha512-DgQNythEg69g9pToBBZQZMXn/xM8ZF/96sutg5c6ODgxargtpteM9+HxACffdWzrzK5YgAdVs8CfucHm5dvbIA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/maptalks/1.0.1/maptalks.min.js" integrity="sha512-nMJHLgEm7hUp/e10n9R/xUz3yMmvx98LQlddhCZl3g0b4JO8NG1SjmcOA1JiFNuxRgseKDzdABcGy4qGZlGwEQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<link href="js/lib/maptalks-gl/maptalks.css" rel="stylesheet">
-<script type="text/javascript" src="js/lib/maptalks-gl/maptalks-gl.js"></script>
+<script type="text/javascript" src="https://unpkg.com/maptalks-gl/dist/maptalks-gl.js"></script>
+
+
 <script type="text/javascript" src="https://unpkg.com/maptalks.markercluster/dist/maptalks.markercluster.min.js"></script>
 -->
 
@@ -189,7 +194,6 @@ let startPitch = 0;
 let startZoom = 2;
 let defaultPitch = 45;
 let autoAltitude = true;
-let markerLayer = null;
 let groupLayer = null;
 let lineLayer = null;
 let regionsLayer = null;
@@ -198,19 +202,25 @@ let types = {};
 let lang = {};
 
 let localDataName = 'joricsStalkerMaps';
-let localData = JSON.parse(localStorage.getItem(localDataName)) || {};
-let settings = {};
+let localData = JSON.parse(localStorage.getItem(localDataName))||{};
 let mapId = 's2hoc';
 
 let searchControl = null;
 
 let localImages = {};
+let firstRun = false;
 
 function loadMap() {
-  settings = localData[mapId] || settings;
+
+  if (!localData[mapId]) {
+    localData[mapId] = { activeItems: {'base':true, 'locations': true, 'stashes': true} };
+  }
+
+  settings = localData[mapId];
+
 
   searchControl = document.querySelector('.search-box input');
-  searchControl.value = settings.searchText;
+  searchControl.value = settings.searchText||'';
 
   let w = h = 812900;
 
@@ -254,7 +264,7 @@ function loadMap() {
     },
 
 
-    baseLayer: new maptalks.TileLayer('base', {
+    baseLayer: new maptalks.TileLayer('Stalker 2 (1.0.3)', {
       maxAvailableZoom: 7,
       urlTemplate: 'https://joric.github.io/stalker2_tileset/tiles/{z}/{x}/{y}.jpg',
       repeatWorld: false,
@@ -270,16 +280,44 @@ function loadMap() {
     },
     */
 
-    /*
-    attribution: {
-      content: '', position: {top: -50, left: 0},
-    },
-    */
-
     //seamlessZoom: true,
     doubleClickZoom: true,
 
     //maxExtent: extent,
+
+    /*
+    // overview is broken, due to a flat projection I guess
+    overviewControl: {
+      position: 'bottom-left',
+      size: [240,135],
+      level: 10,
+      symbol: {
+
+        'lineColor': '#fff',    // Border color
+        'lineWidth': 1.5,            // Border width
+        'polygonFill': '#fff',  // Fill color
+        'polygonOpacity': 0.0,      // Fill opacity
+        'lineOpacity': 0.5,
+      },
+    },
+    */
+
+    attribution: {
+      //position: {top: -50},
+    },
+
+
+    layerSwitcherControl: {
+      'position'  : 'bottom-left',
+      // title of base layers
+      'baseTitle' : 'Base Layers',
+      // title of layers
+      'overlayTitle' : 'Layers',
+      // layers you don't want to manage with layer switcher
+      'excludeLayers' : [],
+      // css class of container element, maptalks-layer-switcher by default
+      'containerClass' : 'maptalks-layer-switcher'
+    },
 
   });
 
@@ -287,8 +325,11 @@ function loadMap() {
   //let extent = new maptalks.Extent(left-gap, top-gap, right+gap, bottom+gap);
   //map.setMaxExtent(extent);
 
-  groupLayer = new maptalks.GroupGLLayer('group', []).addTo(map);
-  regionsLayer = new maptalks.PolygonLayer('regions').addTo(map);
+  groupLayer = new maptalks.GroupGLLayer('Markers').addTo(map);
+
+  //let groupLayer2 = new maptalks.GroupGLLayer('groupLayer').addTo(groupLayer);
+
+  regionsLayer = new maptalks.PolygonLayer('Regions').addTo(map);
 
   map.on('viewchange', e=> {
     settings.center = [e.new.center[0],e.new.center[1]];
@@ -297,7 +338,7 @@ function loadMap() {
     settings.zoom = e.new.zoom;
 
     if (enableAltitude && autoAltitude) {
-      markerLayer.setOptions({enableAltitude: map.getPitch()!=0});
+      groupLayer.setOptions({enableAltitude: map.getPitch()!=0});
     }
 
     saveSettings();
@@ -323,26 +364,18 @@ function loadMap() {
 
   map.on('moving', hideTooltip);
 
-  markerLayer = new maptalks.PointLayer('points').addTo(groupLayer);
-}
-
-function markersLoadedCallback() {
-  //console.log('Markers loaded:', markers.length);
-  //console.timeEnd("markers");
-  //updateCount();
-
-  filterItems();
+  const layerSwitcherContainer = document.querySelector('.maptalks-layer-switcher');
 }
 
 let markers = [];
 
-function loadMarkersIdle(data, animated=false) {
+function loadMarkersIdle(data) {
   // ought to be fastest
   const features = data.features;
   let currentIndex = 0;
 
   function processBatch(deadline) {
-    batch = [];
+    let batch = [];
     while (deadline.timeRemaining() > 0 && currentIndex < features.length) {
       batch.push(Marker(features[currentIndex++]));
     }
@@ -351,13 +384,9 @@ function loadMarkersIdle(data, animated=false) {
 
     if (currentIndex < features.length) {
       markers.push(...batch);
-      animated && markerLayer.addGeometry(batch);
       requestIdleCallback(processBatch); // Schedule the next batch during idle time
     } else {
-      markers.push(...batch);
-      animated && markerLayer.addGeometry(batch);
-      !animated && markerLayer.addGeometry(markers);
-      markersLoadedCallback();
+      markersLoadedCallback(markers);
     }
   }
 
@@ -368,6 +397,84 @@ function loadMarkers(data) {
   loadMarkersIdle(data, false); // animation is really slow on gl layers
 }
 
+function makeVisibilityHandler(layer) {
+  const originalShow = layer.show;
+  const originalHide = layer.hide;
+
+  // Override the show method
+  layer.show = function () {
+    // Call the original show method
+    originalShow.call(this);
+    // Fire a custom 'visibilitychange' event
+    this.fire('visibilitychange', { visible: true });
+  };
+
+  // Override the hide method
+  layer.hide = function () {
+    // Call the original hide method
+    originalHide.call(this);
+    // Fire a custom 'visibilitychange' event
+    this.fire('visibilitychange', { visible: false });
+  };
+
+  // Listen for the custom 'visibilitychange' event
+  layer.on('visibilitychange', function (e) {
+    let group = e.target.getId().toLowerCase();
+    let show = e.visible;
+
+
+    if (show) {
+      settings.activeItems[group] = true;
+    } else {
+      delete settings.activeItems[group];
+    }
+
+    //console.log(settings);
+
+    saveSettings();
+
+  });
+}
+
+function markersLoadedCallback(markers) {
+  //console.log('Markers loaded:', markers.length);
+  //console.timeEnd("markers");
+  //updateCount();
+
+  // join markers by group name
+
+  let collection = {};
+  for (m of markers) {
+    if (!collection[m.group]) collection[m.group] = [];
+    collection[m.group].push(m.marker);
+  }
+
+  const capitalize = s => s[0].toUpperCase()+s.slice(1);
+  const cmpAlphaNum = (a,b) => a[0].localeCompare(b[0], 'en', { numeric: true });
+
+  let weights = {'base': 1000, 'locations': 750, 'stashes': 500, 'items': 250, 'misc': -1000 };
+  let groups = Object.keys(collection);
+
+  groups = groups.sort( (a,b)=> (weights[b]||0)-(weights[a]||0) || cmpAlphaNum(a,b))
+
+  //console.log('sorted groups', groups);
+
+  for (const group of groups) {
+    let layerName = capitalize(group);
+    let geometries = collection[group];
+    let active = settings.activeItems[group];
+
+    layer = new maptalks.PointLayer(layerName).addTo(groupLayer);
+    if (!active) { layer.hide(); }
+    layer.addGeometry(geometries);
+
+    //console.log('created layer', group, 'visible', settings.activeItems[group], geometries.length, 'markers');
+
+    makeVisibilityHandler(layer);
+  }
+
+  filterItems();
+}
 
 function clearSelection() {
   if (window.getSelection) {
@@ -530,7 +637,6 @@ function getIconName(o) {
   return 'Question';
 }
 
-
 function Marker(feature) {
   let markersDir = 'data/sprites/';
   let markersPrefix = markersDir+'';
@@ -551,9 +657,9 @@ function Marker(feature) {
     'Teleport': 'Texture_Archianomaly',
     'Safe':     'Texture_Stahes',
     'Upgrade':  'Texture_Storage',
-    'Weapon':   'Texture_Stahes', // no grenades, only guns and scopes
   }
 
+  // this is direct mapping for reference
   let compass_images = {
     'Enemy': 'CompassMarker_0_0.png',
     'Body': 'CompassMarker_0_1.png',
@@ -572,7 +678,7 @@ function Marker(feature) {
     'Anomaly': 'CompassMarker_3_2.png',
     'Cave': 'CompassMarker_3_3.png',
     'Money': 'CompassMarker_4_0.png',
-    'Medical': 'CompassMarker_4_1.png',
+    'Repair': 'CompassMarker_4_1.png',
     'Rest': 'CompassMarker_4_2.png',
     'Misc': 'CompassMarker_4_3.png',
   };
@@ -580,13 +686,22 @@ function Marker(feature) {
   let misc_images = {
     'Chair': 'CompassMarker_2_0.png',
     'Unique Enemy': 'CompassMarker_0_0.png',
+    //'Weapon':   'CompassMarker_4_1.png',
+    //'Medical': 'CompassMarker_4_1.png',
   };
 
 
   let o = feature.properties;
   let name = getIconName(o);
+  let group = types[name].group || 'misc';
 
+  // stash without a clue is just items
+  //if (group=='stash' && !o.clue) group = 'items';
+
+  if (group == "stashes") name = "Stash";
   if (o.spawns && o.spawns.length>0) name = 'Stash';
+
+  if (name=='Stash') group = 'stashes';
 
   let image = images[name] || compass_images[name] || misc_images[name] || compass_images['Question'];
 
@@ -598,7 +713,6 @@ function Marker(feature) {
 
   coordinates = [coordinates[0], coordinates[1], coordinates[2]*0.1]; // cannot disable altitude for now
 
-  let targetLayer = markerLayer;
   let opacity = 1.0;
 
   let size = iconSize;
@@ -649,7 +763,7 @@ function Marker(feature) {
     tmTooltip = setTimeout(hideTooltip, 25);
   });
 
-  return marker;
+  return {group: group, marker: marker};
 }
 
 
@@ -770,13 +884,17 @@ function passesFilter(marker) {
 }
 
 function filterItems() {
-  for (marker of markerLayer._geoList) {
-    if (passesFilter(marker)){
-      marker.show();
-    } else {
-      marker.hide();
+
+  for (const layer of groupLayer.getLayers()) {
+    for (marker of layer._geoList) {
+      if (passesFilter(marker)){
+        marker.show();
+      } else {
+        marker.hide();
+      }
     }
   }
+
 }
 
 function clearFilter() {
@@ -862,12 +980,17 @@ window.onload = function() {
   fetch('types.json').then(r=>r.json()).then(data =>{
     types = data;
 
-    Promise.all(['markers.json', 'markers_custom.json'].map(url=>fetch(url).then(r=>r.json()))).then(results => {
-      // merge features
-      let data = results[0];
-      data.features = [...data.features, ...results[1].features];
-      loadMarkers(data);
+    Promise.all([
+        'markers.json',
+        'markers_custom.json'
+      ].map(url=>fetch(url).then(r=>r.json()))).then(results => {
+      let features = []
+      for (geojson of results) {
+        features.push(...geojson.features);
+      }
+      loadMarkers({"type": "FeatureCollection", "features": features});
     });
+
   });
 
 };
