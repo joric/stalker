@@ -713,7 +713,7 @@ function Marker(feature) {
 
   //if (o.clue) image = localImages['purpleStash'];
 
-  coordinates = [coordinates[0], coordinates[1], coordinates[2]*0.0]; // cannot disable altitude for now, fucking parallax effect
+  coordinates = [coordinates[0], coordinates[1], coordinates[2]*0.01 ]; // cannot disable altitude for now, fucking parallax effect
 
   let opacity = 1.0;
 
@@ -973,15 +973,14 @@ window.onload = function() {
       return;
     }
 
-    switch (e.code) {
-      case 'KeyR':
-        if (map.getBearing()!=0) {
-          map.animateTo({ bearing: 0 });
-        } else {
-          map.animateTo({ pitch: map.getPitch()==0 ? defaultPitch : 0 });
-        }
-      break;
+    if (e.code=='KeyR' && !e.ctrlKey) {
+      if (map.getBearing()!=0) {
+        map.animateTo({ bearing: 0 });
+      } else {
+        map.animateTo({ pitch: map.getPitch()==0 ? defaultPitch : 0 });
+      }
     }
+
   });
 
   fetch('regions.json').then(r=>r.json()).then(loadRegions);
