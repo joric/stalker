@@ -338,10 +338,9 @@ function loadMap() {
     },
   });
 
-  //let gap = 25000;
-  //let extent = new maptalks.Extent(left-gap, top-gap, right+gap, bottom+gap);
-  //map.setMaxExtent(extent);
-
+  let gap = w/2;
+  let extent = new maptalks.Extent(left-gap, top-gap, right+gap, bottom+gap);
+  map.setMaxExtent(extent);
 
   new maptalks.TileLayer('Stalker1', {
     maxAvailableZoom: 3,
@@ -747,6 +746,8 @@ function Marker(feature) {
     'Sustenance': tiles['bag'],
     'Ammo': tiles['box'],
     'Medkits': tiles['box'],
+    'Medical': tiles['box'],
+    'Artifact': tiles['circle'],
   };
 
 
