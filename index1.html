@@ -331,6 +331,8 @@ function loadMap() {
 
   regionsLayer = new maptalks.PolygonLayer('Regions').addTo(map);
 
+  if (!settings.activeItems['regions']) regionsLayer.hide();
+
   map.on('viewchange', e=> {
     settings.center = [e.new.center[0],e.new.center[1]];
     settings.bearing = e.new.bearing;
@@ -397,7 +399,7 @@ function loadMarkers(data) {
   loadMarkersIdle(data, false); // animation is really slow on gl layers
 }
 
-function makeVisibilityHandler(layer) {
+function makeHandler(layer) {
   const originalShow = layer.show;
   const originalHide = layer.hide;
 
@@ -470,8 +472,10 @@ function markersLoadedCallback(markers) {
 
     //console.log('created layer', group, 'visible', settings.activeItems[group], geometries.length, 'markers');
 
-    makeVisibilityHandler(layer);
+    makeHandler(layer);
   }
+
+  makeHandler(regionsLayer);
 
   filterItems();
 }
