@@ -611,13 +611,11 @@ function showTooltip(e) {
   let t = marker.feature.geometry.coordinates;
   let teleport = `${t[0]} ${t[1]} ${t[2]}`;
 
+  let sid = marker.feature.properties.sid;
+  if (sid.includes('_C_')) sid = sid.split('_C_')[1];
 
-
-  content += `<hr/><small><small>SID: ${marker.feature.properties.sid}</small></small>`;
-
+  content += `<hr/><small><small>SID: ${sid}</small></small>`;
   content += `<br/><small><small>XTeleportTo ${teleport}</small></small>`;
-
-
 
 
 
