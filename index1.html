@@ -348,12 +348,9 @@ function loadMap() {
   });
 
   setTimeout(function() {
-    /*
     if (enableAltitude && autoAltitude) {
-      markerLayer.setOptions({enableAltitude: map.getPitch()!=0});
+      groupLayer.setOptions({enableAltitude: map.getPitch()!=0});
     }
-    */
-
   },500);
 
   document.querySelector('.search-cancel').onclick = e=> {
@@ -704,7 +701,7 @@ function Marker(feature) {
 
   //if (o.clue) image = localImages['purpleStash'];
 
-  //coordinates = [coordinates[0], coordinates[1], coordinates[2]*0.1]; // cannot disable altitude for now
+  coordinates = [coordinates[0], coordinates[1], coordinates[2]*0.0]; // cannot disable altitude for now, fucking parallax effect
 
   let opacity = 1.0;
 
