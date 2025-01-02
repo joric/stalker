@@ -172,7 +172,8 @@ def export_markers():
             #if '105F11AB4ED95DD96B4D8BA45A8F2EB8.cfg' not in filename: continue
 
             # ignore all the files that don't have WorldMap_WP in the name
-            if 'WorldMap_WP' not in filename: continue
+
+            # if 'WorldMap_WP' not in filename: continue # looks like it deletes some quests items we need, e.g. CA_Quest_Hub_Medic
 
 
             parser = UnrealCFGParser(filename)
