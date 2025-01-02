@@ -393,12 +393,37 @@ function loadMap() {
   const layerSwitcherContainer = document.querySelector('.maptalks-layer-switcher');
 }
 
-function loadMarkers(data) {
+function loadMarkersIdle(data) {
+  const features = data.features;
+  let currentIndex = 0;
+  let markers = [];
+  function processBatch(deadline) {
+    batch = [];
+    while (deadline.timeRemaining() > 0 && currentIndex < features.length) {
+      batch.push(Marker(features[currentIndex++]));
+    }
+    //console.log(`Processed ${currentIndex}/${features.length} markers`);
+    if (currentIndex < features.length) {
+      markers.push(...batch);
+      requestIdleCallback(processBatch); // Schedule the next batch during idle time
+    } else {
+      markers.push(...batch);
+      markersLoadedCallback(markers);
+    }
+  }
+  requestIdleCallback(processBatch, { timeout: 1000 });
+}
+
+function loadMarkersSimple(data) {
   let markers = [];
   for (feature of data.features) {
     markers.push(Marker(feature));
   }
   markersLoadedCallback(markers);
+}
+
+function loadMarkers(data) {
+  loadMarkersIdle(data);
 }
 
 function makeHandler(layer) {
