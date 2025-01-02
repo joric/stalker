@@ -264,12 +264,44 @@ function loadMap() {
     },
 
 
-    baseLayer: new maptalks.TileLayer('Stalker 2 (1.0.3)', {
-      maxAvailableZoom: 7,
-      urlTemplate: 'https://joric.github.io/stalker2_tileset/tiles/{z}/{x}/{y}.jpg',
-      repeatWorld: false,
-      tileSize: 512,
-    }),
+    layerSwitcherControl: {
+      'position'  : 'bottom-left',
+      // title of base layers
+      'baseTitle' : 'Base Layers',
+      // title of layers
+      'overlayTitle' : 'Overlays',
+      // layers you don't want to manage with layer switcher
+      'excludeLayers' : [],
+      // css class of container element, maptalks-layer-switcher by default
+      'containerClass' : 'maptalks-layer-switcher'
+    },
+
+    baseLayer: new maptalks.GroupTileLayer('Base TileLayer', [
+
+      new maptalks.TileLayer('PDA', {
+        maxAvailableZoom: 7,
+        urlTemplate: 'https://joric.github.io/stalker2_tileset/tiles/{z}/{x}/{y}.jpg',
+        repeatWorld: false,
+        tileSize: 512,
+      }),
+
+      new maptalks.TileLayer('GlobalMapBase', {
+        maxAvailableZoom: 5,
+        urlTemplate: 'https://joric.github.io/stalker2_tileset/extras/wb/{z}/{x}/{y}.jpg',
+        repeatWorld: false,
+        tileSize: 512,
+        visible : false,
+      }),
+
+      new maptalks.TileLayer('LDScheme', {
+        maxAvailableZoom: 3,
+        urlTemplate: 'https://joric.github.io/stalker2_tileset/extras/ld/{z}/{x}/{y}.png',
+        repeatWorld: false,
+        tileSize: 512,
+        visible : false,
+      }),
+
+    ]),
 
     /*
     zoomControl: {
@@ -305,31 +337,25 @@ function loadMap() {
     attribution: {
       //position: {top: -50},
     },
-
-
-    layerSwitcherControl: {
-      'position'  : 'bottom-left',
-      // title of base layers
-      'baseTitle' : 'Base Layers',
-      // title of layers
-      'overlayTitle' : 'Layers',
-      // layers you don't want to manage with layer switcher
-      'excludeLayers' : [],
-      // css class of container element, maptalks-layer-switcher by default
-      'containerClass' : 'maptalks-layer-switcher'
-    },
-
   });
 
   //let gap = 25000;
   //let extent = new maptalks.Extent(left-gap, top-gap, right+gap, bottom+gap);
   //map.setMaxExtent(extent);
 
-  groupLayer = new maptalks.GroupGLLayer('Markers').addTo(map);
 
-  //let groupLayer2 = new maptalks.GroupGLLayer('groupLayer').addTo(groupLayer);
+  new maptalks.TileLayer('Stalker1', {
+    maxAvailableZoom: 3,
+    urlTemplate: 'https://joric.github.io/stalker2_tileset/extras/s1/{z}/{x}/{y}.png',
+    repeatWorld: false,
+    tileSize: 512,
+    visible : false,
+  }).addTo(map);
+
 
   regionsLayer = new maptalks.PolygonLayer('Regions').addTo(map);
+
+  groupLayer = new maptalks.GroupGLLayer('Markers').addTo(map);
 
   if (!settings.activeItems['regions']) regionsLayer.hide();
 
@@ -440,24 +466,10 @@ function markersLoadedCallback(markers) {
   for (const group of groups) {
     let layerName = capitalize(group);
     let geometries = collection[group];
-    let active = settings.activeItems[group];
-
-    layer = new maptalks.PointLayer(layerName).addTo(groupLayer);
-
-    if (!active) { layer.hide(); }
-
+    let visible = settings.activeItems[group] == true;
+    layer = new maptalks.PointLayer(layerName, [], {visible: visible}).addTo(groupLayer);
     layer.addGeometry(geometries);
-
     //console.log('created layer', group, 'visible', settings.activeItems[group], geometries.length, 'markers');
-
-
-    /*
-    for(geo of geometries) {
-      let p = geo.feature.properties
-      if (p.title=='CA_Quest_Hub_Medic') console.log(geo);
-    }
-    */
-
     makeHandler(layer);
   }
 
