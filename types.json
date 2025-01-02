@@ -31,7 +31,7 @@
   "Loot": { "fa": "toolbox", "bg": "steelblue", "match": "PackOfItemsBase" },
   "Main Mission": { "fa": "diamond-turn-right", "bg": "black", "fg": "darkorange", "match": "MainMission" },
   
-  "Medic": { "fa": "plus", "bg": "cornflowerblue", "match": "(Medic)(?=.*(ESpawnType::Obj|ESpawnType::ContextualAction))", "group": "base" },
+  "Medic": { "fa": "plus", "bg": "cornflowerblue", "match": "(Medic|CA_Quest_Hub_Medic)(?=.*(ESpawnType::Obj|ESpawnType::ContextualAction))", "group": "base" },
   "Medical": { "fa": "suitcase-medical", "bg": "steelblue", "match": "Stimulator|ArmyMedkit|Medkit|PSYBlocker|AntiRad|Hercules|Bandage", "group":"items" },
   "Question": { "fa": "question", "bg": "darkslategrey", "match": "Question" },
   "Unique Artifact": { "fa": "disease", "bg": "saddlebrown", "match": "UniqueArtifact" },

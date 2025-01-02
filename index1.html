@@ -19,13 +19,14 @@
 
 <!--
 
+
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/maptalks/1.0.1/maptalks.min.css" integrity="sha512-DgQNythEg69g9pToBBZQZMXn/xM8ZF/96sutg5c6ODgxargtpteM9+HxACffdWzrzK5YgAdVs8CfucHm5dvbIA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<script type="text/javascript" src="https://unpkg.com/maptalks-gl/dist/maptalks-gl.js"></script>
+
 
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/maptalks/1.0.1/maptalks.min.js" integrity="sha512-nMJHLgEm7hUp/e10n9R/xUz3yMmvx98LQlddhCZl3g0b4JO8NG1SjmcOA1JiFNuxRgseKDzdABcGy4qGZlGwEQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script type="text/javascript" src="https://unpkg.com/maptalks-gl/dist/maptalks-gl.js"></script>
-
-
 <script type="text/javascript" src="https://unpkg.com/maptalks.markercluster/dist/maptalks.markercluster.min.js"></script>
 -->
 
@@ -201,7 +202,7 @@ let map = null;
 let types = {};
 let lang = {};
 
-let localDataName = 'joricsStalkerMaps';
+let localDataName = 'joricsStalkerMapsGL';
 let localData = JSON.parse(localStorage.getItem(localDataName))||{};
 let mapId = 's2hoc';
 
@@ -217,7 +218,6 @@ function loadMap() {
   }
 
   settings = localData[mapId];
-
 
   searchControl = document.querySelector('.search-box input');
   searchControl.value = settings.searchText||'';
@@ -358,6 +358,7 @@ function loadMap() {
 
   document.querySelector('.search-cancel').onclick = e=> {
     clearFilter();
+    saveSettings();
   };
 
   map.on('mousedown', function(e) {
@@ -369,34 +370,12 @@ function loadMap() {
   const layerSwitcherContainer = document.querySelector('.maptalks-layer-switcher');
 }
 
-let markers = [];
-
-function loadMarkersIdle(data) {
-  // ought to be fastest
-  const features = data.features;
-  let currentIndex = 0;
-
-  function processBatch(deadline) {
-    let batch = [];
-    while (deadline.timeRemaining() > 0 && currentIndex < features.length) {
-      batch.push(Marker(features[currentIndex++]));
-    }
-
-    //console.log(`Processed ${currentIndex}/${features.length} markers`);
-
-    if (currentIndex < features.length) {
-      markers.push(...batch);
-      requestIdleCallback(processBatch); // Schedule the next batch during idle time
-    } else {
-      markersLoadedCallback(markers);
-    }
-  }
-
-  requestIdleCallback(processBatch, { timeout: 1000 });
-}
-
 function loadMarkers(data) {
-  loadMarkersIdle(data, false); // animation is really slow on gl layers
+  let markers = [];
+  for (feature of data.features) {
+    markers.push(Marker(feature));
+  }
+  markersLoadedCallback(markers);
 }
 
 function makeHandler(layer) {
@@ -444,11 +423,11 @@ function markersLoadedCallback(markers) {
   //updateCount();
 
   // join markers by group name
-
   let collection = {};
   for (m of markers) {
     if (!collection[m.group]) collection[m.group] = [];
     collection[m.group].push(m.marker);
+    let o = m.marker.feature.properties;
   }
 
   const capitalize = s => s[0].toUpperCase()+s.slice(1);
@@ -467,10 +446,20 @@ function markersLoadedCallback(markers) {
     let active = settings.activeItems[group];
 
     layer = new maptalks.PointLayer(layerName).addTo(groupLayer);
+
     if (!active) { layer.hide(); }
+
     layer.addGeometry(geometries);
 
     //console.log('created layer', group, 'visible', settings.activeItems[group], geometries.length, 'markers');
+
+
+    /*
+    for(geo of geometries) {
+      let p = geo.feature.properties
+      if (p.title=='CA_Quest_Hub_Medic') console.log(geo);
+    }
+    */
 
     makeHandler(layer);
   }
@@ -715,7 +704,7 @@ function Marker(feature) {
 
   //if (o.clue) image = localImages['purpleStash'];
 
-  coordinates = [coordinates[0], coordinates[1], coordinates[2]*0.1]; // cannot disable altitude for now
+  //coordinates = [coordinates[0], coordinates[1], coordinates[2]*0.1]; // cannot disable altitude for now
 
   let opacity = 1.0;
 
@@ -767,7 +756,16 @@ function Marker(feature) {
     tmTooltip = setTimeout(hideTooltip, 25);
   });
 
-  return {group: group, marker: marker};
+  res = {group: group, marker: marker};
+
+
+  if (o.title=='CA_Quest_Hub_Medic') {
+    //console.log(res, o.sid);
+    //console.log(image);
+  }
+
+
+  return res;
 }
 
 
