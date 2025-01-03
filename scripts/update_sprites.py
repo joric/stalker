@@ -15,7 +15,7 @@ folders = [
     'Stalker2/Content/GameLite/FPS_Game/UI/UIIcons/Markers/itr7/NotActive/Shadow',
 ]
 
-def crop_and_resize(img, size, resize=True):
+def crop_and_resize(img, size, resize=True, tint=None):
     img_cropped = ImageOps.crop(img, border=0)
     bbox = img_cropped.getbbox()  # Get the bounding box of non-transparent areas
     
@@ -24,30 +24,39 @@ def crop_and_resize(img, size, resize=True):
     else:
         print(f"Warning: {filename} appears to be fully transparent")
 
-    print(img_cropped.size)
+    #print(img_cropped.size)
 
     if resize:
         # Resize the image, maintaining aspect ratio
-        return ImageOps.pad(img_cropped, (size, size), method=Image.Resampling.LANCZOS, centering=(0.5, 1.0))
+        image = ImageOps.pad(img_cropped, (size, size), method=Image.Resampling.LANCZOS, centering=(0.5, 1.0))
 
-    original_image = img_cropped
+    else:
+        original_image = img_cropped
 
-    original_width, original_height = original_image.size
-    target_width, target_height = size, size
+        original_width, original_height = original_image.size
+        target_width, target_height = size, size
 
-    # Calculate padding
-    padding_left = max((target_width - original_width) // 2, 0)
-    padding_top = max((target_height - original_height) // 2, 0)
-    padding_right = max(target_width - original_width - padding_left, 0)
-    padding_bottom = max(target_height - original_height - padding_top, 0)
+        # Calculate padding
+        padding_left = max((target_width - original_width) // 2, 0)
+        padding_top = max((target_height - original_height) // 2, 0)
+        padding_right = max(target_width - original_width - padding_left, 0)
+        padding_bottom = max(target_height - original_height - padding_top, 0)
 
-    # Create a new image with the target size and padding color
-    new_image = Image.new(original_image.mode, (target_width, target_height))
+        # Create a new image with the target size and padding color
+        image = Image.new(original_image.mode, (target_width, target_height))
 
-    # Paste the original image onto the center of the new image
-    new_image.paste(original_image, (padding_left, padding_top))
+        # Paste the original image onto the center of the new image
+        image.paste(original_image, (padding_left, padding_top))
 
-    return new_image
+    if tint:
+        print('applying tint here')
+        solid_color = Image.new("RGBA", image.size, tint + (255,))
+        tint_strength = 0.5
+        r, g, b, alpha = image.split()
+        image = Image.blend(image, solid_color, tint_strength)
+        image = Image.merge("RGBA", (*image.split()[:3], alpha))
+
+    return image
 
 
     #return ImageOps.pad(img_cropped, (iconSize, iconSize))
@@ -56,12 +65,19 @@ for folder in folders:
     files = list(glob.glob(os.path.join(cache_dir, folder, '**', '*.png'), recursive=True))
 
     for filename in files:
-        print(f"Processing: {filename}")
+        #print(f"Processing: {filename}")
         
         # Open the image
         with Image.open(filename) as img:
             # Crop transparent areas
-            img_resized = crop_and_resize(img, iconSize)
+
+            tint = None
+
+            if 'Stahes' in filename:
+                print('applying tint')
+                tint = (100,0,200) # violet
+
+            img_resized = crop_and_resize(img, iconSize, resize=True, tint=tint)
             # Save the resized image as PNG
             base_name = os.path.basename(filename)
             output_path = os.path.normpath(os.path.join(out_dir, base_name))
@@ -82,7 +98,6 @@ with Image.open(filename) as img_atlas:
             img = img_atlas.crop((i*gw, j*gh, i*gw + tw, j*gh+th))
 
             img_resized = crop_and_resize(img, iconSize2, False)
-
             base_name = f'CompassMarker_{i}_{j}.png'
             output_path = os.path.normpath(os.path.join(out_dir, base_name))
             img_resized.save(output_path, format='PNG')
