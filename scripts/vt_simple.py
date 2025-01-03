@@ -1,6 +1,5 @@
 # https://github.com/joric/maps/wiki/Stalker-2
-# you can extract T_WorldMap_UDIM from pakchunk29-Windows.utoc using Zentools
-# https://github.com/LongerWarrior/ZenTools
+# you can extract T_WorldMap_UDIM from pakchunk29-Windows.utoc using https://github.com/LongerWarrior/ZenTools
 # ZenTools.exe ExtractPackages "<path to game paks>" "<output dir>" -AES=0x... -ZenPackageVersion=Initial
 
 from quicktex.s3tc.bc1 import * # pip install quicktex
