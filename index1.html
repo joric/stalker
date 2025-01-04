@@ -216,8 +216,8 @@ let firstRun = false;
 function loadMap() {
 
   if (!localData[mapId]) {
-    //localData[mapId] = { activeItems: {'base':true, 'locations': true, 'stashes': true, 'regions': true} };
-    localData[mapId] = { activeItems: {'base':true, 'regions': true} };
+    localData[mapId] = { activeItems: {'base':true, 'locations': true, 'stashes': true, 'regions': true} };
+    //localData[mapId] = { activeItems: {'base':true, 'regions': true} };
   }
 
   settings = localData[mapId];
