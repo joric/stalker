@@ -264,18 +264,6 @@ function loadMap() {
       fullExtent : { top: top, left: left, bottom: bottom, right: right },
     },
 
-    layerSwitcherControl: {
-      'position'  : 'bottom-left',
-      // title of base layers
-      'baseTitle' : 'Base Layers',
-      // title of layers
-      'overlayTitle' : 'Overlays',
-      // layers you don't want to manage with layer switcher
-      'excludeLayers' : [],
-      // css class of container element, maptalks-layer-switcher by default
-      'containerClass' : 'maptalks-layer-switcher'
-    },
-
     baseLayer: new maptalks.GroupTileLayer('Base TileLayer', [
 
       new maptalks.TileLayer('PDA', {
@@ -513,6 +501,14 @@ function markersLoadedCallback(markers) {
   makeHandler(regionsLayer);
 
   filterItems();
+
+  let LayerSwitcher = new maptalks.control.LayerSwitcher({
+    position  : 'bottom-left',
+    baseTitle : 'Base Layers',
+    overlayTitle : 'Overlays',
+    containerClass : 'maptalks-layer-switcher',
+  }).addTo(map);
+
 }
 
 function clearSelection() {
