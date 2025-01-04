@@ -1,7 +1,7 @@
 {
   "Upgrade": { "fa": "bed", "bg": "darkslategrey", "match": "Upgrade", "group": "stashes" },
 
-  "Teleport": { "fa": "person-arrow-up-from-line", "bg": "black", "match": "BP_Teleport_Portal" },
+  "Teleport": { "fa": "circle-dot", "bg": "black", "match": "BP_Teleport_Portal" },
   "TeleportPlaceholder": { "fa": "person-arrowd-down-from-line", "bg": "black", "match": "BP_TeleportPlaceholder_C" },
 
   "Ammo": { "fa": "list", "bg": "steelblue", "match": "(?=Ammo|AGA|AHEDP|AVOG|APG7V|(A\\d{3}[\\w]+))(?=.*ESpawnType::(Item|PackOfItems))", "group": "items" },
