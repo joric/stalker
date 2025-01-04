@@ -270,7 +270,7 @@ function loadMap() {
     spatialReference : {
       projection : 'identity',
       fullExtent : { top: top, left: left, bottom: bottom, right: right }, // mandatory to hide 404
-      resolutions: Array.from({length: maxZoom + 1},(_,i) => w / tileSize / Math.pow(2, i)), // mandatory
+      resolutions: Array.from({length: maxZoom + 1},(_,i) => w / tileSize / (1<<i)), // mandatory zoom levels
     },
 
     baseLayer: new maptalks.GroupTileLayer('Base TileLayer', [
