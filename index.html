@@ -499,10 +499,10 @@ function onMarkerHover(e) {
   //let's add elevation to tooltip
   let z = ~~e.target.feature.geometry.coordinates[2] || 0;
 
-  if (z<0) {
-    text += ` &ShortDownArrow;${-z}`;
+  if (z>=0) {
+    text += ` &uparrow;${z}`;
   } else {
-    text += ` &ShortUpArrow;${z}`;
+    text += ` &downarrow;${-z}`;
   }
 
 
