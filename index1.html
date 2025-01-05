@@ -725,7 +725,6 @@ function Marker(feature) {
     'Medic':      'Texture_Medecine',
     'Stash':      'Texture_Stahes',
     'Scanner':    'Texture_Signal',
-    'Teleport': 'Texture_Archianomaly',
     'Safe':     'Texture_Stahes',
     'Upgrade':  'Texture_Storage',
   }
@@ -771,8 +770,11 @@ function Marker(feature) {
     'Ammo': tiles['box'],
     'Medkits': tiles['box'],
     'Medical': tiles['box'],
-    'Artifact': tiles['circle'],
     'Grenade': tiles['box'],
+
+    'Artifact': tiles['circle'],
+    'Teleport': tiles['circle_locked'],
+    'Teleport Target': tiles['circle_dot'],
   };
 
 
