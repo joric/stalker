@@ -64,7 +64,7 @@ def get_markers(cells):
                             'geometry': {'type':'Point', 'coordinates': coord},
                             'properties': {
                                 'title': outer.split('_UAID')[0],
-                                'description': 'Custom::CustomItems',
+                                'description': 'Custom::Blueprints',
                                 'sid': outer,
                                 'cell': cell,
                             }
@@ -77,7 +77,7 @@ def get_markers(cells):
                             'geometry': {'type':'Point', 'coordinates': coord_target},
                             'properties': {
                                 'title': outer.split('_UAID')[0]+'_Target',
-                                'description': 'Custom::CustomItems',
+                                'description': 'Custom::Blueprints',
                                 'sid': outer + '_Target',
                                 'cell': cell,
                             }
