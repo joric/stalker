@@ -1038,9 +1038,6 @@ window.onload = function() {
     }
 
   });
-
-  fetch('regions.json').then(r=>r.json()).then(loadRegions).catch(e=>{alert('Cannot load files, CORS?')});
-  fetch('data/Localization/language_02.json').then(r=>r.json()).then(data => {lang = data});
   
   // need types to load markers, the rest can be loaded asyncronously
   fetch('types.json').then(r=>r.json()).then(data =>{
@@ -1057,7 +1054,10 @@ window.onload = function() {
       loadMarkers({"type": "FeatureCollection", "features": features});
     });
 
-  });
+  }).catch(e=>{alert('Cannot load files, CORS?')});
+
+  fetch('regions.json').then(r=>r.json()).then(loadRegions);
+  fetch('data/Localization/language_02.json').then(r=>r.json()).then(data => {lang = data});
 
 };
 
