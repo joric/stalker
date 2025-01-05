@@ -49,6 +49,8 @@ def get_markers(cells):
         data = json.load(open(filename, 'r'))
         for o in data:
             type = o['Type']
+            if type == 'BP_Teleport_Portal_Bubble_C':
+                target = o.get('Properties',{}).get('EndPoint',{}).get('Translation')
             if type in ('SkeletalMeshComponent','StaticMeshComponent','SceneComponent'):
                 outer = o['Outer']
                 if any(x in outer for x in classes):
@@ -66,6 +68,20 @@ def get_markers(cells):
                                 'cell': cell,
                             }
                         })
+                    if 'BP_Teleport_Portal_Bubble_C' in o['Outer'] and target:
+                        delta = [target[t] for t in 'XYZ']
+                        coord_target = [coord[t]+delta[t] for t in range(3)]
+                        features.append({
+                            'type': 'Feature',
+                            'geometry': {'type':'Point', 'coordinates': coord_target},
+                            'properties': {
+                                'title': outer.split('_UAID')[0]+'_Target',
+                                'description': 'Custom::CustomItems',
+                                'sid': outer + '_Target',
+                                'cell': cell,
+                            }
+                        })
+
     return features
 
 # partitions are read from WorldMap_WP and then exported with FModel as json (one by one)

@@ -6,6 +6,856 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          291823.75,
+          426257.7,
+          200.0
+        ]
+      },
+      "properties": {
+        "title": "BP_TopazScanner_Overworld_C",
+        "description": "Custom::CustomItems",
+        "sid": "BP_TopazScanner_Overworld_C_UAID_00059A3C7A0038D501_1169693187_0c9cc25df6bae22c",
+        "cell": "NavigationDataChunks_L0_X-23Y3_DL0"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          494969.22,
+          522887.78,
+          376.8854
+        ]
+      },
+      "properties": {
+        "title": "BP_TopazScanner_Broken_C",
+        "description": "Custom::CustomItems",
+        "sid": "BP_TopazScanner_Broken_C_UAID_4851C52E58FFA3EA01_1116744502_adf579e256b520ab",
+        "cell": "NavigationDataChunks_L0_X17Y22_DL0"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          388559.34,
+          439655.5,
+          -76.96184
+        ]
+      },
+      "properties": {
+        "title": "BP_TopazScanner_Broken_C",
+        "description": "Custom::CustomItems",
+        "sid": "BP_TopazScanner_Broken_C_UAID_E8F40804416421EB01_1830797462_f978980b22bbf712",
+        "cell": "NavigationDataChunks_L0_X-4Y6_DL0"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          488357.06,
+          517389.5,
+          251.5235
+        ]
+      },
+      "properties": {
+        "title": "BP_PlayerStash_C",
+        "description": "Custom::CustomItems",
+        "sid": "BP_PlayerStash_C_UAID_00D861FD685406C601_2081831329",
+        "cell": "MainGrid_L0_X12Y17_DL0"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107660.6,
+          473491.44,
+          629.32294
+        ]
+      },
+      "properties": {
+        "title": "BP_PlayerStash_C",
+        "description": "Custom::CustomItems",
+        "sid": "BP_PlayerStash_C_UAID_00D86159F049D7C501_1691512292",
+        "cell": "MainGrid_L0_X-48Y10_DL0"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          107605.3,
+          473599.62,
+          678.52374
+        ]
+      },
+      "properties": {
+        "title": "BP_Bed_OnBed_C",
+        "description": "Custom::CustomItems",
+        "sid": "BP_Bed_OnBed_C_UAID_00D86159F049FBE301_1318812108",
+        "cell": "MainGrid_L0_X-48Y10_DL0"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          307090.62,
+          515636.78,
+          637.5253
+        ]
+      },
+      "properties": {
+        "title": "BP_PlayerStash_C",
+        "description": "Custom::CustomItems",
+        "sid": "BP_PlayerStash_C_UAID_00D861FD676703DE01_1833198539",
+        "cell": "MainGrid_L0_X-16Y17_DL0"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          307094.38,
+          515771.5,
+          685.10535
+        ]
+      },
+      "properties": {
+        "title": "BP_Bed_OnBed_C",
+        "description": "Custom::CustomItems",
+        "sid": "BP_Bed_OnBed_C_UAID_00D861FD6767782302_1449640076",
+        "cell": "MainGrid_L0_X-16Y17_DL0"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          171646.86,
+          275623.66,
+          79.076195
+        ]
+      },
+      "properties": {
+        "title": "BP_TopazScanner_Prologue_C",
+        "description": "Custom::CustomItems",
+        "sid": "BP_TopazScanner_Prologue_C_UAID_E8F4080441641BE001_1244634750_585d1c8c388387f3",
+        "cell": "NavigationDataChunks_L0_X-47Y-26_DL0"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          527100.0,
+          326840.0,
+          4170.0
+        ]
+      },
+      "properties": {
+        "title": "BP_TopazScanner_Overworld_C",
+        "description": "Custom::CustomItems",
+        "sid": "BP_TopazScanner_Overworld_C_UAID_00059A3C7A0092D901_1091030272_0f221ac0d4b85649",
+        "cell": "NavigationDataChunks_L0_X23Y-16_DL0"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          373622.75,
+          603584.94,
+          123.317696
+        ]
+      },
+      "properties": {
+        "title": "BP_TopazScanner_Prologue_C",
+        "description": "Custom::CustomItems",
+        "sid": "BP_TopazScanner_Prologue_C_UAID_00D8612FD3CB53BD01_1368824374_be956d71e41348c6",
+        "cell": "NavigationDataChunks_L0_X-7Y38_DL0"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          644022.5,
+          646345.25,
+          621.34375
+        ]
+      },
+      "properties": {
+        "title": "BP_Bed_OnBed_C",
+        "description": "Custom::CustomItems",
+        "sid": "BP_Bed_OnBed_C_UAID_D8BBC11C280DA7DD01_1278899759",
+        "cell": "MainGrid_L0_X37Y37_DL92CC467B"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          404036.75,
+          546702.8,
+          513.89453
+        ]
+      },
+      "properties": {
+        "title": "BP_PlayerStash_C",
+        "description": "Custom::CustomItems",
+        "sid": "BP_PlayerStash_C_UAID_D8BBC11C280DF4DD01_1510016301",
+        "cell": "MainGrid_L0_X-1Y22_DLC6C35766"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          403865.2,
+          546720.3,
+          560.98505
+        ]
+      },
+      "properties": {
+        "title": "BP_Bed_OnBed_C",
+        "description": "Custom::CustomItems",
+        "sid": "BP_Bed_OnBed_C_UAID_D8BBC11C280DF4DD01_1455071299",
+        "cell": "MainGrid_L0_X-1Y22_DLC6C35766"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          231380.0,
+          495900.0,
+          649.9984
+        ]
+      },
+      "properties": {
+        "title": "BP_TopazScanner_Overworld_C",
+        "description": "Custom::CustomItems",
+        "sid": "BP_TopazScanner_Overworld_C_UAID_18C04D7E62BCE50F02_1461642437_e5b5a96f8aa7c232",
+        "cell": "MainGrid_L0_X-28Y14_DL0"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          608157.25,
+          599559.1,
+          3098.792
+        ]
+      },
+      "properties": {
+        "title": "BP_PlayerStash_C",
+        "description": "Custom::CustomItems",
+        "sid": "BP_PlayerStash_C_UAID_D8BBC11C280DE9DE01_1680322025",
+        "cell": "MainGrid_L0_X31Y30_DL0"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          608272.8,
+          599628.56,
+          3140.55
+        ]
+      },
+      "properties": {
+        "title": "BP_Bed_OnBed_C",
+        "description": "Custom::CustomItems",
+        "sid": "BP_Bed_OnBed_C_UAID_D8BBC11C280DE6DE01_2070544273",
+        "cell": "MainGrid_L0_X31Y30_DL0"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          214915.73,
+          270725.9,
+          853.0
+        ]
+      },
+      "properties": {
+        "title": "BP_PlayerStash_C",
+        "description": "Custom::CustomItems",
+        "sid": "BP_PlayerStash_C_UAID_2CF05D1FE304F0C701_1393880809",
+        "cell": "MainGrid_L0_X-31Y-22_DL0"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          214926.67,
+          270860.6,
+          903.0
+        ]
+      },
+      "properties": {
+        "title": "BP_Bed_OnBed_C",
+        "description": "Custom::CustomItems",
+        "sid": "BP_Bed_OnBed_C_UAID_2CF05D1FE304F0C701_1314587808",
+        "cell": "MainGrid_L0_X-31Y-22_DL0"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          146970.0,
+          312430.0,
+          100.0
+        ]
+      },
+      "properties": {
+        "title": "BP_TopazScanner_Overworld_C",
+        "description": "Custom::CustomItems",
+        "sid": "BP_TopazScanner_Overworld_C_UAID_74563C6C9B82CBD001_1598495545_7b9e08f6aac7b602",
+        "cell": "NavigationDataChunks_L0_X-52Y-19_DL0"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          686929.0,
+          468887.0,
+          -706.0
+        ]
+      },
+      "properties": {
+        "title": "BP_Teleport_Portal_Bubble_C",
+        "description": "Custom::CustomItems",
+        "sid": "BP_Teleport_Portal_Bubble_C_UAID_2CF05D9D9D923DF501_1655663906",
+        "cell": "MainGrid_L0_X44Y9_DL0"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          688660.5936,
+          479167.532,
+          -4894.662
+        ]
+      },
+      "properties": {
+        "title": "BP_Teleport_Portal_Bubble_C_Target",
+        "description": "Custom::CustomItems",
+        "sid": "BP_Teleport_Portal_Bubble_C_UAID_2CF05D9D9D923DF501_1655663906_Target",
+        "cell": "MainGrid_L0_X44Y9_DL0"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          488485.1,
+          517619.5,
+          306.83777
+        ]
+      },
+      "properties": {
+        "title": "BP_Bed_OnBed_C",
+        "description": "Custom::CustomItems",
+        "sid": "BP_Bed_OnBed_C_UAID_00D861FD685406C601_2144311330",
+        "cell": "MainGrid_L0_X12Y17_DL6ABA6B9"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          231134.64,
+          159246.58,
+          1021.00006
+        ]
+      },
+      "properties": {
+        "title": "BP_PlayerStash_C",
+        "description": "Custom::CustomItems",
+        "sid": "BP_PlayerStash_C_UAID_2CF05D1FE3040FC601_1708880888",
+        "cell": "MainGrid_L0_X-28Y-39_DL0"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          231093.45,
+          159359.2,
+          1070.0
+        ]
+      },
+      "properties": {
+        "title": "BP_Bed_OnBed_C",
+        "description": "Custom::CustomItems",
+        "sid": "BP_Bed_OnBed_C_UAID_2CF05D1FE304B8E101_1264665019",
+        "cell": "MainGrid_L0_X-28Y-39_DL0"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          692766.4,
+          744545.56,
+          390.0
+        ]
+      },
+      "properties": {
+        "title": "BP_TopazScanner_Overworld_C",
+        "description": "Custom::CustomItems",
+        "sid": "BP_TopazScanner_Overworld_C_UAID_74563C6C9B8295D801_1400593526_2e6c356d32ff1415",
+        "cell": "MainGrid_L0_X45Y53_DL0"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          298186.0,
+          461420.0,
+          216.0
+        ]
+      },
+      "properties": {
+        "title": "BP_Teleport_Portal_Bubble_C",
+        "description": "Custom::CustomItems",
+        "sid": "BP_Teleport_Portal_Bubble_C_UAID_30D042F7BCC8A5F901_1359435754",
+        "cell": "MainGrid_L0_X-18Y8_DL0"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          292912.1025,
+          461415.0,
+          528.0
+        ]
+      },
+      "properties": {
+        "title": "BP_Teleport_Portal_Bubble_C_Target",
+        "description": "Custom::CustomItems",
+        "sid": "BP_Teleport_Portal_Bubble_C_UAID_30D042F7BCC8A5F901_1359435754_Target",
+        "cell": "MainGrid_L0_X-18Y8_DL0"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          379430.16,
+          25309.584,
+          280.15887
+        ]
+      },
+      "properties": {
+        "title": "BP_Bed_OnBed_C",
+        "description": "Custom::CustomItems",
+        "sid": "BP_Bed_OnBed_C_UAID_00D861D9738D8CE401_2034873546",
+        "cell": "MainGrid_L0_X-5Y-61_DL0"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          282210.53,
+          154014.95,
+          1460.7911
+        ]
+      },
+      "properties": {
+        "title": "BP_Teleport_Portal_Bubble_C",
+        "description": "Custom::CustomItems",
+        "sid": "BP_Teleport_Portal_Bubble_C_UAID_E89C255E1016050002_1794049386",
+        "cell": "MainGrid_L0_X-20Y-40_DL0"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          281765.88864,
+          157550.76760000002,
+          3406.1799
+        ]
+      },
+      "properties": {
+        "title": "BP_Teleport_Portal_Bubble_C_Target",
+        "description": "Custom::CustomItems",
+        "sid": "BP_Teleport_Portal_Bubble_C_UAID_E89C255E1016050002_1794049386_Target",
+        "cell": "MainGrid_L0_X-20Y-40_DL0"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          276850.0,
+          138690.0,
+          1280.0
+        ]
+      },
+      "properties": {
+        "title": "BP_TopazScanner_Overworld_C",
+        "description": "Custom::CustomItems",
+        "sid": "BP_TopazScanner_Overworld_C_UAID_00059A3C7A002EDA01_1514009566_b218f80946565a9d",
+        "cell": "NavigationDataChunks_L0_X-26Y-53_DL0"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          172130.0,
+          243970.0,
+          520.0
+        ]
+      },
+      "properties": {
+        "title": "BP_TopazScanner_Overworld_C",
+        "description": "Custom::CustomItems",
+        "sid": "BP_TopazScanner_Overworld_C_UAID_00059A3C7A0054D901_1956317352_3213f1ef569ed636",
+        "cell": "Architecture_L0_X-37Y-26_DL0"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          644137.1,
+          646271.6,
+          573.74817
+        ]
+      },
+      "properties": {
+        "title": "BP_PlayerStash_C",
+        "description": "Custom::CustomItems",
+        "sid": "BP_PlayerStash_C_UAID_D8BBC11C280DA7DD01_1326677760",
+        "cell": "MainGrid_L0_X37Y37_DL0"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          491994.25,
+          372874.5,
+          2102.0579
+        ]
+      },
+      "properties": {
+        "title": "BP_PlayerStash_C",
+        "description": "Custom::CustomItems",
+        "sid": "BP_PlayerStash_C_UAID_00D861FD6767F9DD01_2049378364",
+        "cell": "MainGrid_L0_X13Y-6_DL0"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          492074.38,
+          372738.3,
+          2151.2354
+        ]
+      },
+      "properties": {
+        "title": "BP_Bed_OnBed_C",
+        "description": "Custom::CustomItems",
+        "sid": "BP_Bed_OnBed_C_UAID_00D861FD6767F9E301_1820183566",
+        "cell": "MainGrid_L0_X13Y-6_DL0"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          397584.16,
+          544803.8,
+          896.65393
+        ]
+      },
+      "properties": {
+        "title": "BP_PlayerStash_C",
+        "description": "Custom::CustomItems",
+        "sid": "BP_PlayerStash_C_UAID_F43BD864B6C0C81902_1198135257",
+        "cell": "MainGrid_L0_X-2Y21_DLA8129FC2"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          555379.7,
+          344953.88,
+          2267.726
+        ]
+      },
+      "properties": {
+        "title": "BP_Teleport_Portal_Bubble_C",
+        "description": "Custom::CustomItems",
+        "sid": "BP_Teleport_Portal_Bubble_C_UAID_E89C252D0AF6802D02_1299006254",
+        "cell": "MainGrid_L0_X23Y-10_DL0"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          555748.7,
+          342953.88,
+          10313.726
+        ]
+      },
+      "properties": {
+        "title": "BP_Teleport_Portal_Bubble_C_Target",
+        "description": "Custom::CustomItems",
+        "sid": "BP_Teleport_Portal_Bubble_C_UAID_E89C252D0AF6802D02_1299006254_Target",
+        "cell": "MainGrid_L0_X23Y-10_DL0"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          375041.0,
+          620587.0,
+          164.0
+        ]
+      },
+      "properties": {
+        "title": "BP_TopazScanner_Prologue_C",
+        "description": "Custom::CustomItems",
+        "sid": "BP_TopazScanner_Prologue_C_UAID_00D8612FD3CB4CBD01_1417423139_be956d71e41348c6",
+        "cell": "NavigationDataChunks_L0_X-7Y42_DL0"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          359900.0,
+          460280.0,
+          816.0
+        ]
+      },
+      "properties": {
+        "title": "BP_TopazScanner_Overworld_C",
+        "description": "Custom::CustomItems",
+        "sid": "BP_TopazScanner_Overworld_C_UAID_00059A3C7A00FBCD01_1999636820_c26e4a72d47d6c36",
+        "cell": "Architecture_L0_X-8Y8_DL0"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          421131.56,
+          411747.53,
+          2020.6703
+        ]
+      },
+      "properties": {
+        "title": "BP_PlayerStash_C",
+        "description": "Custom::CustomItems",
+        "sid": "BP_PlayerStash_C_UAID_18C04D7E62A1B1E201_1392030010",
+        "cell": "MainGrid_L0_X2Y0_DL0"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          419719.84,
+          410475.44,
+          2072.7468
+        ]
+      },
+      "properties": {
+        "title": "BP_Bed_OnBed_C",
+        "description": "Custom::CustomItems",
+        "sid": "BP_Bed_OnBed_C_UAID_18C04D7E62A1B1E201_1674865012",
+        "cell": "MainGrid_L0_X2Y0_DL0"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          274317.8,
+          152356.3,
+          963.28314
+        ]
+      },
+      "properties": {
+        "title": "BP_Teleport_Portal_Bubble_C",
+        "description": "Custom::CustomItems",
+        "sid": "BP_Teleport_Portal_Bubble_C_UAID_E89C255E1016040002_2031664208",
+        "cell": "MainGrid_L0_X-21Y-41_DL0"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          280139.0944,
+          154033.0404,
+          1950.4105399999999
+        ]
+      },
+      "properties": {
+        "title": "BP_Teleport_Portal_Bubble_C_Target",
+        "description": "Custom::CustomItems",
+        "sid": "BP_Teleport_Portal_Bubble_C_UAID_E89C255E1016040002_2031664208_Target",
+        "cell": "MainGrid_L0_X-21Y-41_DL0"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          276174.12,
+          151254.98,
+          1259.3446
+        ]
+      },
+      "properties": {
+        "title": "BP_Teleport_Portal_Bubble_C",
+        "description": "Custom::CustomItems",
+        "sid": "BP_Teleport_Portal_Bubble_C_UAID_E89C255E1016050002_1317880385",
+        "cell": "MainGrid_L0_X-21Y-41_DL0"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          281995.4144,
+          152931.72040000002,
+          2246.4719999999998
+        ]
+      },
+      "properties": {
+        "title": "BP_Teleport_Portal_Bubble_C_Target",
+        "description": "Custom::CustomItems",
+        "sid": "BP_Teleport_Portal_Bubble_C_UAID_E89C255E1016050002_1317880385_Target",
+        "cell": "MainGrid_L0_X-21Y-41_DL0"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          738650.0,
+          537630.0,
+          145.79703
+        ]
+      },
+      "properties": {
+        "title": "BP_TopazScanner_Overworld_C",
+        "description": "Custom::CustomItems",
+        "sid": "BP_TopazScanner_Overworld_C_UAID_00059A3C7A00E4D401_2011904859_61737f1b09ead9cc",
+        "cell": "MainGrid_L0_X52Y20_DL0"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          317452.97,
+          415673.0,
+          256.89584
+        ]
+      },
+      "properties": {
+        "title": "BP_PlayerStash_C",
+        "description": "Custom::CustomItems",
+        "sid": "BP_PlayerStash_C_UAID_00D861D9738D09C601_1213254834",
+        "cell": "MainGrid_L0_X-15Y1_DL0"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          317332.5,
+          415674.97,
+          306.89587
+        ]
+      },
+      "properties": {
+        "title": "BP_Bed_OnBed_C",
+        "description": "Custom::CustomItems",
+        "sid": "BP_Bed_OnBed_C_UAID_2CF05D1FE304082F02_2019080601",
+        "cell": "MainGrid_L0_X-15Y1_DL0"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           662855.94,
           618891.7,
           486.79898
@@ -74,703 +924,6 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          491994.25,
-          372874.5,
-          2102.0579
-        ]
-      },
-      "properties": {
-        "title": "BP_PlayerStash_C",
-        "description": "Custom::CustomItems",
-        "sid": "BP_PlayerStash_C_UAID_00D861FD6767F9DD01_2049378364",
-        "cell": "MainGrid_L0_X13Y-6_DL0"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          492074.38,
-          372738.3,
-          2151.2354
-        ]
-      },
-      "properties": {
-        "title": "BP_Bed_OnBed_C",
-        "description": "Custom::CustomItems",
-        "sid": "BP_Bed_OnBed_C_UAID_00D861FD6767F9E301_1820183566",
-        "cell": "MainGrid_L0_X13Y-6_DL0"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          317452.97,
-          415673.0,
-          256.89584
-        ]
-      },
-      "properties": {
-        "title": "BP_PlayerStash_C",
-        "description": "Custom::CustomItems",
-        "sid": "BP_PlayerStash_C_UAID_00D861D9738D09C601_1213254834",
-        "cell": "MainGrid_L0_X-15Y1_DL0"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          317332.5,
-          415674.97,
-          306.89587
-        ]
-      },
-      "properties": {
-        "title": "BP_Bed_OnBed_C",
-        "description": "Custom::CustomItems",
-        "sid": "BP_Bed_OnBed_C_UAID_2CF05D1FE304082F02_2019080601",
-        "cell": "MainGrid_L0_X-15Y1_DL0"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          373622.75,
-          603584.94,
-          123.317696
-        ]
-      },
-      "properties": {
-        "title": "BP_TopazScanner_Prologue_C",
-        "description": "Custom::CustomItems",
-        "sid": "BP_TopazScanner_Prologue_C_UAID_00D8612FD3CB53BD01_1368824374_be956d71e41348c6",
-        "cell": "NavigationDataChunks_L0_X-7Y38_DL0"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          421131.56,
-          411747.53,
-          2020.6703
-        ]
-      },
-      "properties": {
-        "title": "BP_PlayerStash_C",
-        "description": "Custom::CustomItems",
-        "sid": "BP_PlayerStash_C_UAID_18C04D7E62A1B1E201_1392030010",
-        "cell": "MainGrid_L0_X2Y0_DL0"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          419719.84,
-          410475.44,
-          2072.7468
-        ]
-      },
-      "properties": {
-        "title": "BP_Bed_OnBed_C",
-        "description": "Custom::CustomItems",
-        "sid": "BP_Bed_OnBed_C_UAID_18C04D7E62A1B1E201_1674865012",
-        "cell": "MainGrid_L0_X2Y0_DL0"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          298186.0,
-          461420.0,
-          216.0
-        ]
-      },
-      "properties": {
-        "title": "BP_Teleport_Portal_Bubble_C",
-        "description": "Custom::CustomItems",
-        "sid": "BP_Teleport_Portal_Bubble_C_UAID_30D042F7BCC8A5F901_1359435754",
-        "cell": "MainGrid_L0_X-18Y8_DL0"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          276850.0,
-          138690.0,
-          1280.0
-        ]
-      },
-      "properties": {
-        "title": "BP_TopazScanner_Overworld_C",
-        "description": "Custom::CustomItems",
-        "sid": "BP_TopazScanner_Overworld_C_UAID_00059A3C7A002EDA01_1514009566_b218f80946565a9d",
-        "cell": "NavigationDataChunks_L0_X-26Y-53_DL0"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          404036.75,
-          546702.8,
-          513.89453
-        ]
-      },
-      "properties": {
-        "title": "BP_PlayerStash_C",
-        "description": "Custom::CustomItems",
-        "sid": "BP_PlayerStash_C_UAID_D8BBC11C280DF4DD01_1510016301",
-        "cell": "MainGrid_L0_X-1Y22_DLC6C35766"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          403865.2,
-          546720.3,
-          560.98505
-        ]
-      },
-      "properties": {
-        "title": "BP_Bed_OnBed_C",
-        "description": "Custom::CustomItems",
-        "sid": "BP_Bed_OnBed_C_UAID_D8BBC11C280DF4DD01_1455071299",
-        "cell": "MainGrid_L0_X-1Y22_DLC6C35766"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          375041.0,
-          620587.0,
-          164.0
-        ]
-      },
-      "properties": {
-        "title": "BP_TopazScanner_Prologue_C",
-        "description": "Custom::CustomItems",
-        "sid": "BP_TopazScanner_Prologue_C_UAID_00D8612FD3CB4CBD01_1417423139_be956d71e41348c6",
-        "cell": "NavigationDataChunks_L0_X-7Y42_DL0"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          291823.75,
-          426257.7,
-          200.0
-        ]
-      },
-      "properties": {
-        "title": "BP_TopazScanner_Overworld_C",
-        "description": "Custom::CustomItems",
-        "sid": "BP_TopazScanner_Overworld_C_UAID_00059A3C7A0038D501_1169693187_0c9cc25df6bae22c",
-        "cell": "NavigationDataChunks_L0_X-23Y3_DL0"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          686929.0,
-          468887.0,
-          -706.0
-        ]
-      },
-      "properties": {
-        "title": "BP_Teleport_Portal_Bubble_C",
-        "description": "Custom::CustomItems",
-        "sid": "BP_Teleport_Portal_Bubble_C_UAID_2CF05D9D9D923DF501_1655663906",
-        "cell": "MainGrid_L0_X44Y9_DL0"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          274317.8,
-          152356.3,
-          963.28314
-        ]
-      },
-      "properties": {
-        "title": "BP_Teleport_Portal_Bubble_C",
-        "description": "Custom::CustomItems",
-        "sid": "BP_Teleport_Portal_Bubble_C_UAID_E89C255E1016040002_2031664208",
-        "cell": "MainGrid_L0_X-21Y-41_DL0"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          276174.12,
-          151254.98,
-          1259.3446
-        ]
-      },
-      "properties": {
-        "title": "BP_Teleport_Portal_Bubble_C",
-        "description": "Custom::CustomItems",
-        "sid": "BP_Teleport_Portal_Bubble_C_UAID_E89C255E1016050002_1317880385",
-        "cell": "MainGrid_L0_X-21Y-41_DL0"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          388559.34,
-          439655.5,
-          -76.96184
-        ]
-      },
-      "properties": {
-        "title": "BP_TopazScanner_Broken_C",
-        "description": "Custom::CustomItems",
-        "sid": "BP_TopazScanner_Broken_C_UAID_E8F40804416421EB01_1830797462_f978980b22bbf712",
-        "cell": "NavigationDataChunks_L0_X-4Y6_DL0"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          494969.22,
-          522887.78,
-          376.8854
-        ]
-      },
-      "properties": {
-        "title": "BP_TopazScanner_Broken_C",
-        "description": "Custom::CustomItems",
-        "sid": "BP_TopazScanner_Broken_C_UAID_4851C52E58FFA3EA01_1116744502_adf579e256b520ab",
-        "cell": "NavigationDataChunks_L0_X17Y22_DL0"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          397584.16,
-          544803.8,
-          896.65393
-        ]
-      },
-      "properties": {
-        "title": "BP_PlayerStash_C",
-        "description": "Custom::CustomItems",
-        "sid": "BP_PlayerStash_C_UAID_F43BD864B6C0C81902_1198135257",
-        "cell": "MainGrid_L0_X-2Y21_DLA8129FC2"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          379430.16,
-          25309.584,
-          280.15887
-        ]
-      },
-      "properties": {
-        "title": "BP_Bed_OnBed_C",
-        "description": "Custom::CustomItems",
-        "sid": "BP_Bed_OnBed_C_UAID_00D861D9738D8CE401_2034873546",
-        "cell": "MainGrid_L0_X-5Y-61_DL0"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          359900.0,
-          460280.0,
-          816.0
-        ]
-      },
-      "properties": {
-        "title": "BP_TopazScanner_Overworld_C",
-        "description": "Custom::CustomItems",
-        "sid": "BP_TopazScanner_Overworld_C_UAID_00059A3C7A00FBCD01_1999636820_c26e4a72d47d6c36",
-        "cell": "Architecture_L0_X-8Y8_DL0"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          307090.62,
-          515636.78,
-          637.5253
-        ]
-      },
-      "properties": {
-        "title": "BP_PlayerStash_C",
-        "description": "Custom::CustomItems",
-        "sid": "BP_PlayerStash_C_UAID_00D861FD676703DE01_1833198539",
-        "cell": "MainGrid_L0_X-16Y17_DL0"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          307094.38,
-          515771.5,
-          685.10535
-        ]
-      },
-      "properties": {
-        "title": "BP_Bed_OnBed_C",
-        "description": "Custom::CustomItems",
-        "sid": "BP_Bed_OnBed_C_UAID_00D861FD6767782302_1449640076",
-        "cell": "MainGrid_L0_X-16Y17_DL0"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          644022.5,
-          646345.25,
-          621.34375
-        ]
-      },
-      "properties": {
-        "title": "BP_Bed_OnBed_C",
-        "description": "Custom::CustomItems",
-        "sid": "BP_Bed_OnBed_C_UAID_D8BBC11C280DA7DD01_1278899759",
-        "cell": "MainGrid_L0_X37Y37_DL92CC467B"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          282210.53,
-          154014.95,
-          1460.7911
-        ]
-      },
-      "properties": {
-        "title": "BP_Teleport_Portal_Bubble_C",
-        "description": "Custom::CustomItems",
-        "sid": "BP_Teleport_Portal_Bubble_C_UAID_E89C255E1016050002_1794049386",
-        "cell": "MainGrid_L0_X-20Y-40_DL0"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          146970.0,
-          312430.0,
-          100.0
-        ]
-      },
-      "properties": {
-        "title": "BP_TopazScanner_Overworld_C",
-        "description": "Custom::CustomItems",
-        "sid": "BP_TopazScanner_Overworld_C_UAID_74563C6C9B82CBD001_1598495545_7b9e08f6aac7b602",
-        "cell": "NavigationDataChunks_L0_X-52Y-19_DL0"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          555379.7,
-          344953.88,
-          2267.726
-        ]
-      },
-      "properties": {
-        "title": "BP_Teleport_Portal_Bubble_C",
-        "description": "Custom::CustomItems",
-        "sid": "BP_Teleport_Portal_Bubble_C_UAID_E89C252D0AF6802D02_1299006254",
-        "cell": "MainGrid_L0_X23Y-10_DL0"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          107660.6,
-          473491.44,
-          629.32294
-        ]
-      },
-      "properties": {
-        "title": "BP_PlayerStash_C",
-        "description": "Custom::CustomItems",
-        "sid": "BP_PlayerStash_C_UAID_00D86159F049D7C501_1691512292",
-        "cell": "MainGrid_L0_X-48Y10_DL0"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          107605.3,
-          473599.62,
-          678.52374
-        ]
-      },
-      "properties": {
-        "title": "BP_Bed_OnBed_C",
-        "description": "Custom::CustomItems",
-        "sid": "BP_Bed_OnBed_C_UAID_00D86159F049FBE301_1318812108",
-        "cell": "MainGrid_L0_X-48Y10_DL0"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          488357.06,
-          517389.5,
-          251.5235
-        ]
-      },
-      "properties": {
-        "title": "BP_PlayerStash_C",
-        "description": "Custom::CustomItems",
-        "sid": "BP_PlayerStash_C_UAID_00D861FD685406C601_2081831329",
-        "cell": "MainGrid_L0_X12Y17_DL0"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          527100.0,
-          326840.0,
-          4170.0
-        ]
-      },
-      "properties": {
-        "title": "BP_TopazScanner_Overworld_C",
-        "description": "Custom::CustomItems",
-        "sid": "BP_TopazScanner_Overworld_C_UAID_00059A3C7A0092D901_1091030272_0f221ac0d4b85649",
-        "cell": "NavigationDataChunks_L0_X23Y-16_DL0"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          738650.0,
-          537630.0,
-          145.79703
-        ]
-      },
-      "properties": {
-        "title": "BP_TopazScanner_Overworld_C",
-        "description": "Custom::CustomItems",
-        "sid": "BP_TopazScanner_Overworld_C_UAID_00059A3C7A00E4D401_2011904859_61737f1b09ead9cc",
-        "cell": "MainGrid_L0_X52Y20_DL0"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          214915.73,
-          270725.9,
-          853.0
-        ]
-      },
-      "properties": {
-        "title": "BP_PlayerStash_C",
-        "description": "Custom::CustomItems",
-        "sid": "BP_PlayerStash_C_UAID_2CF05D1FE304F0C701_1393880809",
-        "cell": "MainGrid_L0_X-31Y-22_DL0"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          214926.67,
-          270860.6,
-          903.0
-        ]
-      },
-      "properties": {
-        "title": "BP_Bed_OnBed_C",
-        "description": "Custom::CustomItems",
-        "sid": "BP_Bed_OnBed_C_UAID_2CF05D1FE304F0C701_1314587808",
-        "cell": "MainGrid_L0_X-31Y-22_DL0"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          644137.1,
-          646271.6,
-          573.74817
-        ]
-      },
-      "properties": {
-        "title": "BP_PlayerStash_C",
-        "description": "Custom::CustomItems",
-        "sid": "BP_PlayerStash_C_UAID_D8BBC11C280DA7DD01_1326677760",
-        "cell": "MainGrid_L0_X37Y37_DL0"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          488485.1,
-          517619.5,
-          306.83777
-        ]
-      },
-      "properties": {
-        "title": "BP_Bed_OnBed_C",
-        "description": "Custom::CustomItems",
-        "sid": "BP_Bed_OnBed_C_UAID_00D861FD685406C601_2144311330",
-        "cell": "MainGrid_L0_X12Y17_DL6ABA6B9"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          231380.0,
-          495900.0,
-          649.9984
-        ]
-      },
-      "properties": {
-        "title": "BP_TopazScanner_Overworld_C",
-        "description": "Custom::CustomItems",
-        "sid": "BP_TopazScanner_Overworld_C_UAID_18C04D7E62BCE50F02_1461642437_e5b5a96f8aa7c232",
-        "cell": "MainGrid_L0_X-28Y14_DL0"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          172130.0,
-          243970.0,
-          520.0
-        ]
-      },
-      "properties": {
-        "title": "BP_TopazScanner_Overworld_C",
-        "description": "Custom::CustomItems",
-        "sid": "BP_TopazScanner_Overworld_C_UAID_00059A3C7A0054D901_1956317352_3213f1ef569ed636",
-        "cell": "Architecture_L0_X-37Y-26_DL0"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          608157.25,
-          599559.1,
-          3098.792
-        ]
-      },
-      "properties": {
-        "title": "BP_PlayerStash_C",
-        "description": "Custom::CustomItems",
-        "sid": "BP_PlayerStash_C_UAID_D8BBC11C280DE9DE01_1680322025",
-        "cell": "MainGrid_L0_X31Y30_DL0"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          608272.8,
-          599628.56,
-          3140.55
-        ]
-      },
-      "properties": {
-        "title": "BP_Bed_OnBed_C",
-        "description": "Custom::CustomItems",
-        "sid": "BP_Bed_OnBed_C_UAID_D8BBC11C280DE6DE01_2070544273",
-        "cell": "MainGrid_L0_X31Y30_DL0"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          692766.4,
-          744545.56,
-          390.0
-        ]
-      },
-      "properties": {
-        "title": "BP_TopazScanner_Overworld_C",
-        "description": "Custom::CustomItems",
-        "sid": "BP_TopazScanner_Overworld_C_UAID_74563C6C9B8295D801_1400593526_2e6c356d32ff1415",
-        "cell": "MainGrid_L0_X45Y53_DL0"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
           254340.0,
           626800.0,
           -760.0
@@ -781,57 +934,6 @@
         "description": "Custom::CustomItems",
         "sid": "BP_TopazScanner_Overworld_C_UAID_00059A3C7A0031D501_2073570947_9376a2ab31b27f08",
         "cell": "NavigationDataChunks_L0_X-30Y43_DL0"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          171646.86,
-          275623.66,
-          79.076195
-        ]
-      },
-      "properties": {
-        "title": "BP_TopazScanner_Prologue_C",
-        "description": "Custom::CustomItems",
-        "sid": "BP_TopazScanner_Prologue_C_UAID_E8F4080441641BE001_1244634750_585d1c8c388387f3",
-        "cell": "NavigationDataChunks_L0_X-47Y-26_DL0"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          231134.64,
-          159246.58,
-          1021.00006
-        ]
-      },
-      "properties": {
-        "title": "BP_PlayerStash_C",
-        "description": "Custom::CustomItems",
-        "sid": "BP_PlayerStash_C_UAID_2CF05D1FE3040FC601_1708880888",
-        "cell": "MainGrid_L0_X-28Y-39_DL0"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          231093.45,
-          159359.2,
-          1070.0
-        ]
-      },
-      "properties": {
-        "title": "BP_Bed_OnBed_C",
-        "description": "Custom::CustomItems",
-        "sid": "BP_Bed_OnBed_C_UAID_2CF05D1FE304B8E101_1264665019",
-        "cell": "MainGrid_L0_X-28Y-39_DL0"
       }
     }
   ]
