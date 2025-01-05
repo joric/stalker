@@ -4,7 +4,7 @@ from collections import Counter
 
 cache_dir = 'C:/Temp/Exports'
 world_path = 'Stalker2/Content/_Stalker_2/maps/_Stalker2_WorldMap/WorldMap_WP'
-classes = ['BP_PlayerStash_C','BP_Bed_OnBed_C','BP_TopazScanner', 'BP_Teleport']
+classes = ['BP_PlayerStash_C','BP_Bed_OnBed_C','BP_TopazScanner', 'BP_Teleport_Portal_Bubble']
 
 counter = Counter()
 
@@ -44,6 +44,7 @@ def get_markers(cells):
         filename = os.path.normpath(os.path.join(cache_dir, package_path)) + '.json'
 
         if not os.path.exists(filename):
+            print('missing', filename)
             continue
 
         data = json.load(open(filename, 'r'))
