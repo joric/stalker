@@ -174,18 +174,18 @@ let icons = {};
 let popup = null;
 let tooltip = null;
 
-function getIconHTML(options, size=48) {
-  let bg = options.bg || 'dimgrey';
+function getIconHTML(options, size=48, color=null) {
+  let bg = color || options.bg || 'dimgrey';
   let fg = options.fg || 'white';
   let html = options.html || `<i class="fa fa-${options.fa}" style="color:${fg}"></i>`;
   return `<span class="icon-base icon-${size}" style="color:${bg}">${html}</span>`;
 }
 
-let baseIcon = (options) => {
+let baseIcon = (options, color) => {
   let size = 48;
   return L.divIcon({
     className: 'divIcon',
-    html: getIconHTML(options, size),
+    html: getIconHTML(options, size, color),
     iconSize:     [size, size], // size of the icon
     iconAnchor:   [size/2, size], // point of the icon which will correspond to marker's location
     popupAnchor:  [0, -size*1.1], // point from which the popup should open relative to the iconAnchor
@@ -210,6 +210,20 @@ function getIconName(o) {
   }
 
   return 'Question';
+}
+
+function getIconColor(o) {
+  // get color from a small pool of colors
+
+  //let colors = ['red','dodgerblue','yellowgreen','darkorange','brown','darkkhaki','mediumpurple','tomato','tan'];
+  let colors = ['green','limegreen','seagreen','forestgreen','darkgreen','yellowgreen','olivedrab','darkolivegreen'];
+
+  if (o.sid && o.sid.includes('BP_Teleport_Portal_Bubble_C')) {
+    let s = o.sid.split('_Target')[0]
+    let c = s.split('').map(i => i.charCodeAt(0)).reduce((a, b)=> (a+b)^1337, 0) % colors.length;
+    return colors[c];
+  }
+  return null;
 }
 
 function loadMap(mapId) {
@@ -330,7 +344,7 @@ function loadMap(mapId) {
     //spiderfyOnMaxZoom: false,
     //removeOutsideVisibleBounds: true,
     //zoomToBoundsOnClick: false,
-    //maxClusterRadius: 50,
+    maxClusterRadius: 30,
     //animateAddingMarkers: true,
 
     showCoverageOnHover: false,
@@ -489,6 +503,13 @@ function Marker(feature) {
   const latlng = L.latLng(feature.geometry.coordinates[1], feature.geometry.coordinates[0]);
   let iconName = getIconName(feature.properties);
   let marker = L.marker(latlng, { icon: icons[iconName] || icons['Question'] } );
+
+  // check if we need to use custom color for this icon (teleports)
+  let color = getIconColor(feature.properties);
+  if (color) {
+    marker = L.marker(latlng, { icon: baseIcon(types[iconName], color) } );
+  }
+
   marker.feature = feature;
   marker.on('click', onMarkerClick);
   marker.on('mouseover', onMarkerHover);
