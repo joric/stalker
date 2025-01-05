@@ -480,7 +480,7 @@ function onMarkerClick(e) {
 function onMarkerHover(e) {
   let o = e.target.feature.properties;
   let name = getIconName(o);
-  let text = `${o.title} (${name})`;
+  let text = `${o.title} (${o.description}) / ${name}`;
   tooltip.setContent(text);
   tooltip.setLatLng(e.target.getLatLng());
 }
