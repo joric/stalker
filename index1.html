@@ -361,7 +361,6 @@ function loadMap() {
       groupLayer.setOptions({enableAltitude: map.getPitch()!=0});
     }
     //console.log('zoom', settings.zoom);
-
     saveSettings();
   });
 
@@ -406,6 +405,7 @@ function loadMap() {
   });
 
   map.on('moving', hideTooltip);
+  map.on('zooming', hideTooltip);
 }
 
 function markersLoadedCallback(markers) {
