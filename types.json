@@ -1,8 +1,8 @@
 {
   "Upgrade": { "fa": "bed", "bg": "darkslategrey", "match": "Upgrade", "group": "stashes" },
 
-  "Teleport Target": { "fa": "circle-chevron-down", "bg": "yellowgreen", "match": "BP_Teleport_Portal_Bubble_C_Target" },
-  "Teleport": { "fa": "circle-chevron-up", "bg": "yellowgreen", "match": "BP_Teleport_Portal_Bubble_C" },
+  "Teleport Target": { "fa": "circle-chevron-down", "bg": "dodgerblue", "match": "BP_Teleport_Portal_Bubble_C_Target" },
+  "Teleport": { "fa": "circle-chevron-up", "bg": "red", "match": "BP_Teleport_Portal_Bubble_C" },
 
   "Ammo": { "fa": "list", "bg": "steelblue", "match": "(?=Ammo|AGA|AHEDP|AVOG|APG7V|(A\\d{3}[\\w]+))(?=.*ESpawnType::(Item|PackOfItems))", "group": "items" },
   "Arch Anomaly": { "fa": "hurricane", "bg": "darkorange", "match": "ArchAnomaly", "group": "locations" },
