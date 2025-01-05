@@ -478,8 +478,9 @@ function onMarkerClick(e) {
 }
 
 function onMarkerHover(e) {
-  let p = e.target.feature.properties;
-  let text = `${p.title} (${p.description})`;
+  let o = e.target.feature.properties;
+  let name = getIconName(o);
+  let text = `${o.title} (${name})`;
   tooltip.setContent(text);
   tooltip.setLatLng(e.target.getLatLng());
 }
