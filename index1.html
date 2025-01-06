@@ -246,7 +246,7 @@ function loadMap() {
     [settings.zoom, settings.pitch, settings.bearing, settings.center] = [startZoom, startPitch, 0, mapCenter];
   }
 
-  let maxZoom = 7;
+  let maxZoom = 19;
   let tileSize = 512;
 
   //console.log('current zoom:', settings.zoom);
@@ -754,27 +754,47 @@ function Marker(feature) {
   };
 
   let misc_images = {
-    'Character': tiles['character'],
-    'Chest': tiles['box'],
+    //'Character': tiles['character'],
+    //'Chest': tiles['box'],
     'Squad': tiles['character'],
     'Shelter': tiles['cave'],
-    'Anomaly': tiles['anomaly'],
-    'Arch Anomaly': tiles['anomaly'],
+
+    //'Anomaly': tiles['anomaly'],
+    //'Arch Anomaly': tiles['anomaly'],
+
     'Radiation': tiles['radiation'],
     'Action': tiles['exclamation'],
     'Chair': tiles['exclamation'],
-    'Unique Enemy': tiles['claws'],
-    'Enemy': tiles['claws'],
-    'Weapon': tiles['box'],
-    'Sustenance': tiles['bag'],
-    'Ammo': tiles['box'],
-    'Medkits': tiles['box'],
-    'Medical': tiles['box'],
-    'Grenade': tiles['box'],
+
+    //'Unique Enemy': tiles['claws'],
+    //'Enemy': tiles['claws'],
+    //'Weapon': tiles['box'],
+    //'Sustenance': tiles['bag'],
+    //'Ammo': tiles['box'],
+    //'Medkits': tiles['box'],
+    //'Medical': tiles['box'],
+    //'Grenade': tiles['box'],
 
     'Artifact': tiles['circle'],
     'Teleport': tiles['circle_locked'],
     'Teleport Target': tiles['circle_dot'],
+
+
+    'Anomaly': 'Texture_Anomaly',
+    'Enemy': 'Texture_Dangerous',
+    'Unique Enemy': 'Texture_Dangerous',
+
+    'Weapon': 'Texture_Habar',
+    'Sustenance': 'Texture_Habar',
+    'Ammo': 'Texture_Habar',
+    'Medkits': 'Texture_Habar',
+    'Medical': 'Texture_Habar',
+    'Grenade': 'Texture_Habar',
+    'Chest': 'Texture_Habar',
+
+    'Character': 'Texture_Dangerous',
+
+
   };
 
 
@@ -805,7 +825,7 @@ function Marker(feature) {
   let size = iconSize;
 
   if (image.includes('CompassMarker')) {
-    //opacity = 0.5;
+    opacity = 0.75;
     size = 32;
   }
 

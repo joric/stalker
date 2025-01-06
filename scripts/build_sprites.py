@@ -15,6 +15,31 @@ folders = [
     'Stalker2/Content/GameLite/FPS_Game/UI/UIIcons/Markers/itr7/NotActive/Shadow',
 ]
 
+colors = {
+    'red':(255,0,0),
+    'cyan': (0,200,255),
+    'purple': (255,0,255),
+    'green': (0,255,0),
+    'orange': (255,140,0),
+    'violet': (200,100,255),
+    'jade': (74,211,172)
+}
+
+tints = {
+    'claws': colors['red'],
+    'box': colors['cyan'],
+    'anomaly': colors['purple'],
+    'character': colors['green'],
+    'radiation': colors['orange'],
+
+    'Stahes': colors['violet'],
+    'Dangerous': colors['jade'],
+    'Anomaly': colors['jade'],
+    'Follow': colors['jade'],
+    'Habar': colors['jade'],
+    'Radiation': colors['jade'],
+}
+
 def crop_and_resize(img, size, resize=True, tint=None):
     img_cropped = ImageOps.crop(img, border=0)
     bbox = img_cropped.getbbox()  # Get the bounding box of non-transparent areas
@@ -50,7 +75,8 @@ def crop_and_resize(img, size, resize=True, tint=None):
 
     if tint:
         print('applying tint here')
-        solid_color = Image.new("RGBA", image.size, tint + (255,))
+        k = 1
+        solid_color = Image.new("RGBA", image.size, (int(tint[0]*k), int(tint[1]*k), int(tint[2]*k), 255))
         tint_strength = 0.5
         r, g, b, alpha = image.split()
         image = Image.blend(image, solid_color, tint_strength)
@@ -71,12 +97,8 @@ for folder in folders:
         with Image.open(filename) as img:
             # Crop transparent areas
 
-            tint = None
-
-            if 'Stahes' in filename:
-                print('applying tint')
-                tint = (100,0,200) # violet
-
+            name = os.path.basename(filename).split('_')[1]
+            tint = tints.get(name)
             img_resized = crop_and_resize(img, iconSize, resize=True, tint=tint)
             # Save the resized image as PNG
             base_name = os.path.basename(filename)
@@ -87,18 +109,34 @@ for folder in folders:
 # cut the compass atlas
 img_path = 'Stalker2/Content/GameLite/FPS_Game/UI/UIIcons/Markers/Textures/CompassMarker.png'
 filename = os.path.normpath(os.path.join(cache_dir, img_path))
+
 gw = 44
 gh = 46
 tw = 40
 th = 44
 iconSize2 = 32
-with Image.open(filename) as img_atlas:
-    for i in range(5):
-        for j in range(4):
-            img = img_atlas.crop((i*gw, j*gh, i*gw + tw, j*gh+th))
+nw = 5
+nh = 4
 
-            img_resized = crop_and_resize(img, iconSize2, False)
-            base_name = f'CompassMarker_{i}_{j}.png'
+tiles = [
+    'claws','skull', 'bag', 'circle',
+    'circle_locked','fire', 'radiation', 'lock',
+    'exclamation', 'character', 'circle_dot', 'question',
+    'box', 'unlocked', 'anomaly', 'cave',
+    'yen','repair','rest', 'misc',
+]
+
+def get_name(x,y):
+    return tiles[x * nh + y]
+
+with Image.open(filename) as img_atlas:
+    for x in range(nw):
+        for y in range(nh):
+            img = img_atlas.crop((x*gw, y*gh, x*gw + tw, y*gh+th))
+            name = get_name(x,y)
+            tint = tints.get(name)
+            img_resized = crop_and_resize(img, iconSize2, False, tint=tint)
+            base_name = f'CompassMarker_{x}_{y}.png'
             output_path = os.path.normpath(os.path.join(out_dir, base_name))
             img_resized.save(output_path, format='PNG')
             print(f"Saved: {output_path}")
