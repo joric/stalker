@@ -17,7 +17,7 @@ folders = [
 
 colors = {
     'red':(255,0,0),
-    'cyan': (0,200,255),
+    'cyan': (33,175,214),
     'purple': (255,0,255),
     'green': (0,255,0),
     'orange': (255,140,0),
@@ -41,6 +41,9 @@ tints = {
     'Follow': colors['jade'],
     'Habar': colors['jade'],
     'Radiation': colors['jade'],
+    'Quest': colors['cyan'],
+    'QuestGiver': colors['cyan'],
+
 }
 
 def crop_and_resize(img, size, resize=True, tint=None):
