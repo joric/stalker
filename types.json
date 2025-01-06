@@ -5,7 +5,7 @@
   "Teleport": { "fa": "circle-chevron-up", "bg": "red", "match": "BP_Teleport_Portal_Bubble_C", "group":"locations" },
 
   "Ammo": { "fa": "list", "bg": "steelblue", "match": "(?=Ammo|AGA|AHEDP|AVOG|APG7V|(A\\d{3}[\\w]+))(?=.*ESpawnType::(Item|PackOfItems))", "group": "items" },
-  "Arch Anomaly": { "fa": "hurricane", "bg": "darkorange", "match": "ArchAnomaly", "group": "locations" },
+  "Arch Anomaly": { "fa": "hurricane", "bg": "darkorange", "match": "ArchAnomaly", "group": "anomalies" },
   "Anomaly": { "fa": "hurricane", "bg": "brown", "match": "Anomaly", "group": "anomalies" },
   "Artifact": { "fa": "virus", "bg": "saddlebrown", "match": "Artifact", "group": "anomalies" },
   "Attachment": { "fa": "wrench", "bg": "steelblue", "match": "Attachment", "group": "items" },
