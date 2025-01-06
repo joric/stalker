@@ -725,8 +725,9 @@ function Marker(feature) {
     'Medic':      'Texture_Medecine',
     'Stash':      'Texture_Stahes',
     'Scanner':    'Texture_Signal',
-    'Safe':     'Texture_Stahes',
-    'Upgrade':  'Texture_Storage',
+
+    'Safe':     'Texture_Habar',
+    'Upgrade':  'Texture_Habar',
   }
 
   // this is direct mapping for reference
@@ -800,8 +801,9 @@ function Marker(feature) {
   // stash without a clue is just items
   //if (group=='stash' && !o.clue) group = 'items';
 
-  if (group == "stashes") name = "Stash";
-  if (o.spawns && o.spawns.length>0) name = 'Stash';
+  //if (group == "stashes") name = "Stash";
+
+  //if (o.spawns && o.spawns.length>0) name = 'Stash';
 
   if (name=='Stash') group = 'stashes';
 
