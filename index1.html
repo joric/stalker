@@ -461,9 +461,9 @@ function markersLoadedCallback(markers) {
     collection[m.group].push(m.marker);
   }
 
+  // circles do not make it slower, multiple layers do
   let circleLayer = addCircles(markers);
   makeHandler(circleLayer);
-
   circleLayer.addTo(map);
 
   const capitalize = s => s[0].toUpperCase()+s.slice(1);
