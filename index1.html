@@ -426,7 +426,7 @@ function markersLoadedCallback(markers) {
   const capitalize = s => s[0].toUpperCase()+s.slice(1);
   const cmpAlphaNum = (a,b) => a[0].localeCompare(b[0], 'en', { numeric: true });
 
-  let weights = {'base': 1000, 'locations': 750, 'stashes': 500, 'items': 250, 'misc': -1000 };
+  let weights = {'base': 1000, 'locations': 750, 'stashes': 500, 'items': 250, 'anomalies': -900, 'misc': -1000 };
   let groups = Object.keys(collection);
 
   groups = groups.sort( (a,b)=> (weights[b]||0)-(weights[a]||0) || cmpAlphaNum(a,b))
