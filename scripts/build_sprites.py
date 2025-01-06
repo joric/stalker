@@ -24,6 +24,7 @@ colors = {
     'violet': (200,100,255),
     'jade': (74,211,172),
     'khaki': (213,197,138),
+    'green': (50,200,50),
 }
 
 tints = {
@@ -32,6 +33,7 @@ tints = {
     'anomaly': colors['purple'],
     'character': colors['khaki'],
     'radiation': colors['orange'],
+    'bag': colors['green'],
 
     'Stahes': colors['violet'],
     'Dangerous': colors['jade'],
