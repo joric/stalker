@@ -447,6 +447,19 @@ function addCircles(markers) {
 
 }
 
+function markersLoadedCallback2(markers) {
+  // looks like performance depends on misc layer
+  // have to speed up the search the way it doesn't make too much show/hide calls
+  let geometries = []
+  for (m of markers) {
+    if ( ['locations','base','items','stashes','mutants','anomalies'].includes(m.group) )
+      geometries.push(m.marker);
+  }
+  new maptalks.PointLayer('Points', geometries, {}).addTo(groupLayer);
+
+  console.log('loaded geometries', geometries.length);
+}
+
 function markersLoadedCallback(markers) {
   console.timeEnd('markers');
   console.log('Total markers:', markers.length);
@@ -1015,6 +1028,9 @@ function passesFilter(marker) {
 function filterItems() {
 
   for (const layer of groupLayer.getLayers()) {
+
+    if (!layer.isVisible()) continue; // skip hidden layers altogether (for now)
+
     for (marker of layer._geoList) {
       if (passesFilter(marker)){
         marker.show();
