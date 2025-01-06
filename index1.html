@@ -198,8 +198,7 @@ let startZoom = 2;
 let defaultPitch = 45;
 let autoAltitude = true;
 let groupLayer = null;
-let lineLayer = null;
-let regionsLayer = null;
+let regionLayer = null;
 let map = null;
 let types = {};
 let lang = {};
@@ -378,8 +377,7 @@ function loadMap() {
     visible : false,
   }).addTo(map);
 
-
-  regionsLayer = new maptalks.PolygonLayer('Regions').addTo(map);
+  regionLayer = new maptalks.PolygonLayer('Regions').addTo(map);
 
   groupLayer = new maptalks.GroupGLLayer('Markers',[], {
     enableAltitude: enableAltitude,
@@ -388,7 +386,7 @@ function loadMap() {
     forceRenderOnRotating: true,
   }).addTo(map);
 
-  if (!settings.activeItems['regions']) regionsLayer.hide();
+  if (!settings.activeItems['regions']) regionLayer.hide();
 
   setTimeout(function() {
     if (enableAltitude && autoAltitude) {
@@ -409,6 +407,46 @@ function loadMap() {
   map.on('zooming', hideTooltip);
 }
 
+function addCircles(markers) {
+  let circles = [];
+
+  const defaultSymbol = {
+    'lineColor': '#fff',    // Border color
+    'lineWidth': 2.5,            // Border width
+    'polygonFill': '#fff',  // Fill color
+    'polygonOpacity': 0.1,      // Fill opacity
+    'lineOpacity': 0.5,
+  };
+
+  for (m of markers) {
+    let coordinates = m.marker.feature.geometry.coordinates;
+
+    coordinates = [coordinates[0], coordinates[1], coordinates[2]*0.05 ]; // cannot disable altitude for now, fucking parallax effect
+
+    let o = m.marker.feature.properties;
+    if (o.radius) {
+
+      //let numberOfShellPoints = Math.min(60, ~~(o.radius / 200));
+      var circle = new maptalks.Circle(coordinates, o.radius, {
+        symbol: defaultSymbol,
+        properties: {
+          //numberOfShellPoints: numberOfShellPoints,
+        },
+      });
+      circles.push(circle);
+
+      circle.feature = m.marker.feature;
+    }
+  }
+
+  let circleLayer = new maptalks.PolygonLayer('Circles', circles, {
+    visible: settings.activeItems['circles']
+  });
+
+  return circleLayer;
+
+}
+
 function markersLoadedCallback(markers) {
   console.timeEnd('markers');
   console.log('Total markers:', markers.length);
@@ -417,11 +455,16 @@ function markersLoadedCallback(markers) {
 
   // join markers by group name
   let collection = {};
+
   for (m of markers) {
     if (!collection[m.group]) collection[m.group] = [];
     collection[m.group].push(m.marker);
-    let o = m.marker.feature.properties;
   }
+
+  let circleLayer = addCircles(markers);
+  makeHandler(circleLayer);
+
+  circleLayer.addTo(map);
 
   const capitalize = s => s[0].toUpperCase()+s.slice(1);
   const cmpAlphaNum = (a,b) => a[0].localeCompare(b[0], 'en', { numeric: true });
@@ -453,7 +496,7 @@ function markersLoadedCallback(markers) {
     makeHandler(layer);
   }
 
-  makeHandler(regionsLayer);
+  makeHandler(regionLayer);
 
   filterItems();
 
@@ -463,7 +506,6 @@ function markersLoadedCallback(markers) {
     overlayTitle : 'Overlays',
     containerClass : 'maptalks-layer-switcher',
   }).addTo(map);
-
 }
 
 function loadMarkersIdle(data) {
@@ -949,7 +991,7 @@ function loadRegions(geojson) {
   });
 
 
-  regionsLayer.addGeometry(geometries);
+  regionLayer.addGeometry(geometries);
 }
 
 function saveSettings() {
