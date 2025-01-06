@@ -1,6 +1,4 @@
 {
-  "Upgrade": { "fa": "bed", "bg": "darkslategrey", "match": "Upgrade", "group": "items" },
-
   "Teleport Target": { "fa": "circle-chevron-down", "bg": "dodgerblue", "match": "BP_Teleport_Portal_Bubble_C_Target", "group":"anomalies" },
   "Teleport": { "fa": "circle-chevron-up", "bg": "red", "match": "BP_Teleport_Portal_Bubble_C", "group":"anomalies" },
 
