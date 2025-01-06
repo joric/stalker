@@ -74,16 +74,18 @@ def crop_and_resize(img, size, resize=True, tint=None):
         image.paste(original_image, (padding_left, padding_top))
 
     if tint:
-        print('applying tint here')
-        k = 1
-        solid_color = Image.new("RGBA", image.size, (int(tint[0]*k), int(tint[1]*k), int(tint[2]*k), 255))
-        tint_strength = 0.5
-        r, g, b, alpha = image.split()
-        image = Image.blend(image, solid_color, tint_strength)
-        image = Image.merge("RGBA", (*image.split()[:3], alpha))
+        original = image
+        pixels = original.load()
+        tint_color = tint + (255,)
+        for y in range(original.height):
+            for x in range(original.width):
+                r, g, b, a = pixels[x, y]
+                r = int(r * (tint_color[0] / 255))
+                g = int(g * (tint_color[1] / 255))
+                b = int(b * (tint_color[2] / 255))
+                pixels[x, y] = (r, g, b, a)
 
     return image
-
 
     #return ImageOps.pad(img_cropped, (iconSize, iconSize))
 
