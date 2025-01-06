@@ -33,7 +33,7 @@ tints = {
     #'anomaly': colors['orange'],
     'character': colors['khaki'],
     'radiation': colors['orange'],
-    'bag': colors['green'],
+    #'bag': colors['green'],
 
     'Stahes': colors['violet'],
     'Dangerous': colors['jade'],
