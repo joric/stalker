@@ -22,14 +22,15 @@ colors = {
     'green': (0,255,0),
     'orange': (255,140,0),
     'violet': (200,100,255),
-    'jade': (74,211,172)
+    'jade': (74,211,172),
+    'olive': (213,197,138),
 }
 
 tints = {
     'claws': colors['red'],
     'box': colors['cyan'],
     'anomaly': colors['purple'],
-    'character': colors['green'],
+    'character': colors['khaki'],
     'radiation': colors['orange'],
 
     'Stahes': colors['violet'],
