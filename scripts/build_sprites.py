@@ -8,7 +8,7 @@ out_dir = '../data/sprites'
 
 os.makedirs(out_dir, exist_ok = True)
 
-iconSize = 42
+iconSize = 48
 
 folders = [
     'Stalker2/Content/GameLite/FPS_Game/UI/UIIcons/Markers/itr6/NotActive/Shadow',
@@ -23,7 +23,7 @@ colors = {
     'orange': (255,140,0),
     'violet': (200,100,255),
     'jade': (74,211,172),
-    'olive': (213,197,138),
+    'khaki': (213,197,138),
 }
 
 tints = {
