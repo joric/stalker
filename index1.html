@@ -221,6 +221,8 @@ function loadMap() {
 
   settings = localData[mapId];
 
+  settings.baseLayer = settings.baseLayer || 'PDA';
+
   searchControl = document.querySelector('.search-box input');
   searchControl.value = settings.searchText||'';
 
@@ -280,6 +282,7 @@ function loadMap() {
         urlTemplate: 'https://joric.github.io/stalker2_tileset/tiles/{z}/{x}/{y}.jpg',
         repeatWorld: false,
         tileSize: 512,
+        visible: settings.baseLayer == 'PDA',
       }),
 
       new maptalks.TileLayer('GlobalMap', {
@@ -287,7 +290,7 @@ function loadMap() {
         urlTemplate: 'https://joric.github.io/stalker2_tileset/extras/wb/{z}/{x}/{y}.jpg',
         repeatWorld: false,
         tileSize: 512,
-        visible : false,
+        visible: settings.baseLayer == 'GlobalMap',
       }),
 
       new maptalks.TileLayer('LDScheme', {
@@ -295,7 +298,7 @@ function loadMap() {
         urlTemplate: 'https://joric.github.io/stalker2_tileset/extras/ld/{z}/{x}/{y}.png',
         repeatWorld: false,
         tileSize: 512,
-        visible : false,
+        visible: settings.baseLayer == 'LDScheme',
       }),
 
     ]),
@@ -405,6 +408,16 @@ function loadMap() {
 
   map.on('moving', hideTooltip);
   map.on('zooming', hideTooltip);
+
+  map.on('setbaselayer', e=> {
+    let layers = map.getBaseLayer().getLayers();
+    for (layer of layers) {
+      if (layer.isVisible()) {
+        settings.baseLayer = layer.getId();
+      }
+    }
+    saveSettings();
+  });
 }
 
 function addCircles(markers) {
@@ -478,7 +491,7 @@ function markersLoadedCallback(markers) {
 
   // circles do not make it slower, multiple layers do
   let circleLayer = addCircles(markers);
-  makeHandler(circleLayer);
+  addHandler(circleLayer);
   circleLayer.addTo(map);
 
   const capitalize = s => s[0].toUpperCase()+s.slice(1);
@@ -508,10 +521,10 @@ function markersLoadedCallback(markers) {
 
     layer.addGeometry(geometries);
     //console.log('created layer', group, 'visible', settings.activeItems[group], geometries.length, 'markers');
-    makeHandler(layer);
+    addHandler(layer);
   }
 
-  makeHandler(regionLayer);
+  addHandler(regionLayer);
 
   filterItems();
 
@@ -558,7 +571,7 @@ function loadMarkers(data) {
   loadMarkersIdle(data);
 }
 
-function makeHandler(layer) {
+function addHandler(layer) {
   const originalShow = layer.show;
   const originalHide = layer.hide;
 
