@@ -8,8 +8,6 @@ out_dir = '../data/sprites'
 
 os.makedirs(out_dir, exist_ok = True)
 
-iconSize = 48
-
 folders = [
     'Stalker2/Content/GameLite/FPS_Game/UI/UIIcons/Markers/itr6/NotActive/Shadow',
     'Stalker2/Content/GameLite/FPS_Game/UI/UIIcons/Markers/itr7/NotActive/Shadow',
@@ -46,9 +44,21 @@ tints = {
 
 }
 
+iconSize = 48
+
 def crop_and_resize(img, size, resize=True, tint=None):
     img_cropped = ImageOps.crop(img, border=0)
-    bbox = img_cropped.getbbox()  # Get the bounding box of non-transparent areas
+
+    cw = ch = 80 # good size match
+
+    w,h = img.size
+    
+    b = (w-cw)//2
+
+    bbox = (b,b, w-b, h-b)
+
+    #bbox = img_cropped.getbbox()  # Get the bounding box of non-transparent areas
+
     
     if bbox:
         img_cropped = img_cropped.crop(bbox)
@@ -59,7 +69,7 @@ def crop_and_resize(img, size, resize=True, tint=None):
 
     if resize:
         # Resize the image, maintaining aspect ratio
-        image = ImageOps.pad(img_cropped, (size, size), method=Image.Resampling.LANCZOS, centering=(0.5, 1.0))
+        image = ImageOps.pad(img_cropped, (size, size), method=Image.Resampling.LANCZOS)
 
     else:
         original_image = img_cropped
