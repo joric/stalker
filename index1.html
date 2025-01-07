@@ -882,15 +882,14 @@ function Marker(feature) {
     size = 32;
   }
 
-  var marker = new maptalks.Marker(coordinates,
-    {
-      'symbol' : {
-        'markerFile'   : image,
-        'markerWidth'  : size,
-        'markerHeight' : size,
-        'markerDx'     : 0,
-        'markerDy'     : 0,
-        'markerOpacity': opacity,
+  var marker = new maptalks.Marker(coordinates,{
+      symbol : {
+        markerFile   : image,
+        markerWidth  : size,
+        markerHeight : size,
+        markerDx     : 0,
+        markerDy     : 0,
+        markerOpacity: opacity,
         markerVerticalAlignment: 'middle',
       },
     }
@@ -899,8 +898,22 @@ function Marker(feature) {
   marker.feature = feature;
 
   marker.on('click', showPopup);
-  marker.on('mouseover', showTooltip);
-  marker.on('mouseout', function () {
+
+  marker.on('mouseover', function(e) {
+    let marker = e.target;
+    marker.updateSymbol({
+      markerWidth: size*1.15,
+      markerHeight: size*1.15,
+    });
+    showTooltip(e);
+  });
+
+  marker.on('mouseout', function(e) {
+    let marker = e.target;
+    marker.updateSymbol({
+      markerWidth: size,
+      markerHeight: size,
+    });
     clearTimeout(tmTooltip);
     tmTooltip = setTimeout(hideTooltip, 25);
   });
