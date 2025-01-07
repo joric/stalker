@@ -226,34 +226,19 @@ function loadMap() {
   searchControl = document.querySelector('.search-box input');
   searchControl.value = settings.searchText||'';
 
+  //console.log('current zoom:', settings.zoom);
+  let scrollWheelZoom = true; // maptalks uses fractional zoom by default
+  //let scrollWheelZoom = false;
+
   let w = h = 812900;
-
-  let mapSize = {width: 65536, height: 65536};
-
-  let mapWorldSize = w;
-  let scale = mapWorldSize / mapSize.width;
-
-  let mapWorldCenter = { X: w/2, Y: h/2, Z: 0.0 };
-
-  let mapWorldUpperLeft = { X: 0, Y: 0, Z: 0.0 };
-  let mapWorldLowerRight = { X: w, Y: h, Z: 0.0 };
-
-  mapCenter = [mapWorldCenter.X, mapWorldCenter.Y];
-  mapBounds = [mapWorldUpperLeft.X, mapWorldUpperLeft.Y, mapWorldLowerRight.X, mapWorldLowerRight.Y];
-
-  let [left,top,right,bottom] = mapBounds;
+  let center = [w/2, h/2];
+  let [left,top,right,bottom] = [0, 0, w, h];
+  let maxZoom = 8;
+  let tileSize = 512;
 
   if (!settings.center) {
     [settings.zoom, settings.pitch, settings.bearing, settings.center] = [startZoom, startPitch, 0, mapCenter];
   }
-
-  let maxZoom = 19;
-  let tileSize = 512;
-
-  //console.log('current zoom:', settings.zoom);
-
-  let scrollWheelZoom = true; // maptalks uses fractional zoom by default
-  //let scrollWheelZoom = false;
 
   map = new maptalks.Map('map', {
 
