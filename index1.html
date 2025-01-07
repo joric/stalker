@@ -237,7 +237,7 @@ function loadMap() {
   let tileSize = 512;
 
   if (!settings.center) {
-    [settings.zoom, settings.pitch, settings.bearing, settings.center] = [startZoom, startPitch, 0, mapCenter];
+    [settings.zoom, settings.pitch, settings.bearing, settings.center] = [startZoom, startPitch, 0, center];
   }
 
   map = new maptalks.Map('map', {
