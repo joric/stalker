@@ -13,14 +13,14 @@
 
   "Bed": { "fa": "bed", "bg": "darkslategrey", "match": "BP_Bed_OnBed_C", "group": "base" },
   "Body": { "fa": "face-dizzy", "bg": "steelblue", "match": "Body", "group": "misc" },
-  "Unique Enemy": { "fa": "skull-crossbones", "bg": "brown", "match": "(Deer|Pseudogiant|Burer|Poltergeist|Controller|Chimera)(?=.*ESpawnType::Obj)", "group": "mutants" },
+  "Unique Enemy": { "fa": "skull-crossbones", "bg": "brown", "match": "(Deer|Pseudogiant|Burer|Poltergeist|Controller|Chimera)(?=.*ESpawnType::Obj)", "group": "enemies" },
   "Box": { "fa": "box", "bg": "steelblue", "match": "(?=Box)(?=.*::Obj)" },
   "Character": { "fa": "person", "bg": "cornflowerblue", "match": "(Mityaj|Sniper|Noon|Batya|Pripoy|Varta|Neutral|Scientist|NPC|Freedom|Military|Spark|Kardan|Captain|Doctor|Mercenaries|Scar|Lejtenant|Duty|Radovoj|Bandit|Monolith|Mercenary)(?=.*ESpawnType::Obj)" },
   "Chest": { "fa": "box-archive", "bg": "steelblue", "match": "Bluebox|Cabinet_metal", "group": "items" },
   "City": { "fa": "city", "bg": "darkslategrey", "match": "City" },
   "Easter Egg": { "fa": "egg", "bg": "darkslategrey", "match": "EasterEgg" },
   
-  "Enemy": { "fa": "skull", "bg": "brown", "match": "(PseudoDog|Bayun|Bloodsucker|Flesh|Blinddog|Tushkan|Boar|ZombieFoster|Rat|Snork|Zombie)(?=.*ESpawnType::Obj)", "group": "mutants" },
+  "Enemy": { "fa": "skull", "bg": "brown", "match": "(PseudoDog|Bayun|Bloodsucker|Flesh|Blinddog|Tushkan|Boar|ZombieFoster|Rat|Snork|Zombie)(?=.*ESpawnType::Obj)", "group": "enemies" },
   "Gear": { "fa": "shirt", "bg": "steelblue", "match": "Gear|Armor", "group": "items" },
   "Guide": { "fa": "location-crosshairs", "bg": "cornflowerblue", "match": "Custom::FastTravel" },
   "Key": { "fa": "key", "bg": "saddlebrown", "match": "Key" },
@@ -64,7 +64,7 @@
   "Guitar": { "fa": "guitar", "bg": "cornflowerblue", "match": "Guitar(?=.*ESpawnType::Item)", "group" :"items" },
   "EnemySpawner": { "fa": "skull", "bg": "black", "match": "(?=.*CA_Jerboa|CA_Flesh|CA_Blinddog|CA_Pseudodog|CA_Boar|CA_Cat|CA_Bloodsucker|CA_Snork|CA_Tushkan)(?=.*::ContextualAction)" },
   "Chair": { "fa": "chair", "bg": "black", "match": "(lie|sit|stand)(?=.*ESpawnType::ContextualAction)" },
-  "Lair": { "fa": "dungeon", "bg": "black", "match": "Lair", "group": "mutants" },
+  "Lair": { "fa": "dungeon", "bg": "black", "match": "Lair", "group": "enemies" },
   "Trigger": { "fa": "cube", "bg": "black", "match": "ESpawnType::Trigger|WeatherSelection|SafeZone|DailyScheduleZone", "priority": -1 },
   "Action": { "fa": "toggle-off", "bg": "black", "match": "ESpawnType::ContextualAction", "priority": -1 }
 }
