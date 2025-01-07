@@ -439,8 +439,10 @@ function addCircles(markers) {
     }
   }
 
+  let visible = settings.activeItems['circles'] == true;
+
   let circleLayer = new maptalks.PolygonLayer('Circles', circles, {
-    visible: settings.activeItems['circles']
+    visible: visible,
   });
 
   return circleLayer;
@@ -580,7 +582,6 @@ function makeHandler(layer) {
   layer.on('visibilitychange', function (e) {
     let group = e.target.getId().toLowerCase();
     let show = e.visible;
-
 
     if (show) {
       settings.activeItems[group] = true;
@@ -844,8 +845,8 @@ function Marker(feature) {
     'Gear': 'Texture_Habar',
     'Chest': 'Texture_Habar',
 
-    //'Artifact': 'Texture_Follow',
-    'Artifact': tiles['anomaly'],
+    'Artifact': 'Texture_Follow',
+    //'Artifact': tiles['anomaly'],
   };
 
 

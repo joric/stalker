@@ -47,18 +47,15 @@ tints = {
 iconSize = 48
 
 def crop_and_resize(img, size, resize=True, tint=None):
-    img_cropped = ImageOps.crop(img, border=0)
+    img_cropped = img #ImageOps.crop(img, border=0)
 
-    cw = ch = 80 # good size match
-
-    w,h = img.size
-    
-    b = (w-cw)//2
-
-    bbox = (b,b, w-b, h-b)
-
-    #bbox = img_cropped.getbbox()  # Get the bounding box of non-transparent areas
-
+    if resize:
+        cw = ch = 80 # good size match
+        w,h = img.size
+        b = (w-cw)//2
+        bbox = (b,b, w-b, h-b)
+    else:
+        bbox = img_cropped.getbbox()  # Get the bounding box of non-transparent areas
     
     if bbox:
         img_cropped = img_cropped.crop(bbox)

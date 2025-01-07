@@ -5,7 +5,7 @@
   "Ammo": { "fa": "list", "bg": "steelblue", "match": "(?=Ammo|AGA|AHEDP|AVOG|APG7V|(A\\d{3}[\\w]+))(?=.*ESpawnType::(Item|PackOfItems))", "group": "items" },
   "Arch Anomaly": { "fa": "hurricane", "bg": "darkorange", "match": "ArchAnomaly", "group": "locations" },
   "Anomaly": { "fa": "hurricane", "bg": "brown", "match": "Anomaly", "group": "anomalies" },
-  "Artifact": { "fa": "virus", "bg": "saddlebrown", "match": "Artifact", "group": "anomalies" },
+  "Artifact": { "fa": "virus", "bg": "saddlebrown", "match": "Artifact", "group": "items" },
   "Attachment": { "fa": "wrench", "bg": "steelblue", "match": "Attachment", "group": "items" },
   "Bag": { "fa": "briefcase", "bg": "steelblue", "match": "(see_stash)(?=.*ESpawnType::ItemContainer)", "group": "items" },
   "Base": { "fa": "star", "bg": "darkslategrey", "match": "ESpawnType::Hub", "priority": -1, "group": "base" },
