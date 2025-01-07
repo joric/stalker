@@ -215,7 +215,7 @@ let firstRun = false;
 function loadMap() {
 
   if (!localData[mapId]) {
-    localData[mapId] = { activeItems: {'base':true, 'locations': true, 'stashes': true, 'regions': true, 'items': true, 'mutants': true} };
+    localData[mapId] = { activeItems: {'base':true, 'locations': true, 'stashes': true, 'regions': true, 'items': true, 'mutants': true, 'circles': true} };
     //localData[mapId] = { activeItems: {'base':true, 'regions': true} };
   }
 
@@ -477,7 +477,7 @@ function markersLoadedCallback(markers) {
   // circles do not make it slower, multiple layers do
   let circleLayer = addCircles(markers);
   addHandler(circleLayer);
-  circleLayer.addTo(map);
+  circleLayer.addTo(groupLayer);
 
   const capitalize = s => s[0].toUpperCase()+s.slice(1);
   const cmpAlphaNum = (a,b) => a[0].localeCompare(b[0], 'en', { numeric: true });
