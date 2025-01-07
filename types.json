@@ -1,6 +1,6 @@
 {
-  "Teleport Target": { "fa": "circle-chevron-down", "bg": "dodgerblue", "match": "BP_Teleport_Portal_Bubble_C_Target", "group":"anomalies" },
-  "Teleport": { "fa": "circle-chevron-up", "bg": "red", "match": "BP_Teleport_Portal_Bubble_C", "group":"anomalies" },
+  "Teleport Target": { "fa": "circle-chevron-down", "bg": "dodgerblue", "match": "BP_Teleport_Portal_Bubble_C_Target", "group":"locations" },
+  "Teleport": { "fa": "circle-chevron-up", "bg": "red", "match": "BP_Teleport_Portal_Bubble_C", "group":"locations" },
 
   "Ammo": { "fa": "list", "bg": "steelblue", "match": "(?=Ammo|AGA|AHEDP|AVOG|APG7V|(A\\d{3}[\\w]+))(?=.*ESpawnType::(Item|PackOfItems))", "group": "items" },
   "Arch Anomaly": { "fa": "hurricane", "bg": "darkorange", "match": "ArchAnomaly", "group": "locations" },
