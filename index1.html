@@ -365,14 +365,14 @@ function loadMap() {
     visible : false,
   }).addTo(map);
 
-  regionLayer = new maptalks.PolygonLayer('Regions').addTo(map);
-
-  groupLayer = new maptalks.GroupGLLayer('Markers',[], {
+  groupLayer = new maptalks.GroupGLLayer('Features',[], {
     enableAltitude: enableAltitude,
     sortByDistanceToCamera: true,
     forceRenderOnMoving: true,
     forceRenderOnRotating: true,
   }).addTo(map);
+
+  regionLayer = new maptalks.PolygonLayer('Regions').addTo(groupLayer);
 
   if (!settings.activeItems['regions']) regionLayer.hide();
 
@@ -941,7 +941,7 @@ function scaleGeoJSON(geojson, scaleFactor, origin) {
   return geojson;
 }
 
-function loadRegions(geojson) {
+function addRegions(geojson) {
 
   const defaultSymbol = {
     'lineColor': '#fff',    // Border color
@@ -974,6 +974,8 @@ function loadRegions(geojson) {
         geometry.updateSymbol(defaultSymbol); // Reset to default
       });
       */
+
+      geometry.feature = {properties: {name: geometry.properties.svgID}};
 
     }
   });
@@ -1148,7 +1150,7 @@ window.onload = function() {
 
   }).catch(e=>{alert('Cannot load files, CORS?')});
 
-  fetch('regions.json').then(r=>r.json()).then(loadRegions);
+  fetch('regions.json').then(r=>r.json()).then(addRegions);
   fetch('data/Localization/language_02.json').then(r=>r.json()).then(data => {lang = data});
 
 };
