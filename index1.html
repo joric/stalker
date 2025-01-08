@@ -630,20 +630,23 @@ function showPopup(e) {
   */
 }
 
-tmTooltip = null;
+tooltipShowTimer = null;
+tooltipHideTimer = null;
+tooltipHideDelay = 100;
+tooltipShowDelay = 250;
 
 // Function to show the tooltip
 function showTooltip(e) {
   var tooltip = document.getElementById('map-tooltip');
 
-  clearTimeout(tmTooltip);
+  clearTimeout(tooltipHideTimer);
 
   tooltip.onmouseover = function(e) {
-    clearTimeout(tmTooltip);
+    clearTimeout(tooltipHideTimer);
   };
 
   tooltip.onmouseout = function(e) {
-    tmTooltip = setTimeout(hideTooltip, 25);
+    tooltipHideTimer = setTimeout(hideTooltip, tooltipHideDelay);
   };
 
 
@@ -905,7 +908,11 @@ function Marker(feature) {
       markerWidth: size*1.15,
       markerHeight: size*1.15,
     });
-    showTooltip(e);
+
+
+    clearTimeout(tooltipShowTimer);
+    tooltipShowTimer = setTimeout(function(){showTooltip(e)}, tooltipShowDelay);
+
   });
 
   marker.on('mouseout', function(e) {
@@ -914,8 +921,11 @@ function Marker(feature) {
       markerWidth: size,
       markerHeight: size,
     });
-    clearTimeout(tmTooltip);
-    tmTooltip = setTimeout(hideTooltip, 25);
+
+    clearTimeout(tooltipShowTimer);
+    clearTimeout(tooltipHideTimer);
+
+    tooltipHideTimer = setTimeout(hideTooltip, tooltipHideDelay);
   });
 
   return {group: group, marker: marker};
@@ -975,8 +985,8 @@ function addRegions(geojson) {
       });
       */
 
-      geometry.feature = {properties: {name: geometry.properties.svgID}};
-
+      let name = geometry.properties.svgID.substring(1).replaceAll('_','');
+      geometry.feature = {properties: {title: name}};
     }
   });
 
