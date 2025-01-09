@@ -885,8 +885,6 @@ function Marker(feature) {
 
   let coordinates = feature.geometry.coordinates;
 
-  //if (o.clue) image = localImages['purpleStash'];
-
   coordinates = [coordinates[0], coordinates[1], coordinates[2]*0.05 ]; // cannot disable altitude for now, fucking parallax effect
 
   let opacity = 1.0;
