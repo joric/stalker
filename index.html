@@ -996,7 +996,7 @@ function updateView(e) {
     if (layer) {
 
       let minZoom = zoomLevel - 0.01;
-      let maxZoom = layerName == 'areas' ? 2: 99;
+      let maxZoom = layerName == 'areas' ? 3: 99;
 
       if (zoom>=minZoom && zoom < maxZoom) {
         layer.show();
@@ -1041,29 +1041,7 @@ function addRegions(geojson) {
 
   geometries.forEach(geometry => {
     if (geometry.getType() === 'Polygon') { // Ensure it's a polygon
-
       geometry.setSymbol(defaultSymbol);
-      //geometry.setOptions({ interactive: false, cursor: 'default', }); 
-
-      /*
-      // Add event listeners for hover effect
-      geometry.on('mousemove', () => {
-        let zoom = map.getZoom();
-        geometry.updateSymbol(zoom < 3 ? hoverSymbol : defaultSymbol); // Apply hover style
-      });
-
-      geometry.on('mouseout', () => {
-        geometry.updateSymbol(defaultSymbol); // Reset to default
-      });
-
-      geometry.on('click', () => {
-        const extent = polygon.getExtent(); // Get the bounds of the polygon
-        if (extent) {
-          map.fitExtent(extent); // Adjust the map view to fit the polygon bounds
-          }
-      });
-      */
-
       let name = geometry.properties.svgID.substring(1).replaceAll('_','');
       geometry.feature = {properties: {title: name}};
     }
@@ -1093,7 +1071,7 @@ function addRegions(geojson) {
   map.on('mousemove', e => {
 
     let zoom = map.getZoom();
-    let maxZoom = 2;
+    let maxZoom = 3;
 
     const mouseCoord = e.coordinate; // Geographic coordinate of the mouse
     //let mouseCoord = map.containerPointToCoord(e.containerPoint); // same
