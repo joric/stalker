@@ -17,7 +17,7 @@
   "Box": { "fa": "box", "bg": "steelblue", "match": "(?=Box)(?=.*::Obj)" },
   "Character": { "fa": "person", "bg": "cornflowerblue", "match": "(Mityaj|Sniper|Noon|Batya|Pripoy|Varta|Neutral|Scientist|NPC|Freedom|Military|Spark|Kardan|Captain|Doctor|Mercenaries|Scar|Lejtenant|Duty|Radovoj|Bandit|Monolith|Mercenary)(?=.*ESpawnType::Obj)" },
   "Chest": { "fa": "box-archive", "bg": "steelblue", "match": "Bluebox|Cabinet_metal", "group": "items" },
-  "City": { "fa": "city", "bg": "darkslategrey", "match": "City" },
+  "City": { "fa": "city", "bg": "darkslategrey", "match": "_City" },
   "Easter Egg": { "fa": "egg", "bg": "darkslategrey", "match": "EasterEgg" },
   
   "Enemy": { "fa": "skull", "bg": "brown", "match": "(PseudoDog|Bayun|Bloodsucker|Flesh|Blinddog|Tushkan|Boar|ZombieFoster|Rat|Snork|Zombie)(?=.*ESpawnType::Obj)", "group": "enemies" },
