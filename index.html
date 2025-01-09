@@ -67,12 +67,12 @@ html, body {
   border-radius:3px;
   border-radius: 5px;
   padding: 0.75em;
-  max-width: 300px;
+  max-width: 350px;
   //box-shadow: 3px 3px 20px black;
 }
 
 .overflow-container {
-  max-width: 300px;
+  max-width: 350px;
   width: 100%;
   overflow: hidden;
   white-space: nowrap;
@@ -671,7 +671,7 @@ function showTooltip(e) {
   let o = marker.feature.properties;
 
   let title = o.title;
-  let subtitle = o.description;//'sid_misc_pda_Map_MarkerCache';
+  let subtitle = ''; //o.description;//'sid_misc_pda_Map_MarkerCache';
 
   if (o.clue) {
     title = 'sid_stashes_'+o.clue+'_name'
@@ -709,7 +709,8 @@ function showTooltip(e) {
   let sid = marker.feature.properties.sid;
   if (sid.includes('_C_')) sid = sid.split('_C_')[1];
 
-  content += `<hr/><small><small>SID: ${sid}</small></small>`;
+  content += `<hr/><small><small>Type: ${o.description}</small></small>`;
+  content += `<br/><small><small>SID: ${sid}</small></small>`;
   content += `<br/><small><small>XTeleportTo ${teleport}</small></small>`;
 
 
