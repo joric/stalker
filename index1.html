@@ -463,7 +463,7 @@ function addCircles(markers) {
 function updateView(e) {
   let zoom = map.getZoom();
 
-  let zoomLevels = {'areas': [0,2], 'regions':[0,99], 'base': [2,99], 'circles':[3,99], 'locations': [3,99], 'stashes':[4,99], 'items':[4,99], 'enemies':[4,99], 'anomalies':[6,99], 'misc':[8,99] };
+  let zoomLevels = {'areas':0, 'regions':0, 'base': 2, 'circles':3, 'locations': 3, 'stashes':4, 'items':4, 'enemies':4, 'anomalies':6, 'misc':8 };
 
   if (settings.searchText!='') {
     return;
@@ -472,7 +472,10 @@ function updateView(e) {
   for(const [layerName, zoomLevel] of Object.entries(zoomLevels)) {
     let layer = groupLayer.getLayer(capitalize(layerName));
     if (layer) {
-      let [minZoom, maxZoom] = zoomLevel;
+
+      let minZoom = zoomLevel;
+      let maxZoom = layerName == 'areas' ? 2: 99;
+
       if (zoom>=minZoom && zoom < maxZoom) {
         layer.show();
       } else {
