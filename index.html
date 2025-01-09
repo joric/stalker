@@ -900,7 +900,7 @@ function Marker(feature) {
 
   //if (group == "stashes") name = "Stash";
 
-  //if (o.spawns && o.spawns.length>0) name = 'Stash';
+  if (group=="misc" && o.spawns && o.spawns.length>0) name = 'Stash';
 
   if (name=='Stash') group = 'stashes';
 
