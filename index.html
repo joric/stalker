@@ -996,7 +996,7 @@ function updateView(e) {
     if (layer) {
 
       let minZoom = zoomLevel - 0.01;
-      let maxZoom = layerName == 'areas' ? 3: 99;
+      let maxZoom = layerName == 'areas' ? 2: 99;
 
       if (zoom>=minZoom && zoom < maxZoom) {
         layer.show();
@@ -1093,7 +1093,7 @@ function addRegions(geojson) {
   map.on('mousemove', e => {
 
     let zoom = map.getZoom();
-    let maxZoom = 3;
+    let maxZoom = 2;
 
     const mouseCoord = e.coordinate; // Geographic coordinate of the mouse
     //let mouseCoord = map.containerPointToCoord(e.containerPoint); // same
