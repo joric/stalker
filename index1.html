@@ -1076,7 +1076,9 @@ function passesFilter(marker) {
   let tags = o.spawns || [''];
   let t = lang[o.title]||'';
   let d = lang[o.description]||'';
-  let name = getIconName(o)||'';
+
+  let name = getIconName(o)||''; // bottleneck, apparently, need to reorganize types
+
   let title = [t, d, o.title||'', name, o.description||'', o.sid||'', o.clue||'', ...tags].join(' ').toLowerCase();
   if (o.clue) title += ' clue';
   return !(text!='' && !terms.every(term=>title.includes(term)));
