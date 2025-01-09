@@ -12,7 +12,7 @@
   "Headquarters": { "fa": "mountain", "bg": "brown", "match": "Headquarters", "group": "base" },
 
   "Bed": { "fa": "bed", "bg": "darkslategrey", "match": "BP_Bed_OnBed_C", "group": "base" },
-  "Body": { "fa": "face-dizzy", "bg": "steelblue", "match": "Body", "group": "misc" },
+  "Body": { "fa": "face-dizzy", "bg": "steelblue", "match": "Body|DeadBody", "group": "misc" },
   "Unique Enemy": { "fa": "skull-crossbones", "bg": "brown", "match": "(Deer|Pseudogiant|Burer|Poltergeist|Controller|Chimera)(?=.*ESpawnType::Obj)", "group": "enemies" },
   "Box": { "fa": "box", "bg": "steelblue", "match": "(?=Box)(?=.*::Obj)" },
   "Character": { "fa": "person", "bg": "cornflowerblue", "match": "(Mityaj|Sniper|Noon|Batya|Pripoy|Varta|Neutral|Scientist|NPC|Freedom|Military|Spark|Kardan|Captain|Doctor|Mercenaries|Scar|Lejtenant|Duty|Radovoj|Bandit|Monolith|Mercenary)(?=.*ESpawnType::Obj)" },
