@@ -46,11 +46,11 @@ tints = {
 
 iconSize = 48
 
-def crop_and_resize(img, size, resize=True, tint=None):
+def crop_and_resize(img, size, resize=True, tint=None, crop=0):
     img_cropped = img #ImageOps.crop(img, border=0)
 
-    if resize:
-        cw = ch = 80 # good size match
+    if crop:
+        ch = cw = crop # 80 # good size match
         w,h = img.size
         b = (w-cw)//2
         bbox = (b,b, w-b, h-b)
@@ -102,24 +102,28 @@ def crop_and_resize(img, size, resize=True, tint=None):
 
     #return ImageOps.pad(img_cropped, (iconSize, iconSize))
 
+def process_file(filename, iconSize, resize=True, crop=0):
+    # Open the image
+    with Image.open(filename) as img:
+        # Crop transparent areas
+        name = os.path.basename(filename).split('_')[1]
+        tint = tints.get(name)
+        img_resized = crop_and_resize(img, iconSize, resize=True, tint=tint, crop=crop)
+        # Save the resized image as PNG
+        base_name = os.path.basename(filename)
+        output_path = os.path.normpath(os.path.join(out_dir, base_name))
+        img_resized.save(output_path, format='PNG')
+        print(f"Saved: {output_path}")
+
 for folder in folders:
     files = list(glob.glob(os.path.join(cache_dir, folder, '**', '*.png'), recursive=True))
-
     for filename in files:
-        #print(f"Processing: {filename}")
-        
-        # Open the image
-        with Image.open(filename) as img:
-            # Crop transparent areas
+        process_file(filename, iconSize, resize=True, crop=80)
 
-            name = os.path.basename(filename).split('_')[1]
-            tint = tints.get(name)
-            img_resized = crop_and_resize(img, iconSize, resize=True, tint=tint)
-            # Save the resized image as PNG
-            base_name = os.path.basename(filename)
-            output_path = os.path.normpath(os.path.join(out_dir, base_name))
-            img_resized.save(output_path, format='PNG')
-            print(f"Saved: {output_path}")
+region_dir = 'Stalker2/Content/GameLite/FPS_Game/UIRemaster/UITextures/WorldMap/RegionMarker'
+filename = os.path.join(cache_dir, region_dir, 'T_NotActive_Region_Shadow.png')
+process_file(filename, iconSize, resize=True, crop=64)
+
 
 # cut the compass atlas
 img_path = 'Stalker2/Content/GameLite/FPS_Game/UI/UIIcons/Markers/Textures/CompassMarker.png'
@@ -155,6 +159,3 @@ with Image.open(filename) as img_atlas:
             output_path = os.path.normpath(os.path.join(out_dir, base_name))
             img_resized.save(output_path, format='PNG')
             print(f"Saved: {output_path}")
-
-
-
