@@ -486,7 +486,7 @@ function updateView(e) {
 
 }
 
-function addMarkers2(markers) {
+function addMarkersOld(markers) {
   // looks like performance depends on misc layer
   // have to speed up the search the way it doesn't make too much show/hide calls
   let geometries = []
@@ -683,6 +683,7 @@ function showTooltip(e) {
   };
 
 
+
   // Show the tooltip to calculate the size
   // Since browsers do not repaint the screen during synchronous JavaScript execution,
   // temporarily changing the display property within a script will not cause the element to flash visibly on the screen.
@@ -691,6 +692,8 @@ function showTooltip(e) {
   let marker = e.target;
 
   let o = marker.feature.properties;
+
+  if (o.description.includes('Region')) return;
 
 
   let title = o.title;
@@ -920,18 +923,31 @@ function Marker(feature) {
     size = 32;
   }
 
-  var marker = new maptalks.Marker(coordinates,{
-      symbol : {
-        markerFile   : image,
-        markerWidth  : size,
-        markerHeight : size,
-        markerDx     : 0,
-        markerDy     : 0,
-        markerOpacity: opacity,
-        markerVerticalAlignment: 'middle',
+  let symbol = {
+    markerFile   : image,
+    markerWidth  : size,
+    markerHeight : size,
+    markerDx     : 0,
+    markerDy     : 0,
+    markerOpacity: opacity,
+    markerVerticalAlignment: 'middle',
+  };
+
+  if (name=='Region') {
+    symbol = [
+      symbol,
+      {
+        textFaceName : 'sans-serif',
+        textName : lang['sid_locations_region_' + o.title + '_name'] || o.title,
+        textFill : '#fff',
+        textHorizontalAlignment : 'right',
+        textSize : 16,
+        textDx: 16,
       },
-    }
-  );
+    ]
+  }
+
+  var marker = new maptalks.Marker(coordinates, {symbol: symbol});
 
   marker.feature = feature;
 
@@ -939,11 +955,12 @@ function Marker(feature) {
 
   marker.on('mouseover', function(e) {
     let marker = e.target;
+
+    if (!marker.feature.properties.description.includes('Region'))
     marker.updateSymbol({
       markerWidth: size*1.15,
       markerHeight: size*1.15,
     });
-
 
     clearTimeout(tooltipShowTimer);
     tooltipShowTimer = setTimeout(function(){showTooltip(e)}, tooltipShowDelay);
@@ -952,6 +969,8 @@ function Marker(feature) {
 
   marker.on('mouseout', function(e) {
     let marker = e.target;
+
+    if (!marker.feature.properties.description.includes('Region'))
     marker.updateSymbol({
       markerWidth: size,
       markerHeight: size,
