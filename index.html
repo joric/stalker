@@ -907,8 +907,17 @@ function Marker(feature) {
   };
 
   if (name=='Region') {
+    let offset = -16;
     symbol = [
-      symbol,
+       {
+        markerFile   : image,
+        markerWidth  : size,
+        markerHeight : size,
+        markerDx     : offset,
+        markerDy     : 0,
+        markerOpacity: opacity,
+        markerVerticalAlignment: 'middle',
+      },
       {
         textFaceName : 'sans-serif',
         textName : lang['sid_locations_region_' + o.title + '_name'] || o.title,
@@ -919,7 +928,7 @@ function Marker(feature) {
 
         textHorizontalAlignment : 'right',
         textSize : 16,
-        textDx: 16,
+        textDx: offset+16,
       },
     ]
   }
