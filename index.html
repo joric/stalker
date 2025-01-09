@@ -1,6 +1,7 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+
 <title>Joric's Stalker</title>
 <meta charset="utf-8">
 <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
@@ -12,616 +13,1086 @@
 <meta property="og:title" content="Joric's Stalker" />
 <meta property="og:description" content="Interactive Map" />
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<link href="js/lib/maptalks-gl/maptalks.css" rel="stylesheet">
+<script type="text/javascript" src="js/lib/maptalks-gl/maptalks-gl.js"></script>
 
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet-mouse-position@1.2.0/src/L.Control.MousePosition.min.css">
-<script src="https://cdn.jsdelivr.net/npm/leaflet-mouse-position@1.2.0/src/L.Control.MousePosition.min.js"></script>
-
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet-search@4.0.0/dist/leaflet-search.src.min.css">
-<script src="https://cdn.jsdelivr.net/npm/leaflet-search@4.0.0/dist/leaflet-search.src.min.js"></script>
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/MarkerCluster.Default.css" integrity="sha512-6ZCLMiYwTeli2rVh3XAPxy3YoR5fVxGdH/pz+KMCzRY2M65Emgkw00Yqmhh8qLGeYQ3LbVZGdmOX9KUjSKr0TA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/leaflet.markercluster.js" integrity="sha512-OFs3W4DIZ5ZkrDhBFtsCP6JXtMEDGmhl0QPlmWYBJay40TT1n3gt2Xuw8Pf/iezgW9CdabjkNChRqozl/YADmg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-
-<script src="https://cdn.jsdelivr.net/npm/leaflet-edgebuffer@1.0.6/src/leaflet.edgebuffer.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/tilelayer-canvas@1.1.5/index.min.js" comment="only matters if lots of layers, blurs zoom"></script>
-
-<script src="https://cdn.rawgit.com/hayeswise/Leaflet.PointInPolygon/v1.0.0/wise-leaflet-pip.js"></script>
 
 <!--
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/MarkerCluster.css" comment="enable markercluster animation"/>
-<link rel="stylesheet" href="js/lib/leaflet-markercluster/MarkerCluster.css" />
+<link href="js/lib/maptalks-gl/maptalks.css" rel="stylesheet">
+<script type="text/javascript" src="js/lib/maptalks-gl/maptalks-gl.js"></script>
 
-<link rel="stylesheet" href="js/lib/font-awesome/css/all.min.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/maptalks/1.0.1/maptalks.min.css" integrity="sha512-DgQNythEg69g9pToBBZQZMXn/xM8ZF/96sutg5c6ODgxargtpteM9+HxACffdWzrzK5YgAdVs8CfucHm5dvbIA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<script type="text/javascript" src="https://unpkg.com/maptalks-gl/dist/maptalks-gl.js"></script>
 
-<link rel="stylesheet" href="js/lib/leaflet/leaflet.min.css"/>
-<script src="js/lib/leaflet/leaflet.min.js"></script>
-
-<link rel="stylesheet" href="js/lib/leaflet-markercluster/MarkerCluster.Default.css" />
-<script src="js/lib/leaflet-markercluster/leaflet.markercluster.js" ></script>
-
-<link rel="stylesheet" href="js/lib/leaflet-mouseposition/L.Control.MousePosition.css" />
-<script src="js/lib/leaflet-mouseposition/L.Control.MousePosition.js"></script>
-
-<link rel="stylesheet" href="js/lib/leaflet-search/leaflet-search.src.min.css">
-<script src="js/lib/leaflet-search/leaflet-search.src.min.js"></script>
-
-<script src="js/lib/leaflet-edgebuffer/leaflet.edgebuffer.min.js"></script>
-<script src="js/lib/leaflet-canvas/L.TileLayer.Canvas.min.js"></script>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/maptalks/1.0.1/maptalks.min.js" integrity="sha512-nMJHLgEm7hUp/e10n9R/xUz3yMmvx98LQlddhCZl3g0b4JO8NG1SjmcOA1JiFNuxRgseKDzdABcGy4qGZlGwEQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script type="text/javascript" src="https://unpkg.com/maptalks-gl/dist/maptalks-gl.js"></script>
+<script type="text/javascript" src="https://unpkg.com/maptalks.markercluster/dist/maptalks.markercluster.min.js"></script>
 -->
 
+
 <style>
-html, body, #map { width:100%; height: 100%; margin: 0; padding: 0; background-color: #333; z-index: 0; }
-
-img.leaflet-tile { image-rendering: pixelated; }
-
-//canvas { image-rendering: pixelated; }
-
-.leaflet-popup-content pre {
-  white-space: pre-wrap;
-  word-wrap: break-word;
+html, body {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  background-color: #222;
+  font-family:sans-serif;
+  font-size: 16px;
+  overflow: hidden;
+}
+#map {
+  height: 100%;
+  width:  100%;
 }
 
-.icon-base i {
-  text-align: center;
-  position: absolute;
-  color: white;
-  width: 64px;
-  font-size: 28px;
-  top: 10px;
+.maptalks-tooltip {
+  display: block;
+  background: #fff;
+  padding: 0px 4px 0px 4px;
+  height:24px;
+  line-height:24px;
+  font-size:14px;
+  white-space: nowrap;
 }
 
-.icon-base::before{
-  font-family: 'Font Awesome 6 Free';
-  font-weight: 900;
-  content: "\f041";
-  text-align: center;
-  position: absolute;
-  width: 64px;
-  font-size: 64px;
-  top: -16px;
+#map-tooltip {
+  background-color: white;
+  color: black;
+  opacity: 0.95;
+
+  display:none;
+  position:absolute;
+  padding:5px;
+  border-radius:3px;
+  border-radius: 5px;
+  padding: 0.75em;
+  max-width: 300px;
+  //box-shadow: 3px 3px 20px black;
 }
 
-.icon-48 i {
-  width: 48px;
-  font-size: 20px;
-  top: 4px;
-}
-
-.icon-48::before {
-  width: 48px;
-  font-size: 48px;
-  top: -16px;
-  text-shadow: 0 0 1px black;
-}
-
-.leaflet-control-search .search-input {
-  width: 220px;
-}
-
-.leaflet-control-search .search-tooltip {
-  width: 275px;
-  max-height: 207px;
-  margin-top: 2px;
-}
-
-.search-count {
-  color: grey;
-  width: auto;
-  background: white;
-  position: absolute;
-  pointer-events: none;
-  top: 7px;
-  right: 50px;
-  display: none;
-}
-
-.region-label {
-  background-color: rgb(255,255,255,0);
-  padding-left: 14px;
-  padding-right: 14px;
-  border: none;
-  box-shadow: none;
-  font-size: 18px;
-  color: rgb(255,255,255,0.85);
-}
-
-.grid-label {
-  background-color: rgb(255,255,255,0);
-  padding-left: 14px;
-  padding-right: 14px;
-  border: none;
-  box-shadow: none;
+.overflow-container {
+  max-width: 300px;
+  width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
   font-size: 14px;
-  color: rgb(255,255,255,0.85);
 }
 
-.region-cell {
-  stroke-width: 1.5;
-  fill: rgb(255,255,255,0.2);
-  stroke: rgb(255,255,255,0.25);
+.arrow-left::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: 100%; /* Position the triangle to the left of the popup */
+  margin-top: -8px; /* Half the height of the triangle */
+  border-width: 8px;
+  border-style: solid;
+  border-color: transparent white transparent transparent;
 }
 
-.grid-cell {
-  stroke-width: 1.5;
-  fill: rgb(255,255,255,0.2);
-  stroke: rgb(255,255,255,0.25);
+.arrow-right::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 100%; /* Position the triangle to the right of the popup */
+  margin-top: -8px; /* Half the height of the triangle */
+  border-width: 8px;
+  border-style: solid;
+  border-color: transparent transparent transparent white;
 }
 
-.selected {
-  fill: rgb(255,255,255,0.95);
+
+/* ----------------------------------------------- */
+
+.search-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  // left: 50%; ransform: translateX(-50%);
+  padding: 20px;
+  z-index: 9999;
+}
+
+.search-box {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 240px;
+
+  //opacity: 0.85;
+
+  transition: all 0.3s ease;
+}
+
+.search-box:has(input:focus) {
+  width: 450px;
+  opacity: 1;
+}
+
+@media (max-width: 460px) {
+  .search-box:has(input:focus) {
+    width: 90vw;
+    opacity: 1;
+  }
+}
+
+.search-box input {
+  width: 100%;
+  padding: 12px 24px;
+  border: 1px solid #ddd;
+  border-radius: 24px;
+  outline: none;
+  background: white;
+  font-size: 17px;
+  padding-right: 80px;
+}
+
+.search-icon {
+  position: absolute;
+  font-size: 20px;
+  cursor: pointer;
+  opacity: 0.5;
+}
+
+.search-icon:hover {
+  opacity: 1;
+}
+
+.search-submit {
+  right: 48px;
+  margin-top: -3px;
+}
+
+.search-cancel {
+  font-size: 30px;
+  right: 15px;
 }
 
 </style>
 
-<div id="map"></div>
+</head>
+<body>
+
+<div  tabindex=0 id="map"></div>
+
+<div class="search-container">
+  <div class="search-box">
+    <input tabindex=1 type="text" placeholder="Search...">
+    <span class="search-icon search-submit" title="Search">&#128269;&#xFE0E;</span>
+    <span class="search-icon search-cancel" title="Cancel">&times;</span>
+  </div>
+</div>
+
+<div id="map-tooltip" class="arrow-left"></div>
 
 <script>
 
-let getMapSize = (mapId) => 812900; // 8129x8129 (largest landscape) x 100
-let localDataName = 'joricsStalkerMaps';
-let mapId = 's2hoc';
-let defaultLocalData = { 's2hoc': { searchText:'' } };
-let localData = JSON.parse(localStorage.getItem(localDataName)) || defaultLocalData;
-let settings = localData[mapId];
-let lang=[];
-let icons = {};
-let popup = null;
-let tooltip = null;
+let tooltipShowTimer = null;
+let tooltipHideTimer = null;
+let tooltipHideDelay = 150;
+let tooltipShowDelay = 200;
 
-function getIconHTML(options, size=48, color=null) {
-  let bg = color || options.bg || 'dimgrey';
-  let fg = options.fg || 'white';
-  let html = options.html || `<i class="fa fa-${options.fa}" style="color:${fg}"></i>`;
-  return `<span class="icon-base icon-${size}" style="color:${bg}">${html}</span>`;
-}
+let enableAltitude = true;
+let heightFactor = 1.0;
 
-let baseIcon = (options, color) => {
-  let size = 48;
-  return L.divIcon({
-    className: 'divIcon',
-    html: getIconHTML(options, size, color),
-    iconSize:     [size, size], // size of the icon
-    iconAnchor:   [size/2, size], // point of the icon which will correspond to marker's location
-    popupAnchor:  [0, -size*1.1], // point from which the popup should open relative to the iconAnchor
-  });
-};
+let iconSize = 48;
 
+let startPitch = 0;
+let startZoom = 2;
+let defaultPitch = 45;
+let autoAltitude = true;
+let groupLayer = null;
+let regionLayer = null;
+let map = null;
 let types = {};
-let markers = [];
-let markersLayer = null;
-//let regionsLayer = null;
+let lang = {};
 
-function getIconIndex(iconName) {
-  return Math.max(0, Object.keys(types).indexOf(iconName));
-}
+let localDataName = 'joricsStalkerMapsGL';
+let localData = JSON.parse(localStorage.getItem(localDataName))||{};
+let mapId = 's2hoc';
 
-function getIconName(o) {
-  let s = [o.title, o.description].join('/');
+let searchControl = null;
 
-  for (const key of Object.keys(types).sort((a,b)=>(types[b].priority || 0) - (types[a].priority || 0)) ) {
-    let regex = types[key].match;
-    if (regex && s.match(new RegExp(regex, "i"))) return key;
+let localImages = {};
+let firstRun = false;
+
+const capitalize = s => s[0].toUpperCase()+s.slice(1);
+const cmpAlphaNum = (a,b) => a[0].localeCompare(b[0], 'en', { numeric: true });
+
+
+function loadMap() {
+
+  if (!localData[mapId]) {
+    localData[mapId] = { activeItems: {'base':true, 'locations': true, 'stashes': true, 'regions': true, 'items': true, 'enemies': true, 'circles': true} };
+    //localData[mapId] = { activeItems: {'base':true, 'regions': true} };
   }
 
-  return 'Question';
-}
+  settings = localData[mapId];
 
-function getIconColor(o) {
-  // get color from a small pool of colors
+  settings.baseLayer = settings.baseLayer || 'PDA';
 
-  //let colors = ['red','dodgerblue','yellowgreen','darkorange','brown','darkkhaki','mediumpurple','tomato','tan'];
-  let colors = ['green','limegreen','seagreen','forestgreen','darkgreen','yellowgreen','olivedrab','darkolivegreen'];
+  searchControl = document.querySelector('.search-box input');
+  searchControl.value = settings.searchText||'';
 
-  if (o.sid && o.sid.includes('BP_Teleport_Portal_Bubble_C')) {
-    let s = o.sid.split('_Target')[0]
-    let c = s.split('').map(i => i.charCodeAt(0)).reduce((a, b)=> (a+b)^1337, 0) % colors.length;
-    return colors[c];
-  }
-  return null;
-}
+  //console.log('current zoom:', settings.zoom);
+  let scrollWheelZoom = true; // maptalks uses fractional zoom by default
+  //let scrollWheelZoom = false;
 
-function loadMap(mapId) {
+  let w = h = 812900;
+  let center = [w/2, h/2];
+  let [left,top,right,bottom] = [0, 0, w, h];
+  let maxZoom = 8;
+  let tileSize = 512;
 
-  if (!settings.activeLayers) {
-    settings.activeLayers = { 'Regions':true, 'Markers': true };
+  if (!settings.center) {
+    [settings.zoom, settings.pitch, settings.bearing, settings.center] = [startZoom, startPitch, 0, center];
   }
 
-  let d = getMapSize(mapId);
+  map = new maptalks.Map('map', {
 
-  let m = {
-    size: d,
-    bounds: [[0,0], [d-1,d-1]],
-    center: [d/2, d/2],
-    flip_y: false,
-  }
+    heightFactor: heightFactor,
 
-  let tileSize = 512; // this is essentially map size in tiles on zoom level 0
-  let size = tileSize*tileSize; // default map width in pixels is tileSize squared
+    zoom: settings.zoom,
+    pitch: settings.pitch,
+    bearing: settings.bearing,
+    center: settings.center,
+    maxPitch: 80,
 
-  // custom map weighted (scaled) dimensions (usually 0..1)
-  let [sw,sh] = [m.size, m.size].map(e => e / size);
-  let [sx,sy] = m.center.map(e => e / size);
+    maxZoom: maxZoom,
 
-  // calculate factor and offset for the custom map
-  let factor = 1 / tileSize / sw;
-  let dx = (.5 - sx / sw) * tileSize;
-  let dy = (.5 - sy / sh) * tileSize;
+    scrollWheelZoom: scrollWheelZoom,
 
-  // correct bounds (still need to flip x and y for leaflet)
-  let [w,h] = [m.size, m.size];
-  let [x,y] = m.center;
+    spatialReference : {
+      projection : 'identity',
+      fullExtent : { top: top, left: left, bottom: bottom, right: right }, // mandatory to hide 404
+      resolutions: Array.from({length: maxZoom + 1},(_,i) => w / tileSize / (1<<i)), // mandatory zoom levels
+    },
 
-  let [[left,top],[right,bottom]] = m.bounds;
-  let bounds = [[top, left], [bottom, right]];
-  let center = [(m.flip_y ? -1 : 1) * y, x];
+    baseLayer: new maptalks.GroupTileLayer('Base TileLayer', [
 
-  // crs.transformation represents an affine transformation:
-  let crs = L.CRS.Simple;
-  // a set of coefficients a, b, c, d for transforming a point of a form (x,y) into (a*x + b, c*y + d)
-  crs.transformation = new L.Transformation(factor, dx, (m.flip_y ? -1 : 1) *  factor, dy); // Invert the y-axis
+      new maptalks.TileLayer('PDA', {
+        maxAvailableZoom: 7,
+        urlTemplate: 'https://joric.github.io/stalker2_tileset/tiles/{z}/{x}/{y}.jpg',
+        repeatWorld: false,
+        tileSize: 512,
+        visible: settings.baseLayer == 'PDA',
+      }),
 
-  map = L.map('map', {
-    crs: crs,
-    zoom: 1, // mandatory, need to set zoom and center first (c)
-    center: center, // mandatory
-    //minZoom: -10, // nice to have (zoom 0 means map is tile-sized, i.e. 512)
-    maxBounds: L.latLngBounds(bounds).pad(0.5), // elastic-y bounds, nice to have
-    zoomControl: false,
-      renderer: new L.SVG({
-        padding: 1
-    }),
+      new maptalks.TileLayer('GlobalMap', {
+        maxAvailableZoom: 5,
+        urlTemplate: 'https://joric.github.io/stalker2_tileset/extras/wb/{z}/{x}/{y}.jpg',
+        repeatWorld: false,
+        tileSize: 512,
+        visible: settings.baseLayer == 'GlobalMap',
+      }),
+
+      new maptalks.TileLayer('LDScheme', {
+        maxAvailableZoom: 3,
+        urlTemplate: 'https://joric.github.io/stalker2_tileset/extras/ld/{z}/{x}/{y}.png',
+        repeatWorld: false,
+        tileSize: 512,
+        visible: settings.baseLayer == 'LDScheme',
+      }),
+
+    ]),
+
+    zoomControl: {
+      //position  : 'bottom-right',
+      //position  : 'top-right',
+      position  : {bottom: 70, right: 20},
+      zoomLevel : false,
+    },
+
+    //seamlessZoom: true,
+    doubleClickZoom: true,
+
+    //maxExtent: extent,
+
+    /*
+    // overview is broken, due to a flat projection I guess
+    overviewControl: {
+      position: 'bottom-left',
+      size: [240,135],
+      level: 10,
+      symbol: {
+
+        'lineColor': '#fff',    // Border color
+        'lineWidth': 1.5,            // Border width
+        'polygonFill': '#fff',  // Fill color
+        'polygonOpacity': 0.0,      // Fill opacity
+        'lineOpacity': 0.5,
+      },
+    },
+    */
+
+    attribution: {
+      //position: {top: -50},
+    },
   });
 
-  L.control.zoom({
-      position: 'bottomright'  // Move control to bottom-right
-  }).addTo(map);
 
-  if (settings.center && settings.zoom) {
-    map.setView(settings.center, settings.zoom, { animate: false });
+  // Function to handle zooming
+  function handleZoom(event) {
+    event.preventDefault(); // Prevent the default scroll behavior
+    const currentZoom = map.getZoom();
+    const zoomStep = 1; // Define the zoom step
+    if (event.deltaY < 0) {
+      // Scroll up, zoom in
+      map.setZoom(currentZoom + zoomStep);
+    } else {
+      // Scroll down, zoom out
+      map.setZoom(currentZoom - zoomStep);
+    }
   }
 
-  map.on('zoomend', updateZoom);
+  // Add event listener for mouse wheel
+  if (!scrollWheelZoom) map.getContainer().addEventListener('wheel', handleZoom);
 
-  map.on('moveend zoomend', function(e) {
-    settings.center = [map.getCenter().lat, map.getCenter().lng]; // avoid circular refs here
-    settings.zoom = map.getZoom();
-    //console.log('moveend/zoomend fired, saving state');
+  map.on('viewchange', e=> {
+    settings.center = [e.new.center[0],e.new.center[1]];
+    settings.bearing = e.new.bearing;
+    settings.pitch = e.new.pitch;
+    settings.zoom = e.new.zoom;
+    if (enableAltitude && autoAltitude) {
+      groupLayer.setOptions({enableAltitude: map.getPitch()!=0});
+    }
+    //console.log('zoom', settings.zoom);
     saveSettings();
   });
 
-  if (L.tileLayer.canvas) L.tileLayer = L.tileLayer.canvas; // enable canvas layer
 
-  let baseLayers = {
-    'PDA': L.tileLayer('https://joric.github.io/stalker2_tileset/tiles/{z}/{x}/{y}.jpg', {
-        tileSize: 512,
-        maxNativeZoom: 7,
-        bounds: bounds,
-        edgeBufferTiles: 1,
-        attribution: '<a href="https://github.com/joric/stalker2_tileset/wiki" target="_blank">Stalker 2 Tileset</a>',
-    }),
+  let gap = w/2;
+  let extent = new maptalks.Extent(left-gap, top-gap, right+gap, bottom+gap);
+  map.setMaxExtent(extent);
 
-    'Base': L.tileLayer('https://joric.github.io/stalker2_tileset/extras/wb/{z}/{x}/{y}.jpg', {
-      tileSize: 512,
-      maxNativeZoom: 5,
-      bounds: bounds,
-      attribution: '<a href="https://github.com/joric/stalker2_tileset/wiki" target="_blank">Stalker 2 Tileset</a>',
-    }),
+  new maptalks.TileLayer('Stalker1', {
+    maxAvailableZoom: 3,
+    urlTemplate: 'https://joric.github.io/stalker2_tileset/extras/s1/{z}/{x}/{y}.png',
+    repeatWorld: false,
+    tileSize: 512,
+    visible : false,
+  }).addTo(map);
 
-    'LD': L.tileLayer('https://joric.github.io/stalker2_tileset/extras/ld/{z}/{x}/{y}.png', {
-      tileSize: 512,
-      maxNativeZoom: 3,
-      bounds: bounds,
-      attribution: '<a href="https://github.com/joric/stalker2_tileset/wiki" target="_blank">Stalker 2 Tileset</a>',
-    }),
-  }
+  groupLayer = new maptalks.GroupGLLayer('Features',[], {
+    enableAltitude: enableAltitude,
+    sortByDistanceToCamera: true,
+    forceRenderOnMoving: true,
+    forceRenderOnRotating: true,
+  }).addTo(map);
 
-  let overlayLayers = {
-    'Stalker1': L.tileLayer('https://joric.github.io/stalker2_tileset/extras/s1/{z}/{x}/{y}.png', {
-      tileSize: 512,
-      maxNativeZoom: 4,
-      bounds: bounds,
-      attribution: '<a href="https://www.nexusmods.com/stalker2heartofchornobyl/images/212" target="_blank">Stalker 1 Maps</a>',
-    }),
+  regionLayer = new maptalks.PolygonLayer('Regions').addTo(groupLayer);
+
+  if (!settings.activeItems['regions']) regionLayer.hide();
+
+  setTimeout(function() {
+    if (enableAltitude && autoAltitude) {
+      groupLayer.setOptions({enableAltitude: map.getPitch()!=0});
+    }
+  },500);
+
+  document.querySelector('.search-cancel').onclick = e=> {
+    clearFilter();
+    saveSettings();
+    updateView();
   };
 
-  map.options.maxZoom = 19;
-
-  markersLayer = L.markerClusterGroup({
-    // need chunkedLoading to use addLayers without blocking, see https://github.com/Leaflet/Leaflet.markercluster
-    // note that we also have to use chunked JSON loading because creating DOM markers is blocking as well
-    // see loadMarkersSimple,loadMarkersGeo, loadMarkersBatched, loadMarkersIdle implementations below
-    chunkedLoading: true, 
-    //chunkInterval: 200,
-    //chunkDelay: 50,
-
-    disableClusteringAtZoom: 8, // overshadows sidorovich a bit
-    //spiderfyOnMaxZoom: false,
-    //removeOutsideVisibleBounds: true,
-    //zoomToBoundsOnClick: false,
-    // maxClusterRadius: 48, // roughly an icon size so there's no overlap (really affects performance)
-    //animateAddingMarkers: true,
-
-    showCoverageOnHover: false,
-    polygonOptions: {
-      color: 'white',        // Sets the border color of the polygon
-      weight: 2,           // Sets the width of the polygon border
-      opacity: 0.5,        // Sets the opacity of the polygon border
-      fillColor: 'white',   // Sets the fill color of the polygon
-      fillOpacity: 0.2     // Sets the opacity of the polygon fill
-    }
+  map.on('mousedown', function(e) {
+    document.getElementById('map').focus(); // needs tabindex on the map element
   });
 
-  L.control.mousePosition({numDigits: 0, lngFirst: true, wrapLng: false }).addTo(map);
+  map.on('moving', hideTooltip);
+  map.on('zooming', e=>{
+    hideTooltip();
+    updateView();
+  });
 
-  // use global tooltip and popup
-  popup = L.popup({offset:[0,0], minWidth:330, maxWidth:400}).setContent('popup text');
-  tooltip = L.tooltip({offset:[0,0]}).setLatLng([0,0]).setContent('tooltip text');
+  map.on('setbaselayer', e=> {
+    let layers = map.getBaseLayer().getLayers();
+    for (layer of layers) {
+      if (layer.isVisible()) {
+        settings.baseLayer = layer.getId();
+      }
+    }
+    saveSettings();
+  });
+}
 
-  markersLayer.bindPopup(popup);
-  markersLayer.bindTooltip(tooltip);
+function addCircles(markers) {
+  let circles = [];
 
-  searchControl = new L.Control.Search({
-      layer: markersLayer,
-      marker: false, // no red circle
-      initial: false, // search any substring
-      firstTipSubmit: false, // use first autosuggest
-      autoCollapse: false,
-      tipAutoSubmit: false, //auto map panTo when click on tooltip
-      tooltipLimit: -1,
-      textPlaceholder: 'Search for anything...',
-      propertyName: 'search',
-      position: 'topleft',
+  const defaultSymbol = {
+    'lineColor': '#fff',    // Border color
+    'lineWidth': 2.5,            // Border width
+    'polygonFill': '#fff',  // Fill color
+    'polygonOpacity': 0.1,      // Fill opacity
+    'lineOpacity': 0.85,
+  };
+
+  for (m of markers) {
+    let coordinates = m.marker.feature.geometry.coordinates;
+
+    coordinates = [coordinates[0], coordinates[1], coordinates[2]*0.05 ]; // cannot disable altitude for now, fucking parallax effect
+
+    let o = m.marker.feature.properties;
+    if (o.radius) {
+
+      //let numberOfShellPoints = Math.min(60, ~~(o.radius / 200));
+      var circle = new maptalks.Circle(coordinates, o.radius, {
+        symbol: defaultSymbol,
+        properties: {
+          //numberOfShellPoints: numberOfShellPoints,
+        },
+      });
+      circles.push(circle);
+
+      circle.feature = m.marker.feature;
+    }
+  }
+
+  let visible = settings.activeItems['circles'] == true;
+
+  let circleLayer = new maptalks.PolygonLayer('Circles', circles, {
+    visible: visible,
+  });
+
+  return circleLayer;
+
+}
+
+function updateView(e) {
+  let zoom = map.getZoom();
+
+  let zoomLevels = {'areas':0, 'regions':0, 'base': 2, 'circles':3, 'locations': 3, 'stashes':4, 'items':5, 'enemies':5, 'anomalies':6, 'misc':8 };
+
+  if (settings.searchText!='') {
+    return;
+  }
+
+  for(const [layerName, zoomLevel] of Object.entries(zoomLevels)) {
+    let layer = groupLayer.getLayer(capitalize(layerName));
+    if (layer) {
+
+      let minZoom = zoomLevel;
+      let maxZoom = layerName == 'areas' ? 2: 99;
+
+      if (zoom>=minZoom && zoom < maxZoom) {
+        layer.show();
+      } else {
+        layer.hide();
+      }
+    }
+  }
+
+}
+
+function addMarkersOld(markers) {
+  // looks like performance depends on misc layer
+  // have to speed up the search the way it doesn't make too much show/hide calls
+  let geometries = []
+  for (m of markers) {
+    if ( ['locations','base','items','stashes','mutants','anomalies'].includes(m.group) )
+      geometries.push(m.marker);
+  }
+  new maptalks.PointLayer('Points', geometries, {}).addTo(groupLayer);
+
+  console.log('loaded geometries', geometries.length);
+}
+
+function addMarkers(markers) {
+  console.timeEnd('markers');
+  console.log('Total markers:', markers.length);
+
+  //updateCount();
+
+  // join markers by group name
+  let collection = {};
+
+  for (m of markers) {
+    if (!collection[m.group]) collection[m.group] = [];
+    collection[m.group].push(m.marker);
+  }
+
+  // circles do not make it slower, multiple layers do
+  let circleLayer = addCircles(markers);
+  addHandler(circleLayer);
+  circleLayer.addTo(groupLayer);
+
+  let weights = {'areas': 1100, 'base': 1000, 'locations': 750, 'stashes': 500, 'items': 250, 'anomalies': -900, 'misc': -1000 };
+  let groups = Object.keys(collection);
+
+  groups = groups.sort( (a,b)=> (weights[b]||0)-(weights[a]||0) || cmpAlphaNum(a,b))
+
+  //console.log('sorted groups', groups);
+
+  for (const group of groups) {
+    let layerName = capitalize(group);
+    let geometries = collection[group];
+    let visible = settings.activeItems[group] == true;
+
+    layer = new maptalks.PointLayer(layerName, [], {
+      enableAltitude: enableAltitude,
+      sortByDistanceToCamera: true,
+      forceRenderOnMoving: true,
+      forceRenderOnRotating: true,
+
+      visible: visible,
+
+    }).addTo(groupLayer);
+
+    layer.addGeometry(geometries);
+    //console.log('created layer', group, 'visible', settings.activeItems[group], geometries.length, 'markers');
+    addHandler(layer);
+  }
+
+  addHandler(regionLayer);
+
+  filterItems();
+
+  let LayerSwitcher = new maptalks.control.LayerSwitcher({
+    position  : 'bottom-left',
+    baseTitle : 'Base Layers',
+    overlayTitle : 'Overlays',
+    containerClass : 'maptalks-layer-switcher',
   }).addTo(map);
 
-  //settings.searchText = ''; // maybe we don't want it on loading
-
-  searchControl._handleSubmit = function(){
-    settings.searchText = this._input.value;
-    this._input.select();
-    //searchControl.collapse();
-    map.closePopup();
-    saveSettings();
-    filterItems();
-    //map.options.maxZoom = 7;
-    //map.fitBounds(markersLayer.getBounds());
-    //map.options.maxZoom = 19;
-  }
-
-  document.querySelector('.search-cancel').addEventListener('click', clearFilter);
-  searchControl._input.addEventListener('focus', function(e) { setTimeout(function(e){ e.target.select(); },50,e); } );
-  searchControl._input.addEventListener('input', addSearchCallbacks);
-
-  // item clicked in a dropdown list
-  function clickItem(text) {
-    if (loc = searchControl._getLocation(text)) {
-      searchControl.showLocation(loc, text);
-      //searchControl.fire('search:locationfound', { latlng: loc, text: text, layer:loc.layer });
-    }
-  }
-
-  // add click callbacks to dropdown list after input events, wait 1500 ms so it could reload items
-  function addSearchCallbacks(){
-    setTimeout(function() {
-      let divs = document.querySelectorAll('.search-tip');
-      [].forEach.call(divs, function(div) {
-        div.addEventListener('click', function (e) { clickItem(e.target.innerText); e.preventDefault(); })
-      })
-    }, 1500)
-  }
-
-  searchControl.on('search:collapsed', function (e) {
-    document.querySelector('.search-count').style.display = 'none';
-  });
-
-  // fired when input control is expanded (not the dropdown list)
-  searchControl.on('search:expanded', function (e) {
-    searchControl._input.value = settings.searchText;
-
-    if (settings.searchText)
-      document.querySelector('.search-cancel').style.display = 'block';
-
-    //searchControl.searchText(settings.searchText);
-    addSearchCallbacks();
-    document.querySelector('.search-count').style.display = 'block';
-    updateCount();
-  });
-  // end of search
-
-  // create a found tooltip, add it to search control
-  let div = document.createElement('div');
-  div.className = "search-count";
-  document.querySelector('.leaflet-control-search').appendChild(div);
-  div.textContent = markers.length;
-
-
-  window.addEventListener("keydown", function (e) {
-    if (e.code=='KeyF' && e.ctrlKey) {
-      searchControl.expand(true);
-      e.preventDefault();
-    }
-  });
-
-  // prerender all icons
-  for (const iconName of Object.keys(types)) {
-    icons[iconName] = baseIcon(types[iconName]);
-  }
-
-  return [baseLayers, overlayLayers];
+  updateView();
 }
 
-function updateCount() {
-  let update = ()=> {
-    let el = document.querySelector('.search-count');
-    if (el) el.textContent = markersLayer.getLayers().length;
-  }
-  for(let i=200; i<5000; i*=2) setTimeout(update, i);
-}
-
-function markersLoadedCallback() {
-  //console.log('Markers loaded:', markers.length);
-  //console.timeEnd("markers");
-  updateCount();
-}
-
-function getCell(feature) {
-  let c = feature.geometry.coordinates;
-  let w = getMapSize(mapId);
-  let x = Math.floor((c[0] / w - 0.5) * 128);
-  let y = Math.floor((c[1] / w - 0.5) * 128);
-  return {x:x, y:y};
-}
-
-function onMarkerClick(e) {
-  let p = e.target.feature;
-  let t = getCell(p);
-  let cell = `MainGrid_L0_X${t.x}Y${t.y}`;
-  let json = JSON.stringify(p, null, 2);
-  //let text = `<b>${p.properties.title}</b><br/>${p.properties.description}<br/><small>${cell}</small><pre>${json}</pre>`;
-  let c = p.geometry.coordinates;
-  let teleport = `XTeleportTo ${c[0]} ${c[1]} ${c[2]}`;
-  let text = `<pre>${json}</pre>${cell}<br/>${teleport}`;
-  let latlng = e.target.getLatLng();
-  popup.setContent(text);
-  popup.setLatLng(latlng);
-}
-
-function onMarkerHover(e) {
-  let o = e.target.feature.properties;
-  let name = getIconName(o);
-  let text = `${o.title} (${o.description}) / ${name}`;
-
-  //let's add elevation to tooltip
-  let z = ~~e.target.feature.geometry.coordinates[2] || 0;
-
-  if (z>=0) {
-    text += ` &uparrow;${z}`;
-  } else {
-    text += ` &downarrow;${-z}`;
-  }
-
-
-  tooltip.setContent(text);
-  tooltip.setLatLng(e.target.getLatLng());
-}
-
-function Marker(feature) {
-  const latlng = L.latLng(feature.geometry.coordinates[1], feature.geometry.coordinates[0]);
-  let iconName = getIconName(feature.properties);
-  let marker = L.marker(latlng, { icon: icons[iconName] || icons['Question'] } );
-
-  // check if we need to use custom color for this icon (teleports)
-  let color = getIconColor(feature.properties);
-  if (color) {
-    marker = L.marker(latlng, { icon: baseIcon(types[iconName], color) } );
-  }
-
-  marker.feature = feature;
-  marker.on('click', onMarkerClick);
-  marker.on('mouseover', onMarkerHover);
-  marker.alt = iconName;
-  return marker;
-}
-
-function loadMarkersGeo(data) {
-  // this is blocking, not nice
-  L.geoJSON(data, {
-    pointToLayer: (feature, latlng) => {
-      return Marker(feature);
-    }
-  })
-  markersLayer.addLayers(markers.filter(passesFilter));
-  markersLoadedCallback();
-}
-
-function loadMarkersBatched(data, animated=false) {
-  const features = data.features;
-  const batchSize = 1000; // Number of features to process per batch
-  let currentIndex = 0;
-
-  function processBatch() {
-    let batch = [];
-    const end = Math.min(currentIndex + batchSize, features.length);
-
-    for (let i = currentIndex; i < end; i++) {
-      batch.push(Marker(features[i]));
-    }
-
-    currentIndex = end;
-    //console.log(`Processed ${currentIndex}/${features.length} markers`);
-
-    if (currentIndex < features.length) {
-      markers.push(...batch);
-      animated && markersLayer.addLayers(batch.filter(passesFilter));
-      setTimeout(processBatch, 0); // Schedule the next batch
-    } else {
-      markers.push(...batch);
-      animated && markersLayer.addLayers(batch);
-      !animated && markersLayer.addLayers(markers.filter(passesFilter));
-      markersLoadedCallback();
-    }
-  }
-
-  processBatch();
-}
-
-function loadMarkersIdle(data, animated=false) {
-  // ought to be fastest
+function loadMarkersIdle(data) {
   const features = data.features;
   let currentIndex = 0;
-
+  let markers = [];
   function processBatch(deadline) {
     batch = [];
     while (deadline.timeRemaining() > 0 && currentIndex < features.length) {
       batch.push(Marker(features[currentIndex++]));
     }
-
     //console.log(`Processed ${currentIndex}/${features.length} markers`);
-
     if (currentIndex < features.length) {
       markers.push(...batch);
-      animated && markersLayer.addLayers(batch.filter(passesFilter));
       requestIdleCallback(processBatch); // Schedule the next batch during idle time
     } else {
       markers.push(...batch);
-      animated && markersLayer.addLayers(batch);
-      !animated && markersLayer.addLayers(markers.filter(passesFilter));
-      markersLoadedCallback();
+      addMarkers(markers);
     }
   }
-
   requestIdleCallback(processBatch, { timeout: 1000 });
 }
 
-function loadMarkersSimple(data, animated=false) {
+function loadMarkersSimple(data) {
+  let markers = [];
   for (feature of data.features) {
-      markers.push(Marker(feature));
+    markers.push(Marker(feature));
   }
-  markersLayer.addLayers(markers.filter(passesFilter));
-  markersLoadedCallback();
+  markersLoadedCallback(markers);
 }
 
 function loadMarkers(data) {
-  console.time("markers");
-
-  // true/false: animated or not. non-animated version may be blocking
-
-  //loadMarkersSimple(data);
-  //loadMarkersGeo(data);
-  //loadMarkersBatched(data, true);
-  loadMarkersIdle(data, false);
+  console.time('markers');
+  //loadMarkersSimple(data); // really blocking
+  loadMarkersIdle(data);
 }
 
-function clearFilter() {
-  markersLayer.addLayers(markers);
-  settings.searchText = '';
-  saveSettings();
-  updateCount();
+function addHandler(layer) {
+  const originalShow = layer.show;
+  const originalHide = layer.hide;
+
+  // Override the show method
+  layer.show = function () {
+    // Call the original show method
+    originalShow.call(this);
+    // Fire a custom 'visibilitychange' event
+    this.fire('visibilitychange', { visible: true });
+  };
+
+  // Override the hide method
+  layer.hide = function () {
+    // Call the original hide method
+    originalHide.call(this);
+    // Fire a custom 'visibilitychange' event
+    this.fire('visibilitychange', { visible: false });
+  };
+
+  // Listen for the custom 'visibilitychange' event
+  layer.on('visibilitychange', function (e) {
+    let group = e.target.getId().toLowerCase();
+    let show = e.visible;
+
+    if (show) {
+      settings.activeItems[group] = true;
+    } else {
+      delete settings.activeItems[group];
+    }
+
+    //console.log(settings);
+
+    saveSettings();
+
+  });
+}
+
+function clearSelection() {
+  if (window.getSelection) {
+    // Modern browsers
+    const selection = window.getSelection();
+    if (selection.removeAllRanges) {
+      selection.removeAllRanges();
+    } else if (selection.collapseToEnd) {
+      // For older WebKit browsers
+      selection.collapseToEnd();
+    }
+  } else if (document.selection) {
+    // Older versions of Internet Explorer
+    document.selection.empty();
+  }
+}
+
+function showPopup(e) {
+
+  showTooltip(e);
+
+  console.log(e.target.feature.geometry.coordinates, e.target.feature.properties);
+
+  /*
+  var popup = new maptalks.ui.InfoWindow({
+    content: '<pre>' + JSON.stringify(feature, null, 2) + '</pre>' + teleport,
+    title: o.title,
+    autoOpenOn: 'click',
+    autoCloseOn: 'click',
+    dy: iconSize/2+5,
+  });
+    
+  popup.addTo(marker);
+  popup.addEventListener('contextmenu', function(e) { e.stopPropagation()}, true); // enable default context menu
+  */
+}
+
+// Function to show the tooltip
+function showTooltip(e) {
+
+  if (e.target.feature.properties.description.includes('Region')) return;
+
+  var tooltip = document.getElementById('map-tooltip');
+
+  clearTimeout(tooltipHideTimer);
+
+  tooltip.onmouseover = function(e) {
+    clearTimeout(tooltipHideTimer);
+  };
+
+  tooltip.onmouseout = function(e) {
+    tooltipHideTimer = setTimeout(hideTooltip, tooltipHideDelay);
+  };
+
+
+
+  // Show the tooltip to calculate the size
+  // Since browsers do not repaint the screen during synchronous JavaScript execution,
+  // temporarily changing the display property within a script will not cause the element to flash visibly on the screen.
+  tooltip.style.display = 'block';
+
+  let marker = e.target;
+
+  let o = marker.feature.properties;
+
+  let title = o.title;
+  let subtitle = o.description;//'sid_misc_pda_Map_MarkerCache';
+
+  if (o.clue) {
+    title = 'sid_stashes_'+o.clue+'_name'
+    subtitle = 'sid_stashes_'+o.clue+'_description';
+  }
+
+  if (o.description=='ESpawnType::Item') {
+    title = 'sid_items_' + title + '_name';
+  }
+
+
+  title = lang[title] || title;
+  subtitle = lang[subtitle] || subtitle;
+
+
+  title += ' (' + getIconName(o) + ')';
+
+  let content = `<b>${title}</b><br/>${subtitle}`;
+  
+  //+'<pre>' + JSON.stringify(o, null, 2) + '</pre>';
+
+  if (o.spawns) {
+    content +='<hr/><div class="overflow-container">';
+
+    for (spawn of o.spawns) {
+      content += spawn + '<br/>';
+    }
+
+    content +='</div>';
+  }
+
+  let t = marker.feature.geometry.coordinates;
+  let teleport = `${t[0]} ${t[1]} ${t[2]}`;
+
+  let sid = marker.feature.properties.sid;
+  if (sid.includes('_C_')) sid = sid.split('_C_')[1];
+
+  content += `<hr/><small><small>SID: ${sid}</small></small>`;
+  content += `<br/><small><small>XTeleportTo ${teleport}</small></small>`;
+
+
+
+  tooltip.innerHTML = content;
+
+  //console.log(e);
+
+
+
+  // Get the screen coordinates of the event
+  //let c = marker.getCoordinates();
+  //var screenPosition = coordinateToContainerPoint(map, c);
+  //var screenPosition = map.coordinateToContainerPoint(c);
+
+  //console.log('tooltip size', tooltipWidth, tooltipHeight);
+
+  let c = marker.getContainerExtent();
+  let screenPosition = {x: c.pxmin, y: c.pymin};
+
+  // Determine the tooltip position
+  var mapContainer = map.getContainer();
+  var mapRect = mapContainer.getBoundingClientRect();
+  var tooltipWidth = tooltip.offsetWidth;
+  var tooltipHeight = tooltip.offsetHeight;
+
+
+  // Calculate available space
+  var spaceRight = mapRect.width - screenPosition.x;
+  var spaceLeft = screenPosition.x;
+
+  let gap = marker.getSymbol().markerWidth/2+5;
+
+  // Position the tooltip
+  if (spaceRight > tooltipWidth) {
+    // Place tooltip to the right
+    tooltip.style.left = mapRect.left + screenPosition.x + gap + 'px';
+    tooltip.className = 'arrow-left';
+  } else {
+    // Place tooltip to the left
+    tooltip.style.left =  mapRect.left + screenPosition.x - tooltipWidth - gap + 'px';
+    tooltip.className = 'arrow-right';
+  }
+
+  tooltip.style.top = mapRect.top + screenPosition.y - tooltipHeight/2 + 'px';
+
+}
+
+// Function to hide the tooltip
+function hideTooltip() {
+  var tooltip = document.getElementById('map-tooltip');
+  tooltip.style.display = 'none';
+  clearSelection();
+}
+
+function getIconName(o) {
+  let tags = o.spawns || [''];
+  let s = [o.title, o.description, ...tags].join('/');
+  for (const key of Object.keys(types).sort((a,b)=>(types[b].priority || 0) - (types[a].priority || 0)) ) {
+    let regex = types[key].match;
+    if (regex && s.match(new RegExp(regex, "i"))) return key;
+  }
+  return 'Question';
+}
+
+function Marker(feature) {
+  let markersDir = 'data/sprites/';
+  let markersPrefix = markersDir+'';
+  let markersPostfix = '_NotActive_General_Shadow.png'
+
+  images = {
+    'Location':      'T_LocationOrigin_NotActive_Shadow.png',
+    'Base':      'Texture_Camp',
+    'Arch Anomaly':      'Texture_Archianomaly',
+    'Guide':      'Texture_Guide',
+    'Technician':      'Texture_Mechanical',
+    'Trader':      'Texture_Trader',
+    'Personal Stash':      'Texture_Storage',
+    'Bed':        'Texture_Bed',
+    'Medic':      'Texture_Medecine',
+    'Stash':      'Texture_Stahes',
+    'Scanner':    'Texture_Signal',
+
+    'Safe':     'Texture_Habar',
+    'Upgrade':  'Texture_Habar',
+  }
+
+  // this is direct mapping for reference
+  let tiles = {
+    'claws': 'CompassMarker_0_0.png',
+    'skull': 'CompassMarker_0_1.png',
+    'bag': 'CompassMarker_0_2.png',
+    'circle': 'CompassMarker_0_3.png',
+    'circle_locked': 'CompassMarker_1_0.png',
+    'fire': 'CompassMarker_1_1.png',
+    'radiation': 'CompassMarker_1_2.png',
+    'lock': 'CompassMarker_1_3.png',
+    'exclamation': 'CompassMarker_2_0.png',
+    'character': 'CompassMarker_2_1.png',
+    'circle_dot': 'CompassMarker_2_2.png',
+    'question': 'CompassMarker_2_3.png',
+    'box': 'CompassMarker_3_0.png',
+    'unlocked': 'CompassMarker_3_1.png',
+    'anomaly': 'CompassMarker_3_2.png',
+    'cave': 'CompassMarker_3_3.png',
+    'yen': 'CompassMarker_4_0.png',
+    'repair': 'CompassMarker_4_1.png',
+    'rest': 'CompassMarker_4_2.png',
+    'misc': 'CompassMarker_4_3.png',
+  };
+
+  let misc_images = {
+    'Character': tiles['character'],
+    //'Chest': tiles['box'],
+    'Squad': tiles['character'],
+    'Shelter': tiles['cave'],
+
+    //'Anomaly': tiles['anomaly'],
+    //'Arch Anomaly': tiles['anomaly'],
+
+    'Radiation': tiles['radiation'],
+    'Action': tiles['exclamation'],
+    'Chair': tiles['exclamation'],
+
+    //'Unique Enemy': tiles['claws'],
+    //'Enemy': tiles['claws'],
+    //'Weapon': tiles['box'],
+    'Sustenance': tiles['bag'],
+    'Ammo': tiles['box'],
+    'Medical': tiles['box'],
+    'Grenade': tiles['box'],
+
+    //'Artifact': tiles['anomaly'],
+    'Teleport Target': tiles['circle_locked'],
+    'Teleport': tiles['circle_dot'],
+
+
+    'Anomaly': 'Texture_Anomaly',
+    'Enemy': 'Texture_Dangerous',
+    'Unique Enemy': 'Texture_Dangerous',
+
+    'Weapon': 'Texture_Habar',
+    'Ammo': 'Texture_Habar',
+    'Gear': 'Texture_Habar',
+    'Chest': 'Texture_Habar',
+
+    'Artifact': 'Texture_Follow',
+    //'Artifact': tiles['anomaly'],
+
+    'Lair': 'Texture_Dangerous',
+
+    'Region': 'T_NotActive_Region_Shadow.png',
+  };
+
+
+  let o = feature.properties;
+  let name = getIconName(o);
+  let group = types[name].group || 'misc';
+
+  // stash without a clue is just items
+  //if (group=='stash' && !o.clue) group = 'items';
+
+  //if (group == "stashes") name = "Stash";
+
+  //if (o.spawns && o.spawns.length>0) name = 'Stash';
+
+  if (name=='Stash') group = 'stashes';
+
+  let image = images[name] || misc_images[name] || tiles['question'];
+
+  image = (image.includes('/') ? '': markersPrefix) + image + (image.includes('.png') ? '' : markersPostfix);
+
+  let coordinates = feature.geometry.coordinates;
+
+  //if (o.clue) image = localImages['purpleStash'];
+
+  coordinates = [coordinates[0], coordinates[1], coordinates[2]*0.05 ]; // cannot disable altitude for now, fucking parallax effect
+
+  let opacity = 1.0;
+
+  let size = iconSize;
+
+  if (image.includes('CompassMarker')) {
+    //opacity = 0.75;
+    size = 32;
+  }
+
+  let symbol = {
+    markerFile   : image,
+    markerWidth  : size,
+    markerHeight : size,
+    markerDx     : 0,
+    markerDy     : 0,
+    markerOpacity: opacity,
+    markerVerticalAlignment: 'middle',
+  };
+
+  if (name=='Region') {
+    symbol = [
+      symbol,
+      {
+        textFaceName : 'sans-serif',
+        textName : lang['sid_locations_region_' + o.title + '_name'] || o.title,
+        textFill : '#fff',
+
+        textHaloFill      : '#222',
+        textHaloRadius    : 2,
+
+        textHorizontalAlignment : 'right',
+        textSize : 16,
+        textDx: 16,
+      },
+    ]
+  }
+
+  var marker = new maptalks.Marker(coordinates, {symbol: symbol});
+
+  marker.feature = feature;
+
+  marker.on('click', showPopup);
+
+  marker.on('mouseover', function(e) {
+    let marker = e.target;
+
+    if (!marker.feature.properties.description.includes('Region'))
+    marker.updateSymbol({
+      markerWidth: size*1.15,
+      markerHeight: size*1.15,
+    });
+
+    clearTimeout(tooltipShowTimer);
+    tooltipShowTimer = setTimeout(function(){showTooltip(e)}, tooltipShowDelay);
+
+  });
+
+  marker.on('mouseout', function(e) {
+    let marker = e.target;
+
+    if (!marker.feature.properties.description.includes('Region'))
+    marker.updateSymbol({
+      markerWidth: size,
+      markerHeight: size,
+    });
+
+    clearTimeout(tooltipShowTimer);
+    clearTimeout(tooltipHideTimer);
+
+    tooltipHideTimer = setTimeout(hideTooltip, tooltipHideDelay);
+  });
+
+  return {group: group, marker: marker};
+}
+
+
+function scaleCoordinates(coordinates, scaleFactor, origin) {
+  return coordinates.map(coord => {
+    const [x, y] = coord;
+    return [
+      origin[0] + (x - origin[0]) * scaleFactor,
+      origin[1] + (y - origin[1]) * scaleFactor
+    ];
+  });
+}
+
+function scaleGeoJSON(geojson, scaleFactor, origin) {
+  geojson.features.forEach(feature => {
+    feature.geometry.coordinates = feature.geometry.coordinates.map(ring =>
+      scaleCoordinates(ring, scaleFactor, origin)
+    );
+  });
+  return geojson;
+}
+
+function addRegions(geojson) {
+
+  const defaultSymbol = {
+    'lineColor': '#fff',    // Border color
+    'lineWidth': 1.5,            // Border width
+    'polygonFill': '#fff',  // Fill color
+    'polygonOpacity': 0.0,      // Fill opacity
+    'lineOpacity': 0.5,
+  };
+
+  // Define the hover style
+  const hoverSymbol = {
+    'polygonOpacity': 0.0 // Increased opacity
+  };
+
+  const geometries = maptalks.GeoJSON.toGeometry(scaleGeoJSON(geojson, 812900/8192, [0,0]));
+
+  geometries.forEach(geometry => {
+    if (geometry.getType() === 'Polygon') { // Ensure it's a polygon
+
+      geometry.setSymbol(defaultSymbol);
+      //geometry.setOptions({ interactive: false, cursor: 'default', }); 
+
+      /*
+      // Add event listeners for hover effect
+      geometry.on('mousemove', () => {
+        geometry.updateSymbol(hoverSymbol); // Apply hover style
+      });
+
+      geometry.on('mouseout', () => {
+        geometry.updateSymbol(defaultSymbol); // Reset to default
+      });
+      */
+
+      let name = geometry.properties.svgID.substring(1).replaceAll('_','');
+      geometry.feature = {properties: {title: name}};
+    }
+  });
+
+
+  let polygons = geometries;
+
+  // Store a reference to the currently "hovered" polygon
+  let hoveredPolygon = null;
+
+  // Add mousemove listener to the map
+  map.on('mousemove', e => {
+    const mouseCoord = e.coordinate; // Geographic coordinate of the mouse
+    let found = false;
+
+    // Iterate through polygons to find if the point is inside any
+    for (const polygon of polygons) {
+      if (polygon.containsPoint(mouseCoord)) {
+
+        found = true;
+
+        if (hoveredPolygon !== polygon) {
+          // New polygon hovered, update appearance
+          if (hoveredPolygon) {
+            // Reset the previous polygon
+            hoveredPolygon.updateSymbol(defaultSymbol);
+          }
+
+          // Highlight the currently hovered polygon
+          polygon.updateSymbol(hoverSymbol);
+          hoveredPolygon = polygon; // Update reference
+        }
+        break; // Stop checking once a match is found
+      }
+    }
+
+    if (!found && hoveredPolygon) {
+      // Mouse is not over any polygon, reset the previous one
+      hoveredPolygon.updateSymbol(defaultSymbol);
+      hoveredPolygon = null; // Clear reference
+    }
+  });
+
+
+  regionLayer.addGeometry(geometries);
+}
+
+function saveSettings() {
+  localStorage.setItem(localDataName, JSON.stringify(localData));
 }
 
 function passesFilter(marker) {
@@ -630,230 +1101,132 @@ function passesFilter(marker) {
   let terms = text.split(' ');
   let o = marker.feature.properties;
   let tags = o.spawns || [''];
-  let title = [marker.alt||'', o.title||'', o.description||'', o.sid||'', o.clue||'', ...tags].join(' ').toLowerCase();
+  let t = lang[o.title]||'';
+  let d = lang[o.description]||'';
+
+  let name = '';//getIconName(o)||''; // bottleneck, apparently, need to reorganize types
+
+  let title = [t, d, o.title||'', name, o.description||'', o.sid||'', o.clue||'', ...tags].join(' ').toLowerCase();
+  if (o.clue) title += ' clue';
   return !(text!='' && !terms.every(term=>title.includes(term)));
 }
 
 function filterItems() {
-  // filter by settings.searchText. caching is unreliable, just perform a full search here
-  let count = 0;
 
-  let addList = [];
-  let removeList = [];
+  for (const layer of groupLayer.getLayers()) {
 
-  for (marker of markers) {
-    if (passesFilter(marker)) {
-      count += 1;
-      addList.push(marker);
-    } else {
-      removeList.push(marker);
-    }
-  }
+    //if (!layer.isVisible()) continue; // skip hidden layers altogether (for now)
 
-  markersLayer.addTo(map); // add markers to map, or it's super slow
-  markersLayer.removeLayers(removeList);
-  markersLayer.addLayers(addList);
-  updateCount();
-}
-
-function hideElements(className, hide) {
-  document.querySelectorAll(className).forEach(el => {
-    //el.style.opacity = hide ? 0: 1;
-    el.style.visibility =  hide ? 'hidden': 'visible';
-  });
-}
-
-function updateZoom(e) {
-  let zoom = map.getZoom();
-  hideElements('.grid-label', zoom > 4 || zoom < 1);
-  hideElements('.grid-cell', zoom > 4 || zoom < 0);
-  hideElements('.region-label', zoom > 4 || zoom < 1);
-  hideElements('.region-cell', zoom > 4 || zoom < 0);
-}
-
-function zoomToFeature(e) {
-  map.fitBounds(e.target.getBounds());
-}
-
-let getGridSize = (mapId) => 16;
-
-function getGridLabel(mapId, x, y) {
-  let w = getMapSize(mapId);
-  let cw = getGridSize(mapId);
-  let rx = Math.floor((x/w - 0.5) * 128);
-  let ry = Math.floor((y/w - 0.5) * 128);
-  return `X ${rx}..${rx+7}<br>Y ${ry}..${ry+7}`;
-}
-
-function addGrid(mapId) {
-  let baseLayer = L.layerGroup();
-
-  let d = getMapSize(mapId);
-  let n = getGridSize(mapId);
-  var cellSize = d / n;
-
-  function drawGrid() {
-    for (var x = 0; x < d; x += cellSize) {
-      for (var y = 0; y < d; y += cellSize) {
-        let bounds = L.latLngBounds([[y, x], [y + cellSize, x + cellSize]]);
-        let layer = L.rectangle(bounds, { className:'grid-cell', interactive: true });
-        layer.on('click', zoomToFeature);
-        let latlng = bounds.getCenter();
-        let title = getGridLabel(mapId, x,y);
-        let label = L.tooltip({ className: 'grid-label', permanent: true, direction: 'center'}).setLatLng(latlng).setContent(title);
-        layer.addTo(baseLayer);
-        label.addTo(baseLayer);
+    for (marker of layer._geoList) {
+      if (passesFilter(marker)){
+        marker.show();
+        let parent = marker.getLayer();
+        if (parent && !parent.isVisible())
+          parent.show();
+      } else {
+        marker.hide();
       }
     }
   }
 
-  map.on('mousemove', function(e) {
-    const mouseLatLng = e.latlng;
-    baseLayer.eachLayer(function(layer) {
-      if (layer instanceof L.Rectangle) {
-        let selected = layer.contains(mouseLatLng);
-        let el = layer.getElement();
-        if (!el) return;
-        if (selected) {
-          el.classList.add('selected');
-        } else {
-          el.classList.remove('selected');
-        }
-      }
-    });
-  });
-
-  drawGrid();
-  setTimeout(updateZoom,0);
-
-  return baseLayer;
 }
 
-function addRegions(data) {
-  let labels = [];
+function clearFilter() {
+  searchControl.value = '';
+  settings.searchText = '';
+  filterItems();
+}
 
-  let baseLayer = L.geoJSON(data, {
-    coordsToLatLng: coords=> {
-      const scaleFactor = 812900 / 8192;
-      return L.latLng(coords[1] * scaleFactor, coords[0] * scaleFactor);
-    },
-    onEachFeature: (feature, layer) => {
-      layer.options.className = 'region-cell';
-      layer.on('click', zoomToFeature);
-      //let latlng = layer.getBounds().getCenter();
-      layer.addTo(map); let latlng = layer.getCenter(); layer.removeFrom(map); // polygon centroid needs adding to map
-      let title = layer.feature.properties.svgID.replace('#','');
-      let label = L.tooltip({ className: 'region-label', permanent: true, direction: 'center'}).setLatLng(latlng).setContent(title);
-      labels.push(label);
-    },
-  });
 
-  // need to add here because layer is not available before
-  labels.forEach(label=>label.addTo(baseLayer));
+function applyTint(src, r,g,b, callback) {
+  const canvas = document.createElement('canvas');
+  const ctx = canvas.getContext('2d');
+  const img = new Image();
+  img.crossOrigin = 'Anonymous';
+  img.src = src;
+  img.onload = () => {
+    canvas.width = img.width;
+    canvas.height = img.height;
+    ctx.drawImage(img, 0, 0);
+    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const data = imageData.data;
+    for (let i = 0; i < data.length; i += 4) {
 
-  map.on('mousemove', function(e) {
-    const mouseLatLng = e.latlng;
-    baseLayer.eachLayer(function(layer) {
-      if (layer instanceof L.Polygon) {
-        let selected = layer.contains(mouseLatLng);
-        let el = layer.getElement();
-        if (!el) return;
-        if (selected) {
-          el.classList.add('selected');
-        } else {
-          el.classList.remove('selected');
-        }
-      }
-    });
-  });
+      data[i + 0] = data[i + 0] * r / 255;
+      data[i + 1] = data[i + 1] * g / 255;
+      data[i + 2] = data[i + 2] * b / 255;
 
-  return baseLayer;
+    }
+    ctx.putImageData(imageData, 0, 0);
+    canvas.toBlob((blob) => {
+      callback(blob);
+    }, 'image/png');
+  };
 }
 
 window.onload = function() {
 
-  let files = [
-    'types.json',
-    'regions.json',
-  ].map(url=>fetch(url).then(r=>r.text()));
+  loadMap();
 
-  Promise.all(files).then(data => {
-    types = JSON.parse(data[0]);
+  let compassControl = new maptalks.control.Compass({position  : 'bottom-right'}).addTo(map)
+    ._compass.onclick = (e)=>map.getBearing()==0 && map.animateTo({ pitch: map.getPitch()==0 ? defaultPitch : 0 })
 
-    let [baseLayers, overlayLayers] = loadMap(mapId);
+  window.addEventListener("keydown",function (e) {
 
-    regionsLayer = addRegions(JSON.parse(data[1]));
-
-    let gridLayer = addGrid(mapId);
-
-    overlayLayers['Grid'] = gridLayer;
-    overlayLayers['Regions'] = regionsLayer;
-    overlayLayers['Markers'] = markersLayer;
-
-    // add layers control
-    layersControl = L.control.layers(baseLayers, overlayLayers, {
-      collapsed: true,
-      position: 'bottomleft',
-    }).addTo(map);
-
-
-    let baseLayer = baseLayers[ settings.baseLayer || Object.keys(baseLayers)[0] ];
-
-    if (baseLayer) baseLayer.addTo(map);
-
-    for (const [name, layer] of Object.entries(overlayLayers)) {
-      if (settings.activeLayers[name]) layer.addTo(map);
-    }
-
-    // marker clusters are auto added, need removing rather than adding
-    if (!settings.activeLayers['Markers']) {
-      map.removeLayer(markersLayer);
-    }
-
-    let marker_files = [
-      'markers.json',
-      'markers_custom.json',
-    ].map(url=>fetch(url).then(r=>r.json()));
-
-    Promise.all(marker_files).then(results => {
-      for (data of results) {
-        loadMarkers(data);
+    if (e.code == 'Escape' || e.code == 'Enter') {
+      if (e.code=='Escape') {
+        document.querySelector('#map').focus();
       }
-    });
 
-    map.on('baselayerchange', function(e) {
-      //console.log('base layer changed', e);
-      settings.baseLayer = e.name;
+      settings.searchText = searchControl.value;
+      filterItems();
+
       saveSettings();
+
+      return;
+    }
+
+    if (document.activeElement != document.querySelector('#map')) {
+      return;
+    }
+
+    if (e.code=='KeyF' && e.ctrlKey) {
+      searchControl.focus();
+      e.preventDefault();
+      return;
+    }
+
+    if (e.code=='KeyR' && !e.ctrlKey) {
+      if (map.getBearing()!=0) {
+        map.animateTo({ bearing: 0 });
+      } else {
+        map.animateTo({ pitch: map.getPitch()==0 ? defaultPitch : 0 });
+      }
+    }
+
+  });
+  
+  // need types to load markers, the rest can be loaded asyncronously
+  fetch('types.json').then(r=>r.json()).then(data =>{
+    types = data;
+
+    Promise.all([
+        'markers.json',
+        'markers_custom.json'
+      ].map(url=>fetch(url).then(r=>r.json()))).then(results => {
+      let features = []
+      for (geojson of results) {
+        features.push(...geojson.features);
+      }
+      loadMarkers({"type": "FeatureCollection", "features": features});
     });
 
-    map.on('overlayadd', function(e) {
-      //console.log('added overlay', e);
-      settings.activeLayers[e.name] = true;
-      saveSettings();
-      updateZoom();
-    });
+  }).catch(e=>{alert('Cannot load files, CORS?')});
 
-    map.on('overlayremove', function(e) {
-      //console.log('removed overlay', e);
-      delete settings.activeLayers[e.name];
-      saveSettings();
-    });
+  fetch('regions.json').then(r=>r.json()).then(addRegions);
+  fetch('data/Localization/language_02.json').then(r=>r.json()).then(data => {lang = data});
 
-    markersLayer.on('clustermouseover', function(a) {
-      if (a.layer && (
-        a.layer._childCount < 10
-        //|| map.getZoom() >= 7
-        )) a.layer.spiderfy();
-    });
-
-  }).catch(e=>{console.log(e);})
-}
-
-function saveSettings() {
-  localStorage.setItem(localDataName, JSON.stringify(localData));
-  //console.log('saving settings', localData);
-}
+};
 
 </script>
 
