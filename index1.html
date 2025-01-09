@@ -188,6 +188,11 @@ html, body {
 
 <script>
 
+let tooltipShowTimer = null;
+let tooltipHideTimer = null;
+let tooltipHideDelay = 150;
+let tooltipShowDelay = 200;
+
 let enableAltitude = true;
 let heightFactor = 1.0;
 
@@ -211,6 +216,10 @@ let searchControl = null;
 
 let localImages = {};
 let firstRun = false;
+
+const capitalize = s => s[0].toUpperCase()+s.slice(1);
+const cmpAlphaNum = (a,b) => a[0].localeCompare(b[0], 'en', { numeric: true });
+
 
 function loadMap() {
 
@@ -385,6 +394,7 @@ function loadMap() {
   document.querySelector('.search-cancel').onclick = e=> {
     clearFilter();
     saveSettings();
+    updateView();
   };
 
   map.on('mousedown', function(e) {
@@ -392,7 +402,10 @@ function loadMap() {
   });
 
   map.on('moving', hideTooltip);
-  map.on('zooming', hideTooltip);
+  map.on('zooming', e=>{
+    hideTooltip();
+    updateView();
+  });
 
   map.on('setbaselayer', e=> {
     let layers = map.getBaseLayer().getLayers();
@@ -447,7 +460,29 @@ function addCircles(markers) {
 
 }
 
-function markersLoadedCallback2(markers) {
+function updateView(e) {
+  let zoom = map.getZoom();
+
+  let zoomLevels = {'areas': 0, 'regions':0, 'base': 2, 'circles':3, 'locations': 3, 'stashes':4, 'items':4, 'enemies':4, 'anomalies':7, 'misc':8 };
+
+  if (settings.searchText!='') {
+    return;
+  }
+
+  for(const [layerName, zoomLevel] of Object.entries(zoomLevels)) {
+    let layer = groupLayer.getLayer(capitalize(layerName));
+    if (layer) {
+      if (zoom>=zoomLevel) {
+        layer.show();
+      } else {
+        layer.hide();
+      }
+    }
+  }
+
+}
+
+function addMarkers2(markers) {
   // looks like performance depends on misc layer
   // have to speed up the search the way it doesn't make too much show/hide calls
   let geometries = []
@@ -460,7 +495,7 @@ function markersLoadedCallback2(markers) {
   console.log('loaded geometries', geometries.length);
 }
 
-function markersLoadedCallback(markers) {
+function addMarkers(markers) {
   console.timeEnd('markers');
   console.log('Total markers:', markers.length);
 
@@ -479,10 +514,7 @@ function markersLoadedCallback(markers) {
   addHandler(circleLayer);
   circleLayer.addTo(groupLayer);
 
-  const capitalize = s => s[0].toUpperCase()+s.slice(1);
-  const cmpAlphaNum = (a,b) => a[0].localeCompare(b[0], 'en', { numeric: true });
-
-  let weights = {'base': 1000, 'locations': 750, 'stashes': 500, 'items': 250, 'anomalies': -900, 'misc': -1000 };
+  let weights = {'areas': 1100, 'base': 1000, 'locations': 750, 'stashes': 500, 'items': 250, 'anomalies': -900, 'misc': -1000 };
   let groups = Object.keys(collection);
 
   groups = groups.sort( (a,b)=> (weights[b]||0)-(weights[a]||0) || cmpAlphaNum(a,b))
@@ -519,6 +551,8 @@ function markersLoadedCallback(markers) {
     overlayTitle : 'Overlays',
     containerClass : 'maptalks-layer-switcher',
   }).addTo(map);
+
+  updateView();
 }
 
 function loadMarkersIdle(data) {
@@ -536,7 +570,7 @@ function loadMarkersIdle(data) {
       requestIdleCallback(processBatch); // Schedule the next batch during idle time
     } else {
       markers.push(...batch);
-      markersLoadedCallback(markers);
+      addMarkers(markers);
     }
   }
   requestIdleCallback(processBatch, { timeout: 1000 });
@@ -629,11 +663,6 @@ function showPopup(e) {
   popup.addEventListener('contextmenu', function(e) { e.stopPropagation()}, true); // enable default context menu
   */
 }
-
-tooltipShowTimer = null;
-tooltipHideTimer = null;
-tooltipHideDelay = 100;
-tooltipShowDelay = 250;
 
 // Function to show the tooltip
 function showTooltip(e) {
@@ -850,6 +879,8 @@ function Marker(feature) {
     //'Artifact': tiles['anomaly'],
 
     'Lair': 'Texture_Dangerous',
+
+    'Region': 'T_LocationOrigin_NotActive_Shadow.png',
   };
 
 
@@ -1055,11 +1086,14 @@ function filterItems() {
 
   for (const layer of groupLayer.getLayers()) {
 
-    if (!layer.isVisible()) continue; // skip hidden layers altogether (for now)
+    //if (!layer.isVisible()) continue; // skip hidden layers altogether (for now)
 
     for (marker of layer._geoList) {
       if (passesFilter(marker)){
         marker.show();
+        let parent = marker.getLayer();
+        if (parent && !parent.isVisible())
+          parent.show();
       } else {
         marker.hide();
       }
