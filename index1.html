@@ -670,6 +670,9 @@ function showPopup(e) {
 
 // Function to show the tooltip
 function showTooltip(e) {
+
+  if (e.target.feature.properties.description.includes('Region')) return;
+
   var tooltip = document.getElementById('map-tooltip');
 
   clearTimeout(tooltipHideTimer);
@@ -692,9 +695,6 @@ function showTooltip(e) {
   let marker = e.target;
 
   let o = marker.feature.properties;
-
-  if (o.description.includes('Region')) return;
-
 
   let title = o.title;
   let subtitle = o.description;//'sid_misc_pda_Map_MarkerCache';
