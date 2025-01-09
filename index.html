@@ -460,32 +460,6 @@ function addCircles(markers) {
 
 }
 
-function updateView(e) {
-  let zoom = map.getZoom();
-
-  let zoomLevels = {'areas':-10, 'regions':-10, 'base': 2, 'circles':3, 'locations': 3, 'stashes':4, 'items':5, 'enemies':5, 'anomalies':6, 'misc':8 };
-
-  if (settings.searchText!='') {
-    return;
-  }
-
-  for(const [layerName, zoomLevel] of Object.entries(zoomLevels)) {
-    let layer = groupLayer.getLayer(capitalize(layerName));
-    if (layer) {
-
-      let minZoom = zoomLevel - 0.01;
-      let maxZoom = layerName == 'areas' ? 2: 99;
-
-      if (zoom>=minZoom && zoom < maxZoom) {
-        layer.show();
-      } else {
-        layer.hide();
-      }
-    }
-  }
-
-}
-
 function addMarkersOld(markers) {
   // looks like performance depends on misc layer
   // have to speed up the search the way it doesn't make too much show/hide calls
@@ -1009,6 +983,31 @@ function scaleGeoJSON(geojson, scaleFactor, origin) {
   return geojson;
 }
 
+let zoomLevels = {'areas':-10, 'regions':-10, 'base': 2, 'circles':3, 'locations': 3, 'stashes':4, 'items':5, 'enemies':5, 'anomalies':6, 'misc':8 };
+
+function updateView(e) {
+  let zoom = map.getZoom();
+  if (settings.searchText!='') {
+    return;
+  }
+
+  for(const [layerName, zoomLevel] of Object.entries(zoomLevels)) {
+    let layer = groupLayer.getLayer(capitalize(layerName));
+    if (layer) {
+
+      let minZoom = zoomLevel - 0.01;
+      let maxZoom = layerName == 'areas' ? 3: 99;
+
+      if (zoom>=minZoom && zoom < maxZoom) {
+        layer.show();
+      } else {
+        layer.hide();
+      }
+    }
+  }
+
+}
+
 function isPointInsidePolygon(point, polyPoints) {
   let [x,y] = [point.x, point.y];
   let inside = false;
@@ -1094,7 +1093,7 @@ function addRegions(geojson) {
   map.on('mousemove', e => {
 
     let zoom = map.getZoom();
-    let maxZoom = 2;
+    let maxZoom = 3;
 
     const mouseCoord = e.coordinate; // Geographic coordinate of the mouse
     //let mouseCoord = map.containerPointToCoord(e.containerPoint); // same
