@@ -473,7 +473,7 @@ function updateView(e) {
     let layer = groupLayer.getLayer(capitalize(layerName));
     if (layer) {
 
-      let minZoom = zoomLevel;
+      let minZoom = zoomLevel - 0.01;
       let maxZoom = layerName == 'areas' ? 2: 99;
 
       if (zoom>=minZoom && zoom < maxZoom) {
