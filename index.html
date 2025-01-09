@@ -463,7 +463,7 @@ function addCircles(markers) {
 function updateView(e) {
   let zoom = map.getZoom();
 
-  let zoomLevels = {'areas':0, 'regions':0, 'base': 2, 'circles':3, 'locations': 3, 'stashes':4, 'items':5, 'enemies':5, 'anomalies':6, 'misc':8 };
+  let zoomLevels = {'areas':-10, 'regions':-10, 'base': 2, 'circles':3, 'locations': 3, 'stashes':4, 'items':5, 'enemies':5, 'anomalies':6, 'misc':8 };
 
   if (settings.searchText!='') {
     return;
@@ -1009,6 +1009,20 @@ function scaleGeoJSON(geojson, scaleFactor, origin) {
   return geojson;
 }
 
+function isPointInsidePolygon(point, polyPoints) {
+  let [x,y] = [point.x, point.y];
+  let inside = false;
+  for (let i = 0, j = polyPoints.length - 1; i < polyPoints.length; j = i++) {
+    var xi = polyPoints[i].x, yi = polyPoints[i].y;
+    var xj = polyPoints[j].x, yj = polyPoints[j].y;
+    var intersect = ((yi > y) != (yj > y))
+        && (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
+    if (intersect) inside = !inside;
+  }
+  return inside;
+};
+
+
 function addRegions(geojson) {
 
   const defaultSymbol = {
@@ -1032,6 +1046,7 @@ function addRegions(geojson) {
       geometry.setSymbol(defaultSymbol);
       //geometry.setOptions({ interactive: false, cursor: 'default', }); 
 
+      /*
       // Add event listeners for hover effect
       geometry.on('mousemove', () => {
         let zoom = map.getZoom();
@@ -1042,6 +1057,14 @@ function addRegions(geojson) {
         geometry.updateSymbol(defaultSymbol); // Reset to default
       });
 
+      geometry.on('click', () => {
+        const extent = polygon.getExtent(); // Get the bounds of the polygon
+        if (extent) {
+          map.fitExtent(extent); // Adjust the map view to fit the polygon bounds
+          }
+      });
+      */
+
       let name = geometry.properties.svgID.substring(1).replaceAll('_','');
       geometry.feature = {properties: {title: name}};
     }
@@ -1051,38 +1074,61 @@ function addRegions(geojson) {
   let polygons = geometries;
 
   // Store a reference to the currently "hovered" polygon
-  let hoveredPolygon = null;
+  let selectedPolygon = null;
+  let lastZoom = null;
+
+  map.on('click', e=> {
+    if (selectedPolygon) {
+      const extent = selectedPolygon.getExtent();
+      if (extent) {
+        map.fitExtent(extent);
+      }
+    }
+  });
 
   // Add mousemove listener to the map
   map.on('mousemove', e => {
+
+    let zoom = map.getZoom();
+    let maxZoom = 2;
+
     const mouseCoord = e.coordinate; // Geographic coordinate of the mouse
+    //let mouseCoord = map.containerPointToCoord(e.containerPoint); // same
+
     let found = false;
+
 
     // Iterate through polygons to find if the point is inside any
     for (const polygon of polygons) {
-      if (polygon.containsPoint(mouseCoord)) {
+
+      //if (polygon.containsPoint(mouseCoord)) { // doesn't work for some reason
+      if (isPointInsidePolygon(mouseCoord, polygon.getCoordinates()[0])) {
 
         found = true;
 
-        if (hoveredPolygon !== polygon) {
+        if (selectedPolygon !== polygon || lastZoom != zoom) {
           // New polygon hovered, update appearance
-          if (hoveredPolygon) {
+          if (selectedPolygon) {
             // Reset the previous polygon
-            hoveredPolygon.updateSymbol(defaultSymbol);
+            selectedPolygon.updateSymbol(defaultSymbol);
           }
 
           // Highlight the currently hovered polygon
-          polygon.updateSymbol(hoverSymbol);
-          hoveredPolygon = polygon; // Update reference
+          polygon.updateSymbol(zoom > maxZoom ? defaultSymbol : hoverSymbol);
+          selectedPolygon = polygon; // Update reference
+
+          if (zoom>maxZoom) selectedPolygon = null;
+
+          lastZoom = zoom;
         }
         break; // Stop checking once a match is found
       }
     }
 
-    if (!found && hoveredPolygon) {
+    if (!found && selectedPolygon) {
       // Mouse is not over any polygon, reset the previous one
-      hoveredPolygon.updateSymbol(defaultSymbol);
-      hoveredPolygon = null; // Clear reference
+      selectedPolygon.updateSymbol(defaultSymbol);
+      selectedPolygon = null; // Clear reference
     }
   });
 
