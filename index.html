@@ -402,7 +402,7 @@ function loadMap() {
 
   map.on('moving', hideTooltip);
 
-  map.on('zoomend', e=>{
+  map.on('zooming', e=>{
     hideTooltip();
     updateView();
   });
