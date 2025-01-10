@@ -401,7 +401,8 @@ function loadMap() {
   });
 
   map.on('moving', hideTooltip);
-  map.on('zooming', e=>{
+
+  map.on('zoomend', e=>{
     hideTooltip();
     updateView();
   });
