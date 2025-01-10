@@ -1051,25 +1051,28 @@ function addRegions(geojson) {
   let selectedPolygon = null;
   let lastZoom = null;
 
+  let polygonClick = e=> {
+    if (selectedPolygon) {
+      const extent = selectedPolygon.getExtent();
+      let zoom = map.getZoom();
+      if (extent && zoom <= 4) {
+        //map.fitExtent(extent);
+        const center = extent.getCenter();
+        map.animateTo({center: center, zoom: 4});
+      }
+    }
+  }
+
   polygons.forEach(polygon => {
     if (polygon.getType() === 'Polygon') { // Ensure it's a polygon
       polygon.setSymbol(defaultSymbol);
       let name = polygon.properties.svgID.substring(1).replaceAll('_','');
       polygon.feature = {properties: {title: name}};
-
-      polygon.on('click', e=>{
-        if (selectedPolygon) {
-          const extent = selectedPolygon.getExtent();
-          let zoom = map.getZoom();
-          if (extent && zoom <= 4) {
-            //map.fitExtent(extent);
-            const center = extent.getCenter();
-            map.animateTo({center: center, zoom: 4});
-          }
-        }
-      });
+      //polygon.on('click', polygonClick); // doesn't work with overlapping labels, use global event for now
     }
   });
+
+  map.on('click', polygonClick);
 
   // Add mousemove listener to the map
   map.on('mousemove', e => {
