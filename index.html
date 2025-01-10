@@ -1045,38 +1045,29 @@ function addRegions(geojson) {
     'polygonOpacity': 0.20 // Increased opacity
   };
 
-  const geometries = maptalks.GeoJSON.toGeometry(scaleGeoJSON(geojson, 812900/8192, [0,0]));
-
-  geometries.forEach(geometry => {
-    if (geometry.getType() === 'Polygon') { // Ensure it's a polygon
-      geometry.setSymbol(defaultSymbol);
-      let name = geometry.properties.svgID.substring(1).replaceAll('_','');
-      geometry.feature = {properties: {title: name}};
-    }
-  });
-
-
-  let polygons = geometries;
+  const polygons = maptalks.GeoJSON.toGeometry(scaleGeoJSON(geojson, 812900/8192, [0,0]));
 
   // Store a reference to the currently "hovered" polygon
   let selectedPolygon = null;
   let lastZoom = null;
 
-  map.on('click', e=> {
-    if (selectedPolygon) {
-      const extent = selectedPolygon.getExtent();
+  polygons.forEach(polygon => {
+    if (polygon.getType() === 'Polygon') { // Ensure it's a polygon
+      polygon.setSymbol(defaultSymbol);
+      let name = polygon.properties.svgID.substring(1).replaceAll('_','');
+      polygon.feature = {properties: {title: name}};
 
-      let zoom = map.getZoom();
-
-      if (extent && zoom <= 4) {
-
-        //map.fitExtent(extent);
-
-        const center = extent.getCenter();
-        //map.setCenter(center).setZoom(4);
-
-        map.animateTo({center: center, zoom: 4});
-      }
+      polygon.on('click', e=>{
+        if (selectedPolygon) {
+          const extent = selectedPolygon.getExtent();
+          let zoom = map.getZoom();
+          if (extent && zoom <= 4) {
+            //map.fitExtent(extent);
+            const center = extent.getCenter();
+            map.animateTo({center: center, zoom: 4});
+          }
+        }
+      });
     }
   });
 
@@ -1127,7 +1118,7 @@ function addRegions(geojson) {
   });
 
 
-  polygonLayer.addGeometry(geometries);
+  polygonLayer.addGeometry(polygons);
 }
 
 function saveSettings() {
