@@ -224,8 +224,7 @@ const cmpAlphaNum = (a,b) => a[0].localeCompare(b[0], 'en', { numeric: true });
 function loadMap() {
 
   if (!localData[mapId]) {
-    localData[mapId] = { activeItems: {'base':true, 'locations': true, 'stashes': true, 'regions': true, 'items': true, 'enemies': true, 'circles': true, 'polygons': true} };
-    //localData[mapId] = { activeItems: {'base':true, 'regions': true} };
+    localData[mapId] = { activeItems: {'bases':true, 'locations': true, 'stashes': true, 'regions': true, 'items': true, 'enemies': true, 'circles': true, 'polygons': true} };
   }
 
   settings = localData[mapId];
@@ -460,19 +459,6 @@ function addCircles(markers) {
 
 }
 
-function addMarkersOld(markers) {
-  // looks like performance depends on misc layer
-  // have to speed up the search the way it doesn't make too much show/hide calls
-  let geometries = []
-  for (m of markers) {
-    if ( ['locations','base','items','stashes','mutants','anomalies'].includes(m.group) )
-      geometries.push(m.marker);
-  }
-  new maptalks.PointLayer('Points', geometries, {}).addTo(groupLayer);
-
-  console.log('loaded geometries', geometries.length);
-}
-
 function addMarkers(markers) {
   console.timeEnd('markers');
   console.log('Total markers:', markers.length);
@@ -492,7 +478,7 @@ function addMarkers(markers) {
   addHandler(circleLayer);
   circleLayer.addTo(groupLayer);
 
-  let weights = {'regions': 1100, 'base': 1000, 'locations': 750, 'stashes': 500, 'items': 250, 'anomalies': -900, 'misc': -1000 };
+  let weights = {'regions': 1100, 'bases': 1000, 'locations': 750, 'stashes': 500, 'items': 250, 'anomalies': -900, 'misc': -1000 };
   let groups = Object.keys(collection);
 
   groups = groups.sort( (a,b)=> (weights[b]||0)-(weights[a]||0) || cmpAlphaNum(a,b))
@@ -991,7 +977,7 @@ function scaleGeoJSON(geojson, scaleFactor, origin) {
   return geojson;
 }
 
-let zoomLevels = {'regions':-10, 'polygons':-10, 'base': 2, 'circles':3, 'locations': 3, 'stashes':4, 'items':5, 'enemies':5, 'anomalies':6, 'misc':8 };
+let zoomLevels = {'regions':-10, 'polygons':-10, 'bases': 2, 'circles':3, 'locations': 3, 'stashes':4, 'items':5, 'enemies':5, 'anomalies':6, 'misc':8 };
 
 function updateView(e) {
   let zoom = map.getZoom();
