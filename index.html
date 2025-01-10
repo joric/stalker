@@ -1065,8 +1065,13 @@ function addRegions(geojson) {
   map.on('click', e=> {
     if (selectedPolygon) {
       const extent = selectedPolygon.getExtent();
-      if (extent) {
+
+      let zoom = map.getZoom();
+
+      if (extent && zoom <= 4) {
+
         //map.fitExtent(extent);
+
         const center = extent.getCenter();
         //map.setCenter(center).setZoom(4);
 
@@ -1106,7 +1111,7 @@ function addRegions(geojson) {
           polygon.updateSymbol(zoom > maxZoom ? defaultSymbol : hoverSymbol);
           selectedPolygon = polygon; // Update reference
 
-          if (zoom>maxZoom) selectedPolygon = null;
+          // if (zoom>maxZoom) selectedPolygon = null; // uncomment to prevent zoom on click
 
           lastZoom = zoom;
         }
