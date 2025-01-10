@@ -203,7 +203,7 @@ let startZoom = 2;
 let defaultPitch = 45;
 let autoAltitude = true;
 let groupLayer = null;
-let regionLayer = null;
+let polygonLayer = null;
 let map = null;
 let types = {};
 let lang = {};
@@ -224,7 +224,7 @@ const cmpAlphaNum = (a,b) => a[0].localeCompare(b[0], 'en', { numeric: true });
 function loadMap() {
 
   if (!localData[mapId]) {
-    localData[mapId] = { activeItems: {'base':true, 'locations': true, 'stashes': true, 'regions': true, 'items': true, 'enemies': true, 'circles': true} };
+    localData[mapId] = { activeItems: {'base':true, 'locations': true, 'stashes': true, 'regions': true, 'items': true, 'enemies': true, 'circles': true, 'polygons': true} };
     //localData[mapId] = { activeItems: {'base':true, 'regions': true} };
   }
 
@@ -381,9 +381,9 @@ function loadMap() {
     forceRenderOnRotating: true,
   }).addTo(map);
 
-  regionLayer = new maptalks.PolygonLayer('Regions').addTo(groupLayer);
+  polygonLayer = new maptalks.PolygonLayer('Polygons').addTo(groupLayer);
 
-  if (!settings.activeItems['regions']) regionLayer.hide();
+  if (!settings.activeItems['polygons']) polygonLayer.hide();
 
   setTimeout(function() {
     if (enableAltitude && autoAltitude) {
@@ -492,7 +492,7 @@ function addMarkers(markers) {
   addHandler(circleLayer);
   circleLayer.addTo(groupLayer);
 
-  let weights = {'areas': 1100, 'base': 1000, 'locations': 750, 'stashes': 500, 'items': 250, 'anomalies': -900, 'misc': -1000 };
+  let weights = {'regions': 1100, 'base': 1000, 'locations': 750, 'stashes': 500, 'items': 250, 'anomalies': -900, 'misc': -1000 };
   let groups = Object.keys(collection);
 
   groups = groups.sort( (a,b)=> (weights[b]||0)-(weights[a]||0) || cmpAlphaNum(a,b))
@@ -519,7 +519,7 @@ function addMarkers(markers) {
     addHandler(layer);
   }
 
-  addHandler(regionLayer);
+  addHandler(polygonLayer);
 
   filterItems();
 
@@ -991,7 +991,7 @@ function scaleGeoJSON(geojson, scaleFactor, origin) {
   return geojson;
 }
 
-let zoomLevels = {'areas':-10, 'regions':-10, 'base': 2, 'circles':3, 'locations': 3, 'stashes':4, 'items':5, 'enemies':5, 'anomalies':6, 'misc':8 };
+let zoomLevels = {'regions':-10, 'polygons':-10, 'base': 2, 'circles':3, 'locations': 3, 'stashes':4, 'items':5, 'enemies':5, 'anomalies':6, 'misc':8 };
 
 function updateView(e) {
   let zoom = map.getZoom();
@@ -1004,7 +1004,7 @@ function updateView(e) {
     if (layer) {
 
       let minZoom = zoomLevel - 0.01;
-      let maxZoom = layerName == 'areas' ? 3: 99;
+      let maxZoom = layerName == 'regions' ? 3: 99;
 
       if (zoom>=minZoom && zoom < maxZoom) {
         layer.show();
@@ -1122,7 +1122,7 @@ function addRegions(geojson) {
   });
 
 
-  regionLayer.addGeometry(geometries);
+  polygonLayer.addGeometry(geometries);
 }
 
 function saveSettings() {

@@ -40,7 +40,7 @@
   
   "Squad": { "fa": "person-rifle", "bg": "black", "match": "Squad|Patrol" },
   "Repair": { "fa": "screwdriver-wrench", "bg": "darkslategrey", "match": "Repair" },
-  "Region": { "fa": "flag", "bg": "darkslategrey", "match": "ERegion::", "group": "areas" },
+  "Region": { "fa": "flag", "bg": "darkslategrey", "match": "ERegion::", "group": "regions" },
   "Safe": { "fa": "vault", "bg": "steelblue", "match": "SmallSafe|BigSafe", "group" :"items" },
   "Scanner": { "fa": "tower-broadcast", "bg": "darkslategrey", "match": "Scanner", "group": "locations" },
   "ALife": { "fa": "person-walking", "bg": "black", "match": "ALife" },
