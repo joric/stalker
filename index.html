@@ -407,6 +407,10 @@ function loadMap() {
     updateView();
   });
 
+  map.on('zoomend', e=>{
+    updateView();
+  });
+
   map.on('setbaselayer', e=> {
     let layers = map.getBaseLayer().getLayers();
     for (layer of layers) {
@@ -647,7 +651,6 @@ function showTooltip(e) {
   };
 
 
-
   // Show the tooltip to calculate the size
   // Since browsers do not repaint the screen during synchronous JavaScript execution,
   // temporarily changing the display property within a script will not cause the element to flash visibly on the screen.
@@ -669,10 +672,8 @@ function showTooltip(e) {
     title = 'sid_items_' + title + '_name';
   }
 
-
   title = lang[title] || title;
   subtitle = lang[subtitle] || subtitle;
-
 
   title += ' (' + getIconName(o) + ')';
 
@@ -857,12 +858,11 @@ function Marker(feature) {
   let name = getIconName(o);
   let group = types[name].group || 'misc';
 
-  // stash without a clue is just items
-  //if (group=='stash' && !o.clue) group = 'items';
-
-  //if (group == "stashes") name = "Stash";
-
+  // misc with spawns is stash
   if (group=="misc" && o.spawns && o.spawns.length>0) name = 'Stash';
+
+  // clue is always a stash
+  if (o.clue) name = 'Stash';
 
   if (name=='Stash') group = 'stashes';
 
@@ -978,7 +978,7 @@ function scaleGeoJSON(geojson, scaleFactor, origin) {
   return geojson;
 }
 
-let zoomLevels = {'regions':-10, 'polygons':-10, 'bases': 3, 'circles':3, 'locations': 3, 'stashes':4, 'items':5, 'enemies':5, 'anomalies':6, 'misc':8 };
+let zoomLevels = {'regions':-10, 'polygons':-10, 'bases': 2, 'circles':3, 'locations': 3, 'stashes':4, 'items':5, 'enemies':5, 'anomalies':6, 'misc':8 };
 
 function updateView(e) {
   let zoom = map.getZoom();
@@ -990,8 +990,8 @@ function updateView(e) {
     let layer = groupLayer.getLayer(capitalize(layerName));
     if (layer) {
 
-      let minZoom = zoomLevel - 0.01;
-      let maxZoom = layerName == 'regions' ? 3: 99;
+      let minZoom = zoomLevel;
+      let maxZoom = layerName == 'regions' ? 2: 99;
 
       if (zoom>=minZoom && zoom < maxZoom) {
         layer.show();
