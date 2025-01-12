@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
 <title>Joric's Stalker</title>
 <meta charset="utf-8">
 <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
@@ -12,23 +11,77 @@
 <meta property="og:type" content="object" />
 <meta property="og:title" content="Joric's Stalker" />
 <meta property="og:description" content="Interactive Map" />
-
 <link href="js/lib/maptalks-gl/maptalks.css" rel="stylesheet">
 <script type="text/javascript" src="js/lib/maptalks-gl/maptalks-gl.js"></script>
-
-
 <!--
-
 <link href="js/lib/maptalks-gl/maptalks.css" rel="stylesheet">
 <script type="text/javascript" src="js/lib/maptalks-gl/maptalks-gl.js"></script>
-
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/maptalks/1.0.1/maptalks.min.css" integrity="sha512-DgQNythEg69g9pToBBZQZMXn/xM8ZF/96sutg5c6ODgxargtpteM9+HxACffdWzrzK5YgAdVs8CfucHm5dvbIA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 <script type="text/javascript" src="https://unpkg.com/maptalks-gl/dist/maptalks-gl.js"></script>
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/maptalks/1.0.1/maptalks.min.js" integrity="sha512-nMJHLgEm7hUp/e10n9R/xUz3yMmvx98LQlddhCZl3g0b4JO8NG1SjmcOA1JiFNuxRgseKDzdABcGy4qGZlGwEQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script type="text/javascript" src="https://unpkg.com/maptalks-gl/dist/maptalks-gl.js"></script>
 <script type="text/javascript" src="https://unpkg.com/maptalks.markercluster/dist/maptalks.markercluster.min.js"></script>
 -->
+<script>
+let maxZoom = 19;
+let enableAltitude = true;
+let heightFactor = 1.0;
+let iconSize = 48;
+let textSize = 15;
+let startPitch = 0;
+let startZoom = 2;
+let defaultPitch = 45;
+let autoAltitude = true;
+
+let icon_images = {
+  'location':     'T_LocationOrigin_NotActive_Shadow.png',
+  'anomaly':      'Texture_Anomaly',
+  'arch_anomaly': 'Texture_Archianomaly',
+  'bed':          'Texture_Bed',
+  'camp':         'Texture_Camp',
+  'guide':        'Texture_Guide',
+  'technician':   'Texture_Mechanical',
+  'trader':       'Texture_Trader',
+  'storage':      'Texture_Storage',
+  'medic':        'Texture_Medecine',
+  'stash':        'Texture_Stahes',
+  'scanner':      'Texture_Signal',
+  'chest':        'Texture_Habar',
+  'enemy':        'Texture_Dangerous',
+  'follow':       'Texture_Follow',
+  'region':       'T_NotActive_Region_Shadow.png',
+}
+
+let icon_tiles = {
+  'claws': 'CompassMarker_0_0.png',
+  'skull': 'CompassMarker_0_1.png',
+  'bag': 'CompassMarker_0_2.png',
+  'circle': 'CompassMarker_0_3.png',
+  'circle_locked': 'CompassMarker_1_0.png',
+  'fire': 'CompassMarker_1_1.png',
+  'radiation': 'CompassMarker_1_2.png',
+  'lock': 'CompassMarker_1_3.png',
+  'exclamation': 'CompassMarker_2_0.png',
+  'soldier': 'CompassMarker_2_1.png',
+  'circle_dot': 'CompassMarker_2_2.png',
+  'question': 'CompassMarker_2_3.png',
+  'box': 'CompassMarker_3_0.png',
+  'unlocked': 'CompassMarker_3_1.png',
+  'anomaly': 'CompassMarker_3_2.png',
+  'cave': 'CompassMarker_3_3.png',
+  'yen': 'CompassMarker_4_0.png',
+  'repair': 'CompassMarker_4_1.png',
+  'rest': 'CompassMarker_4_2.png',
+  'misc': 'CompassMarker_4_3.png',
+};
+
+languages = {
+  'ua': 'data/Localization/language_01.json',
+  'en': 'data/Localization/language_02.json',
+  'ru': 'data/Localization/language_18.json',
+}
+
+</script>
 
 
 <style>
@@ -169,12 +222,28 @@ html, body {
   right: 15px;
 }
 
+#language-selector {
+  z-index: 1;
+  position: absolute;
+  right: 86px;
+  top: 16px;
+}
+
 </style>
 
 </head>
 <body>
 
-<div  tabindex=0 id="map"></div>
+<div id="language-selector">
+  <select>
+    <option>en</option>
+    <option>ua</option>
+    <option>ru</option>
+  </select>
+</div>
+
+
+<div tabindex=0 id="map"></div>
 
 <div class="search-container">
   <div class="search-box">
@@ -187,21 +256,11 @@ html, body {
 <div id="map-tooltip" class="arrow-left"></div>
 
 <script>
-
 let tooltipShowTimer = null;
 let tooltipHideTimer = null;
 let tooltipHideDelay = 150;
 let tooltipShowDelay = 200;
 
-let enableAltitude = true;
-let heightFactor = 1.0;
-
-let iconSize = 48;
-
-let startPitch = 0;
-let startZoom = 2;
-let defaultPitch = 45;
-let autoAltitude = true;
 let groupLayer = null;
 let polygonLayer = null;
 let map = null;
@@ -224,14 +283,16 @@ const cmpAlphaNum = (a,b) => a[0].localeCompare(b[0], 'en', { numeric: true });
 function loadMap() {
 
   if (!localData[mapId]) {
-    localData[mapId] = { activeItems: {'bases':true, 'locations': true, 'stashes': true, 'regions': true, 'items': true, 'enemies': true, 'circles': true, 'polygons': true} };
+    localData[mapId] = { language: 'en', activeItems: {'bases':true, 'locations': true, 'stashes': true, 'regions': true, 'items': true, 'enemies': true, 'circles': true, 'polygons': true} };
   }
 
   settings = localData[mapId];
 
   settings.baseLayer = settings.baseLayer || 'PDA';
+  settings.language = settings.language || 'en';
 
   searchControl = document.querySelector('.search-box input');
+
   searchControl.value = settings.searchText||'';
 
   //console.log('current zoom:', settings.zoom);
@@ -241,7 +302,6 @@ function loadMap() {
   let w = h = 812900;
   let center = [w/2, h/2];
   let [left,top,right,bottom] = [0, 0, w, h];
-  let maxZoom = 8;
   let tileSize = 512;
 
   if (!settings.center) {
@@ -531,7 +591,7 @@ function loadMarkersIdle(data) {
   function processBatch(deadline) {
     batch = [];
     while (deadline.timeRemaining() > 0 && currentIndex < features.length) {
-      batch.push(Marker(features[currentIndex++]));
+      batch.push(addMarker(features[currentIndex++]));
     }
     //console.log(`Processed ${currentIndex}/${features.length} markers`);
     if (currentIndex < features.length) {
@@ -548,7 +608,7 @@ function loadMarkersIdle(data) {
 function loadMarkersSimple(data) {
   let markers = [];
   for (feature of data.features) {
-    markers.push(Marker(feature));
+    markers.push(addMarker(feature));
   }
   markersLoadedCallback(markers);
 }
@@ -636,7 +696,7 @@ function showPopup(e) {
 // Function to show the tooltip
 function showTooltip(e) {
 
-  if (e.target.feature.properties.description.includes('Region')) return;
+  //if (e.target.feature.properties.description.includes('Region')) return;
 
   var tooltip = document.getElementById('map-tooltip');
 
@@ -675,7 +735,11 @@ function showTooltip(e) {
   title = lang[title] || title;
   subtitle = lang[subtitle] || subtitle;
 
-  title += ' (' + getIconName(o) + ')';
+  let prop = getIconProp(o);
+  let group = prop.group || 'misc';
+  let category = lang[prop.title] || prop.title || group;
+
+  title += ' (' + category + ')';
 
   let content = `<b>${title}</b><br/>${subtitle}`;
   
@@ -692,15 +756,16 @@ function showTooltip(e) {
   }
 
   let t = marker.feature.geometry.coordinates;
+
   let teleport = `${t[0]} ${t[1]} ${t[2]}`;
 
   let sid = marker.feature.properties.sid;
   if (sid.includes('_C_')) sid = sid.split('_C_')[1];
 
-  content += `<hr/><small><small>Type: ${o.description}</small></small>`;
-  content += `<br/><small><small>SID: ${sid}</small></small>`;
+  content += `<hr/><small><small>Name: ${o.title}</small></small>`;
+  content += `<br/><small><small>Type: ${o.description}</small></small>`;
+  content += `<br/><small><small>Sid: ${sid}</small></small>`;
   content += `<br/><small><small>XTeleportTo ${teleport}</small></small>`;
-
 
 
   tooltip.innerHTML = content;
@@ -710,14 +775,12 @@ function showTooltip(e) {
 
 
   // Get the screen coordinates of the event
-  //let c = marker.getCoordinates();
+  let c = marker.getCoordinates();
   //var screenPosition = coordinateToContainerPoint(map, c);
-  //var screenPosition = map.coordinateToContainerPoint(c);
-
+  var screenPosition = map.coordinateToContainerPoint(c);
   //console.log('tooltip size', tooltipWidth, tooltipHeight);
-
-  let c = marker.getContainerExtent();
-  let screenPosition = {x: c.pxmin, y: c.pymin};
+  //let c = marker.getContainerExtent();
+  //let screenPosition = {x: c.pxmin, y: c.pymin};
 
   // Determine the tooltip position
   var mapContainer = map.getContainer();
@@ -725,12 +788,11 @@ function showTooltip(e) {
   var tooltipWidth = tooltip.offsetWidth;
   var tooltipHeight = tooltip.offsetHeight;
 
-
   // Calculate available space
   var spaceRight = mapRect.width - screenPosition.x;
   var spaceLeft = screenPosition.x;
 
-  let gap = marker.getSymbol().markerWidth/2+5;
+  let gap = 30;//marker.getSymbol().markerWidth/2+5;
 
   // Position the tooltip
   if (spaceRight > tooltipWidth) {
@@ -755,118 +817,50 @@ function hideTooltip() {
 }
 
 function getIconName(o) {
-  let tags = o.spawns || [''];
-  let s = [o.title, o.description, ...tags].join('/');
-  for (const key of Object.keys(types).sort((a,b)=>(types[b].priority || 0) - (types[a].priority || 0)) ) {
-    let regex = types[key].match;
-    if (regex && s.match(new RegExp(regex, "i"))) return key;
-  }
-  return 'Question';
+  return getIconProp(o).icon;
 }
 
-function Marker(feature) {
+function getIconProp(o) {
+  let prop = {icon: 'question', group: 'misc'};
+
+  let name = o.title;
+  let type = o.description;
+  let section = types[type] || types[type.split('::')[0]+'::*'];
+
+  prop = {...prop, ...section};
+
+  if (section && section.items && section.items[name]) {
+    return section.items[name];
+  }
+
+  if (section && section.match) {
+    for (const [regex, entry] of Object.entries(section.match)) {
+      if (regex && (name||'').match(new RegExp(regex, "i"))) return entry;
+    }
+  }
+
+  return prop;
+}
+
+function addMarker(feature) {
   let markersDir = 'data/sprites/';
   let markersPrefix = markersDir+'';
   let markersPostfix = '_NotActive_General_Shadow.png'
 
-  images = {
-    'Location':      'T_LocationOrigin_NotActive_Shadow.png',
-    'Base':      'Texture_Camp',
-    'Arch Anomaly':      'Texture_Archianomaly',
-    'Guide':      'Texture_Guide',
-    'Technician':      'Texture_Mechanical',
-    'Trader':      'Texture_Trader',
-    'Personal Stash':      'Texture_Storage',
-    'Bed':        'Texture_Bed',
-    'Medic':      'Texture_Medecine',
-    'Stash':      'Texture_Stahes',
-    'Scanner':    'Texture_Signal',
-
-    'Safe':     'Texture_Habar',
-    'Upgrade':  'Texture_Habar',
-  }
-
-  // this is direct mapping for reference
-  let tiles = {
-    'claws': 'CompassMarker_0_0.png',
-    'skull': 'CompassMarker_0_1.png',
-    'bag': 'CompassMarker_0_2.png',
-    'circle': 'CompassMarker_0_3.png',
-    'circle_locked': 'CompassMarker_1_0.png',
-    'fire': 'CompassMarker_1_1.png',
-    'radiation': 'CompassMarker_1_2.png',
-    'lock': 'CompassMarker_1_3.png',
-    'exclamation': 'CompassMarker_2_0.png',
-    'character': 'CompassMarker_2_1.png',
-    'circle_dot': 'CompassMarker_2_2.png',
-    'question': 'CompassMarker_2_3.png',
-    'box': 'CompassMarker_3_0.png',
-    'unlocked': 'CompassMarker_3_1.png',
-    'anomaly': 'CompassMarker_3_2.png',
-    'cave': 'CompassMarker_3_3.png',
-    'yen': 'CompassMarker_4_0.png',
-    'repair': 'CompassMarker_4_1.png',
-    'rest': 'CompassMarker_4_2.png',
-    'misc': 'CompassMarker_4_3.png',
-  };
-
-  let misc_images = {
-    'Character': tiles['character'],
-    //'Chest': tiles['box'],
-    'Squad': tiles['character'],
-    'Shelter': tiles['cave'],
-
-    //'Anomaly': tiles['anomaly'],
-    //'Arch Anomaly': tiles['anomaly'],
-
-    'Radiation': tiles['radiation'],
-    'Action': tiles['exclamation'],
-    'Chair': tiles['exclamation'],
-
-    //'Unique Enemy': tiles['claws'],
-    //'Enemy': tiles['claws'],
-    //'Weapon': tiles['box'],
-    'Sustenance': tiles['bag'],
-    'Ammo': tiles['box'],
-    'Medical': tiles['box'],
-    'Grenade': tiles['box'],
-
-    //'Artifact': tiles['anomaly'],
-    'Teleport Target': tiles['circle_locked'],
-    'Teleport': tiles['circle_dot'],
-
-
-    'Anomaly': 'Texture_Anomaly',
-    'Enemy': 'Texture_Dangerous',
-    'Unique Enemy': 'Texture_Dangerous',
-
-    'Weapon': 'Texture_Habar',
-    'Ammo': 'Texture_Habar',
-    'Gear': 'Texture_Habar',
-    'Chest': 'Texture_Habar',
-
-    'Artifact': 'Texture_Follow',
-    //'Artifact': tiles['anomaly'],
-
-    'Lair': 'Texture_Dangerous',
-
-    'Region': 'T_NotActive_Region_Shadow.png',
-  };
-
-
   let o = feature.properties;
-  let name = getIconName(o);
-  let group = types[name].group || 'misc';
+  let prop = getIconProp(o);
+  let name = prop.icon || 'question';
+  let group = prop.group || 'misc';
 
   // misc with spawns is stash
-  if (group=="misc" && o.spawns && o.spawns.length>0) name = 'Stash';
+  if (group=="misc" && o.spawns && o.spawns.length>0) name = 'stash';
 
   // clue is always a stash
-  if (o.clue) name = 'Stash';
+  if (o.clue) name = 'stash';
 
-  if (name=='Stash') group = 'stashes';
+  if (name=='stash') group = 'stashes';
 
-  let image = images[name] || misc_images[name] || tiles['question'];
+  let image = icon_images[name] || icon_tiles[name] || icon_tiles['question'];
 
   image = (image.includes('/') ? '': markersPrefix) + image + (image.includes('.png') ? '' : markersPostfix);
 
@@ -893,29 +887,33 @@ function Marker(feature) {
     markerVerticalAlignment: 'middle',
   };
 
-  if (name=='Region') {
-    let offset = -16;
+  let title = lang['sid_locations_region_' + o.title + '_name'] || lang[o.title] || lang[prop.title] || o.title;
+
+  if (['locations', 'bases', 'regions'].includes(group)) {
     symbol = [
        {
         markerFile   : image,
         markerWidth  : size,
         markerHeight : size,
-        markerDx     : offset,
+        markerDx     : 0,
         markerDy     : 0,
         markerOpacity: opacity,
         markerVerticalAlignment: 'middle',
       },
       {
         textFaceName : 'sans-serif',
-        textName : lang['sid_locations_region_' + o.title + '_name'] || o.title,
+        textName : title,
         textFill : '#fff',
 
-        textHaloFill      : '#222',
-        textHaloRadius    : 2,
+        textHaloFill      : '#000',
+        textHaloRadius    : 3,
+        textHaloOpacity   : 0.15,
+
 
         textHorizontalAlignment : 'right',
-        textSize : 16,
-        textDx: offset+16,
+        textSize : textSize,
+        textDx: iconSize * 0.55,
+        textDy: iconSize * 0,
       },
     ]
   }
@@ -929,11 +927,10 @@ function Marker(feature) {
   marker.on('mouseover', function(e) {
     let marker = e.target;
 
-    if (!marker.feature.properties.description.includes('Region'))
-    marker.updateSymbol({
-      markerWidth: size*1.15,
-      markerHeight: size*1.15,
-    });
+    let symbol = marker.getSymbol();
+    let prop = { markerWidth: size*1.15, markerHeight: size*1.15 };
+    let textProp = { textSize: textSize * 1.1 };
+    marker.setSymbol((symbol instanceof Array) ? [{...symbol[0], ...prop}, {...symbol[1], ...textProp}] : {...symbol, ...prop});
 
     clearTimeout(tooltipShowTimer);
     tooltipShowTimer = setTimeout(function(){showTooltip(e)}, tooltipShowDelay);
@@ -943,11 +940,11 @@ function Marker(feature) {
   marker.on('mouseout', function(e) {
     let marker = e.target;
 
-    if (!marker.feature.properties.description.includes('Region'))
-    marker.updateSymbol({
-      markerWidth: size,
-      markerHeight: size,
-    });
+    let symbol = marker.getSymbol();
+    let prop = { markerWidth: size, markerHeight: size };
+    let textProp = { textSize: textSize };
+
+    marker.setSymbol((symbol instanceof Array) ? [{...symbol[0], ...prop}, {...symbol[1], ...textProp}] : {...symbol, ...prop});
 
     clearTimeout(tooltipShowTimer);
     clearTimeout(tooltipHideTimer);
@@ -957,7 +954,6 @@ function Marker(feature) {
 
   return {group: group, marker: marker};
 }
-
 
 function scaleCoordinates(coordinates, scaleFactor, origin) {
   return coordinates.map(coord => {
@@ -978,7 +974,7 @@ function scaleGeoJSON(geojson, scaleFactor, origin) {
   return geojson;
 }
 
-let zoomLevels = {'regions':-10, 'polygons':-10, 'bases': 2, 'circles':3, 'locations': 3, 'stashes':4, 'items':5, 'enemies':5, 'anomalies':6, 'misc':8 };
+let zoomLevels = {'polygons':0, 'regions':0, 'bases': 2, 'circles':3, 'locations': 3, 'stashes':4, 'items':5, 'enemies':5, 'anomalies':6, 'misc':9 };
 
 function updateView(e) {
   let zoom = map.getZoom();
@@ -991,7 +987,7 @@ function updateView(e) {
     if (layer) {
 
       let minZoom = zoomLevel;
-      let maxZoom = layerName == 'regions' ? 2: 99;
+      let maxZoom = layerName=='regions' ? zoomLevels['bases'] : (layerName=='bases' ? zoomLevels['locations'] :  99);
 
       if (zoom>=minZoom && zoom < maxZoom) {
         layer.show();
@@ -1241,10 +1237,31 @@ window.onload = function() {
       loadMarkers({"type": "FeatureCollection", "features": features});
     });
 
-  }).catch(e=>{alert('Cannot load files, CORS?')});
+  }).catch(e=>{console.log(e); alert('Cannot load files, CORS?')});
 
   fetch('regions.json').then(r=>r.json()).then(addRegions);
-  fetch('data/Localization/language_02.json').then(r=>r.json()).then(data => {lang = data});
+
+  let select = document.querySelector('#language-selector select');
+  for (option of select.children) {
+    if (settings.language==option.value) {
+      option.setAttribute('selected', true);
+    }
+  }
+
+  function loadLanguage(language) {
+    fetch(languages[language]).then(r=>r.json()).then(data => {
+      lang = data;
+      searchControl.setAttribute('placeholder', lang['sid_misc_hint_loot']+'...');
+    });
+  }
+
+  select.onchange = e=> {
+    settings.language = e.target.value;
+    saveSettings();
+    location.reload();
+  };
+
+  loadLanguage(settings.language);
 
 };
 

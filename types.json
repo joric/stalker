@@ -1,70 +1,67 @@
 {
-  "Teleport Target": { "fa": "circle-chevron-down", "bg": "dodgerblue", "match": "BP_Teleport_Portal_Bubble_C_Target", "group":"locations" },
-  "Teleport": { "fa": "circle-chevron-up", "bg": "red", "match": "BP_Teleport_Portal_Bubble_C", "group":"locations" },
+  "Custom::CustomItems": {
+    "items": {
+      "BP_Bed_OnBed_C": { "icon": "bed", "title": "sid_misc_pda_Map_MarkerBed", "group": "locations" },
+      "BP_PlayerStash_C": { "icon": "storage", "title": "sid_misc_inv_player_grid_name", "group": "locations" },
+      "BP_Teleport_Portal_Bubble_C": { "icon": "circle_dot", "title": "sid_items_CArtifactBubble_name", "group": "locations" },
+      "BP_Teleport_Portal_Bubble_C_Target": { "icon": "circle_locked", "title": "sid_items_CArtifactBubble_name", "group": "locations" }
+    },
+    "match": {
+      "BP_TopazScanner_": { "icon": "scanner", "title": "sid_character_skaner_0", "group": "locations" }
+    }
+  },
 
-  "Ammo": { "fa": "list", "bg": "steelblue", "match": "(?=Ammo|AGA|AHEDP|AVOG|APG7V|(A\\d{3}[\\w]+))(?=.*ESpawnType::(Item|PackOfItems))", "group": "items" },
-  "Arch Anomaly": { "fa": "hurricane", "bg": "darkorange", "match": "ArchAnomaly", "group": "locations" },
-  "Anomaly": { "fa": "hurricane", "bg": "brown", "match": "Anomaly", "group": "anomalies" },
-  "Artifact": { "fa": "virus", "bg": "saddlebrown", "match": "Artifact", "group": "items" },
-  "Attachment": { "fa": "wrench", "bg": "steelblue", "match": "Attachment", "group": "items" },
-  "Bag": { "fa": "briefcase", "bg": "steelblue", "match": "(see_stash)(?=.*ESpawnType::ItemContainer)", "group": "items" },
-  "Base": { "fa": "star", "bg": "darkslategrey", "match": "ESpawnType::Hub", "priority": -1, "group": "bases" },
-  "Headquarters": { "fa": "mountain", "bg": "brown", "match": "Headquarters", "group": "bases" },
+  "ESpawnType::Marker" : { "icon": "location", "title": "sid_misc_pda_Map_MarkerLocation", "group": "locations",
+    "match": {
+      "archanomaly": {"icon": "arch_anomaly", "title": "arch_anomaly", "group": "locations" }
+    }
+  },
 
-  "Bed": { "fa": "bed", "bg": "darkslategrey", "match": "BP_Bed_OnBed_C", "group": "bases" },
-  "Body": { "fa": "face-dizzy", "bg": "steelblue", "match": "Body|DeadBody", "group": "misc" },
-  "Unique Enemy": { "fa": "skull-crossbones", "bg": "brown", "match": "(Deer|Pseudogiant|Burer|Poltergeist|Controller|Chimera)(?=.*ESpawnType::Obj)", "group": "enemies" },
-  "Box": { "fa": "box", "bg": "steelblue", "match": "(?=Box)(?=.*::Obj)" },
-  "Character": { "fa": "person", "bg": "cornflowerblue", "match": "(Mityaj|Sniper|Noon|Batya|Pripoy|Varta|Neutral|Scientist|NPC|Freedom|Military|Spark|Kardan|Captain|Doctor|Mercenaries|Scar|Lejtenant|Duty|Radovoj|Bandit|Monolith|Mercenary)(?=.*ESpawnType::Obj)" },
-  "Chest": { "fa": "box-archive", "bg": "steelblue", "match": "Bluebox|Cabinet_metal", "group": "items" },
-  "City": { "fa": "city", "bg": "darkslategrey", "match": "_City" },
-  "Easter Egg": { "fa": "egg", "bg": "darkslategrey", "match": "EasterEgg" },
-  
-  "Enemy": { "fa": "skull", "bg": "brown", "match": "(PseudoDog|Bayun|Bloodsucker|Flesh|Blinddog|Tushkan|Boar|ZombieFoster|Rat|Snork|Zombie)(?=.*ESpawnType::Obj)", "group": "enemies" },
-  "Gear": { "fa": "shirt", "bg": "steelblue", "match": "Gear|Armor", "group": "items" },
-  "Guide": { "fa": "location-crosshairs", "bg": "cornflowerblue", "match": "Custom::FastTravel" },
-  "Key": { "fa": "key", "bg": "saddlebrown", "match": "Key" },
-  "Location": { "fa": "location-crosshairs", "bg": "darkslategrey", "match": "SpawnType::Marker", "group": "locations" },
-  "Locked Door": { "fa": "lock", "bg": "darkslategrey", "match": "LockedDoor" },
-  "Loot": { "fa": "toolbox", "bg": "steelblue", "match": "PackOfItemsBase" },
-  "Main Mission": { "fa": "diamond-turn-right", "bg": "black", "fg": "darkorange", "match": "MainMission" },
-  
-  "Medic": { "fa": "plus", "bg": "cornflowerblue", "match": "(Medic|CA_Quest_Hub_Medic)(?=.*(ESpawnType::Obj|ESpawnType::ContextualAction))", "group": "bases" },
-  "Medical": { "fa": "suitcase-medical", "bg": "steelblue", "match": "Stimulator|ArmyMedkit|Medkit|PSYBlocker|AntiRad|Hercules|Bandage" },
-  "Question": { "fa": "question", "bg": "darkslategrey", "match": "Question" },
-  "Unique Artifact": { "fa": "disease", "bg": "saddlebrown", "match": "UniqueArtifact" },
-  "Note": { "fa": "book", "bg": "steelblue", "match": "Note" },
-  "PDA": { "fa": "tablet-screen-button", "bg": "steelblue", "match": "(PDA)(?=.*ESpawnType::Item)" },
-  "Personal Stash": { "fa": "box-archive", "bg": "darkslategrey", "match": "BP_PlayerStash_C", "group": "bases" },
-  "Radiation": { "fa": "radiation", "bg": "dimgrey", "fg": "darkorange", "match": "Radiation" },
-  
-  "Squad": { "fa": "person-rifle", "bg": "black", "match": "Squad|Patrol" },
-  "Repair": { "fa": "screwdriver-wrench", "bg": "darkslategrey", "match": "Repair" },
-  "Region": { "fa": "flag", "bg": "darkslategrey", "match": "ERegion::", "group": "regions" },
-  "Safe": { "fa": "vault", "bg": "steelblue", "match": "SmallSafe|BigSafe", "group" :"items" },
-  "Scanner": { "fa": "tower-broadcast", "bg": "darkslategrey", "match": "Scanner", "group": "locations" },
-  "ALife": { "fa": "person-walking", "bg": "black", "match": "ALife" },
-  "Side Mission": { "fa": "diamond-turn-right", "bg": "black", "fg": "dodgerblue", "match": "SideMission" },
-  "Fight": { "fa": "hand-fist", "bg": "brown", "match": "Fight" },
-  
-  "Stash": { "fa": "cubes", "bg": "saddlebrown", "match": "(Stash|Bag|Backpack)(?=.*ESpawnType::ItemContainer)", "group" :"stashes" },
-  "Sustenance": { "fa": "drumstick-bite", "bg": "steelblue", "match": "(Drink|Bread|Food|Sausage|Energetic|Vodka|Water|Beer|Milk)(?=.*(ESpawnType::Item|ESpawnType::PackOfItems))" },
-  "Technician": { "fa": "screwdriver-wrench", "bg": "cornflowerblue", "match": "Technician", "group": "bases" },
-  "Trader": { "fa": "sack-dollar", "bg": "cornflowerblue", "match": "(Trader|Sidorovich)(?=.*ESpawnType::Obj)", "group": "bases" },
-  "Trap": { "fa": "burst", "bg": "brown" },
-  "Underground Access": { "fa": "stairs", "bg": "darkslategrey" },
-  "Unique Gear": { "fa": "shirt", "bg": "saddlebrown", "group" : "items" },
-  "Unique Weapon": { "fa": "gun", "bg": "saddlebrown", "group" : "items" },
+  "ESpawnType::Hub": { "icon": "camp", "title": "sid_misc_LEGACY_pda_Map_MarkerFriendlyAreaDefault", "group": "bases" },
+  "ERegion::*": { "icon": "region", "title": "sid_misc_pda_hint_region", "group": "regions" },
+  "ESpawnType::ItemContainer": { "icon": "stash", "title": "sid_misc_pda_Map_MarkerCache", "group": "stashes" },
 
-  "Shelter": { "fa": "person-shelter", "bg": "grey", "fg": "darkorange", "match": "Shelter"},
+  "ESpawnType::Trigger": { "icon": "circle", "title": "trigger", "group": "misc" },
+  "ESpawnType::DeadBody": { "icon": "skull", "title": "dead_body", "group": "misc" },
+  "ESpawnType::PackOfItems": { "icon": "bag", "title": "pack_of_items", "group": "misc" },
+  "ESpawnType::Shelter": { "icon": "cave", "title": "shelter", "group": "misc" },
+  "ESpawnType::Squad": { "icon": "soldier", "title": "squad", "group": "misc" },
+  "ESpawnType::Patrol": { "icon": "soldier", "title": "patrol", "group": "misc" },
+  "ESpawnType::SafeZone": { "icon": "circle", "title": "safe_zone", "group": "misc" },
+  "ESpawnType::ALifeGroup": { "icon": "circle", "title": "trigger", "group": "misc" },
+  "ESpawnType::DailyScheduleZone": { "icon": "circle", "title": "trigger", "group": "misc" },
+  "ESpawnType::MoveToPath": { "icon": "circle", "title": "trigger", "group": "misc" },
+  "ESpawnType::LairSpawner": { "icon": "enemy", "title": "lair", "group": "enemies" },
 
-  "Weapon": { "fa": "gun", "bg": "steelblue", "match": "Scope|Gun(?=.*::(Item|PackOfItems))", "group" : "items" },
-  "Grenade": { "fa": "gun", "bg": "steelblue", "match": "Grenade(?=.*::(Item|PackOfItems))" },
+  "ESpawnType::ContextualAction": { "icon": "circle", "title": "trigger", "group": "misc",
+    "match": {
+      "PseudoDog|Bayun|Bloodsucker|Flesh|Blinddog|Tushkan|Boar|ZombieFoster|Rat|Snork|Zombie": { "icon": "enemy", "title": "sid_npc_name_mutant", "group": "enemies" },
+      "Deer|Pseudogiant|Burer|Poltergeist|Controller|Chimera": { "icon": "enemy", "title": "sid_npc_name_mutant", "group": "enemies" }
+    }
+  },
 
-  "Guitar": { "fa": "guitar", "bg": "cornflowerblue", "match": "Guitar(?=.*ESpawnType::Item)", "group" :"items" },
-  "EnemySpawner": { "fa": "skull", "bg": "black", "match": "(?=.*CA_Jerboa|CA_Flesh|CA_Blinddog|CA_Pseudodog|CA_Boar|CA_Cat|CA_Bloodsucker|CA_Snork|CA_Tushkan)(?=.*::ContextualAction)" },
-  "Chair": { "fa": "chair", "bg": "black", "match": "(lie|sit|stand)(?=.*ESpawnType::ContextualAction)" },
-  "Lair": { "fa": "dungeon", "bg": "black", "match": "Lair", "group": "enemies" },
-  "Trigger": { "fa": "cube", "bg": "black", "match": "ESpawnType::Trigger|WeatherSelection|SafeZone|DailyScheduleZone", "priority": -1 },
-  "Action": { "fa": "toggle-off", "bg": "black", "match": "ESpawnType::ContextualAction", "priority": -1 }
+  "ESpawnType::Obj": {
+    "match": {
+      "PseudoDog|Bayun|Bloodsucker|Flesh|Blinddog|Tushkan|Boar|ZombieFoster|Rat|Snork|Zombie": { "icon": "enemy", "title": "sid_npc_name_mutant", "group": "enemies" },
+      "Deer|Pseudogiant|Burer|Poltergeist|Controller|Chimera": { "icon": "enemy", "title": "sid_npc_name_mutant", "group": "enemies" },
+      "Neutral|Monolith|Mercenaries": { "icon": "soldier", "title": "soldiers", "group": "misc" },
+      "Trader|Sidorovich": { "icon": "trader", "title": "trader", "group": "locations" }
+    }
+  },
+
+  "ESpawnType::Item": {
+    "match": {
+      "Drink|Bread|Food|Sausage|Energetic|Vodka|Water|Beer|Milk": {"icon": "bag", "title": "sustenance", "group": "misc" },
+      "^Ammo|AGA|AHEDP|AVOG|APG7V|(A\\d{3}[\\w]+)": {"icon": "chest", "title": "ammo", "group": "items" },
+      "^Gun": {"icon": "chest", "title": "ammo", "group": "items" },
+      "Armor": {"icon": "chest", "title": "armor", "group": "items" },
+
+      "PDA": {"icon": "follow", "title": "sid_questItemprototypes_BasePDA_name", "group": "items" }
+    }
+  },
+
+  "ESpawnType::Anomaly": {"icon": "anomaly", "title": "sid_misc_pda_map_playerTags_anomaly", "group": "anomalies" },
+  "ESpawnType::ElectroAnomaly": {"icon": "anomaly", "title": "sid_misc_pda_map_playerTags_anomaly", "group": "anomalies" },
+  "ESpawnType::PillowAnomaly": {"icon": "anomaly", "title": "sid_misc_pda_map_playerTags_anomaly", "group": "anomalies" },
+  "ESpawnType::AnomalySpawner": {"icon": "anomaly", "title": "sid_misc_pda_map_playerTags_anomaly", "group": "anomalies" }
 }

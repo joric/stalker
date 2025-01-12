@@ -122,7 +122,7 @@ for folder in folders:
 
 region_dir = 'Stalker2/Content/GameLite/FPS_Game/UIRemaster/UITextures/WorldMap/RegionMarker'
 filename = os.path.join(cache_dir, region_dir, 'T_NotActive_Region_Shadow.png')
-process_file(filename, iconSize, resize=True, crop=64)
+process_file(filename, iconSize, resize=True, crop=52)
 
 
 # cut the compass atlas
