@@ -1188,9 +1188,14 @@ window.onload = function() {
       if (e.code=='Escape') {
         document.querySelector('#map').focus();
       }
+      settings.searchText = searchControl.value || '';
 
-      settings.searchText = searchControl.value;
-      filterItems();
+      if (settings.searchText=='') {
+        clearFilter();
+        updateView();
+      } else {
+        filterItems();
+      }
 
       saveSettings();
 

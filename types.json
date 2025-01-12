@@ -35,7 +35,7 @@
 
   "ESpawnType::ContextualAction": { "icon": "circle", "title": "trigger", "group": "misc",
     "match": {
-      "PseudoDog|Bayun|Bloodsucker|Flesh|Blinddog|Tushkan|Boar|ZombieFoster|Rat|Snork|Zombie": { "icon": "enemy", "title": "sid_npc_name_mutant", "group": "enemies" },
+      "Jerboa|PseudoDog|Bayun|Bloodsucker|Flesh|Blinddog|Tushkan|Boar|ZombieFoster|Rat|Snork|Zombie": { "icon": "enemy", "title": "sid_npc_name_mutant", "group": "enemies" },
       "Deer|Pseudogiant|Burer|Poltergeist|Controller|Chimera": { "icon": "enemy", "title": "sid_npc_name_mutant", "group": "enemies" }
     }
   },
