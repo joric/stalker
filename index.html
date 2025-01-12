@@ -75,12 +75,6 @@ let icon_tiles = {
   'misc': 'CompassMarker_4_3.png',
 };
 
-languages = {
-  'ua': 'data/Localization/language_01.json',
-  'en': 'data/Localization/language_02.json',
-  'ru': 'data/Localization/language_18.json',
-}
-
 </script>
 
 
@@ -1249,7 +1243,12 @@ window.onload = function() {
   }
 
   function loadLanguage(language) {
-    fetch(languages[language]).then(r=>r.json()).then(data => {
+    let languages = {
+      'ua': 'data/Localization/language_01.json',
+      'en': 'data/Localization/language_02.json',
+      'ru': 'data/Localization/language_18.json',
+    };
+    fetch(languages[language] || languages['en']).then(r=>r.json()).then(data => {
       lang = data;
       searchControl.setAttribute('placeholder', lang['sid_misc_hint_loot']+'...');
     });
