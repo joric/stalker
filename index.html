@@ -284,10 +284,11 @@ function loadMap() {
 
   settings.baseLayer = settings.baseLayer || 'PDA';
   settings.language = settings.language || 'en';
+  settings.searchText = settings.searchText || '';
 
   searchControl = document.querySelector('.search-box input');
 
-  searchControl.value = settings.searchText||'';
+  searchControl.value = settings.searchText || '';
 
   //console.log('current zoom:', settings.zoom);
   let scrollWheelZoom = true; // maptalks uses fractional zoom by default
