@@ -45,7 +45,8 @@
       "PseudoDog|Bayun|Bloodsucker|Flesh|Blinddog|Tushkan|Boar|ZombieFoster|Rat|Snork|Zombie": { "icon": "enemy", "title": "sid_npc_name_mutant", "group": "enemies" },
       "Deer|Pseudogiant|Burer|Poltergeist|Controller|Chimera": { "icon": "enemy", "title": "sid_npc_name_mutant", "group": "enemies" },
       "Neutral|Monolith|Mercenaries": { "icon": "soldier", "title": "soldiers", "group": "misc" },
-      "Trader|Sidorovich": { "icon": "trader", "title": "trader", "group": "locations" }
+      "Trader|Sidorovich": { "icon": "trader", "title": "trader", "group": "locations" },
+      "Technician": { "icon": "technician", "title": "technician", "group": "locations" }
     }
   },
 
@@ -55,7 +56,6 @@
       "^Ammo|AGA|AHEDP|AVOG|APG7V|(A\\d{3}[\\w]+)": {"icon": "chest", "title": "ammo", "group": "items" },
       "^Gun": {"icon": "chest", "title": "ammo", "group": "items" },
       "Armor": {"icon": "chest", "title": "armor", "group": "items" },
-
       "PDA": {"icon": "follow", "title": "sid_questItemprototypes_BasePDA_name", "group": "items" }
     }
   },
