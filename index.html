@@ -717,18 +717,25 @@ function showTooltip(e) {
 
   function find_translation(s, postfix, fallback) {
     if (fallback && lang[s]) return lang[s];
-    let prefixes = ['sid_items','sid_stashes','sid_questItemprototypes'];
+    let prefixes = ['sid_items_','sid_stashes_','sid_questItemprototypes_','sid_items_FArtifact','sid_items_CArtifact','sid_items_AArtifact'];
     for (prefix of prefixes) {
-      let res = lang[`${prefix}_${s}_${postfix}`];
+      let res = lang[`${prefix}${s}${postfix}`];
       if (res) return res;
     }
     return fallback;
   }
 
   let name = o.title;
+  let type = o.description;
 
-  let title = find_translation(name, 'name', name);
-  let subtitle = find_translation(name, 'description', '');
+
+  // for the artifacts, it's usually
+  if (type=='ESpawnType::ArtifactSpawner' && name!='UniversalArtifactSpawner') {
+    name = name.split('Artifact')[0];
+  }
+
+  let title = find_translation(name, '_name', name);
+  let subtitle = find_translation(name, '_description', '');
 
   let prop = getIconProp(o);
   let group = prop.group || 'misc';

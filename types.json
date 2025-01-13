@@ -64,5 +64,7 @@
   "ESpawnType::Anomaly": {"icon": "anomaly", "title": "sid_misc_pda_map_playerTags_anomaly", "group": "anomalies" },
   "ESpawnType::ElectroAnomaly": {"icon": "anomaly", "title": "sid_misc_pda_map_playerTags_anomaly", "group": "anomalies" },
   "ESpawnType::PillowAnomaly": {"icon": "anomaly", "title": "sid_misc_pda_map_playerTags_anomaly", "group": "anomalies" },
-  "ESpawnType::AnomalySpawner": {"icon": "anomaly", "title": "sid_misc_pda_map_playerTags_anomaly", "group": "anomalies" }
+  "ESpawnType::AnomalySpawner": {"icon": "anomaly", "title": "sid_misc_pda_map_playerTags_anomaly", "group": "anomalies" },
+
+  "ESpawnType::ArtifactSpawner": {"icon": "follow", "title": "sid_misc_pda_map_playerTags_habar", "group": "stashes" }
 }
