@@ -686,17 +686,21 @@ function showTooltip(e) {
 
   let prop = getIconProp(o);
 
-  let title = translate(o.title || prop.title || o.name, '_name', o.name);
-  let subtitle = translate(o.description || o.name, '_description', '');
+  let title = translate(o.clue || o.title || prop.title || o.name, '_name', o.name);
+  let description = translate(o.clue || o.description || o.name, '_description', '');
 
   let group = prop.group || 'misc';
 
-  let category = lang[prop.title] || lang[prop.description] || prop.title || group;
+  let category = lang[prop.category] || lang[prop.title] || group;
 
-  let content = `<b>${title} (${category})</b>`;
+  let content = `<b>${title}</b>`;
 
-  if (subtitle) {
-    content += `<hr/>${subtitle}`;
+  if (category) {
+    content += `<br/><small>${category}</small>`;
+  }
+
+  if (description) {
+    content += `<hr/>${description}`;
   }
 
   if (o.spawns) {
@@ -716,7 +720,7 @@ function showTooltip(e) {
 
   content += `<hr/><small><small>Name: ${o.name}</small></small>`;
   content += `<br/><small><small>Type: ${o.type}</small></small>`;
-  content += `<br/><small><small>Sid: ${sid}</small></small>`;
+  content += `<br/><small><small>SID: ${sid}</small></small>`;
   content += `<br/><small><small>XTeleportTo ${teleport}</small></small>`;
 
 
@@ -1074,11 +1078,12 @@ function passesFilter(marker) {
 
   let t = lang[o.title]||'';
   let d = lang[o.description]||'';
+  let c = lang['sid_stashes_'+o.clue+'_name']||'';
 
   let name = o.name||'';
   let type = o.type||'';
 
-  let title = [t, d, o.title||'', name, type, o.description||'', o.sid||'', o.clue||'', ...tags].join(' ').toLowerCase();
+  let title = [t, d, c, o.title||'', name, type, o.description||'', o.sid||'', o.clue||'', ...tags].join(' ').toLowerCase();
   if (o.clue) title += ' clue';
   return !(text!='' && !terms.every(term=>title.includes(term)));
 }

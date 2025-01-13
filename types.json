@@ -3,72 +3,72 @@
     "items": {
       "BP_Bed_OnBed_C": { "icon": "bed", "title": "sid_misc_pda_Map_MarkerBed", "group": "locations" },
       "BP_PlayerStash_C": { "icon": "storage", "title": "sid_misc_inv_player_grid_name", "group": "locations" },
-      "BP_Teleport_Portal_Bubble_C": { "icon": "circle_dot", "title": "sid_items_CArtifactBubble_name", "group": "locations" },
-      "BP_Teleport_Portal_Bubble_C_Target": { "icon": "circle_locked", "title": "sid_items_CArtifactBubble_name", "description": "sid_items_CArtifactBubble_name", "group": "locations" }
+      "BP_Teleport_Portal_Bubble_C": { "icon": "circle_dot", "title": "sid_misc_answer_fast_travel", "category": "sid_misc_pda_map_playerTags_anomaly", "group": "locations" },
+      "BP_Teleport_Portal_Bubble_C_Target": { "icon": "circle_locked", "title": "sid_misc_answer_fast_travel", "category": "sid_misc_pda_map_playerTags_anomaly", "group": "locations" }
     },
     "match": {
-      "BP_TopazScanner_": { "icon": "scanner", "title": "sid_character_skaner_0", "group": "locations" }
+      "BP_TopazScanner_": { "icon": "scanner", "title": "sid_character_skaner_0", "category": "sid_misc_inv_player_grid_name", "group": "locations" }
     }
   },
 
-  "ESpawnType::Marker" : { "icon": "location", "description": "sid_misc_pda_Map_MarkerLocation", "group": "locations",
+  "ESpawnType::Marker" : { "icon": "location", "category": "sid_misc_pda_Map_MarkerLocation", "group": "locations",
     "match": {
-      "archanomaly": {"icon": "arch_anomaly", "description": "sid_misc_pda_map_playerTags_anomaly", "group": "locations" }
+      "archanomaly": {"icon": "arch_anomaly", "category": "sid_misc_pda_map_playerTags_anomaly", "group": "locations" }
     }
   },
 
-  "ESpawnType::Hub": { "icon": "camp", "description": "sid_misc_LEGACY_pda_Map_MarkerFriendlyAreaDefault", "group": "bases" },
-  "ERegion::*": { "icon": "region", "description": "sid_misc_pda_hint_region", "group": "regions" },
-  "ESpawnType::ItemContainer": { "icon": "stash", "description": "sid_misc_pda_Map_MarkerCache", "group": "stashes" },
+  "ESpawnType::Hub": { "icon": "camp", "category": "sid_misc_LEGACY_pda_Map_MarkerFriendlyAreaDefault", "group": "bases" },
+  "ERegion::*": { "icon": "region", "category": "sid_misc_pda_hint_region", "group": "regions" },
+  "ESpawnType::ItemContainer": { "icon": "stash", "title": "sid_misc_pda_Map_MarkerCache", "category": "sid_misc_pda_map_playerTags_habar", "group": "stashes" },
 
-  "ESpawnType::Trigger": { "icon": "circle", "description": "trigger", "group": "misc" },
-  "ESpawnType::DeadBody": { "icon": "skull", "description": "dead_body", "group": "misc" },
-  "ESpawnType::PackOfItems": { "icon": "bag", "description": "pack_of_items", "group": "misc" },
-  "ESpawnType::Shelter": { "icon": "cave", "description": "shelter", "group": "misc" },
-  "ESpawnType::Squad": { "icon": "soldier", "description": "squad", "group": "misc" },
-  "ESpawnType::Patrol": { "icon": "soldier", "description": "patrol", "group": "misc" },
-  "ESpawnType::SafeZone": { "icon": "circle", "description": "safe_zone", "group": "misc" },
-  "ESpawnType::ALifeGroup": { "icon": "circle", "description": "trigger", "group": "misc" },
-  "ESpawnType::DailyScheduleZone": { "icon": "circle", "description": "trigger", "group": "misc" },
-  "ESpawnType::MoveToPath": { "icon": "circle", "description": "trigger", "group": "misc" },
-  "ESpawnType::LairSpawner": { "icon": "danger", "description": "lair", "group": "enemies" },
+  "ESpawnType::Trigger": { "icon": "circle", "category": "trigger", "group": "misc" },
+  "ESpawnType::DeadBody": { "icon": "skull", "category": "dead_body", "group": "misc" },
+  "ESpawnType::PackOfItems": { "icon": "bag", "category": "pack_of_items", "group": "misc" },
+  "ESpawnType::Shelter": { "icon": "cave", "category": "shelter", "group": "misc" },
+  "ESpawnType::Squad": { "icon": "soldier", "category": "squad", "group": "misc" },
+  "ESpawnType::Patrol": { "icon": "soldier", "category": "patrol", "group": "misc" },
+  "ESpawnType::SafeZone": { "icon": "circle", "category": "safe_zone", "group": "misc" },
+  "ESpawnType::ALifeGroup": { "icon": "circle", "category": "trigger", "group": "misc" },
+  "ESpawnType::DailyScheduleZone": { "icon": "circle", "category": "trigger", "group": "misc" },
+  "ESpawnType::MoveToPath": { "icon": "circle", "category": "trigger", "group": "misc" },
+  "ESpawnType::LairSpawner": { "icon": "danger", "category": "lair", "group": "enemies" },
 
-  "ESpawnType::ContextualAction": { "icon": "circle", "description": "trigger", "group": "misc",
+  "ESpawnType::ContextualAction": { "icon": "circle", "category": "trigger", "group": "misc",
     "match": {
-      "Jerboa|PseudoDog|Bayun|Bloodsucker|Flesh|Blinddog|Tushkan|Boar|ZombieFoster|Rat|Snork|Zombie": { "icon": "danger", "description": "sid_npc_name_mutant", "group": "enemies" },
-      "Deer|Pseudogiant|Burer|Poltergeist|Controller|Chimera": { "icon": "danger", "description": "sid_npc_name_mutant", "group": "enemies" }
+      "Jerboa|PseudoDog|Bayun|Bloodsucker|Flesh|Blinddog|Tushkan|Boar|ZombieFoster|Rat|Snork|Zombie": { "icon": "danger", "category": "sid_npc_name_mutant", "group": "enemies" },
+      "Deer|Pseudogiant|Burer|Poltergeist|Controller|Chimera": { "icon": "danger", "category": "sid_npc_name_mutant", "group": "enemies" }
     }
   },
 
   "ESpawnType::Obj": {
     "items": {
-      "Faust": { "icon": "guide", "description": "enemies", "group": "locations" }
+      "Faust": { "icon": "guide", "category": "enemies", "group": "locations" }
     },
     "match": {
-      "PseudoDog|Bayun|Bloodsucker|Flesh|Blinddog|Tushkan|Boar|ZombieFoster|Rat|Snork|Zombie": { "icon": "danger", "description": "sid_npc_name_mutant", "group": "enemies" },
-      "Deer|Pseudogiant|Burer|Poltergeist|Controller|Chimera": { "icon": "danger", "description": "sid_npc_name_mutant", "group": "enemies" },
-      "Neutral|Monolith|Mercenaries": { "icon": "soldier", "description": "soldiers", "group": "misc" },
-      "Trader|Sidorovich": { "icon": "trader", "description": "trader", "group": "locations" },
-      "Technician": { "icon": "technician", "description": "technician", "group": "locations" },
-      "Guide": { "icon": "guide", "description": "guide", "group": "locations" }
+      "PseudoDog|Bayun|Bloodsucker|Flesh|Blinddog|Tushkan|Boar|ZombieFoster|Rat|Snork|Zombie": { "icon": "danger", "category": "sid_npc_name_mutant", "group": "enemies" },
+      "Deer|Pseudogiant|Burer|Poltergeist|Controller|Chimera": { "icon": "danger", "category": "sid_npc_name_mutant", "group": "enemies" },
+      "Bandit|Spark|Neutral|Monolith|Mercenaries": { "icon": "soldier", "category": "soldiers", "group": "misc" },
+      "Trader|Sidorovich": { "icon": "trader", "category": "trader", "group": "locations" },
+      "Technician": { "icon": "technician", "category": "technician", "group": "locations" },
+      "Guide": { "icon": "guide", "category": "guide", "group": "locations" }
     }
   },
 
   "ESpawnType::Item": {
     "match": {
-      "Drink|Bread|Food|Sausage|Energetic|Vodka|Water|Beer|Milk": {"icon": "bag", "description": "sustenance", "group": "misc" },
-      "^Ammo|AGA|AHEDP|AVOG|APG7V|(A\\d{3}[\\w]+)": {"icon": "chest", "description": "ammo", "group": "items" },
-      "^Gun": {"icon": "chest", "description": "ammo", "group": "items" },
-      "Armor": {"icon": "chest", "description": "armor", "group": "items" },
-      "PDA": {"icon": "follow", "description": "sid_questItemprototypes_BasePDA_name", "group": "items" },
-      "FArtifact": {"icon": "artifact", "description": "sid_misc_pda_map_playerTags_habar", "group": "misc" }
+      "Drink|Bread|Food|Sausage|Energetic|Vodka|Water|Beer|Milk": {"icon": "bag", "category": "sustenance", "group": "misc" },
+      "^Ammo|AGA|AHEDP|AVOG|APG7V|(A\\d{3}[\\w]+)": {"icon": "chest", "category": "ammo", "group": "items" },
+      "^Gun": {"icon": "chest", "category": "ammo", "group": "items" },
+      "Armor": {"icon": "chest", "category": "armor", "group": "items" },
+      "PDA": {"icon": "follow", "category": "sid_questItemprototypes_BasePDA_name", "group": "items" },
+      "FArtifact": {"icon": "artifact", "category": "sid_misc_pda_map_playerTags_habar", "group": "misc" }
     }
   },
 
-  "ESpawnType::Anomaly": {"icon": "anomaly", "description": "sid_misc_pda_map_playerTags_anomaly", "group": "anomalies" },
-  "ESpawnType::ElectroAnomaly": {"icon": "anomaly", "description": "sid_misc_pda_map_playerTags_anomaly", "group": "anomalies" },
-  "ESpawnType::PillowAnomaly": {"icon": "anomaly", "description": "sid_misc_pda_map_playerTags_anomaly", "group": "anomalies" },
-  "ESpawnType::AnomalySpawner": {"icon": "anomaly", "description": "sid_misc_pda_map_playerTags_anomaly", "group": "anomalies" },
-  "ESpawnType::Radiation": {"icon": "radiation", "description": "sid_misc_pda_map_playerTags_anomaly", "group": "misc" },
-  "ESpawnType::ArtifactSpawner": {"icon": "artifact", "description": "sid_misc_pda_map_playerTags_habar", "group": "misc" }
+  "ESpawnType::Anomaly": {"icon": "anomaly", "category": "sid_misc_pda_map_playerTags_anomaly", "group": "anomalies" },
+  "ESpawnType::ElectroAnomaly": {"icon": "anomaly", "category": "sid_misc_pda_map_playerTags_anomaly", "group": "anomalies" },
+  "ESpawnType::PillowAnomaly": {"icon": "anomaly", "category": "sid_misc_pda_map_playerTags_anomaly", "group": "anomalies" },
+  "ESpawnType::AnomalySpawner": {"icon": "anomaly", "category": "sid_misc_pda_map_playerTags_anomaly", "group": "anomalies" },
+  "ESpawnType::Radiation": {"icon": "radiation", "category": "sid_misc_pda_map_playerTags_anomaly", "group": "misc" },
+  "ESpawnType::ArtifactSpawner": {"icon": "artifact", "category": "sid_misc_pda_map_playerTags_habar", "group": "misc" }
 }
