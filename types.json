@@ -46,7 +46,8 @@
       "Deer|Pseudogiant|Burer|Poltergeist|Controller|Chimera": { "icon": "enemy", "title": "sid_npc_name_mutant", "group": "enemies" },
       "Neutral|Monolith|Mercenaries": { "icon": "soldier", "title": "soldiers", "group": "misc" },
       "Trader|Sidorovich": { "icon": "trader", "title": "trader", "group": "locations" },
-      "Technician": { "icon": "technician", "title": "technician", "group": "locations" }
+      "Technician": { "icon": "technician", "title": "technician", "group": "locations" },
+      "Guide": { "icon": "guide", "title": "guide", "group": "locations" }
     }
   },
 

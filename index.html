@@ -715,38 +715,30 @@ function showTooltip(e) {
 
   let o = marker.feature.properties;
 
-  let title = o.title;
-  let subtitle = ''; //o.description;//'sid_misc_pda_Map_MarkerCache';
-
-  if (o.clue) {
-    title = 'sid_stashes_'+o.clue+'_name'
-    subtitle = 'sid_stashes_'+o.clue+'_description';
+  function find_translation(s, postfix, fallback) {
+    let prefixes = ['sid_items','sid_stashes','sid_questItemprototypes'];
+    for (prefix of prefixes) {
+      let res = lang[`${prefix}_${s}_${postfix}`];
+      if (res) return res;
+    }
+    return fallback;
   }
 
-  if (o.description=='ESpawnType::Item') {
-    title = 'sid_items_' + title + '_name';
-  }
+  let name = o.title;
 
-  title = lang[title] || title;
-  subtitle = lang[subtitle] || subtitle;
+  let title = find_translation(name, 'name', name);
+  let subtitle = find_translation(name, 'description', '');
 
   let prop = getIconProp(o);
   let group = prop.group || 'misc';
   let category = lang[prop.title] || prop.title || group;
-
-  title += ' (' + category + ')';
-
-  let content = `<b>${title}</b><br/>${subtitle}`;
-  
-  //+'<pre>' + JSON.stringify(o, null, 2) + '</pre>';
+  let content = `<b>${title} (${category})</b><br/>${subtitle}`;
 
   if (o.spawns) {
     content +='<hr/><div class="overflow-container">';
-
     for (spawn of o.spawns) {
       content += spawn + '<br/>';
     }
-
     content +='</div>';
   }
 
