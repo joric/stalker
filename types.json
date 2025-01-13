@@ -2,7 +2,7 @@
   "Custom::CustomItems": {
     "items": {
       "BP_Bed_OnBed_C": { "icon": "bed", "title": "sid_misc_pda_Map_MarkerBed", "group": "locations" },
-      "BP_PlayerStash_C": { "icon": "storage", "title": "sid_misc_inv_player_grid_name", "group": "locations" },
+      "BP_PlayerStash_C": { "icon": "storage", "title": "sid_misc_pda_Map_MarkerPlayerStorage", "category": "sid_misc_inv_player_grid_name", "group": "locations" },
       "BP_Teleport_Portal_Bubble_C": { "icon": "circle_dot", "title": "sid_misc_answer_fast_travel", "category": "sid_misc_pda_map_playerTags_anomaly", "group": "locations" },
       "BP_Teleport_Portal_Bubble_C_Target": { "icon": "circle_locked", "title": "sid_misc_answer_fast_travel", "category": "sid_misc_pda_map_playerTags_anomaly", "group": "locations" }
     },
