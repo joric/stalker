@@ -90,14 +90,40 @@ class UnrealCFGParser:
 
 # -----------------------------------------------------------------
 
-def export_markers():
+def getCoordinates(data):
+    pts = data
+    coord = [pts[k] for k in('PositionX','PositionY','PositionZ')if k in pts]
+    if coord: return coord
 
-    out = []
+    pts = data.get('WorldPosition',{}).get('data',{})
+    coord =  [pts[k] for k in('X','Y','Z')if k in pts]
+    if coord: return coord
 
+    pts = data.get('PlayerLocation',{}).get('data',{})
+    coord =  [pts[k] for k in('X','Y','Z')if k in pts]
+    if coord: return coord
+
+def dataCleanup(data):
+    # remove already used keys
+    rk = ('PositionX','PositionY','PositionZ')
+    if all(k in data for k in rk):
+        for k in rk:
+            del data[k]
+
+    # remove scale section with default values
+    rk = ('ScaleX','ScaleY','ScaleZ')
+    if all(k in data and data[k]==1 for k in rk):
+        for k in rk:
+            del data[k]
+
+    # remove zero rotators
+    rk = ('RotatorAngleYaw','RotatorAnglePitch','RotatorAngleRoll')
+    for k in rk:
+        if k in data and data[k]==1:
+            del data[k]
+
+def load_file(package_path, remap):
     lookup = {}
-
-    # preload marker prototypes for names/radius
-    package_path = 'Stalker2/Content/GameLite/GameData/MarkerPrototypes.cfg'
     filename = os.path.normpath(os.path.join(cache_dir, package_path))
     parser = UnrealCFGParser(filename)
     cfg = parser.parse()
@@ -107,47 +133,23 @@ def export_markers():
         if sid:
             lookup[sid] = {}
             e = lookup[sid]
-            remap = {'MarkerRadius':'radius', 'Title':'title', 'Description':'info'}
             for k,v in remap.items():
                 if k in data and data[k]!=0 and data[k]!='Empty':
                     e[v] = data[k]
+    return lookup
+
+def export_markers():
+
+    out = []
+
+    marker_proto = load_file('Stalker2/Content/GameLite/GameData/MarkerPrototypes.cfg', {'MarkerRadius':'radius', 'Title':'title', 'Description':'description'})
+    quest_proto = load_file('Stalker2/Content/GameLite/GameData/ObjPrototypes/QuestObjPrototypes.cfg', {'NPCPrototypeSID': 'npc_ref'})
+    npc_proto = load_file('Stalker2/Content/GameLite/GameData/NPCPrototypes.cfg', {'NameTextKey': 'title'})
 
     folders = [
         'Stalker2/Content/GameLite/DLCGameData',
         'Stalker2/Content/GameLite/GameData',
     ]
-
-    def getCoordinates(data):
-        pts = data
-        coord = [pts[k] for k in('PositionX','PositionY','PositionZ')if k in pts]
-        if coord: return coord
-
-        pts = data.get('WorldPosition',{}).get('data',{})
-        coord =  [pts[k] for k in('X','Y','Z')if k in pts]
-        if coord: return coord
-
-        pts = data.get('PlayerLocation',{}).get('data',{})
-        coord =  [pts[k] for k in('X','Y','Z')if k in pts]
-        if coord: return coord
-
-    def dataCleanup(data):
-        # remove already used keys
-        rk = ('PositionX','PositionY','PositionZ')
-        if all(k in data for k in rk):
-            for k in rk:
-                del data[k]
-
-        # remove scale section with default values
-        rk = ('ScaleX','ScaleY','ScaleZ')
-        if all(k in data and data[k]==1 for k in rk):
-            for k in rk:
-                del data[k]
-
-        # remove zero rotators
-        rk = ('RotatorAngleYaw','RotatorAnglePitch','RotatorAngleRoll')
-        for k in rk:
-            if k in data and data[k]==1:
-                del data[k]
 
     ### Parse
 
@@ -163,19 +165,6 @@ def export_markers():
 
         for filename in g:
 
-            #if '409C17AD468C39F8C605079F41519092.cfg' not in filename: continue
-            #if '4B56C32544C5470C2D7DFD89F59BBB8F' not in filename: continue
-            #if 'C1EEB89C4D27EE16CAC1A2BC85378947' not in filename: continue
-            #if 'D9D900F442E53F6922A64E939CB27E3B.cfg' not in filename: continue
-            #if 'MarkerPrototypes.cfg' not in filename: continue
-            #if 'FastTravelLocationPrototypes.cfg' not in filename: continue
-            #if '105F11AB4ED95DD96B4D8BA45A8F2EB8.cfg' not in filename: continue
-
-            # ignore all the files that don't have WorldMap_WP in the name
-
-            # if 'WorldMap_WP' not in filename: continue # looks like it deletes some quests items we need, e.g. CA_Quest_Hub_Medic
-
-
             parser = UnrealCFGParser(filename)
             cfg = parser.parse()
             #print(json.dumps(cfg, indent=2))
@@ -190,9 +179,10 @@ def export_markers():
                 shortName = spawnType and spawnType.split('::').pop() or data.get('Name') or data.get('SID') or 'Unnamed'
 
                 titles = ('PackOfItemsPrototypeSID','SpawnedPrototypeSID','MarkerSID','ContextualActionSID','LairPrototypeSID','TriggerShape')
-                title = next((data[t] for t in titles if t in data), shortName)
 
-                description = spawnType or data.get('RegionType') or ('FastTravel' in filename and 'Custom::FastTravel') or 'Unknown'
+                marker_name = next((data[t] for t in titles if t in data), shortName)
+
+                marker_type = spawnType or data.get('RegionType') or ('FastTravel' in filename and 'Custom::FastTravel') or 'Unknown'
 
                 allowed_types = ['ESpawnType::Item','ESpawnType::Obj','ESpawnType::Marker','ESpawnType::Anomaly',
                     'ESpawnType::ElectroAnomaly','ESpawnType::AnomalySpawner','ESpawnType::SoapBubbleAnomaly'
@@ -203,25 +193,23 @@ def export_markers():
                 #add_properties = True # adds config data to markers (disabled, because it's really a lot of data)
                 add_properties = False
 
-                #if all(s not in description for s in allowed_types): continue # filter markers (20k with this line, 60k without)
-
 
                 if spawnType =='ESpawnType::DestructibleObject': continue # fuck destructible objects, too many
-
 
                 coord = getCoordinates(data)
                 if not coord or all(x==0 for x in coord):
                     rejected.append(1) # collect rejected later
                     continue
 
-                name = os.path.split(filename)[1]
+                fname = os.path.split(filename)[1]
 
-                prop = { 'title': title, 'description': description }
+                prop = { 'name': marker_name, 'type': marker_type }
 
-                #area = data.get('LevelName')
-                #if area and 'WorldMap_WP' not in area:
-                #    continue
-                #if area: prop['area'] = area
+                area = data.get('LevelName')
+
+                #if area and 'WorldMap_WP' not in area: continue
+
+                if area and area !='WorldMap_WP': prop['area'] = area
 
 
                 sid = data.get('SID')
@@ -288,11 +276,15 @@ def export_markers():
 
                 # ------------------
 
-                # update marker properties from lookup
-                for key in ['SpawnedPrototypeSID']:
-                    if key in data and data[key] in lookup:
-                        prop |= lookup[ data[key] ]
-                        #print(prop)
+
+                # update marker properties from loaded files
+
+                key = 'SpawnedPrototypeSID'
+                if key in data:
+                    #prop |= marker_proto.get(data[key],{})
+                    ref = quest_proto.get(data[key],{}).get('npc_ref')
+                    prop |= npc_proto.get(ref,{})
+
 
                 o = {'type':'Feature','geometry':{'type':'Point', 'coordinates': coord }, 'properties': prop};
 

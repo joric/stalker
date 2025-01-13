@@ -202,7 +202,7 @@ function getIconIndex(iconName) {
 }
 
 function getIconName(o) {
-  let s = [o.title, o.description].join('/');
+  let s = [o.name, o.type].join('/');
 
   for (const key of Object.keys(types).sort((a,b)=>(types[b].priority || 0) - (types[a].priority || 0)) ) {
     let regex = types[key].match;
@@ -494,7 +494,7 @@ function onMarkerClick(e) {
 function onMarkerHover(e) {
   let o = e.target.feature.properties;
   let name = getIconName(o);
-  let text = `${o.title} (${o.description}) / ${name}`;
+  let text = `${o.name} (${o.type}) / ${name}`;
 
   //let's add elevation to tooltip
   let z = ~~e.target.feature.geometry.coordinates[2] || 0;
@@ -630,7 +630,7 @@ function passesFilter(marker) {
   let terms = text.split(' ');
   let o = marker.feature.properties;
   let tags = o.spawns || [''];
-  let title = [marker.alt||'', o.title||'', o.description||'', o.sid||'', o.clue||'', ...tags].join(' ').toLowerCase();
+  let title = [marker.alt||'', o.name||'', o.type||'', o.sid||'', o.clue||'', ...tags].join(' ').toLowerCase();
   return !(text!='' && !terms.every(term=>title.includes(term)));
 }
 

@@ -544,7 +544,11 @@ function loadMarkersIdle(data) {
   function processBatch(deadline) {
     batch = [];
     while (deadline.timeRemaining() > 0 && currentIndex < features.length) {
-      batch.push(addMarker(features[currentIndex++]));
+      let marker = addMarker(features[currentIndex]);
+      if (marker) {
+        batch.push(marker);
+      }
+      currentIndex++;
     }
     //console.log(`Processed ${currentIndex}/${features.length} markers`);
     if (currentIndex < features.length) {
@@ -556,14 +560,6 @@ function loadMarkersIdle(data) {
     }
   }
   requestIdleCallback(processBatch, { timeout: 1000 });
-}
-
-function loadMarkersSimple(data) {
-  let markers = [];
-  for (feature of data.features) {
-    markers.push(addMarker(feature));
-  }
-  markersLoadedCallback(markers);
 }
 
 function loadMarkers(data) {
@@ -626,6 +622,16 @@ function clearSelection() {
   }
 }
 
+function translate(s, postfix, fallback) {
+  if (fallback && lang[s]) return lang[s];
+  let prefixes = ['sid_locations_region_','sid_items_','sid_stashes_','sid_questItemprototypes_','sid_items_FArtifact','sid_items_CArtifact','sid_items_AArtifact'];
+  for (prefix of prefixes) {
+    let res = lang[`${prefix}${s}${postfix}`];
+    if (res) return res;
+  }
+  return fallback;
+}
+
 function showPopup(e) {
 
   showTooltip(e);
@@ -673,29 +679,16 @@ function showTooltip(e) {
 
   let o = marker.feature.properties;
 
-  function find_translation(s, postfix, fallback) {
-    if (fallback && lang[s]) return lang[s];
-    let prefixes = ['sid_items_','sid_stashes_','sid_questItemprototypes_','sid_items_FArtifact','sid_items_CArtifact','sid_items_AArtifact'];
-    for (prefix of prefixes) {
-      let res = lang[`${prefix}${s}${postfix}`];
-      if (res) return res;
-    }
-    return fallback;
-  }
-
-  let name = o.title;
-  let type = o.description;
-
-
   // for the artifacts, it's usually
-  if (type=='ESpawnType::ArtifactSpawner' && name!='UniversalArtifactSpawner') {
+  if (o.type=='ESpawnType::ArtifactSpawner' && o.name!='UniversalArtifactSpawner') {
     name = name.split('Artifact')[0];
   }
 
-  let title = find_translation(name, '_name', name);
-  let subtitle = find_translation(name, '_description', '');
-
   let prop = getIconProp(o);
+
+  let title = translate(o.title || prop.title || o.name, '_name', o.name);
+  let subtitle = translate(o.description || o.name, '_description', '');
+
   let group = prop.group || 'misc';
   let category = lang[prop.title] || prop.title || group;
   let content = `<b>${title} (${category})</b><br/>${subtitle}`;
@@ -715,8 +708,8 @@ function showTooltip(e) {
   let sid = marker.feature.properties.sid;
   if (sid.includes('_C_')) sid = sid.split('_C_')[1];
 
-  content += `<hr/><small><small>Name: ${o.title}</small></small>`;
-  content += `<br/><small><small>Type: ${o.description}</small></small>`;
+  content += `<hr/><small><small>Name: ${o.name}</small></small>`;
+  content += `<br/><small><small>Type: ${o.type}</small></small>`;
   content += `<br/><small><small>Sid: ${sid}</small></small>`;
   content += `<br/><small><small>XTeleportTo ${teleport}</small></small>`;
 
@@ -776,8 +769,11 @@ function getIconName(o) {
 function getIconProp(o) {
   let prop = {icon: 'question', group: 'misc'};
 
-  let name = o.title;
-  let type = o.description;
+  let name = o.name;
+  let type = o.type;
+
+  if (!type) console.log(o);
+
   let section = types[type] || types[type.split('::')[0]+'::*'];
 
   prop = {...prop, ...section};
@@ -797,18 +793,22 @@ function getIconProp(o) {
 
 function addMarker(feature) {
   let o = feature.properties;
+
+  if (o.area && !o.area.includes('WorldMap_WP')) return null;
+
   let prop = getIconProp(o);
-  let name = prop.icon || 'question';
+
+  let icon = prop.icon || 'question';
   let group = prop.group || 'misc';
 
   // misc with spawns is stash
-  if (group=="misc" && o.spawns && o.spawns.length>0) name = 'stash';
+  if (group=="misc" && o.spawns && o.spawns.length>0) icon = 'stash';
 
   // clue is always a stash
-  if (o.clue) name = 'stash';
-  if (name=='stash') group = 'stashes';
+  if (o.clue) icon = 'stash';
+  if (icon=='stash') group = 'stashes';
 
-  image = 'data/sprites/' + ((icons[name] && icons[name].image) || 'CompassMarker_2_3.png');
+  image = 'data/sprites/' + ((icons[icon] && icons[icon].image) || 'CompassMarker_2_3.png');
 
   let coordinates = feature.geometry.coordinates;
 
@@ -833,7 +833,8 @@ function addMarker(feature) {
     markerVerticalAlignment: 'middle',
   };
 
-  let title = lang['sid_locations_region_' + o.title + '_name'] || lang[o.title] || lang[prop.title] || o.title;
+  let title = translate(o.title || prop.title || o.name, '_name', o.name);
+
 
   if (['locations', 'bases', 'regions'].includes(group)) {
     symbol = [
@@ -1063,12 +1064,14 @@ function passesFilter(marker) {
   let terms = text.split(' ');
   let o = marker.feature.properties;
   let tags = o.spawns || [''];
+
   let t = lang[o.title]||'';
   let d = lang[o.description]||'';
 
-  let name = '';//getIconName(o)||''; // bottleneck, apparently, need to reorganize types
+  let name = o.name||'';
+  let type = o.type||'';
 
-  let title = [t, d, o.title||'', name, o.description||'', o.sid||'', o.clue||'', ...tags].join(' ').toLowerCase();
+  let title = [t, d, o.title||'', name, type, o.description||'', o.sid||'', o.clue||'', ...tags].join(' ').toLowerCase();
   if (o.clue) title += ' clue';
   return !(text!='' && !terms.every(term=>title.includes(term)));
 }

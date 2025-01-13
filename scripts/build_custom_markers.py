@@ -63,8 +63,8 @@ def get_markers(cells):
                             'type': 'Feature',
                             'geometry': {'type':'Point', 'coordinates': coord},
                             'properties': {
-                                'title': outer.split('_UAID')[0],
-                                'description': 'Custom::CustomItems',
+                                'name': outer.split('_UAID')[0],
+                                'type': 'Custom::CustomItems',
                                 'sid': outer,
                                 'cell': cell,
                             }
@@ -76,8 +76,8 @@ def get_markers(cells):
                             'type': 'Feature',
                             'geometry': {'type':'Point', 'coordinates': coord_target},
                             'properties': {
-                                'title': outer.split('_UAID')[0]+'_Target',
-                                'description': 'Custom::CustomItems',
+                                'name': outer.split('_UAID')[0]+'_Target',
+                                'type': 'Custom::CustomItems',
                                 'sid': outer + '_Target',
                                 'cell': cell,
                             }
