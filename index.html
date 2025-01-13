@@ -690,7 +690,9 @@ function showTooltip(e) {
   let subtitle = translate(o.description || o.name, '_description', '');
 
   let group = prop.group || 'misc';
-  let category = lang[prop.title] || prop.title || group;
+
+  let category = lang[prop.title] || lang[prop.description] || prop.title || group;
+
   let content = `<b>${title} (${category})</b><br/>${subtitle}`;
 
   if (o.spawns) {
