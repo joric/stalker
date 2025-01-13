@@ -13,7 +13,7 @@
 
   "ESpawnType::Marker" : { "icon": "location", "description": "sid_misc_pda_Map_MarkerLocation", "group": "locations",
     "match": {
-      "archanomaly": {"icon": "arch_anomaly", "description": "arch_anomaly", "group": "locations" }
+      "archanomaly": {"icon": "arch_anomaly", "description": "sid_misc_pda_map_playerTags_anomaly", "group": "locations" }
     }
   },
 

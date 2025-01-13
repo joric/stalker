@@ -693,7 +693,11 @@ function showTooltip(e) {
 
   let category = lang[prop.title] || lang[prop.description] || prop.title || group;
 
-  let content = `<b>${title} (${category})</b><br/>${subtitle}`;
+  let content = `<b>${title} (${category})</b>`;
+
+  if (subtitle) {
+    content += `<hr/>${subtitle}`;
+  }
 
   if (o.spawns) {
     content +='<hr/><div class="overflow-container">';
