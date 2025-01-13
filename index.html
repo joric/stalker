@@ -721,12 +721,13 @@ function showTooltip(e) {
 
 
   // Get the screen coordinates of the event
-  let c = marker.getCoordinates();
+  //let c = marker.getCoordinates();
   //var screenPosition = coordinateToContainerPoint(map, c);
-  var screenPosition = map.coordinateToContainerPoint(c);
+  //var screenPosition = map.coordinateToContainerPoint(c);
   //console.log('tooltip size', tooltipWidth, tooltipHeight);
-  //let c = marker.getContainerExtent();
-  //let screenPosition = {x: c.pxmin, y: c.pymin};
+
+  let c = marker.getContainerExtent();
+  let screenPosition = {x: c.pxmin, y: c.pymin};
 
   // Determine the tooltip position
   var mapContainer = map.getContainer();
