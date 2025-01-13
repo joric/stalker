@@ -32,49 +32,6 @@ let startPitch = 0;
 let startZoom = 2;
 let defaultPitch = 45;
 let autoAltitude = true;
-
-let icon_images = {
-  'location':     'T_LocationOrigin_NotActive_Shadow.png',
-  'anomaly':      'Texture_Anomaly',
-  'arch_anomaly': 'Texture_Archianomaly',
-  'bed':          'Texture_Bed',
-  'camp':         'Texture_Camp',
-  'guide':        'Texture_Guide',
-  'technician':   'Texture_Mechanical',
-  'trader':       'Texture_Trader',
-  'storage':      'Texture_Storage',
-  'medic':        'Texture_Medecine',
-  'stash':        'Texture_Stahes',
-  'scanner':      'Texture_Signal',
-  'chest':        'Texture_Habar',
-  'enemy':        'Texture_Dangerous',
-  'follow':       'Texture_Follow',
-  'region':       'T_NotActive_Region_Shadow.png',
-}
-
-let icon_tiles = {
-  'claws': 'CompassMarker_0_0.png',
-  'skull': 'CompassMarker_0_1.png',
-  'bag': 'CompassMarker_0_2.png',
-  'circle': 'CompassMarker_0_3.png',
-  'circle_locked': 'CompassMarker_1_0.png',
-  'fire': 'CompassMarker_1_1.png',
-  'radiation': 'CompassMarker_1_2.png',
-  'lock': 'CompassMarker_1_3.png',
-  'exclamation': 'CompassMarker_2_0.png',
-  'soldier': 'CompassMarker_2_1.png',
-  'circle_dot': 'CompassMarker_2_2.png',
-  'question': 'CompassMarker_2_3.png',
-  'box': 'CompassMarker_3_0.png',
-  'unlocked': 'CompassMarker_3_1.png',
-  'artifact': 'CompassMarker_3_2.png',
-  'cave': 'CompassMarker_3_3.png',
-  'yen': 'CompassMarker_4_0.png',
-  'repair': 'CompassMarker_4_1.png',
-  'rest': 'CompassMarker_4_2.png',
-  'misc': 'CompassMarker_4_3.png',
-};
-
 </script>
 
 
@@ -259,6 +216,7 @@ let groupLayer = null;
 let polygonLayer = null;
 let map = null;
 let types = {};
+let icons = {};
 let lang = {};
 
 let localDataName = 'joricsStalkerMapsGL';
@@ -838,10 +796,6 @@ function getIconProp(o) {
 }
 
 function addMarker(feature) {
-  let markersDir = 'data/sprites/';
-  let markersPrefix = markersDir+'';
-  let markersPostfix = '_NotActive_General_Shadow.png'
-
   let o = feature.properties;
   let prop = getIconProp(o);
   let name = prop.icon || 'question';
@@ -852,12 +806,9 @@ function addMarker(feature) {
 
   // clue is always a stash
   if (o.clue) name = 'stash';
-
   if (name=='stash') group = 'stashes';
 
-  let image = icon_images[name] || icon_tiles[name] || icon_tiles['question'];
-
-  image = (image.includes('/') ? '': markersPrefix) + image + (image.includes('.png') ? '' : markersPostfix);
+  image = 'data/sprites/' + ((icons[name] && icons[name].image) || 'CompassMarker_2_3.png');
 
   let coordinates = feature.geometry.coordinates;
 
@@ -1226,15 +1177,20 @@ window.onload = function() {
   fetch('types.json').then(r=>r.json()).then(data =>{
     types = data;
 
-    Promise.all([
-        'markers.json',
-        'markers_custom.json'
-      ].map(url=>fetch(url).then(r=>r.json()))).then(results => {
-      let features = []
-      for (geojson of results) {
-        features.push(...geojson.features);
-      }
-      loadMarkers({"type": "FeatureCollection", "features": features});
+    fetch('icons.json').then(r=>r.json()).then(data =>{
+      icons = data;
+
+      Promise.all([
+          'markers.json',
+          'markers_custom.json'
+        ].map(url=>fetch(url).then(r=>r.json()))).then(results => {
+        let features = []
+        for (geojson of results) {
+          features.push(...geojson.features);
+        }
+        loadMarkers({"type": "FeatureCollection", "features": features});
+      });
+
     });
 
   }).catch(e=>{alert(e)});

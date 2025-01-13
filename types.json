@@ -31,19 +31,22 @@
   "ESpawnType::ALifeGroup": { "icon": "circle", "title": "trigger", "group": "misc" },
   "ESpawnType::DailyScheduleZone": { "icon": "circle", "title": "trigger", "group": "misc" },
   "ESpawnType::MoveToPath": { "icon": "circle", "title": "trigger", "group": "misc" },
-  "ESpawnType::LairSpawner": { "icon": "enemy", "title": "lair", "group": "enemies" },
+  "ESpawnType::LairSpawner": { "icon": "danger", "title": "lair", "group": "enemies" },
 
   "ESpawnType::ContextualAction": { "icon": "circle", "title": "trigger", "group": "misc",
     "match": {
-      "Jerboa|PseudoDog|Bayun|Bloodsucker|Flesh|Blinddog|Tushkan|Boar|ZombieFoster|Rat|Snork|Zombie": { "icon": "enemy", "title": "sid_npc_name_mutant", "group": "enemies" },
-      "Deer|Pseudogiant|Burer|Poltergeist|Controller|Chimera": { "icon": "enemy", "title": "sid_npc_name_mutant", "group": "enemies" }
+      "Jerboa|PseudoDog|Bayun|Bloodsucker|Flesh|Blinddog|Tushkan|Boar|ZombieFoster|Rat|Snork|Zombie": { "icon": "danger", "title": "sid_npc_name_mutant", "group": "enemies" },
+      "Deer|Pseudogiant|Burer|Poltergeist|Controller|Chimera": { "icon": "danger", "title": "sid_npc_name_mutant", "group": "enemies" }
     }
   },
 
   "ESpawnType::Obj": {
+    "items": {
+      "Faust": { "icon": "guide", "title": "enemies", "group": "locations" }
+    },
     "match": {
-      "PseudoDog|Bayun|Bloodsucker|Flesh|Blinddog|Tushkan|Boar|ZombieFoster|Rat|Snork|Zombie": { "icon": "enemy", "title": "sid_npc_name_mutant", "group": "enemies" },
-      "Deer|Pseudogiant|Burer|Poltergeist|Controller|Chimera": { "icon": "enemy", "title": "sid_npc_name_mutant", "group": "enemies" },
+      "PseudoDog|Bayun|Bloodsucker|Flesh|Blinddog|Tushkan|Boar|ZombieFoster|Rat|Snork|Zombie": { "icon": "danger", "title": "sid_npc_name_mutant", "group": "enemies" },
+      "Deer|Pseudogiant|Burer|Poltergeist|Controller|Chimera": { "icon": "danger", "title": "sid_npc_name_mutant", "group": "enemies" },
       "Neutral|Monolith|Mercenaries": { "icon": "soldier", "title": "soldiers", "group": "misc" },
       "Trader|Sidorovich": { "icon": "trader", "title": "trader", "group": "locations" },
       "Technician": { "icon": "technician", "title": "technician", "group": "locations" },
