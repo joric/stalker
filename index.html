@@ -716,7 +716,7 @@ function showTooltip(e) {
   let o = marker.feature.properties;
 
   function find_translation(s, postfix, fallback) {
-    if (lang[s]) return lang[s];
+    if (fallback && lang[s]) return lang[s];
     let prefixes = ['sid_items','sid_stashes','sid_questItemprototypes'];
     for (prefix of prefixes) {
       let res = lang[`${prefix}_${s}_${postfix}`];
