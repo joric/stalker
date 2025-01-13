@@ -281,7 +281,7 @@ def export_markers():
 
                 key = 'SpawnedPrototypeSID'
                 if key in data:
-                    #prop |= marker_proto.get(data[key],{})
+                    prop |= marker_proto.get(data[key],{})
                     ref = quest_proto.get(data[key],{}).get('npc_ref')
                     prop |= npc_proto.get(ref,{})
 
