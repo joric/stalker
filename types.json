@@ -38,7 +38,7 @@
     "match": {
       "Jerboa|PseudoDog|Bayun|Bloodsucker|Flesh|Blinddog|Tushkan|Boar|ZombieFoster|Rat|Snork|Zombie": { "icon": "danger", "category": "sid_npc_name_mutant", "group": "enemies" },
       "Deer|Pseudogiant|Burer|Poltergeist|Controller|Chimera": { "icon": "danger", "category": "sid_npc_name_mutant", "group": "enemies" },
-      "CA_Quest_Hub_Medic": { "icon": "medic", "title": "sid_misc_pda_Map_MarkerMedic", "category": "sid_misc_pda_Map_MarkerMedic", "group": "locations" }
+      "CA_Quest_Hub_Medic": { "icon": "medic", "title": "sid_misc_pda_Map_MarkerMedic", "category": "sid_misc_pda_Map_MarkerLocation", "group": "locations" }
     }
   },
 
@@ -50,9 +50,9 @@
       "PseudoDog|Bayun|Bloodsucker|Flesh|Blinddog|Tushkan|Boar|ZombieFoster|Rat|Snork|Zombie": { "icon": "danger", "category": "sid_npc_name_mutant", "group": "enemies" },
       "Deer|Pseudogiant|Burer|Poltergeist|Controller|Chimera": { "icon": "danger", "category": "sid_npc_name_mutant", "group": "enemies" },
       "^(Duty|GeneralNPC_Monolith|Mono|Bandit|Spark|Neutral|Mercenaries)": { "icon": "soldier", "category": "NPCs", "group": "misc" },
-      "Trader|Sidorovich": { "icon": "trader", "category": "sid_misc_pda_Map_MarkerTrader", "group": "locations" },
-      "Technician": { "icon": "technician", "category": "sid_misc_pda_Map_MarkerTechnician", "group": "locations" },
-      "Guide": { "icon": "guide", "category": "sid_misc_pda_Map_MarkerGuide", "group": "locations" },
+      "Trader|Sidorovich": { "icon": "trader", "title":"sid_misc_pda_Map_MarkerTrader", "category": "sid_misc_pda_Map_MarkerLocation", "group": "locations" },
+      "Technician": { "icon": "technician", "title": "sid_misc_pda_Map_MarkerTechnician", "category": "sid_misc_pda_Map_MarkerLocation", "group": "locations" },
+      "Guide": { "icon": "guide", "title": "sid_misc_pda_Map_MarkerGuide", "category": "sid_misc_pda_Map_MarkerLocation", "group": "locations" },
       "Medic": { "icon": "medic", "title": "sid_misc_pda_Map_MarkerMedic", "category": "sid_misc_pda_Map_MarkerMedic", "group": "locations" }
     }
   },
