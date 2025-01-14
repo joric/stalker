@@ -1,8 +1,8 @@
 {
   "Custom::CustomItems": {
     "items": {
-      "BP_Bed_OnBed_C": { "icon": "bed", "title": "sid_misc_pda_Map_MarkerBed", "group": "locations" },
-      "BP_PlayerStash_C": { "icon": "storage", "title": "sid_misc_pda_Map_MarkerPlayerStorage", "category": "sid_misc_inv_player_grid_name", "group": "locations" },
+      "BP_Bed_OnBed_C": { "icon": "bed", "title": "sid_misc_pda_Map_MarkerBed", "category":"sid_misc_pda_Map_MarkerLocation", "group": "locations" },
+      "BP_PlayerStash_C": { "icon": "storage", "title": "sid_misc_pda_Map_MarkerPlayerStorage", "category": "sid_misc_pda_Map_MarkerLocation", "group": "locations" },
       "BP_Teleport_Portal_Bubble_C": { "icon": "circle_dot", "title": "sid_items_CArtifactBubble_name", "category": "sid_misc_pda_map_playerTags_anomaly", "group": "locations" },
       "BP_Teleport_Portal_Bubble_C_Target": { "icon": "circle_locked", "title": "sid_items_CArtifactBubble_name", "category": "sid_misc_pda_map_playerTags_anomaly", "group": "locations" }
     },
@@ -21,10 +21,11 @@
   "ERegion::*": { "icon": "region", "category": "sid_misc_pda_hint_region", "group": "regions" },
   "ESpawnType::ItemContainer": { "icon": "stash", "title": "sid_misc_pda_Map_MarkerCache", "category": "sid_misc_pda_map_playerTags_habar", "group": "stashes" },
 
+  "ESpawnType::DeadBody": { "icon": "skull", "category": "sid_npc_name_mertvec", "group": "misc" },
+  "ESpawnType::PackOfItems": { "icon": "box", "category": "sid_misc_pda_Map_MarkerPlayerLandmarkHabar", "group": "misc" },
+  "ESpawnType::Shelter": { "icon": "cave", "category": "sid_misc_pda_Map_MarkerShellter", "group": "misc" },
+
   "ESpawnType::Trigger": { "icon": "circle", "category": "trigger", "group": "misc" },
-  "ESpawnType::DeadBody": { "icon": "skull", "category": "dead_body", "group": "misc" },
-  "ESpawnType::PackOfItems": { "icon": "bag", "category": "pack_of_items", "group": "misc" },
-  "ESpawnType::Shelter": { "icon": "cave", "category": "shelter", "group": "misc" },
   "ESpawnType::Squad": { "icon": "soldier", "category": "squad", "group": "misc" },
   "ESpawnType::Patrol": { "icon": "soldier", "category": "patrol", "group": "misc" },
   "ESpawnType::SafeZone": { "icon": "circle", "category": "safe_zone", "group": "misc" },
@@ -59,6 +60,7 @@
   "ESpawnType::Item": {
     "match": {
       "Drink|Bread|Food|Sausage|Energetic|Vodka|Water|Beer|Milk": {"icon": "bag", "category": "sid_misc_pda_reward_food_drink", "group": "misc" },
+      "AntiRad|Medkit": {"icon": "bag", "category": "sid_misc_pda_reward_medkit", "group": "items" },
       "^Ammo|AGA|AHEDP|AVOG|APG7V|(A\\d{3}[\\w]+)": {"icon": "chest", "category": "sid_misc_pda_reward_ammo_grenades", "group": "items" },
       "^Gun": {"icon": "chest", "category": "sid_misc_pda_reward_weapon", "group": "items" },
       "Armor": {"icon": "chest", "category": "sid_misc_pda_reward_armor", "group": "items" },
