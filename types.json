@@ -14,8 +14,7 @@
 
   "ESpawnType::Marker" : { "icon": "location", "category": "sid_misc_pda_Map_MarkerLocation", "group": "locations",
     "match": {
-      "archanomaly": {"icon": "arch_anomaly", "category": "sid_misc_pda_map_playerTags_anomaly", "group": "locations" },
-      "---sid_locations_hub": { "icon": "camp", "category": "sid_misc_LEGACY_pda_Map_MarkerFriendlyAreaDefault", "group": "hubs" }
+      "archanomaly": {"icon": "arch_anomaly", "category": "sid_misc_pda_map_playerTags_anomaly", "group": "locations" }
     }
   },
 
@@ -52,11 +51,11 @@
     "match": {
       "PseudoDog|Bayun|Bloodsucker|Flesh|Blinddog|Tushkan|Boar|ZombieFoster|Rat|Snork|Zombie": { "icon": "danger", "category": "sid_npc_name_mutant", "group": "enemies" },
       "Deer|Pseudogiant|Burer|Poltergeist|Controller|Chimera": { "icon": "danger", "category": "sid_npc_name_mutant", "group": "enemies" },
-      "^(Duty|GeneralNPC_Monolith|Mono|Bandit|Spark|Neutral|Mercenaries)": { "icon": "soldier", "category": "NPCs", "group": "misc" },
+      "^(GeneralNPC_|Duty|Mono|Bandit|Spark|Neutral|Mercenaries)": { "icon": "soldier", "category": "NPCs", "group": "misc" },
       "Trader|Sidorovich": { "icon": "trader", "title":"sid_misc_pda_Map_MarkerTrader", "category": "sid_misc_pda_Map_MarkerTrader", "group": "bases" },
       "Technician": { "icon": "technician", "title": "sid_misc_pda_Map_MarkerTechnician", "category": "sid_misc_pda_Map_MarkerTechnician", "group": "bases" },
       "Guide": { "icon": "guide", "title": "sid_misc_pda_Map_MarkerGuide", "category": "sid_misc_pda_Map_MarkerGuide", "group": "bases" },
-      "Medic": { "icon": "medic", "title": "sid_misc_pda_Map_MarkerMedic", "category": "sid_misc_pda_Map_MarkerMedic", "group": "bases" }
+      "Medic|VartanikolajBurahovskij": { "icon": "medic", "title": "sid_misc_pda_Map_MarkerMedic", "category": "sid_misc_pda_Map_MarkerMedic", "group": "bases" }
     }
   },
 
