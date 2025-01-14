@@ -626,7 +626,7 @@ function clearSelection() {
 
 function translate(s, postfix, fallback) {
   if (fallback && lang[s]) return lang[s];
-  let prefixes = ['sid_locations_region_','sid_items_','sid_stashes_','sid_questItemprototypes_','sid_items_FArtifact','sid_items_CArtifact','sid_items_AArtifact'];
+  let prefixes = ['sid_locations_region_','sid_locations_', 'sid_items_','sid_stashes_','sid_questItemprototypes_','sid_items_FArtifact','sid_items_CArtifact','sid_items_AArtifact'];
   for (prefix of prefixes) {
     let res = lang[`${prefix}${s}${postfix}`];
     if (res) return res;
@@ -804,10 +804,18 @@ function getIconProp(o) {
   return prop;
 }
 
+hub_lookup = {};
+
 function addMarker(feature) {
   let o = feature.properties;
 
   if (o.area && !o.area.includes('WorldMap_WP')) return null;
+
+  if (o.type=='ESpawnType::Hub') {
+    if (o.name=='Hub') return null;
+    if (hub_lookup[o.name]) return null;
+    hub_lookup[o.name] = true;
+  }
 
   let prop = getIconProp(o);
 
