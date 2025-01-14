@@ -14,11 +14,13 @@
 
   "ESpawnType::Marker" : { "icon": "location", "category": "sid_misc_pda_Map_MarkerLocation", "group": "locations",
     "match": {
-      "archanomaly": {"icon": "arch_anomaly", "category": "sid_misc_pda_map_playerTags_anomaly", "group": "locations" }
+      "archanomaly": {"icon": "arch_anomaly", "category": "sid_misc_pda_map_playerTags_anomaly", "group": "locations" },
+      "---sid_locations_hub": { "icon": "camp", "category": "sid_misc_LEGACY_pda_Map_MarkerFriendlyAreaDefault", "group": "hubs" }
     }
   },
 
   "ESpawnType::Hub": { "icon": "camp", "category": "sid_misc_LEGACY_pda_Map_MarkerFriendlyAreaDefault", "group": "hubs" },
+
   "ERegion::*": { "icon": "region", "category": "sid_misc_pda_hint_region", "group": "regions" },
   "ESpawnType::ItemContainer": { "icon": "stash", "title": "sid_misc_pda_Map_MarkerCache", "category": "sid_misc_pda_map_playerTags_habar", "group": "stashes" },
 

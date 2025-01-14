@@ -689,7 +689,7 @@ function showTooltip(e) {
   let prop = getIconProp(o);
 
   let title = translate(o.clue || o.title || prop.title || o.name, '_name', o.name);
-  let description = translate(o.clue || o.description || o.name, '_description', '');
+  let description = lang[o.description] || translate(o.clue || o.description || o.name, '_description', '');
 
   let group = prop.group || 'misc';
 
@@ -802,18 +802,26 @@ function getIconProp(o) {
   return prop;
 }
 
-hub_lookup = {};
+dedup = {};
 
 function addMarker(feature) {
   let o = feature.properties;
 
   if (o.area && !o.area.includes('WorldMap_WP')) return null;
+  if (o.name=='Hub') return null; // 1 marker (special case)
 
   if (o.type=='ESpawnType::Hub') {
-    if (o.name=='Hub') return null;
-    if (hub_lookup[o.name]) return null;
-    hub_lookup[o.name] = true;
+    let key = o.type + o.name;
+    if (dedup[key]) return null;
+    dedup[key] = true;
   }
+
+  if (o.type=='ESpawnType::Marker') {
+    let key = o.type + o.title;
+    if (dedup[key]) return null;
+    dedup[key] = true;
+  }
+
 
   let prop = getIconProp(o);
 
@@ -1091,11 +1099,13 @@ function passesFilter(marker) {
 
   let clue = lang['sid_stashes_'+o.clue+'_name'];
 
-  let title = [t||'', d||'', c||'', clue||'', o.title||'', o.name||'', o.type||'', o.description||'', o.sid||'', o.clue||'', ...tags].join(' ').toLowerCase();
+  let s = [t||'', d||'', c||'', clue||'', o.title||'', o.name||'', o.type||'', o.description||'', o.sid||'', o.clue||'', ...tags].join(' ').toLowerCase();
 
-  if (o.clue) title += ' clue';
+  if (o.clue) s += ' clue';
 
-  return !(text!='' && !terms.every(term=>title.includes(term)));
+  //if (o.sid=='CDE91184435C143289155888681CE033') console.log(o.description);
+
+  return !(text!='' && !terms.every(term=>s.includes(term)));
 }
 
 function filterItems() {
