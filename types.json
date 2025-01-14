@@ -1,8 +1,8 @@
 {
   "Custom::CustomItems": {
     "items": {
-      "BP_Bed_OnBed_C": { "icon": "bed", "title": "sid_misc_pda_Map_MarkerBed", "category":"sid_misc_pda_Map_MarkerCamp", "group": "bases" },
-      "BP_PlayerStash_C": { "icon": "storage", "title": "sid_misc_pda_Map_MarkerPlayerStorage", "category": "sid_misc_pda_Map_MarkerCamp", "group": "bases" },
+      "BP_Bed_OnBed_C": { "icon": "bed", "title": "sid_misc_pda_Map_MarkerBed", "category":"sid_misc_pda_Map_MarkerBed", "group": "bases" },
+      "BP_PlayerStash_C": { "icon": "storage", "title": "sid_misc_pda_Map_MarkerPlayerStorage", "category": "sid_misc_pda_Map_MarkerPlayerStorage", "group": "bases" },
 
       "BP_Teleport_Portal_Bubble_C": { "icon": "circle_dot", "title": "sid_items_CArtifactBubble_name", "category": "sid_misc_pda_map_playerTags_anomaly", "group": "locations" },
       "BP_Teleport_Portal_Bubble_C_Target": { "icon": "circle_locked", "title": "sid_items_CArtifactBubble_name", "category": "sid_misc_pda_map_playerTags_anomaly", "group": "locations" }
@@ -39,7 +39,7 @@
     "match": {
       "Jerboa|PseudoDog|Bayun|Bloodsucker|Flesh|Blinddog|Tushkan|Boar|ZombieFoster|Rat|Snork|Zombie": { "icon": "danger", "category": "sid_npc_name_mutant", "group": "enemies" },
       "Deer|Pseudogiant|Burer|Poltergeist|Controller|Chimera": { "icon": "danger", "category": "sid_npc_name_mutant", "group": "enemies" },
-      "CA_Quest_Hub_Medic": { "icon": "medic", "title": "sid_misc_pda_Map_MarkerMedic", "category": "sid_misc_pda_Map_MarkerCamp", "group": "bases" }
+      "CA_Quest_Hub_Medic": { "icon": "medic", "title": "sid_misc_pda_Map_MarkerMedic", "category": "sid_misc_pda_Map_MarkerMedic", "group": "bases" }
     }
   },
 
@@ -51,10 +51,10 @@
       "PseudoDog|Bayun|Bloodsucker|Flesh|Blinddog|Tushkan|Boar|ZombieFoster|Rat|Snork|Zombie": { "icon": "danger", "category": "sid_npc_name_mutant", "group": "enemies" },
       "Deer|Pseudogiant|Burer|Poltergeist|Controller|Chimera": { "icon": "danger", "category": "sid_npc_name_mutant", "group": "enemies" },
       "^(Duty|GeneralNPC_Monolith|Mono|Bandit|Spark|Neutral|Mercenaries)": { "icon": "soldier", "category": "NPCs", "group": "misc" },
-      "Trader|Sidorovich": { "icon": "trader", "title":"sid_misc_pda_Map_MarkerTrader", "category": "sid_misc_pda_Map_MarkerCamp", "group": "bases" },
-      "Technician": { "icon": "technician", "title": "sid_misc_pda_Map_MarkerTechnician", "category": "sid_misc_pda_Map_MarkerCamp", "group": "bases" },
-      "Guide": { "icon": "guide", "title": "sid_misc_pda_Map_MarkerGuide", "category": "sid_misc_pda_Map_MarkerCamp", "group": "bases" },
-      "Medic": { "icon": "medic", "title": "sid_misc_pda_Map_MarkerMedic", "category": "sid_misc_pda_Map_MarkerCamp", "group": "bases" }
+      "Trader|Sidorovich": { "icon": "trader", "title":"sid_misc_pda_Map_MarkerTrader", "category": "sid_misc_pda_Map_MarkerTrader", "group": "bases" },
+      "Technician": { "icon": "technician", "title": "sid_misc_pda_Map_MarkerTechnician", "category": "sid_misc_pda_Map_MarkerTechnician", "group": "bases" },
+      "Guide": { "icon": "guide", "title": "sid_misc_pda_Map_MarkerGuide", "category": "sid_misc_pda_Map_MarkerGuide", "group": "bases" },
+      "Medic": { "icon": "medic", "title": "sid_misc_pda_Map_MarkerMedic", "category": "sid_misc_pda_Map_MarkerMedic", "group": "bases" }
     }
   },
 

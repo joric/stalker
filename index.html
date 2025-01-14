@@ -785,9 +785,7 @@ function getIconProp(o) {
   let name = o.name;
   let type = o.type;
 
-  if (!type) console.log(o);
-
-  let section = types[type] || types[type.split('::')[0]+'::*'];
+  let section = types[type] || (type && types[type.split('::')[0]+'::*']);
 
   prop = {...prop, ...section};
 
@@ -1080,19 +1078,23 @@ function saveSettings() {
 function passesFilter(marker) {
   // will be replaced with fuzzy search
   let text = settings.searchText && settings.searchText.toLowerCase() || '';
+
   let terms = text.split(' ');
   let o = marker.feature.properties;
   let tags = o.spawns || [''];
 
-  let t = lang[o.title]||'';
-  let d = lang[o.description]||'';
-  let c = lang['sid_stashes_'+o.clue+'_name']||'';
+  let prop = getIconProp(o);
 
-  let name = o.name||'';
-  let type = o.type||'';
+  let t = lang[o.title] || lang[prop.title];
+  let d = lang[o.description];
+  let c = lang[prop.category];
 
-  let title = [t, d, c, o.title||'', name, type, o.description||'', o.sid||'', o.clue||'', ...tags].join(' ').toLowerCase();
+  let clue = lang['sid_stashes_'+o.clue+'_name'];
+
+  let title = [t||'', d||'', c||'', clue||'', o.title||'', o.name||'', o.type||'', o.description||'', o.sid||'', o.clue||'', ...tags].join(' ').toLowerCase();
+
   if (o.clue) title += ' clue';
+
   return !(text!='' && !terms.every(term=>title.includes(term)));
 }
 
