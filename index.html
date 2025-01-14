@@ -32,6 +32,10 @@ let startPitch = 0;
 let startZoom = 2;
 let defaultPitch = 45;
 let autoAltitude = true;
+//let labelGroups = ['locations', 'hubs', 'regions'];
+let labelGroups = ['regions'];
+let zoomLevels = {'polygons':[-99,99], 'regions':[-99,1], 'hubs': [1,3], 'bases': [2,99], 'circles':[3,99], 'locations': [3,99], 'stashes':[4,99], 'items':[6,99], 'enemies':[6,99], 'anomalies':[6,99], 'misc':[7,99] };
+
 </script>
 
 
@@ -862,8 +866,7 @@ function addMarker(feature) {
 
   let title = translate(o.title || prop.title || o.name, '_name', o.name);
 
-
-  if (['locations', 'hubs', 'regions'].includes(group)) {
+  if (labelGroups.includes(group)) {
     symbol = [
        {
         markerFile   : image,
@@ -948,7 +951,6 @@ function scaleGeoJSON(geojson, scaleFactor, origin) {
   return geojson;
 }
 
-let zoomLevels = {'polygons':[-99,99], 'regions':[-99,1], 'hubs': [1,3], 'bases': [2,99], 'circles':[3,99], 'locations': [3,99], 'stashes':[4,99], 'items':[6,99], 'enemies':[6,99], 'anomalies':[6,99], 'misc':[7,99] };
 
 function updateView(e) {
   let zoom = map.getZoom();

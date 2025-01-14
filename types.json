@@ -46,7 +46,7 @@
 
   "ESpawnType::Obj": {
     "items": {
-      "Faust": { "icon": "guide", "category": "enemies", "group": "locations" }
+      "Faust": { "icon": "guide", "category": "NPCs", "group": "locations" }
     },
     "match": {
       "PseudoDog|Bayun|Bloodsucker|Flesh|Blinddog|Tushkan|Boar|ZombieFoster|Rat|Snork|Zombie": { "icon": "danger", "category": "sid_npc_name_mutant", "group": "enemies" },
