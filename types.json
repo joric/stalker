@@ -3,8 +3,8 @@
     "items": {
       "BP_Bed_OnBed_C": { "icon": "bed", "title": "sid_misc_pda_Map_MarkerBed", "group": "locations" },
       "BP_PlayerStash_C": { "icon": "storage", "title": "sid_misc_pda_Map_MarkerPlayerStorage", "category": "sid_misc_inv_player_grid_name", "group": "locations" },
-      "BP_Teleport_Portal_Bubble_C": { "icon": "circle_dot", "title": "sid_misc_answer_fast_travel", "category": "sid_misc_pda_map_playerTags_anomaly", "group": "locations" },
-      "BP_Teleport_Portal_Bubble_C_Target": { "icon": "circle_locked", "title": "sid_misc_answer_fast_travel", "category": "sid_misc_pda_map_playerTags_anomaly", "group": "locations" }
+      "BP_Teleport_Portal_Bubble_C": { "icon": "circle_dot", "title": "sid_items_CArtifactBubble_name", "category": "sid_misc_pda_map_playerTags_anomaly", "group": "locations" },
+      "BP_Teleport_Portal_Bubble_C_Target": { "icon": "circle_locked", "title": "sid_items_CArtifactBubble_name", "category": "sid_misc_pda_map_playerTags_anomaly", "group": "locations" }
     },
     "match": {
       "BP_TopazScanner_": { "icon": "scanner", "title": "sid_character_skaner_0", "category": "sid_misc_inv_player_grid_name", "group": "locations" }
@@ -36,7 +36,8 @@
   "ESpawnType::ContextualAction": { "icon": "circle", "category": "trigger", "group": "misc",
     "match": {
       "Jerboa|PseudoDog|Bayun|Bloodsucker|Flesh|Blinddog|Tushkan|Boar|ZombieFoster|Rat|Snork|Zombie": { "icon": "danger", "category": "sid_npc_name_mutant", "group": "enemies" },
-      "Deer|Pseudogiant|Burer|Poltergeist|Controller|Chimera": { "icon": "danger", "category": "sid_npc_name_mutant", "group": "enemies" }
+      "Deer|Pseudogiant|Burer|Poltergeist|Controller|Chimera": { "icon": "danger", "category": "sid_npc_name_mutant", "group": "enemies" },
+      "CA_Quest_Hub_Medic": { "icon": "medic", "title": "sid_misc_pda_Map_MarkerMedic", "category": "sid_misc_pda_Map_MarkerMedic", "group": "locations" }
     }
   },
 
@@ -47,20 +48,21 @@
     "match": {
       "PseudoDog|Bayun|Bloodsucker|Flesh|Blinddog|Tushkan|Boar|ZombieFoster|Rat|Snork|Zombie": { "icon": "danger", "category": "sid_npc_name_mutant", "group": "enemies" },
       "Deer|Pseudogiant|Burer|Poltergeist|Controller|Chimera": { "icon": "danger", "category": "sid_npc_name_mutant", "group": "enemies" },
-      "Bandit|Spark|Neutral|Monolith|Mercenaries": { "icon": "soldier", "category": "soldiers", "group": "misc" },
-      "Trader|Sidorovich": { "icon": "trader", "category": "trader", "group": "locations" },
-      "Technician": { "icon": "technician", "category": "technician", "group": "locations" },
-      "Guide": { "icon": "guide", "category": "guide", "group": "locations" }
+      "^(Duty|GeneralNPC_Monolith|Mono|Bandit|Spark|Neutral|Mercenaries)": { "icon": "soldier", "category": "NPCs", "group": "misc" },
+      "Trader|Sidorovich": { "icon": "trader", "category": "sid_misc_pda_Map_MarkerTrader", "group": "locations" },
+      "Technician": { "icon": "technician", "category": "sid_misc_pda_Map_MarkerTechnician", "group": "locations" },
+      "Guide": { "icon": "guide", "category": "sid_misc_pda_Map_MarkerGuide", "group": "locations" },
+      "Medic": { "icon": "medic", "title": "sid_misc_pda_Map_MarkerMedic", "category": "sid_misc_pda_Map_MarkerMedic", "group": "locations" }
     }
   },
 
   "ESpawnType::Item": {
     "match": {
-      "Drink|Bread|Food|Sausage|Energetic|Vodka|Water|Beer|Milk": {"icon": "bag", "category": "sustenance", "group": "misc" },
-      "^Ammo|AGA|AHEDP|AVOG|APG7V|(A\\d{3}[\\w]+)": {"icon": "chest", "category": "ammo", "group": "items" },
-      "^Gun": {"icon": "chest", "category": "ammo", "group": "items" },
-      "Armor": {"icon": "chest", "category": "armor", "group": "items" },
-      "PDA": {"icon": "follow", "category": "sid_questItemprototypes_BasePDA_name", "group": "items" },
+      "Drink|Bread|Food|Sausage|Energetic|Vodka|Water|Beer|Milk": {"icon": "bag", "category": "sid_misc_pda_reward_food_drink", "group": "misc" },
+      "^Ammo|AGA|AHEDP|AVOG|APG7V|(A\\d{3}[\\w]+)": {"icon": "chest", "category": "sid_misc_pda_reward_ammo_grenades", "group": "items" },
+      "^Gun": {"icon": "chest", "category": "sid_misc_pda_reward_weapon", "group": "items" },
+      "Armor": {"icon": "chest", "category": "sid_misc_pda_reward_armor", "group": "items" },
+      "PDA|Note": {"icon": "follow", "category": "sid_questItemprototypes_BasePDA_name", "group": "items" },
       "FArtifact": {"icon": "artifact", "category": "sid_misc_pda_map_playerTags_habar", "group": "misc" }
     }
   },

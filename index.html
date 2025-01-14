@@ -691,7 +691,7 @@ function showTooltip(e) {
 
   let group = prop.group || 'misc';
 
-  let category = lang[prop.category] || lang[prop.title] || group;
+  let category = lang[prop.category] || lang[prop.title] || prop.category || group;
 
   let content = `<b>${title}</b>`;
 
@@ -887,7 +887,7 @@ function addMarker(feature) {
 
     let symbol = marker.getSymbol();
     let prop = { markerWidth: size*1.15, markerHeight: size*1.15 };
-    let textProp = { textSize: textSize * 1.1 };
+    let textProp = { textSize: textSize * 1.0 };
     marker.setSymbol((symbol instanceof Array) ? [{...symbol[0], ...prop}, {...symbol[1], ...textProp}] : {...symbol, ...prop});
 
     clearTimeout(tooltipShowTimer);
@@ -1026,9 +1026,10 @@ function addRegions(geojson) {
 
     let found = false;
 
-
     // Iterate through polygons to find if the point is inside any
     for (const polygon of polygons) {
+
+      if (!polygon.isVisible()) continue;
 
       //if (polygon.containsPoint(mouseCoord)) { // doesn't work for some reason
       if (isPointInsidePolygon(mouseCoord, polygon.getCoordinates()[0])) {

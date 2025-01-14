@@ -165,6 +165,8 @@ def export_markers():
 
         for filename in g:
 
+            #if 'D54670734737DA6F615CFCA1CA7B7774' not in filename: continue  # gauss sniper
+
             parser = UnrealCFGParser(filename)
             cfg = parser.parse()
             #print(json.dumps(cfg, indent=2))
@@ -184,15 +186,8 @@ def export_markers():
 
                 marker_type = spawnType or data.get('RegionType') or ('FastTravel' in filename and 'Custom::FastTravel') or 'Unknown'
 
-                allowed_types = ['ESpawnType::Item','ESpawnType::Obj','ESpawnType::Marker','ESpawnType::Anomaly',
-                    'ESpawnType::ElectroAnomaly','ESpawnType::AnomalySpawner','ESpawnType::SoapBubbleAnomaly'
-                    'ESpawnType::LairSpawner','ESpawnType::Obj','ESpawnType::DeadBody','ESpawnType::ItemContainer'
-                    'Custom::FastTravel','Region::'
-                    ]
-
                 #add_properties = True # adds config data to markers (disabled, because it's really a lot of data)
                 add_properties = False
-
 
                 if spawnType =='ESpawnType::DestructibleObject': continue # fuck destructible objects, too many
 
@@ -284,7 +279,6 @@ def export_markers():
                     prop |= marker_proto.get(data[key],{})
                     ref = quest_proto.get(data[key],{}).get('npc_ref')
                     prop |= npc_proto.get(ref,{})
-
 
                 o = {'type':'Feature','geometry':{'type':'Point', 'coordinates': coord }, 'properties': prop};
 
