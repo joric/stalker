@@ -235,7 +235,7 @@ const cmpAlphaNum = (a,b) => a[0].localeCompare(b[0], 'en', { numeric: true });
 function loadMap() {
 
   if (!localData[mapId]) {
-    localData[mapId] = { language: 'en', activeItems: {'bases':true, 'locations': true, 'stashes': true, 'regions': true, 'items': true, 'enemies': true, 'circles': true, 'polygons': true} };
+    localData[mapId] = { language: 'en', activeItems: {'bases':true, 'hubs': true, 'locations': true, 'stashes': true, 'regions': true, 'items': true, 'enemies': true, 'circles': true, 'polygons': true} };
   }
 
   settings = localData[mapId];
@@ -857,7 +857,7 @@ function addMarker(feature) {
   let title = translate(o.title || prop.title || o.name, '_name', o.name);
 
 
-  if (['locations', 'bases', 'regions'].includes(group)) {
+  if (['locations', 'hubs', 'regions'].includes(group)) {
     symbol = [
        {
         markerFile   : image,
@@ -942,7 +942,7 @@ function scaleGeoJSON(geojson, scaleFactor, origin) {
   return geojson;
 }
 
-let zoomLevels = {'polygons':0, 'regions':0, 'bases': 2, 'circles':3, 'locations': 3, 'stashes':4, 'items':6, 'enemies':6, 'anomalies':6, 'misc':7 };
+let zoomLevels = {'polygons':[0,99], 'regions':[0,1], 'hubs': [1,3], 'bases': [3,99], 'circles':[3,99], 'locations': [3,99], 'stashes':[4,99], 'items':[6,99], 'enemies':[6,99], 'anomalies':[6,99], 'misc':[7,99] };
 
 function updateView(e) {
   let zoom = map.getZoom();
@@ -953,10 +953,7 @@ function updateView(e) {
   for(const [layerName, zoomLevel] of Object.entries(zoomLevels)) {
     let layer = groupLayer.getLayer(capitalize(layerName));
     if (layer) {
-
-      let minZoom = zoomLevel;
-      let maxZoom = layerName=='regions' ? zoomLevels['bases'] : (layerName=='bases' ? zoomLevels['locations'] :  99);
-
+      let [minZoom, maxZoom] = zoomLevel;
       if (zoom>=minZoom && zoom < maxZoom) {
         layer.show();
       } else {
