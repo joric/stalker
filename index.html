@@ -1107,8 +1107,8 @@ function passesFilter(marker) {
 
   let prop = getIconProp(o);
 
-  let t = lang[o.title] || lang[prop.title];
-  let d = lang[o.description];
+  let t = translate(o.clue || o.title || prop.title || o.name, '_name', o.name);
+  let d = lang[o.description] || translate(o.clue || o.description || o.name, '_description', '');
   let c = lang[prop.category];
 
   let clue = lang['sid_stashes_'+o.clue+'_name'];
@@ -1222,30 +1222,6 @@ window.onload = function() {
 
   });
   
-  // need types to load markers, the rest can be loaded asyncronously
-  fetch('types.json').then(r=>r.json()).then(data =>{
-    types = data;
-
-    fetch('icons.json').then(r=>r.json()).then(data =>{
-      icons = data;
-
-      Promise.all([
-          'markers.json',
-          'markers_custom.json'
-        ].map(url=>fetch(url).then(r=>r.json()))).then(results => {
-        let features = []
-        for (geojson of results) {
-          features.push(...geojson.features);
-        }
-        loadMarkers({"type": "FeatureCollection", "features": features});
-      });
-
-    });
-
-  }).catch(e=>{alert(e)});
-
-  fetch('regions.json').then(r=>r.json()).then(addRegions);
-
   let select = document.querySelector('#language-selector select');
   for (option of select.children) {
     if (settings.language==option.value) {
@@ -1253,25 +1229,48 @@ window.onload = function() {
     }
   }
 
-  function loadLanguage(language) {
-    let languages = {
-      'ua': 'data/Localization/language_01.json',
-      'en': 'data/Localization/language_02.json',
-      'ru': 'data/Localization/language_18.json',
-    };
-    fetch(languages[language] || languages['en']).then(r=>r.json()).then(data => {
-      lang = data;
-      searchControl.setAttribute('placeholder', lang['sid_misc_hint_loot']+'...');
-    });
-  }
+  let languages = {
+    'ua': 'data/Localization/language_01.json',
+    'en': 'data/Localization/language_02.json',
+    'ru': 'data/Localization/language_18.json',
+  };
+
+  // load language, then load the rest
+  fetch(languages[settings.language] || languages['en']).then(r=>r.json()).then(data => {
+    lang = data;
+    searchControl.setAttribute('placeholder', lang['sid_misc_hint_loot']+'...');
+
+    // need types to load markers, the rest can be loaded asyncronously
+    fetch('types.json').then(r=>r.json()).then(data =>{
+      types = data;
+
+      fetch('icons.json').then(r=>r.json()).then(data =>{
+        icons = data;
+
+        Promise.all([
+            'markers.json',
+            'markers_custom.json'
+          ].map(url=>fetch(url).then(r=>r.json()))).then(results => {
+          let features = []
+          for (geojson of results) {
+            features.push(...geojson.features);
+          }
+          loadMarkers({"type": "FeatureCollection", "features": features});
+        });
+
+      });
+
+    }).catch(e=>{alert(e)});
+
+    fetch('regions.json').then(r=>r.json()).then(addRegions);
+
+  });
 
   select.onchange = e=> {
     settings.language = e.target.value;
     saveSettings();
     location.reload();
   };
-
-  loadLanguage(settings.language);
 
 };
 
