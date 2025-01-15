@@ -956,7 +956,10 @@ function addMarker(feature) {
   // dedup bulba anomaly (it's BulbArchAnomaly vs sid_locations_archanomaly_bulba_name but titles are the same)
   if (o.type=='ESpawnType::Marker') {
     let key = o.type + o.title;
-    if (dedup[key]) return null;
+    if (dedup[key]) {
+      //console.log(key);
+      return null;
+    }
     dedup[key] = marker;
   }
 
