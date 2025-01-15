@@ -230,6 +230,10 @@ def export_markers():
                 if clue and clue != 'EmptyInherited':
                     prop['clue'] = clue
 
+                radius = data.get('CloseDoorRadius')
+                if radius:
+                    prop['radius'] = radius
+
                 # ----------------
                 # export references for item generators
 

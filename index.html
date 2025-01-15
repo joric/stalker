@@ -31,8 +31,8 @@ let startPitch = 0;
 let startZoom = 2;
 let defaultPitch = 45;
 let autoAltitude = true;
-let labelGroups = ['regions','hubs'];
-let zoomGroups = {'polygons':[-99,99], 'regions':[-99,2], 'hubs': [2,3], 'bases': [3,99], 'circles':[3,99], 'locations': [3,99], 'stashes':[4,99], 'items':[6,99], 'enemies':[6,99], 'anomalies':[6,99], 'misc':[7,99] };
+let labelGroups = ['regions'];
+let zoomGroups = {'polygons':[-99,99], 'regions':[-99,2], 'hubs': [2,99], 'bases': [2,99], 'circles':[2,99], 'locations': [2,99], 'stashes':[4,99], 'items':[6,99], 'enemies':[6,99], 'anomalies':[6,99], 'misc':[7,99] };
 
 </script>
 
@@ -449,16 +449,14 @@ function addCircles(markers) {
   };
 
   for (m of markers) {
-    let coordinates = m.marker.feature.geometry.coordinates;
-
-    coordinates = [coordinates[0], coordinates[1], coordinates[2]*0.05 ]; // cannot disable altitude for now, fucking parallax effect
-
     let o = m.marker.feature.properties;
     if (o.radius) {
 
+      let color = o.type.includes('Hub') ? '#e8a514' : '#fff';
+
       //let numberOfShellPoints = Math.min(60, ~~(o.radius / 200));
-      var circle = new maptalks.Circle(coordinates, o.radius, {
-        symbol: defaultSymbol,
+      var circle = new maptalks.Circle(m.marker.getCoordinates(), o.radius, {
+        symbol: {...defaultSymbol, lineColor: color, polygonFill: color},
         properties: {
           //numberOfShellPoints: numberOfShellPoints,
         },
@@ -485,6 +483,11 @@ function addMarkers(markers) {
 
   //updateCount();
 
+  // circles do not make it slower, multiple layers do
+  let circleLayer = addCircles(markers);
+  addHandler(circleLayer);
+  circleLayer.addTo(groupLayer);
+
   // join markers by group name
   let collection = {};
 
@@ -492,11 +495,6 @@ function addMarkers(markers) {
     if (!collection[m.group]) collection[m.group] = [];
     collection[m.group].push(m.marker);
   }
-
-  // circles do not make it slower, multiple layers do
-  let circleLayer = addCircles(markers);
-  addHandler(circleLayer);
-  circleLayer.addTo(groupLayer);
 
   let weights = {'regions': 1100, 'hubs': 1000, 'bases': 900, 'locations': 750, 'stashes': 500, 'items': 250, 'anomalies': -900, 'misc': -1000 };
   let groups = Object.keys(collection);
@@ -727,12 +725,9 @@ function showTooltip(e) {
   content += `<br/><small><small>SID: ${sid}</small></small>`;
   content += `<br/><small><small>XTeleportTo ${teleport}</small></small>`;
 
-
   tooltip.innerHTML = content;
 
   //console.log(e);
-
-
 
   // Get the screen coordinates of the event
   //let c = marker.getCoordinates();
@@ -808,22 +803,10 @@ dedup = {};
 
 function addMarker(feature) {
   let o = feature.properties;
+  let c = feature.geometry.coordinates;
 
   if (o.area && !o.area.includes('WorldMap_WP')) return null;
   if (o.name=='Hub') return null; // 1 marker (special case)
-
-  if (o.type=='ESpawnType::Hub') {
-    let key = o.type + o.name;
-    if (dedup[key]) return null;
-    dedup[key] = true;
-  }
-
-  if (o.type=='ESpawnType::Marker') {
-    let key = o.type + o.title;
-    if (dedup[key]) return null;
-    dedup[key] = true;
-  }
-
 
   let prop = getIconProp(o);
 
@@ -839,9 +822,7 @@ function addMarker(feature) {
 
   image = 'data/sprites/' + ((icons[icon] && icons[icon].image) || 'CompassMarker_2_3.png');
 
-  let coordinates = feature.geometry.coordinates;
-
-  coordinates = [coordinates[0], coordinates[1], coordinates[2]*0.05 ]; // cannot disable altitude for now, fucking parallax effect
+  c = [c[0], c[1], c[2]*0.05 ]; // cannot disable altitude for now, fucking parallax effect
 
   let opacity = 1.0;
 
@@ -915,7 +896,7 @@ function addMarker(feature) {
     ]
   }
 
-  var marker = new maptalks.Marker(coordinates, {symbol: symbol});
+  var marker = new maptalks.Marker(c, {symbol: symbol});
 
   marker.feature = feature;
 
@@ -948,6 +929,37 @@ function addMarker(feature) {
 
     tooltipHideTimer = setTimeout(hideTooltip, tooltipHideDelay);
   });
+
+  // hub markers seem to use average coordinates
+  // so we check the dedup structure if we have the marker then adjust coordinates accordingly
+
+  if (o.type=='ESpawnType::Hub') {
+    let key = o.type + o.name;
+
+    if (dedup[key]) {
+      // move the coordinates
+
+      let marker = dedup[key];
+
+      function average(a,b) {
+        return [ (a.x+b.x)/2, (a.y+b.y)/2, (a.z+b.z)/2 ];
+      };
+
+      marker.setCoordinates(average(marker.getCoordinates(), {x: c[0], y: c[1], z:c[2]}));
+
+      return null;
+    }
+
+    dedup[key] = marker;
+  }
+
+  /*
+  if (o.type=='ESpawnType::Marker') {
+    let key = o.type + o.title;
+    if (dedup[key]) return null;
+    dedup[key] = true;
+  }
+  */
 
   return {group: group, marker: marker};
 }

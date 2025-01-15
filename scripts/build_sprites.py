@@ -18,7 +18,7 @@ colors = {
     'cyan': (33,175,214),
     'purple': (255,0,255),
     'green': (0,255,0),
-    'orange': (255,140,0),
+    'orange': (232,165,20),
     'violet': (136,133,197),
     'jade': (74,211,172),
     'khaki': (213,197,138),
@@ -41,6 +41,7 @@ tints = {
     'Radiation': colors['jade'],
     'Quest': colors['cyan'],
     'QuestGiver': colors['cyan'],
+    'Camp': colors['orange'],
 
 }
 
