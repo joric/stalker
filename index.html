@@ -31,9 +31,9 @@ let startPitch = 0;
 let startZoom = 2;
 let defaultPitch = 45;
 let autoAltitude = true;
-let labelGroups = ['regions'];
+let textSize = 18;
+let labelGroups = ['regions'];//,'hubs', 'locations'];
 let zoomGroups = {'polygons':[-99,99], 'regions':[-99,2], 'hubs': [2,99], 'bases': [2,99], 'circles':[2,99], 'locations': [2,99], 'stashes':[4,99], 'items':[6,99], 'enemies':[6,99], 'anomalies':[6,99], 'misc':[7,99] };
-
 </script>
 
 
@@ -845,7 +845,6 @@ function addMarker(feature) {
 
   let title = translate(o.title || prop.title || o.name, '_name', o.name);
 
-  let textSize = 18;
   let markerDx = 0;
   let markerDy = 0;
   let textDx = iconSize * 0.55;
@@ -932,28 +931,20 @@ function addMarker(feature) {
 
   // hub markers seem to use average coordinates
   // so we check the dedup structure if we have the marker then adjust coordinates accordingly
-
   if (o.type=='ESpawnType::Hub') {
     let key = o.type + o.name;
-
     if (dedup[key]) {
-      // move the coordinates
-
       let marker = dedup[key];
-
       function average(a,b) {
         return [ (a.x+b.x)/2, (a.y+b.y)/2, (a.z+b.z)/2 ];
       };
-
       marker.setCoordinates(average(marker.getCoordinates(), {x: c[0], y: c[1], z:c[2]}));
-
       return null;
     }
-
     dedup[key] = marker;
   }
 
-  // dedup bulba anomaly (it's BulbArchAnomaly vs sid_locations_archanomaly_bulba_name but titles are the same)
+  // deduplicate bulba anomaly (it's BulbArchAnomaly vs sid_locations_archanomaly_bulba_name but titles are the same)
   if (o.type=='ESpawnType::Marker') {
     let key = o.type + o.title;
     if (dedup[key]) {
