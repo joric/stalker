@@ -32,7 +32,7 @@ let startZoom = 2;
 let defaultPitch = 45;
 let autoAltitude = true;
 let labelGroups = ['regions','hubs'];
-let zoomGroups = {'polygons':[-99,99], 'regions':[-99,2], 'hubs': [2,3], 'bases': [3,99], 'circles':[3,99], 'locations': [3,99], 'stashes':[4,99], 'items':[5,99], 'enemies':[5,99], 'anomalies':[6,99], 'misc':[7,99] };
+let zoomGroups = {'polygons':[-99,99], 'regions':[-99,2], 'hubs': [2,3], 'bases': [3,99], 'circles':[3,99], 'locations': [3,99], 'stashes':[4,99], 'items':[6,99], 'enemies':[6,99], 'anomalies':[6,99], 'misc':[7,99] };
 
 </script>
 
@@ -877,8 +877,8 @@ function addMarker(feature) {
     let dx = 0;//- title.length*textSize*0.85 / 2;
     let dy = 0;
 
-    if (o.sid=='yantar') {
-      dy = -16;
+    if (o.sid=='yantar' || o.sid=='iron_forest') {
+      dy = -12;
     }
 
     markerDx += dx;
