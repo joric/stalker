@@ -27,12 +27,10 @@ let maxZoom = 19;
 let enableAltitude = true;
 let heightFactor = 1.0;
 let iconSize = 48;
-let textSize = 15;
 let startPitch = 0;
 let startZoom = 2;
 let defaultPitch = 45;
 let autoAltitude = true;
-//let labelGroups = ['locations', 'hubs', 'regions'];
 let labelGroups = ['regions'];
 let zoomGroups = {'polygons':[-99,99], 'regions':[-99,2], 'hubs': [2,3], 'bases': [2,99], 'circles':[3,99], 'locations': [3,99], 'stashes':[4,99], 'items':[5,99], 'enemies':[5,99], 'anomalies':[6,99], 'misc':[7,99] };
 
@@ -866,14 +864,37 @@ function addMarker(feature) {
 
   let title = translate(o.title || prop.title || o.name, '_name', o.name);
 
+  let textSize = 18;
+  let markerDx = 0;
+  let markerDy = 0;
+  let textDx = iconSize * 0.55;
+  let textDy = 0;
+
+  if (group=='regions') {
+    textDx = 16 ;
+    title = title.toUpperCase();
+
+    let dx = -50;
+    let dy = 0;
+
+    if (o.sid=='yantar') {
+      dy = -16;
+    }
+
+    markerDx += dx;
+    markerDy += dy;
+    textDx += dx;
+    textDy += dy;
+  }
+
   if (labelGroups.includes(group)) {
     symbol = [
        {
         markerFile   : image,
         markerWidth  : size,
         markerHeight : size,
-        markerDx     : 0,
-        markerDy     : 0,
+        markerDx     : markerDx,
+        markerDy     : markerDy,
         markerOpacity: opacity,
         markerVerticalAlignment: 'middle',
       },
@@ -886,11 +907,10 @@ function addMarker(feature) {
         textHaloRadius    : 3,
         textHaloOpacity   : 0.15,
 
-
         textHorizontalAlignment : 'right',
         textSize : textSize,
-        textDx: iconSize * 0.55,
-        textDy: iconSize * 0,
+        textDx: textDx,
+        textDy: textDy,
       },
     ]
   }

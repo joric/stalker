@@ -120,10 +120,10 @@ for folder in folders:
     for filename in files:
         process_file(filename, iconSize, resize=True, crop=80)
 
+# region sprite
 region_dir = 'Stalker2/Content/GameLite/FPS_Game/UIRemaster/UITextures/WorldMap/RegionMarker'
 filename = os.path.join(cache_dir, region_dir, 'T_NotActive_Region_Shadow.png')
-process_file(filename, iconSize, resize=True, crop=52)
-
+process_file(filename, iconSize, resize=True, crop=84)
 
 # cut the compass atlas
 img_path = 'Stalker2/Content/GameLite/FPS_Game/UI/UIIcons/Markers/Textures/CompassMarker.png'
