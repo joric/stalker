@@ -851,20 +851,7 @@ function addMarker(feature) {
   let textDy = 0;
 
   if (group=='regions') {
-    //title = title.toUpperCase();
     textDx = 16;
-
-    let dx = 0;//- title.length*textSize*0.85 / 2;
-    let dy = 0;
-
-    if (o.sid=='yantar' || o.sid=='iron_forest') {
-      dy = -12;
-    }
-
-    markerDx += dx;
-    markerDy += dy;
-    textDx += dx;
-    textDy += dy;
   }
 
   if (labelGroups.includes(group)) {
