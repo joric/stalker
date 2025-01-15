@@ -1229,6 +1229,12 @@ window.onload = function() {
     }
   }
 
+  select.onchange = e=> {
+    settings.language = e.target.value;
+    saveSettings();
+    location.reload();
+  };
+
   let languages = {
     'ua': 'data/Localization/language_01.json',
     'en': 'data/Localization/language_02.json',
@@ -1265,13 +1271,6 @@ window.onload = function() {
     fetch('regions.json').then(r=>r.json()).then(addRegions);
 
   });
-
-  select.onchange = e=> {
-    settings.language = e.target.value;
-    saveSettings();
-    location.reload();
-  };
-
 };
 
 </script>
