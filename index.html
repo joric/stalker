@@ -498,7 +498,7 @@ function addMarkers(markers) {
   addHandler(circleLayer);
   circleLayer.addTo(groupLayer);
 
-  let weights = {'regions': 1100, 'bases': 1000, 'locations': 750, 'stashes': 500, 'items': 250, 'anomalies': -900, 'misc': -1000 };
+  let weights = {'regions': 1100, 'hubs': 1000, 'bases': 900, 'locations': 750, 'stashes': 500, 'items': 250, 'anomalies': -900, 'misc': -1000 };
   let groups = Object.keys(collection);
 
   groups = groups.sort( (a,b)=> (weights[b]||0)-(weights[a]||0) || cmpAlphaNum(a,b))
