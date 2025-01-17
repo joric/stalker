@@ -425,7 +425,9 @@ def export_markers(cache):
                 if prop.get('type')=='EMarkerType::RegionMarker': prop['title'] = 'sid_locations_region_' + prop.get('sid') + '_name'
 
                 # set title for hubs
-                if prop.get('type')=='ESpawnType::Hub': prop['title'] = prop.get('name')
+                if prop.get('type')=='ESpawnType::Hub':
+                    prop['title'] = prop.get('name')
+                    if not prop.get('name'): continue
 
 
                 cleanup(prop)
