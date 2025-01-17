@@ -33,7 +33,7 @@ let defaultPitch = 45;
 let autoAltitude = true;
 let textSize = 18;
 let labelGroups = ['regions', 'locations'];
-let zoomGroups = {'polygons':[-99,99], 'regions':[-99,2], 'hubs': [2,99], 'bases': [2,99], 'circles':[2,99], 'locations': [2,99], 'stashes':[4,99], 'items':[6,99], 'enemies':[6,99], 'anomalies':[6,99], 'misc':[7,99] };
+let zoomGroups = {'polygons':[-99,99], 'regions':[-99,2], 'hubs': [2,99], 'bases': [2,99], 'circles':[2,99], 'locations': [2,99], 'stashes':[5,99], 'items':[6,99], 'enemies':[6,99], 'anomalies':[6,99], 'misc':[7,99] };
 </script>
 
 
@@ -624,15 +624,44 @@ function clearSelection() {
   }
 }
 
-function translate(s, postfix, fallback) {
-  if (fallback && lang[s]) return lang[s];
+function translate(fields, postfix) {
   let prefixes = ['sid_locations_region_','sid_locations_', 'sid_items_','sid_stashes_','sid_questItemprototypes_','sid_items_FArtifact','sid_items_CArtifact','sid_items_AArtifact'];
-  for (prefix of prefixes) {
-    let res = lang[`${prefix}${s}${postfix}`];
-    if (res) return res;
+  for (field of fields) {
+    if (lang[field]) return lang[field];
+    for (prefix of prefixes) {
+      let res = lang[`${prefix}${field}${postfix}`];
+      if (res) return res;
+    }
   }
-  return fallback;
 }
+
+function getTitleDesc(o) {
+  if (o.title || o.description) {
+    return [ lang[o.title], lang[o.description] || ''];
+  }
+
+  if (o.type=='ESpawnType::Item') {
+    return [
+      lang[`sid_items_${o.name}_name`] || lang[`sid_questItemprototypes_${o.name}_name`],
+      lang[`sid_items_${o.name}_desc`] || lang[`sid_questItemprototypes_${o.name}_desc`],
+    ];
+  }
+
+  return [o.title, o.desc];
+}
+
+function humanReadable(o) {
+
+  let [title, desc] = getTitleDesc(o);
+
+  if (!title || !desc) {
+    let prop = getIconProp(o);
+    return [ title || lang[o.title || prop.title] || o.name,  desc || lang[o.description || prop.description]||''];
+  }
+
+  return [title, desc];
+}
+
 
 function showPopup(e) {
 
@@ -688,8 +717,7 @@ function showTooltip(e) {
 
   let prop = getIconProp(o);
 
-  let title = translate(o.clue || o.title || prop.title || o.name, '_name', o.name);
-  let description = lang[o.description] || translate(o.clue || o.description || o.name, '_description', '');
+  let [title, description] = humanReadable(o);
 
   let group = prop.group || 'misc';
 
@@ -843,7 +871,7 @@ function addMarker(feature) {
     markerVerticalAlignment: 'middle',
   };
 
-  let title = translate(o.title || prop.title || o.name, '_name', o.name);
+  let [title, description] = humanReadable(o);
 
   let markerDx = 0;
   let markerDy = 0;
@@ -1106,14 +1134,12 @@ function passesFilter(marker) {
   let tags = o.spawns || [''];
 
   let prop = getIconProp(o);
-
-  let t = translate(o.clue || o.title || prop.title || o.name, '_name', o.name);
-  let d = lang[o.description] || translate(o.clue || o.description || o.name, '_description', '');
+  let [title, description] = humanReadable(o);
   let c = lang[prop.category];
 
   let clue = lang['sid_stashes_'+o.clue+'_name'];
 
-  let s = [t||'', d||'', c||'', clue||'', o.title||'', o.name||'', o.type||'', o.description||'', o.sid||'', o.clue||'', ...tags].join(' ').toLowerCase();
+  let s = [title||'', description||'', c||'', clue||'', o.title||'', o.name||'', o.type||'', o.description||'', o.sid||'', o.clue||'', ...tags].join(' ').toLowerCase();
 
   if (o.clue) s += ' clue';
 
@@ -1245,31 +1271,15 @@ window.onload = function() {
   fetch(languages[settings.language] || languages['en']).then(r=>r.json()).then(data => {
     lang = data;
     searchControl.setAttribute('placeholder', lang['sid_misc_hint_loot']+'...');
-
     // need types to load markers, the rest can be loaded asyncronously
     fetch('types.json').then(r=>r.json()).then(data =>{
       types = data;
-
       fetch('icons.json').then(r=>r.json()).then(data =>{
         icons = data;
-
-        Promise.all([
-            'markers.json',
-            'markers_custom.json'
-          ].map(url=>fetch(url).then(r=>r.json()))).then(results => {
-          let features = []
-          for (geojson of results) {
-            features.push(...geojson.features);
-          }
-          loadMarkers({"type": "FeatureCollection", "features": features});
-        });
-
+        fetch('markers.json').then(r=>r.json()).then(loadMarkers);
       });
-
     }).catch(e=>{alert(e)});
-
     fetch('regions.json').then(r=>r.json()).then(addRegions);
-
   });
 };
 

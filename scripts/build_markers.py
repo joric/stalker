@@ -1,305 +1,496 @@
-import os,sys,json,glob,re
-import re
+import json, re, glob, os, sys, time, copy
 from collections import defaultdict
+from collections import Counter
+from io import StringIO
+import traceback
 
 cache_dir = 'C:/Temp/Exports'
+cache_file = 'cache.json'
+markers_file = '../markers.json'
+world_path = 'Stalker2/Content/_Stalker_2/maps/_Stalker2_WorldMap/WorldMap_WP'
+bp_classes = {'BP_PlayerStash_C':'EMarkerType::PlayerStorage', 'BP_Bed_OnBed_C':'EMarkerType::Bed', 'BP_TopazScanner':'EMarkerType::Scanner', 'BP_Teleport_Portal_Bubble': 'EMarkerType::Teleport'}
 
-class UnrealCFGParser:
-    def __init__(self, filepath):
-        self.filepath = filepath
-        self.data = {}
+def parse_struct(reader, options={}):
+    result = {}
 
-    def parse(self):
-        stack = []
-        current_section = self.data
-        pending_comment = None  # Tracks comments preceding a section
+    def parse_key(key):
+        return f"[{len(result)}]" if key == "[*]" else key
 
-        with open(self.filepath, "r", encoding="utf-8-sig") as file:  # Handle BOM
-            for line in file:
-                line = line.strip()
+    def parse_options(line):
+        if '{' in line and line.endswith('}'):
+            head, tail = map(str.strip, line.split('{'))
+            vars = map(str.strip, tail[:-1].split(';'))
+            return head, {key.strip(): value.strip() for s in vars if '=' in s for key,value in [s.split('=', 1)]}
+        return line, {}
 
-                if not line:
-                    continue  # Skip empty lines
-
-                if line.startswith("//"):
-                    # Capture the comment
-                    pending_comment = line.lstrip("//").strip()
-                elif "struct.begin" in line:
-                    # Start a new nested structure
-                    name, attributes = self._parse_struct_begin(line)
-
-                    # Initialize the section
-                    if name not in current_section:
-                        current_section[name] = p = {}
-                        if pending_comment:
-                            p['comment'] = pending_comment
-                        if attributes:
-                            p['attributes'] = attributes
-                        p['data'] = {}
-
-                    # Reset pending_comment and update the stack
-                    pending_comment = None
-                    stack.append(current_section)
-                    current_section = current_section[name]["data"]
-                elif "struct.end" in line:
-                    # End the current structure
-                    if stack:
-                        current_section = stack.pop()
-                else:
-                    if "=" in line:
-                        # Parse key-value pairs with type conversion
-                        key, value = map(str.strip, line.split("=", 1))
-                        converted_value = self._convert_type(value)
-                        if converted_value is not None:  # Exclude empty values
-                            current_section[key] = converted_value
-
-        return self.data
-
-    def _parse_struct_begin(self, line):
-        """Parses a 'struct.begin' line to extract the structure name and its attributes."""
-        parts = line.split(":", 1)
-        name = parts[0].strip()
-        attributes = {}
-        if len(parts) > 1 and "{" in parts[1]:
-            attr_string = parts[1].split("{", 1)[1].split("}", 1)[0]
-            attributes = dict(
-                map(str.strip, attr.split("=")) for attr in attr_string.split(";") if "=" in attr
-            )
-        return name, attributes
-
-    def _convert_type(self, value):
-        """
-        Detects the type of the input value and converts it to int, float, or None.
-        Excludes empty values.
-        """
-        if not value:  # Exclude empty strings
+    def parse_value(value):
+        value, options = parse_options(value) # remove {bskipref} etc.
+        if not value or value == "empty" or value == "Empty" or value == "None":
             return None
-        if value == "None":  # Convert "None" to Python None
-            return None
-
-        # Only handle numbers with 'f' suffix (without affecting strings)
-        if re.match(r"^-?\d*\.?\d*f$", value):  # Match float-like values with 'f' at the end
-            return float(value[:-1])  # Remove the 'f' and convert to float
-    
-        # If it's a valid number (int or float)
-        if re.match(r"^-?\d*(\.\d+)?$", value):  # Match numbers
-            return float(value) if '.' in value else int(value)
-
+        if re.match(r'^-?\d*\.?\d*f?$', value):
+            return float(value[:-1] if value[-1]=='f' else value) if '.' in value or 'f' in value else int(value)
         return value
 
+    while True:
+        line = reader.readline()
+        if not line:
+            break
 
-# -----------------------------------------------------------------
+        line = line.strip()
+        if not line:
+            continue
 
-def getCoordinates(data):
+        if line.startswith("//"):
+            options['comment'] = line[2:].strip()
+
+        result.update(options)
+
+        if line == "struct.end":
+            return result
+
+        if "struct.begin" in line:
+            key = line.split(":")[0].strip()
+            value, options = parse_options(line)
+            result[parse_key(key)] = parse_struct(reader, options)
+
+        elif "=" in line:
+            key, value = map(str.strip, line.split("=", 1))
+            result[parse_key(key)] = parse_value(value)
+
+        options = {}
+
+    return result
+
+def load_cache():
+    if os.path.exists(cache_file):
+        print(f'{cache_file} exists ({os.path.getsize(cache_file)//1024//1024}Mb), loading records...')
+        return json.load(open(cache_file,'r', encoding='utf-8'))
+    else:
+        print(cache_file, 'does not exist, parsing records...')
+        return load_files()
+
+def load_files():
+    folders = [
+        'Stalker2/Content/GameLite/GameData',
+        'Stalker2/Content/GameLite/DLCGameData',
+    ]
+    total = 0
+    processed = 0
+    data = {}
+    for folder in folders:
+        g = list(glob.glob(os.path.join(cache_dir, f'{folder}/**/*.cfg'),recursive=True))
+        total += len(g)
+        print('found', total, '.cfg files in', folder)
+        for filename in g:
+            reader = open(filename,'r', encoding='utf-8-sig')
+
+            try:
+                result = parse_struct(reader)
+            except Exception as e:
+                print('exception at', filename)
+                traceback.print_exc()
+                exit(0)
+
+            package_path = filename.replace(cache_dir+'\\', '').replace('\\','/')
+
+            data[package_path] = result
+
+            processed += 1
+            sys.stderr.write(f'file {processed} of {total}    \r')
+
+    print('writing data...')
+    f = open(cache_file, 'w', encoding='utf-8')
+    json.dump(data, f, indent=2, sort_keys=False)
+    return data
+
+def get_coordinates(data):
     pts = data
+    if type(pts) is not dict: return None
+
     coord = [pts[k] for k in('PositionX','PositionY','PositionZ')if k in pts]
     if coord: return coord
 
-    pts = data.get('WorldPosition',{}).get('data',{})
+    pts = data.get('WorldPosition',{})
     coord =  [pts[k] for k in('X','Y','Z')if k in pts]
     if coord: return coord
 
-    pts = data.get('PlayerLocation',{}).get('data',{})
+    pts = data.get('PlayerLocation',{})
     coord =  [pts[k] for k in('X','Y','Z')if k in pts]
     if coord: return coord
 
-def dataCleanup(data):
-    # remove already used keys
-    rk = ('PositionX','PositionY','PositionZ')
-    if all(k in data for k in rk):
-        for k in rk:
-            del data[k]
-
-    # remove scale section with default values
-    rk = ('ScaleX','ScaleY','ScaleZ')
-    if all(k in data and data[k]==1 for k in rk):
-        for k in rk:
-            del data[k]
-
-    # remove zero rotators
-    rk = ('RotatorAngleYaw','RotatorAnglePitch','RotatorAngleRoll')
-    for k in rk:
-        if k in data and data[k]==1:
-            del data[k]
-
-def load_file(package_path, remap):
-    lookup = {}
-    filename = os.path.normpath(os.path.join(cache_dir, package_path))
-    parser = UnrealCFGParser(filename)
-    cfg = parser.parse()
-    for cfg_id, config in cfg.items():
-        data = config.get('data',{})
+def load_map(records, remap):
+    entries = {}
+    for key, data in records.items():
+        if type(data) is not dict: continue
         sid = data.get('SID')
         if sid:
-            lookup[sid] = {}
-            e = lookup[sid]
-            for k,v in remap.items():
-                if k in data and data[k]!=0 and data[k]!='Empty':
-                    e[v] = data[k]
-    return lookup
+            entries[sid] = {}
+            prop = entries[sid]
+            prop.update({v: data[k] for k,v in remap.items() if k in data})
+    return entries
 
-def export_markers():
+def cleanup(prop):
+    cleanup_map = {
+        'comment': ['------------------------------------------', 'Location markers'],
+        'clue': ['EmptyInherited'],
+        'area': ['WorldMap_WP'],
+    }
 
+    for k, values in cleanup_map.items():
+        for v in values:
+            if prop.get(k)==v:
+                del prop[k]
+
+
+RANK_ANY = 'ERank::Any'
+def get_rank_code(enum):
+    rank_code = {
+        'ERank::Newbie':'0',
+        'ERank::Experienced':'1',
+        'ERank::Veteran':'2',
+        'ERank::Master':'3',
+    }
+    return rank_code.get(enum)
+
+def add_spawns(data, prop):
+    ranks = defaultdict(list)
+
+    for stash_sid in ('StashPrototypeSID', 'CorpseStashSID'):
+        stash = data.get(stash_sid)
+        if stash:
+            for x in stash.split(','):
+                ranks[RANK_ANY].append(x.strip())
+
+    gs = data.get('ItemGeneratorSettings') or {}
+    for g in gs.values():
+        d = g.get('ItemGenerators',{})
+        rank = g.get('PlayerRank', RANK_ANY)
+        if d:
+            protos = []
+            for t in d.values():
+                x = t.get('PrototypeSID')
+                if x:
+                    ranks[rank].append(x.strip())
+
+    items = []
+    for rank, ids in ranks.items():
+        prefix = get_rank_code(rank)
+        for s in ids:
+            items.append( (prefix +':' if prefix else '') + s )
+
+    if items:
+        prop['spawns'] = items
+
+def export_stashes(cache):
+    entries = {}
+    records = cache['Stalker2/Content/GameLite/GameData/StashPrototypes.cfg']
+    for key, config in records.items():
+        if key in ['comment','empty']: continue
+        data = type(config) is dict and config.get('ItemGenerators') or {}
+        ranks = defaultdict(dict)
+
+        for values in data.values():
+            rank = values.get('Rank', RANK_ANY)
+            loot = values.get('SmartLootParams',{})
+            for field in ['PrimaryWeaponParams','GrenadesParams','ConsumablesParams', 'HealthParams', 'AttachParams']:
+                params = loot.get(field) or {}
+                for param in params.values():
+                    ranks[rank] = {}
+                    fields = {'ItemSetCount': 'count', 'MinSpawnChance':'min','MaxSpawnChance': 'max'}
+                    ranks[rank].update({v: param[k] for k,v in fields.items() if k in param})
+
+                    items = param.get('Items',{})
+
+                    if items:
+                        ranks[rank]['items'] = {}
+
+                    for item in items.values():
+                        name = item.get('ItemPrototypeSID')
+                        fields = {'MinCount':'min', 'MaxCount':'max', 'Weight':'weight'}
+                        ranks[rank]['items'][name] = {v: item[k] for k,v in fields.items() if k in item}
+
+        entries[key] = ranks
+    return entries
+
+def export_packs(cache):
+    entries = {}
+    records = cache['Stalker2/Content/GameLite/GameData/PackOfItemsGroupPrototypes.cfg']
+    for key, config in records.items():
+        if key in ['comment','empty']: continue
+        data = type(config) is dict and config.get('PackOfItemsSettings') or {}
+        ranks = defaultdict(dict)
+        for values in data.values():
+            rank = values.get('PlayerRank', RANK_ANY)
+            items = values.get('Items',{})
+            for item in items.values():
+                name = item.get('ItemPrototypeSID')
+                weight = item.get('Weight')
+                if weight:
+                    ranks[rank][name] = weight
+        entries[key] = ranks
+    return entries
+
+gen_remap = {
+    'MinCount':'min',
+    'MaxCount':'max',
+    'Chance':'chance',
+    'Weight':'weight',
+    'MinDurability': 'min_durability',
+    'MaxDurability': 'max_durability',
+    'AmmoMinCount': 'min_ammo',
+    'AmmoMaxCount': 'max_ammo',
+}
+
+def export_generators(cache):
+    entries = {}
+    records = cache['Stalker2/Content/GameLite/GameData/ItemGeneratorPrototypes.cfg']
+
+    for key, config in records.items():
+        if key in ['comment','empty']: continue
+        sid = type(config) is dict and config.get('SID')
+        if not sid:
+            continue
+
+        entry = defaultdict(dict)
+
+        data = type(config) is dict and config.get('ItemGenerator') or {}
+        if not data:
+            item = config.get('MoneyGenerator')
+            if item:
+                name = "Money"
+                entry[name] = {v: item[k] for k,v in gen_remap.items() if k in item}
+                entries[sid] = entry
+            continue
+
+        for values in data.values():
+            if type(values) is not dict: continue
+            items = values.get('PossibleItems') or {}
+            for item in items.values():
+                name = item.get('ItemPrototypeSID')
+                if not name:
+                    name = item.get('ItemGeneratorPrototypeSID')
+                    if not name: continue
+                entry[name] = {v: item[k] for k,v in gen_remap.items() if k in item}
+
+        entries[sid] = entry
+
+    return entries
+
+counter = Counter()
+
+def get_filename(package_path):
+    return os.path.normpath(os.path.join(cache_dir,package_path))+'.json'
+
+def get_cells(package_path):
     out = []
+    filename = get_filename(package_path)
+    data = json.load(open(filename, 'r'))
+    for o in data:
+        p = o.get('Properties',{})
+        r = p.get('SubObjectsToCellRemapping',{})
+        for t in r:
+            key, cell = t['Key'], t['Value']
+            for name in bp_classes:
+                if name in key:
+                    out.append(cell)
+                    counter[key.split('_UAID')[0]] += 1
 
-    marker_proto = load_file('Stalker2/Content/GameLite/GameData/MarkerPrototypes.cfg', {'MarkerRadius':'radius', 'Title':'title', 'Description':'description'})
-    quest_proto = load_file('Stalker2/Content/GameLite/GameData/ObjPrototypes/QuestObjPrototypes.cfg', {'NPCPrototypeSID': 'npc_ref'})
-    npc_proto = load_file('Stalker2/Content/GameLite/GameData/NPCPrototypes.cfg', {'NameTextKey': 'title'})
+                    package_path = os.path.join(world_path,'_Generated_', cell)
+                    filename = os.path.normpath(os.path.join(cache_dir, package_path)) + '.json'
 
-    folders = [
-        'Stalker2/Content/GameLite/DLCGameData',
-        'Stalker2/Content/GameLite/GameData',
-    ]
+                    if not os.path.exists(filename):
+                        print('NOT CACHED', cell, 'need for', key)
+                        continue
 
-    ### Parse
+    #print('found items', counter)
+    return out
 
+def get_custom_markers(cells):
+    features = []
+    for cell in cells:
+        package_path = os.path.join(world_path,'_Generated_', cell)
+        filename = os.path.normpath(os.path.join(cache_dir, package_path)) + '.json'
+
+        if not os.path.exists(filename):
+            print('missing', filename)
+            continue
+
+        data = json.load(open(filename, 'r'))
+        for o in data:
+            type = o['Type']
+            if type == 'BP_Teleport_Portal_Bubble_C':
+                target = o.get('Properties',{}).get('EndPoint',{}).get('Translation')
+
+            if type in ('SkeletalMeshComponent','StaticMeshComponent','SceneComponent'):
+                outer = o['Outer']
+
+                for class_name, marker_type in bp_classes.items():
+                    if class_name not in outer: continue
+
+                    name, sid = outer.split('_UAID_')
+
+                    c = o.get('Properties',{}).get('RelativeLocation',{})
+                    if c:
+                        coord = [float(c[a]) for a in ('X','Y','Z')]
+                        #print('found', outer, 'in', cell)
+
+                        feature = {
+                            'type': 'Feature',
+                            'geometry': {'type':'Point', 'coordinates': coord},
+                            'properties': {'name': name, 'type': marker_type, 'sid': sid, 'cell': cell }
+                        }
+
+                        features.append(feature)
+
+                        if 'BP_Teleport_Portal_Bubble_C' in o['Outer'] and target:
+                            delta = [target[t] for t in 'XYZ']
+                            target_coord = [coord[t]+delta[t] for t in range(3)]
+
+                            feature = {
+                                'type': 'Feature',
+                                'geometry': {'type':'Point', 'coordinates': target_coord},
+                                'properties': {'name': name, 'type': marker_type+'Target', 'sid': sid+'_target', 'cell': cell }
+                            }
+
+                            features.append(feature)
+
+    return features
+
+def export_markers(cache):
     features = []
 
-    for folder in folders:
-        g = list(glob.glob(os.path.join(cache_dir, f'{folder}/**/*.cfg'),recursive=True))
-        processed = 0
-        total = len(g)
-        rejected = [];
-
-        print('found', total, '.cfg files in', folder)
-
-        for filename in g:
-
-            #if 'D54670734737DA6F615CFCA1CA7B7774' not in filename: continue  # gauss sniper
-
-            parser = UnrealCFGParser(filename)
-            cfg = parser.parse()
-            #print(json.dumps(cfg, indent=2))
-
-            for cfg_id, config in cfg.items():
-
-                data = type(config) is dict and config.get('data')
-                if not data:
-                    continue
-
-                spawnType = data.get('SpawnType')
-                shortName = spawnType and spawnType.split('::').pop() or data.get('Name') or data.get('SID') or 'Unnamed'
-
-                titles = ('PackOfItemsPrototypeSID','SpawnedPrototypeSID','MarkerSID','ContextualActionSID','LairPrototypeSID','TriggerShape')
-
-                marker_name = next((data[t] for t in titles if t in data), shortName)
-
-                marker_type = spawnType or data.get('RegionType') or ('FastTravel' in filename and 'Custom::FastTravel') or 'Unknown'
-
-                #add_properties = True # adds config data to markers (disabled, because it's really a lot of data)
-                add_properties = False
-
-                if spawnType =='ESpawnType::DestructibleObject': continue # fuck destructible objects, too many
-
-                coord = getCoordinates(data)
-                if not coord or all(x==0 for x in coord):
-                    rejected.append(1) # collect rejected later
-                    continue
-
-                fname = os.path.split(filename)[1]
-
-                prop = { 'name': marker_name, 'type': marker_type }
-
-                area = data.get('LevelName')
-
-                #if area and 'WorldMap_WP' not in area: continue
-
-                if area and area !='WorldMap_WP': prop['area'] = area
+    marker_proto = load_map(cache['Stalker2/Content/GameLite/GameData/MarkerPrototypes.cfg'], {'MarkerRadius':'radius', 'MarkType': 'name', 'Title':'title', 'Description':'description'})
+    quest_proto = load_map(cache['Stalker2/Content/GameLite/GameData/ObjPrototypes/QuestObjPrototypes.cfg'], {'NPCPrototypeSID': 'npc', 'Faction': 'faction'})
+    npc_proto = load_map(cache['Stalker2/Content/GameLite/GameData/NPCPrototypes.cfg'], {'NameTextKey': 'title', 'Rank': 'rank'})
 
 
-                sid = data.get('SID')
-                if sid:
-                    prop['sid'] = sid
+    for package_path, entries in cache.items():
+        comment = entries.get('comment')
+        for sid, data in entries.items():
+            try:
+                coord = get_coordinates(data)
 
-                '''
-                dataCleanup(data) # remove unnecessary keys from config data
+                # skip markers without coordinates
+                if not coord or coord==[0,0,0]: continue
 
-                if add_properties:
-                    for key in data.keys():
-                        s = data.get(key)
-                        if s and type(s) is not dict:
-                            prop[key] =  s
+                prop = {'sid': sid}
 
-                #print(json.dumps(v, indent=2))
-
-                #prop['config'] = config
-                prop['file'] = filename.replace("\\","/").replace(cache_dir + '/Stalker2/Content/GameLite/','')
-                '''
-
-                clue = data.get('ClueVariablePrototypeSID')
-                if clue and clue != 'EmptyInherited':
-                    prop['clue'] = clue
-
-                radius = data.get('CloseDoorRadius')
-                if radius:
-                    prop['radius'] = radius
-
-                # ----------------
-                # export references for item generators
-
-                ranks = defaultdict(list)
-
-                # don't need 'ItemSID', 'PackOfItemsPrototypeSID' - it's in the title
-                for stash_sid in ('StashPrototypeSID', 'CorpseStashSID'):
-                    stash = data.get(stash_sid)
-                    if stash:
-                        for x in stash.split(','):
-                            ranks['any'].append(x.strip())
-
-                gs = data.get('ItemGeneratorSettings',{}).get('data',{})
-                for g in gs.values():
-                    d = g.get('data',{}).get('ItemGenerators',{}).get('data',{})
-                    rank = g.get('data',{}).get('PlayerRank','any')
-                    if d:
-                        protos = []
-                        for t in d.values():
-                            x = t.get('data',[]).get('PrototypeSID')
-                            if x:
-                                ranks[rank].append(x.strip())
-
-                # let's encode it to tags
-
-                rank_prefix = {
-                    'ERank::Newbie':'0:',
-                    'ERank::Experienced':'1:',
-                    'ERank::Veteran':'2:',
-                    'ERank::Master':'3:',
+                # map spawn type to name field
+                type_map = {
+                    'ESpawnType::ContextualAction': 'ContextualActionSID',
+                    'ESpawnType::Trigger': 'TriggerShape',
+                    'ESpawnType::Hub': 'MarkerSID',
+                    'ESpawnType::Radiation': 'Radioactivity',
+                    'EMarkerType::RegionMarker': 'RegionType',
                 }
 
-                tags = []
-                for rank, ids in ranks.items():
-                    for s in ids:
-                        tags.append( rank_prefix.get(rank,'')+s )
+                refkey = data.get('refkey')
+                if entries.get(refkey):
+                    template = copy.copy(entries.get(refkey))
+                    template.update(data)
+                    data = template
 
-                if tags: prop['spawns'] = tags
+                type_field = next((t for t in ['MarkType'] if t in data), 'SpawnType')
+                name_field = type_map.get(data.get(type_field), 'SpawnedPrototypeSID')
 
-                # ------------------
+                remap = {
+                    name_field: 'name',
+                    type_field: 'type',
+                    'ClueVariablePrototypeSID': 'clue',
+                    'LevelName': 'area',
+                    'CloseDoorRadius': 'radius',
+                    'SpawnInRadius': 'spawn_radius',
+                }
+
+                prop.update({v: data[k] for k,v in remap.items() if k in data})
+
+                #if comment: prop['comment'] = comment # comments don't seem useful but take space
+
+                # skip some markers
+                if not prop: continue
+                if prop.get('type')=='ESpawnType::DestructibleObject': continue
+                if prop.get('area') and 'WorldMap_WP' not in prop.get('area'): continue
+
+                # update with prototype properties
+                name = data.get('SpawnedPrototypeSID')
+                if name:
+                    prop |= marker_proto.get(name,{})
+                    npc = quest_proto.get(name,{}).get('npc')
+                    prop |= npc_proto.get(npc,{})
+                    faction = quest_proto.get(name,{}).get('faction')
+                    if faction:
+                        prop |= {'faction': faction}
+
+                # set title for region markers
+                if prop.get('type')=='EMarkerType::RegionMarker': prop['title'] = 'sid_locations_region_' + prop.get('sid') + '_name'
+
+                # set title for hubs
+                if prop.get('type')=='ESpawnType::Hub': prop['title'] = prop.get('name')
 
 
-                # update marker properties from loaded files
+                cleanup(prop)
+                add_spawns(data, prop)
 
-                key = 'SpawnedPrototypeSID'
-                if key in data:
-                    prop |= marker_proto.get(data[key],{})
-                    ref = quest_proto.get(data[key],{}).get('npc_ref')
-                    prop |= npc_proto.get(ref,{})
+                features.append({'type':'Feature','geometry': {'type':'Point', 'coordinates': coord }, 'properties': prop})
+                #sys.stderr.write(f'added {len(features)} markers    \r')
 
-                o = {'type':'Feature','geometry':{'type':'Point', 'coordinates': coord }, 'properties': prop};
+            except Exception as e:
+                print('exception at', package_path, sid)
+                traceback.print_exc()
+                exit(0)
 
-                features.append(o)
+    out = {"type": "FeatureCollection", "features": features}
 
-            processed += 1
-            sys.stderr.write(f'file {processed} of {total}, {len(features)} markers, {len(rejected)} rejected (no coordinates)   \r')
+    out['packs'] = export_packs(cache)
+    out['stashes'] = export_stashes(cache)
+    out['generators'] = export_generators(cache)
 
-    print()
-    print('collected %d markers, %d rejected' % (len(features), len(rejected)))
-    print()
+    # partitions are read from WorldMap_WP and then exported with FModel as json (one by one)
+    cells = set(get_cells(world_path))
+    features2 = get_custom_markers(cells)
 
-    out.extend(features)
+    features.extend(features2)
 
-    json_file = 'markers.json'
-    print('writing "%s" ...' % json_file)
-    json.dump({'type':'FeatureCollection','features': out}, open(json_file,'w'), indent=2)
+    print(f'writing {markers_file} ({len(features)} features)...')
+    f = open(markers_file, 'w', encoding='utf-8')
+    json.dump(out, f, indent=2)
+
+def test():
+    # Example usage
+    input_text = """
+    // taken from Stalker2/Content/GameLite/GameData/DialogChainPrototypes.cfg
+    [0] : struct.begin
+    SID = Empty
+    ID = 0
+    Factions: struct.begin
+        [*] = None{bskipref}
+    struct.end
+    struct.end
+    [1] : struct.begin {refkey=[0]}
+    SID = HumanoidRestrictions
+    ID = 2
+    Factions: struct.begin
+        [*] = Bandits
+        [*] = Monolith
+        [*] = Duty
+    struct.end
+    struct.end
+    """
+    string_io = StringIO(input_text)
+
+    #string_io = open('parser_test1.cfg','r')
+    #string_io = open('parser_test2.cfg','r')
+    string_io = open('parser_test3.cfg','r')
+    #string_io = open('cfg/MarkerPrototypes.cfg','r')
+    #string_io = open('cfg/ItemGeneratorPrototypes.cfg','r', encoding='utf-8-sig')
+
+    result = parse_struct(string_io)
+    print(json.dumps(result, indent=2, sort_keys=False))
 
 if __name__ == '__main__':
-    export_markers()
+    #test()
+    tm = time.time()
+    data = load_cache()
+    export_markers(data)
+    print(f'finished in {time.time()-tm:f} seconds')
+
