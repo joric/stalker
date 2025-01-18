@@ -217,9 +217,12 @@ let tooltipShowDelay = 200;
 let groupLayer = null;
 let polygonLayer = null;
 let map = null;
+
 let types = {};
 let icons = {};
 let lang = {};
+let markers = {};
+let regions = {};
 
 let localDataName = 'joricsStalkerMapsGL';
 let localData = JSON.parse(localStorage.getItem(localDataName))||{};
@@ -229,7 +232,6 @@ let searchControl = null;
 
 let localImages = {};
 let firstRun = false;
-let markersData = {};
 
 const capitalize = s => s[0].toUpperCase()+s.slice(1);
 const cmpAlphaNum = (a,b) => a[0].localeCompare(b[0], 'en', { numeric: true });
@@ -478,21 +480,21 @@ function addCircles(markers) {
 
 }
 
-function addMarkers(markers) {
+function addMarkers(data) {
   console.timeEnd('markers');
-  console.log('Total markers:', markers.length);
+  console.log('Total markers:', data.length);
 
   //updateCount();
 
   // circles do not make it slower, multiple layers do
-  let circleLayer = addCircles(markers);
+  let circleLayer = addCircles(data);
   addHandler(circleLayer);
   circleLayer.addTo(groupLayer);
 
   // join markers by group name
   let collection = {};
 
-  for (m of markers) {
+  for (m of data) {
     if (!collection[m.group]) collection[m.group] = [];
     collection[m.group].push(m.marker);
   }
@@ -543,7 +545,7 @@ function addMarkers(markers) {
 function loadMarkersIdle(data) {
   const features = data.features;
   let currentIndex = 0;
-  let markers = [];
+  let result = [];
   function processBatch(deadline) {
     batch = [];
     while (deadline.timeRemaining() > 0 && currentIndex < features.length) {
@@ -555,20 +557,19 @@ function loadMarkersIdle(data) {
     }
     //console.log(`Processed ${currentIndex}/${features.length} markers`);
     if (currentIndex < features.length) {
-      markers.push(...batch);
+      result.push(...batch);
       requestIdleCallback(processBatch); // Schedule the next batch during idle time
     } else {
-      markers.push(...batch);
-      addMarkers(markers);
+      result.push(...batch);
+      addMarkers(result);
     }
   }
   requestIdleCallback(processBatch, { timeout: 1000 });
 }
 
 function loadMarkers(data) {
-  markersData = data;
+  markers = data;
   console.time('markers');
-  //loadMarkersSimple(data); // really blocking
   loadMarkersIdle(data);
 }
 
@@ -745,7 +746,7 @@ function showTooltip(e) {
 
     let sections = {'ESpawnType::ItemContainer': 'stashes'}
     let section = sections[o.type];
-    let repo = markersData[section];
+    let repo = markers[section];
 
     if (!repo && !repo[name]) return;
 
@@ -1297,11 +1298,12 @@ window.onload = function() {
     'ru': 'data/Localization/language_18.json',
   };
 
+  let lang_file = languages[settings.language] || languages['en'];
+
   // load language, then load the rest
-  fetch(languages[settings.language] || languages['en']).then(r=>r.json()).then(data => {
+  fetch(lang_file).then(r=>r.json()).then(data => {
     lang = data;
     searchControl.setAttribute('placeholder', lang['sid_misc_hint_loot']+'...');
-    // need types to load markers, the rest can be loaded asyncronously
     fetch('types.json').then(r=>r.json()).then(data =>{
       types = data;
       fetch('icons.json').then(r=>r.json()).then(data =>{
@@ -1311,6 +1313,23 @@ window.onload = function() {
     }).catch(e=>{alert(e)});
     fetch('regions.json').then(r=>r.json()).then(addRegions);
   });
+
+/*
+  // chain all files (seems slower)
+  let promises = [
+    lang_file,
+    'types.json',
+    'icons.json',
+    'markers.json',
+    'regions.json',
+  ].map(url=>fetch(url).then(r=>r.json()));
+
+  Promise.all(promises).then(data => {
+    [lang, types, icons, markers, regions] = data;
+    loadMarkers(markers);
+    addRegions(regions);
+  });
+*/
 };
 
 </script>
