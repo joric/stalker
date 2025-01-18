@@ -752,7 +752,7 @@ function showTooltip(e) {
     data = repo[name];
 
     // unwind if possible
-    for (item of Object.keys(data)) {
+    for (item of Object.keys(data||{})) {
       if (repo[item]) data = repo[item];
     }
 
