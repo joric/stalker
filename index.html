@@ -764,7 +764,7 @@ function showTooltip(e) {
     for (spawn of o.spawns) {
       let data = getSpawnContent(o, spawn);
       //console.log(data);
-      let title = JSON.stringify(data || name, null, 2);
+      let title = JSON.stringify(data || name);
 
       content += `<div title='${title}'>${spawn}</div>`;
     }
