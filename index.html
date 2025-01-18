@@ -229,6 +229,7 @@ let searchControl = null;
 
 let localImages = {};
 let firstRun = false;
+let markersData = {};
 
 const capitalize = s => s[0].toUpperCase()+s.slice(1);
 const cmpAlphaNum = (a,b) => a[0].localeCompare(b[0], 'en', { numeric: true });
@@ -565,6 +566,7 @@ function loadMarkersIdle(data) {
 }
 
 function loadMarkers(data) {
+  markersData = data;
   console.time('markers');
   //loadMarkersSimple(data); // really blocking
   loadMarkersIdle(data);
@@ -733,10 +735,38 @@ function showTooltip(e) {
     content += `<hr/>${description}`;
   }
 
+  function getSpawnContent(o, name) {
+    let rank = null;
+    let data = {};
+
+    if (name.includes(':')) {
+      [rank, name] = name.split(':');
+    }
+
+    let sections = {'ESpawnType::ItemContainer': 'stashes'}
+    let section = sections[o.type];
+    let repo = markersData[section];
+
+    if (!repo && !repo[name]) return;
+
+    data = repo[name];
+
+    // unwind if possible
+    for (item of Object.keys(data)) {
+      if (repo[item]) data = repo[item];
+    }
+
+    return data;
+  }
+
   if (o.spawns) {
     content +='<hr/><div class="overflow-container">';
     for (spawn of o.spawns) {
-      content += spawn + '<br/>';
+      let data = getSpawnContent(o, spawn);
+      //console.log(data);
+      let title = JSON.stringify(data || name, null, 2);
+
+      content += `<div title='${title}'>${spawn}</div>`;
     }
     content +='</div>';
   }

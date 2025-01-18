@@ -181,9 +181,8 @@ def add_spawns(data, prop):
     if items:
         prop['spawns'] = items
 
-def export_stashes(cache):
+def export_stashes(records):
     entries = {}
-    records = cache['Stalker2/Content/GameLite/GameData/StashPrototypes.cfg']
     for key, config in records.items():
         if key in ['comment','empty']: continue
         data = type(config) is dict and config.get('ItemGenerators') or {}
@@ -212,9 +211,8 @@ def export_stashes(cache):
         entries[key] = ranks
     return entries
 
-def export_packs(cache):
+def export_packs(records):
     entries = {}
-    records = cache['Stalker2/Content/GameLite/GameData/PackOfItemsGroupPrototypes.cfg']
     for key, config in records.items():
         if key in ['comment','empty']: continue
         data = type(config) is dict and config.get('PackOfItemsSettings') or {}
@@ -241,9 +239,8 @@ gen_remap = {
     'AmmoMaxCount': 'max_ammo',
 }
 
-def export_generators(cache):
+def export_generators(records):
     entries = {}
-    records = cache['Stalker2/Content/GameLite/GameData/ItemGeneratorPrototypes.cfg']
 
     for key, config in records.items():
         if key in ['comment','empty']: continue
@@ -448,9 +445,12 @@ def export_markers(cache):
 
     out = {"type": "FeatureCollection", "features": features}
 
-    out['packs'] = export_packs(cache)
-    out['stashes'] = export_stashes(cache)
-    out['generators'] = export_generators(cache)
+    out['packs'] = export_packs(cache['Stalker2/Content/GameLite/GameData/PackOfItemsGroupPrototypes.cfg'])
+    out['stashes'] = export_stashes(cache['Stalker2/Content/GameLite/GameData/StashPrototypes.cfg'])
+    out['generators'] = export_generators(cache['Stalker2/Content/GameLite/GameData/ItemGeneratorPrototypes.cfg'])
+
+    out['stashes'].update(export_generators(cache['Stalker2/Content/GameLite/GameData/ItemGeneratorPrototypes/Gamepass_ItemGenerators.cfg']))
+
 
     # partitions are read from WorldMap_WP and then exported with FModel as json (one by one)
     cells = set(get_cells(world_path))
