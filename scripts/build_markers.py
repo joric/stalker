@@ -427,8 +427,13 @@ def export_markers(cache):
                 # set title for hubs
                 if prop.get('type')=='ESpawnType::Hub':
                     prop['title'] = prop.get('name')
-                    if not prop.get('name'): continue
+                    if not prop.get('name'): continue # skip null hubs
 
+                # set title for clues
+                clue = prop.get('clue')
+                if clue and clue != 'EmptyInherited':
+                    prop['title'] = f'sid_stashes_{clue}_name'
+                    prop['description'] = f'sid_stashes_{clue}_description'
 
                 cleanup(prop)
                 add_spawns(data, prop)
