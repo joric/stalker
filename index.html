@@ -460,7 +460,7 @@ function addLines(markers) {
 
     if (o.target) {
       let target = {x: o.target[0], y: o.target[1], z: o.target[2]};
-      let points = [scaleCoordinate(c), scaleCoordinate(target)];
+      let points = [c, scaleCoordinate(target)];
       let line = new maptalks.LineString(points,{symbol:{lineColor: lineColor, lineWidth: lineWidth}});
       geometry.push(line);
       line.feature =  m.marker.feature;
