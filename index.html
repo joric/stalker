@@ -24,8 +24,8 @@
 -->
 <script>
 let maxZoom = 19;
-let enableAltitude = true;
-let heightFactor = 1.0;
+let enableAltitude = false;
+let heightFactor = 0.1;
 let iconSize = 48;
 let startPitch = 0;
 let startZoom = 2;
@@ -34,6 +34,12 @@ let autoAltitude = true;
 let textSize = 18;
 let labelGroups = ['regions'];//, 'locations'];
 let zoomGroups = {'polygons':[-99,99], 'regions':[-99,2], 'hubs': [2,99], 'bases': [2,99], 'circles':[2,99], 'locations': [2,99], 'stashes':[5,99], 'items':[6,99], 'enemies':[6,99], 'anomalies':[6,99], 'misc':[7,99] };
+
+let scaleZ = 0.1; // postprocess coordinates beacuse enableAltitude and heightFactor doesn't seem to work at all
+
+let enableLines = true; //weird shit happening. vertical lines seem to be rectangles with thickness 0 so they dissapear sometimes
+let lineWidth = 2;
+let lineColor = '#fff';
 </script>
 
 
@@ -215,7 +221,6 @@ let tooltipHideDelay = 150;
 let tooltipShowDelay = 200;
 
 let groupLayer = null;
-let polygonLayer = null;
 let map = null;
 
 let types = {};
@@ -236,6 +241,13 @@ let firstRun = false;
 const capitalize = s => s[0].toUpperCase()+s.slice(1);
 const cmpAlphaNum = (a,b) => a[0].localeCompare(b[0], 'en', { numeric: true });
 
+function scaleCoordinate(c) {
+  return scaleZ < 1.0 ? {x: c.x, y:c.y, z:c.z*scaleZ} : c;
+}
+
+function scaleCoordinateArray(c) {
+  return scaleZ < 1.0 ? [ c[0], c[1], c[2]*scaleZ] : c;
+}
 
 function loadMap() {
 
@@ -398,10 +410,6 @@ function loadMap() {
     forceRenderOnRotating: true,
   }).addTo(map);
 
-  polygonLayer = new maptalks.PolygonLayer('Polygons').addTo(groupLayer);
-
-  if (!settings.activeItems['polygons']) polygonLayer.hide();
-
   setTimeout(function() {
     if (enableAltitude && autoAltitude) {
       groupLayer.setOptions({enableAltitude: map.getPitch()!=0});
@@ -440,8 +448,39 @@ function loadMap() {
   });
 }
 
+function addLines(markers) {
+  let geometry = [];
+
+  for (m of markers) {
+
+    // let's just do teleports for now
+    let o = m.marker.feature.properties;
+    let c = m.marker.getCoordinates();
+
+
+    if (o.target) {
+      let target = {x: o.target[0], y: o.target[1], z: o.target[2]};
+      let points = [scaleCoordinate(c), scaleCoordinate(target)];
+      let line = new maptalks.LineString(points,{symbol:{lineColor: lineColor, lineWidth: lineWidth}});
+      geometry.push(line);
+      line.feature =  m.marker.feature;
+    }
+     /*
+    let points = [c, {x: c.x, y: c.y, z: 0}];
+    geometry.push(new maptalks.LineString(points,{feature: m.marker.feature, symbol:{lineColor: lineColor, lineWidth: lineWidth}}););
+    */
+
+  }
+
+  let layerId = 'Lines'
+  let visible = settings.activeItems[layerId.toLowerCase()] == true;
+  let layer = new maptalks.LineStringLayer(layerId, geometry, { visible: visible, sceneConfig: { depthFunc: '<='} });
+  addHandler(layer);
+  layer.addTo(groupLayer);
+}
+
 function addCircles(markers) {
-  let circles = [];
+  let geometry = [];
 
   const defaultSymbol = {
     'lineColor': '#fff',    // Border color
@@ -464,32 +503,26 @@ function addCircles(markers) {
           //numberOfShellPoints: numberOfShellPoints,
         },
       });
-      circles.push(circle);
+      geometry.push(circle);
 
       circle.feature = m.marker.feature;
     }
   }
 
-  let visible = settings.activeItems['circles'] == true;
-
-  let circleLayer = new maptalks.PolygonLayer('Circles', circles, {
-    visible: visible,
-  });
-
-  return circleLayer;
-
+  let layerId = 'Circles'
+  let visible = settings.activeItems[layerId.toLowerCase()] == true;
+  let layer = new maptalks.PolygonLayer(layerId, geometry, { visible: visible });
+  addHandler(layer);
+  layer.addTo(groupLayer);
 }
 
 function addMarkers(data) {
   console.timeEnd('markers');
   console.log('Total markers:', data.length);
 
-  //updateCount();
-
-  // circles do not make it slower, multiple layers do
-  let circleLayer = addCircles(data);
-  addHandler(circleLayer);
-  circleLayer.addTo(groupLayer);
+  if (enableLines) addLines(data);
+  addRegions(regions);
+  addCircles(data);
 
   // join markers by group name
   let collection = {};
@@ -516,19 +549,14 @@ function addMarkers(data) {
       sortByDistanceToCamera: true,
       forceRenderOnMoving: true,
       forceRenderOnRotating: true,
-
       visible: visible,
-
-      //collision: true,
-
+      sceneConfig: { depthFunc: '<='},
     }).addTo(groupLayer);
 
     layer.addGeometry(geometries);
     //console.log('created layer', group, 'visible', settings.activeItems[group], geometries.length, 'markers');
     addHandler(layer);
   }
-
-  addHandler(polygonLayer);
 
   filterItems();
 
@@ -738,26 +766,24 @@ function showTooltip(e) {
 
   function getSpawnContent(o, name) {
     let rank = null;
-    let data = {};
 
     if (name.includes(':')) {
       [rank, name] = name.split(':');
     }
 
-    let sections = {'ESpawnType::ItemContainer': 'stashes'}
-    let section = sections[o.type];
-    let repo = markers[section];
+    section = 'generators'
 
-    if (!repo && !repo[name]) return;
+    let data = markers[section]['gen_' + name];
 
-    data = repo[name];
-
-    // unwind if possible
-    for (item of Object.keys(data||{})) {
-      if (repo[item]) data = repo[item];
+    for (item of Object.keys( data||{} )) {
+      if (markers[section][item]) {
+        //console.log(name, '->', item);
+        return markers[section][item];
+      }
     }
 
     return data;
+
   }
 
   if (o.spawns) {
@@ -765,6 +791,7 @@ function showTooltip(e) {
     for (spawn of o.spawns) {
       let data = getSpawnContent(o, spawn);
       //console.log(data);
+
       let title = JSON.stringify(data || name);
 
       content += `<div title='${title}'>${spawn}</div>`;
@@ -862,7 +889,6 @@ dedup = {};
 
 function addMarker(feature) {
   let o = feature.properties;
-  let c = feature.geometry.coordinates;
 
   if (o.area && !o.area.includes('WorldMap_WP')) return null;
   if (o.name=='Hub') return null; // 1 marker (special case)
@@ -880,8 +906,6 @@ function addMarker(feature) {
   if (icon=='stash') group = 'stashes';
 
   image = 'data/sprites/' + ((icons[icon] && icons[icon].image) || 'CompassMarker_2_3.png');
-
-  c = [c[0], c[1], c[2]*0.05 ]; // cannot disable altitude for now, fucking parallax effect
 
   let opacity = 1.0;
 
@@ -940,6 +964,12 @@ function addMarker(feature) {
       },
     ]
   }
+
+  //c = {x: c[0], y:c[1], z:c[2] };
+  //c = scaleAltitude(c);
+
+  let c = feature.geometry.coordinates;
+  c = scaleCoordinateArray(c);
 
   var marker = new maptalks.Marker(c, {symbol: symbol});
 
@@ -1003,7 +1033,7 @@ function addMarker(feature) {
   return {group: group, marker: marker};
 }
 
-function scaleCoordinates(coordinates, scaleFactor, origin) {
+function scaleOrigin(coordinates, scaleFactor, origin) {
   return coordinates.map(coord => {
     const [x, y] = coord;
     return [
@@ -1016,7 +1046,7 @@ function scaleCoordinates(coordinates, scaleFactor, origin) {
 function scaleGeoJSON(geojson, scaleFactor, origin) {
   geojson.features.forEach(feature => {
     feature.geometry.coordinates = feature.geometry.coordinates.map(ring =>
-      scaleCoordinates(ring, scaleFactor, origin)
+      scaleOrigin(ring, scaleFactor, origin)
     );
   });
   return geojson;
@@ -1058,7 +1088,6 @@ function isPointInsidePolygon(point, polyPoints) {
 
 
 function addRegions(geojson) {
-
   const defaultSymbol = {
     'lineColor': '#fff',    // Border color
     'lineWidth': 1.5,            // Border width
@@ -1148,8 +1177,11 @@ function addRegions(geojson) {
     }
   });
 
-
-  polygonLayer.addGeometry(polygons);
+  let layerId = 'Polygons'
+  let visible = settings.activeItems[layerId.toLowerCase()] == true;
+  let layer = new maptalks.PolygonLayer(layerId, polygons, { visible: visible });
+  addHandler(layer);
+  layer.addTo(groupLayer);
 }
 
 function saveSettings() {
@@ -1300,6 +1332,7 @@ window.onload = function() {
 
   let lang_file = languages[settings.language] || languages['en'];
 
+/*
   // load language, then load the rest
   fetch(lang_file).then(r=>r.json()).then(data => {
     lang = data;
@@ -1308,28 +1341,29 @@ window.onload = function() {
       types = data;
       fetch('icons.json').then(r=>r.json()).then(data =>{
         icons = data;
-        fetch('markers.json').then(r=>r.json()).then(loadMarkers);
+        fetch('regions.json').then(r=>r.json()).then(data=>{
+          regions = data;
+          fetch('markers.json').then(r=>r.json()).then(loadMarkers);
+        });
       });
     }).catch(e=>{alert(e)});
-    fetch('regions.json').then(r=>r.json()).then(addRegions);
   });
+  */
 
-/*
   // chain all files (seems slower)
   let promises = [
     lang_file,
     'types.json',
     'icons.json',
-    'markers.json',
     'regions.json',
+    'markers.json',
   ].map(url=>fetch(url).then(r=>r.json()));
 
   Promise.all(promises).then(data => {
-    [lang, types, icons, markers, regions] = data;
+    [lang, types, icons, regions, markers] = data;
     loadMarkers(markers);
-    addRegions(regions);
   });
-*/
+
 };
 
 </script>

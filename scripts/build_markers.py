@@ -208,7 +208,7 @@ def export_stashes(records):
                         fields = {'MinCount':'min', 'MaxCount':'max', 'Weight':'weight'}
                         ranks[rank]['items'][name] = {v: item[k] for k,v in fields.items() if k in item}
 
-        entries[key] = ranks
+        entries['gen_' + key] = ranks
     return entries
 
 def export_packs(records):
@@ -225,7 +225,7 @@ def export_packs(records):
                 weight = item.get('Weight')
                 if weight:
                     ranks[rank][name] = weight
-        entries[key] = ranks
+        entries['gen_' + key] = ranks
     return entries
 
 gen_remap = {
@@ -251,12 +251,19 @@ def export_generators(records):
         entry = defaultdict(dict)
 
         data = type(config) is dict and config.get('ItemGenerator') or {}
+
         if not data:
-            item = config.get('MoneyGenerator')
-            if item:
+            data = config.get('MoneyGenerator')
+            if data:
                 name = "Money"
+                item = data
                 entry[name] = {v: item[k] for k,v in gen_remap.items() if k in item}
                 entries[sid] = entry
+            if not data:
+                refkey = config.get('refkey')
+                if refkey:
+                    entries['gen_' + sid] = { 'gen_' + refkey: {} }
+
             continue
 
         for values in data.values():
@@ -267,9 +274,10 @@ def export_generators(records):
                 if not name:
                     name = item.get('ItemGeneratorPrototypeSID')
                     if not name: continue
+                    name = 'gen_' + name;
                 entry[name] = {v: item[k] for k,v in gen_remap.items() if k in item}
 
-        entries[sid] = entry
+        entries['gen_' + sid] = entry
 
     return entries
 
@@ -329,7 +337,6 @@ def get_custom_markers(cells):
                     c = o.get('Properties',{}).get('RelativeLocation',{})
                     if c:
                         coord = [float(c[a]) for a in ('X','Y','Z')]
-                        #print('found', outer, 'in', cell)
 
                         feature = {
                             'type': 'Feature',
@@ -340,8 +347,10 @@ def get_custom_markers(cells):
                         features.append(feature)
 
                         if 'BP_Teleport_Portal_Bubble_C' in o['Outer'] and target:
+
                             delta = [target[t] for t in 'XYZ']
                             target_coord = [coord[t]+delta[t] for t in range(3)]
+                            feature['properties']['target'] = target_coord
 
                             feature = {
                                 'type': 'Feature',
@@ -445,12 +454,12 @@ def export_markers(cache):
 
     out = {"type": "FeatureCollection", "features": features}
 
-    out['packs'] = export_packs(cache['Stalker2/Content/GameLite/GameData/PackOfItemsGroupPrototypes.cfg'])
-    out['stashes'] = export_stashes(cache['Stalker2/Content/GameLite/GameData/StashPrototypes.cfg'])
-    out['generators'] = export_generators(cache['Stalker2/Content/GameLite/GameData/ItemGeneratorPrototypes.cfg'])
-
-    out['stashes'].update(export_generators(cache['Stalker2/Content/GameLite/GameData/ItemGeneratorPrototypes/Gamepass_ItemGenerators.cfg']))
-
+    gen = {}
+    gen.update(export_packs(cache['Stalker2/Content/GameLite/GameData/PackOfItemsGroupPrototypes.cfg']))
+    gen.update(export_stashes(cache['Stalker2/Content/GameLite/GameData/StashPrototypes.cfg']))
+    gen.update(export_generators(cache['Stalker2/Content/GameLite/GameData/ItemGeneratorPrototypes.cfg']))
+    gen.update(export_generators(cache['Stalker2/Content/GameLite/GameData/ItemGeneratorPrototypes/Gamepass_ItemGenerators.cfg']))
+    out['generators'] = gen
 
     # partitions are read from WorldMap_WP and then exported with FModel as json (one by one)
     cells = set(get_cells(world_path))
