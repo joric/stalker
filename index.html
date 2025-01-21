@@ -37,7 +37,9 @@ let zoomGroups = {'polygons':[-99,99], 'regions':[-99,2], 'hubs': [2,99], 'bases
 
 let scaleZ = 0.1; // postprocess coordinates beacuse enableAltitude and heightFactor doesn't seem to work at all
 
-let enableLines = true; //weird shit happening. vertical lines seem to be rectangles with thickness 0 so they dissapear sometimes
+//weird shit's happening. lines seem to be flat rectangles so they dissapear at certain camera angles
+let enableTeleportLines = true;
+let enableHeightLines = false;
 let lineWidth = 2;
 let lineColor = '#fff';
 </script>
@@ -458,18 +460,20 @@ function addLines(markers) {
     let c = m.marker.getCoordinates();
 
 
-    if (o.target) {
+    if (enableTeleportLines && o.target) {
       let target = {x: o.target[0], y: o.target[1], z: o.target[2]};
       let points = [c, scaleCoordinate(target)];
       let line = new maptalks.LineString(points,{symbol:{lineColor: lineColor, lineWidth: lineWidth}});
       geometry.push(line);
       line.feature =  m.marker.feature;
     }
-     /*
-    let points = [c, {x: c.x, y: c.y, z: 0}];
-    geometry.push(new maptalks.LineString(points,{feature: m.marker.feature, symbol:{lineColor: lineColor, lineWidth: lineWidth}}););
-    */
 
+    if (enableHeightLines) {
+      let points = [c, {x: c.x, y: c.y, z: 0}];
+      let line = new maptalks.LineString(points,{symbol:{lineColor: lineColor, lineWidth: lineWidth}});
+      geometry.push(line);
+      line.feature =  m.marker.feature;
+    }
   }
 
   let layerId = 'Lines'
@@ -520,7 +524,7 @@ function addMarkers(data) {
   console.timeEnd('markers');
   console.log('Total markers:', data.length);
 
-  if (enableLines) addLines(data);
+  addLines(data);
   addRegions(regions);
   addCircles(data);
 
