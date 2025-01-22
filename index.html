@@ -1336,25 +1336,6 @@ window.onload = function() {
 
   let lang_file = languages[settings.language] || languages['en'];
 
-/*
-  // load language, then load the rest
-  fetch(lang_file).then(r=>r.json()).then(data => {
-    lang = data;
-    searchControl.setAttribute('placeholder', lang['sid_misc_hint_loot']+'...');
-    fetch('types.json').then(r=>r.json()).then(data =>{
-      types = data;
-      fetch('icons.json').then(r=>r.json()).then(data =>{
-        icons = data;
-        fetch('regions.json').then(r=>r.json()).then(data=>{
-          regions = data;
-          fetch('markers.json').then(r=>r.json()).then(loadMarkers);
-        });
-      });
-    }).catch(e=>{alert(e)});
-  });
-  */
-
-  // chain all files (seems slower)
   let promises = [
     lang_file,
     'types.json',
