@@ -25,7 +25,7 @@
 <script>
 let maxZoom = 19;
 let enableAltitude = false;
-let heightFactor = 0.1;
+let heightFactor = 1.0;
 let iconSize = 48;
 let startPitch = 0;
 let startZoom = 2;
@@ -818,6 +818,19 @@ function showTooltip(e) {
   tooltip.innerHTML = content;
 
   //console.log(e);
+
+  // does not work really. use getContainerExtent. see https://github.com/maptalks/maptalks.js/issues/2486
+  function coordinateToContainerPoint(map, coordinate) {
+    const { x, y, z = 0 } = coordinate;
+    const baseContainerPoint = map.coordinateToContainerPoint(new maptalks.Coordinate(x, y));
+    const pitch = map.getPitch() * (Math.PI / 180); // Convert degrees to radians
+    const tilt = map.getBearing() * (Math.PI / 180); // Convert degrees to radians (if needed)
+    const resolution = map.getResolution();
+    const altitudeAdjustment = z / resolution;
+    const adjustedX = baseContainerPoint.x + altitudeAdjustment * Math.sin(tilt);
+    const adjustedY = baseContainerPoint.y - altitudeAdjustment * Math.cos(pitch);
+    return { x: adjustedX, y: adjustedY };
+  }
 
   // Get the screen coordinates of the event
   //let c = marker.getCoordinates();
