@@ -2,8 +2,8 @@
   "EMarkerType::RegionMarker": { "icon": "region", "category": "sid_misc_pda_hint_region", "group": "regions" },
   "EMarkerType::Bed": { "icon": "bed", "title": "sid_misc_pda_Map_MarkerBed", "category":"sid_misc_pda_Map_MarkerBed", "group": "bases" },
   "EMarkerType::PlayerStorage": { "icon": "storage", "title": "sid_misc_pda_Map_MarkerPlayerStorage", "category": "sid_misc_pda_Map_MarkerPlayerStorage", "group": "bases" },
-  "EMarkerType::Teleport": { "icon": "circle_dot", "title": "sid_items_CArtifactBubble_name", "category": "sid_misc_pda_map_playerTags_anomaly", "group": "locations" },
-  "EMarkerType::TeleportTarget": { "icon": "circle_locked", "title": "sid_items_CArtifactBubble_name", "category": "sid_misc_pda_map_playerTags_anomaly", "group": "locations" },
+  "EMarkerType::Teleport": { "icon": "circle_locked", "title": "sid_items_CArtifactBubble_name", "category": "sid_misc_pda_map_playerTags_anomaly", "group": "locations" },
+  "EMarkerType::TeleportTarget": { "icon": "circle_dot", "title": "sid_items_CArtifactBubble_name", "category": "sid_misc_pda_map_playerTags_anomaly", "group": "locations" },
   "EMarkerType::Scanner": { "icon": "scanner", "title": "sid_character_skaner_0", "category": "sid_misc_inv_player_grid_name", "group": "locations" },
 
   "---Custom::FastTravel": { "icon": "camp", "category": "sid_misc_LEGACY_pda_Map_MarkerFriendlyAreaDefault", "group": "hubs" },
