@@ -8,7 +8,13 @@ cache_dir = 'C:/Temp/Exports'
 cache_file = 'cache.json'
 markers_file = '../markers.json'
 world_path = 'Stalker2/Content/_Stalker_2/maps/_Stalker2_WorldMap/WorldMap_WP'
-bp_classes = {'BP_PlayerStash_C':'EMarkerType::PlayerStorage', 'BP_Bed_OnBed_C':'EMarkerType::Bed', 'BP_TopazScanner':'EMarkerType::Scanner', 'BP_Teleport_Portal_Bubble': 'EMarkerType::Teleport'}
+
+bp_classes = {
+    'BP_PlayerStash_C':'EMarkerType::PlayerStorage',
+    'BP_Bed_OnBed_C':'EMarkerType::Bed',
+    'BP_TopazScanner':'EMarkerType::Scanner',
+    'BP_Teleport_Portal_Bubble': 'EMarkerType::Teleport'
+}
 
 def parse_struct(reader, options={}):
     result = {}
