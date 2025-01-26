@@ -1359,6 +1359,7 @@ window.onload = function() {
 
   Promise.all(promises).then(data => {
     [lang, types, icons, regions, markers] = data;
+    document.querySelector('.search-box input').setAttribute('placeholder', lang['sid_misc_hint_loot'] +'...');
     loadMarkers(markers);
   });
 
