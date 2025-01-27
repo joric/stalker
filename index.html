@@ -1182,7 +1182,7 @@ window.onload = function() {
   let cc = settings.language || 'en';
   let cc_list = ['ua','en','ru'];
   let select = document.querySelector('#language-selector select');
-  select.innerHTML = cc_list.map(x=>`<option value="${x}"${cc==x ? 'selected':''}>${x}</option>`).join('');
+  select.innerHTML = cc_list.map(x=>`<option${cc==x?' selected':''}>${x}</option>`).join('');
 
   select.onchange = e=> {
     settings.language = e.target.value;
