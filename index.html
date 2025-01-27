@@ -1179,7 +1179,7 @@ window.onload = function() {
 
   });
 
-  let cc = settings.language;
+  let cc = settings.language || 'en';
   let cc_list = ['ua','en','ru'];
   let select = document.querySelector('#language-selector select');
   select.innerHTML = cc_list.map(x=>`<option value="${x}"${cc==x ? 'selected':''}>${x}</option>`).join('');
@@ -1190,7 +1190,7 @@ window.onload = function() {
     location.reload();
   };
 
-  let lang_file = `Localization/Localization_${(cc||'en').toUpperCase()}.json`;
+  let lang_file = `Localization/Localization_${cc.toUpperCase()}.json`;
 
   let promises = [
     lang_file,
