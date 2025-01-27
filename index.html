@@ -27,28 +27,6 @@
 <script type="text/javascript" src="js/maps.js"></script>
 -->
 
-<script>
-let maxZoom = 19;
-let enableAltitude = false;
-let heightFactor = 1.0;
-let iconSize = 48;
-let startPitch = 0;
-let startZoom = 2;
-let defaultPitch = 45;
-let autoAltitude = true;
-let textSize = 18;
-let labelGroups = ['regions'];//, 'locations'];
-let zoomGroups = {'polygons':[-99,99], 'regions':[-99,2], 'lines':[2,99], 'hubs': [2,99], 'bases': [2,99], 'circles':[2,99], 'locations': [2,99], 'stashes':[4,99], 'items':[5,99], 'enemies':[6,99], 'anomalies':[6,99], 'misc':[7,99] };
-
-let scaleZ = 0.1; // postprocess coordinates beacuse enableAltitude and heightFactor doesn't seem to work at all
-
-//weird shit's happening. lines seem to be flat rectangles so they dissapear at certain camera angles
-let enableTeleportLines = true;
-let enableHeightLines = false;
-let lineWidth = 2;
-let lineColor = '#fff';
-</script>
-
 </head>
 <body>
 
@@ -74,6 +52,26 @@ let lineColor = '#fff';
 <div id="map-tooltip" class="arrow-left"></div>
 
 <script>
+let maxZoom = 19;
+let enableAltitude = false;
+let heightFactor = 1.0;
+let iconSize = 48;
+let startPitch = 0;
+let startZoom = 2;
+let defaultPitch = 45;
+let autoAltitude = true;
+let textSize = 18;
+let labelGroups = ['regions'];//, 'locations'];
+let zoomGroups = {'polygons':[-99,99], 'regions':[-99,2], 'lines':[2,99], 'hubs': [2,99], 'bases': [2,99], 'circles':[2,99], 'locations': [2,99], 'stashes':[4,99], 'items':[5,99], 'enemies':[6,99], 'anomalies':[6,99], 'misc':[7,99] };
+
+let scaleZ = 0.1; // postprocess coordinates beacuse enableAltitude and heightFactor doesn't seem to work at all
+
+//weird shit's happening. lines seem to be flat rectangles so they dissapear at certain camera angles
+let enableTeleportLines = true;
+let enableHeightLines = false;
+let lineWidth = 2;
+let lineColor = '#fff';
+
 let tooltipShowTimer = null;
 let tooltipHideTimer = null;
 let tooltipHideDelay = 150;
