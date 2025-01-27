@@ -5,23 +5,16 @@
   "EMarkerType::Teleport": { "icon": "circle_locked", "title": "sid_items_CArtifactBubble_name", "category": "sid_misc_pda_map_playerTags_anomaly", "group": "locations" },
   "EMarkerType::TeleportTarget": { "icon": "circle_dot", "title": "sid_items_CArtifactBubble_name", "category": "sid_misc_pda_map_playerTags_anomaly", "group": "locations" },
   "EMarkerType::Scanner": { "icon": "scanner", "title": "sid_character_skaner_0", "category": "sid_misc_inv_player_grid_name", "group": "locations" },
-
-  "---Custom::FastTravel": { "icon": "camp", "category": "sid_misc_LEGACY_pda_Map_MarkerFriendlyAreaDefault", "group": "hubs" },
-
   "ESpawnType::Marker" : { "icon": "location", "category": "sid_misc_pda_Map_MarkerLocation", "group": "locations",
     "match": {
       "archanomaly": {"icon": "arch_anomaly", "category": "sid_misc_pda_map_playerTags_anomaly", "group": "locations" }
     }
   },
-
   "ESpawnType::Hub": { "icon": "camp", "category": "sid_misc_LEGACY_pda_Map_MarkerFriendlyAreaDefault", "group": "hubs" },
-
   "ESpawnType::ItemContainer": { "icon": "stash", "title": "sid_misc_pda_Map_MarkerCache", "category": "sid_misc_pda_map_playerTags_habar", "group": "stashes" },
-
   "ESpawnType::DeadBody": { "icon": "skull", "category": "sid_npc_name_mertvec", "group": "misc" },
   "ESpawnType::PackOfItems": { "icon": "box", "category": "sid_misc_pda_Map_MarkerPlayerLandmarkHabar", "group": "misc" },
   "ESpawnType::Shelter": { "icon": "cave", "category": "sid_misc_pda_Map_MarkerShellter", "group": "misc" },
-
   "ESpawnType::Trigger": { "icon": "circle", "category": "trigger", "group": "misc" },
   "ESpawnType::Squad": { "icon": "soldier", "category": "squad", "group": "misc" },
   "ESpawnType::Patrol": { "icon": "soldier", "category": "patrol", "group": "misc" },
@@ -30,7 +23,6 @@
   "ESpawnType::DailyScheduleZone": { "icon": "circle", "category": "trigger", "group": "misc" },
   "ESpawnType::MoveToPath": { "icon": "circle", "category": "trigger", "group": "misc" },
   "ESpawnType::LairSpawner": { "icon": "danger", "category": "lair", "group": "enemies" },
-
   "ESpawnType::ContextualAction": { "icon": "circle", "category": "trigger", "group": "misc",
     "match": {
       "Jerboa|PseudoDog|Bayun|Bloodsucker|Flesh|Blinddog|Tushkan|Boar|ZombieFoster|Rat|Snork|Zombie": { "icon": "danger", "category": "sid_npc_name_mutant", "group": "enemies" },
@@ -38,7 +30,6 @@
       "CA_Quest_Hub_Medic": { "icon": "medic", "title": "sid_misc_pda_Map_MarkerMedic", "category": "sid_misc_pda_Map_MarkerMedic", "group": "bases" }
     }
   },
-
   "ESpawnType::Obj": {
     "items": {
       "Faust": { "icon": "guide", "category": "NPC", "group": "locations" }
@@ -53,7 +44,6 @@
       "Medic|VartanikolajBurahovskij": { "icon": "medic", "title": "sid_misc_pda_Map_MarkerMedic", "category": "sid_misc_pda_Map_MarkerMedic", "group": "bases" }
     }
   },
-
   "ESpawnType::Item": {
     "match": {
       "Drink|Bread|Food|Sausage|Energetic|Vodka|Water|Beer|Milk": {"icon": "bag", "category": "sid_misc_pda_reward_food_drink", "group": "misc" },
@@ -65,7 +55,6 @@
       "FArtifact": {"icon": "artifact", "category": "sid_misc_pda_map_playerTags_habar", "group": "misc" }
     }
   },
-
   "ESpawnType::Anomaly": {"icon": "anomaly", "category": "sid_misc_pda_map_playerTags_anomaly", "group": "anomalies" },
   "ESpawnType::ElectroAnomaly": {"icon": "anomaly", "category": "sid_misc_pda_map_playerTags_anomaly", "group": "anomalies" },
   "ESpawnType::PillowAnomaly": {"icon": "anomaly", "category": "sid_misc_pda_map_playerTags_anomaly", "group": "anomalies" },
