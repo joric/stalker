@@ -1183,7 +1183,6 @@ window.onload = function() {
   let cc_list = ['ua','en','ru'];
   let select = document.querySelector('#language-selector select');
   select.innerHTML = cc_list.map(x=>`<option${cc==x?' selected':''}>${x}</option>`).join('');
-
   select.onchange = e=> {
     settings.language = e.target.value;
     saveSettings();
