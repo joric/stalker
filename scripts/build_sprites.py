@@ -4,7 +4,7 @@ import os
 
 cache_dir = 'C:/Temp/Exports'
 
-out_dir = '../data/sprites'
+out_dir = '../images/sprites'
 
 os.makedirs(out_dir, exist_ok = True)
 

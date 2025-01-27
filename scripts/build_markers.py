@@ -6,7 +6,7 @@ import traceback
 
 cache_dir = 'C:/Temp/Exports'
 cache_file = 'cache.json'
-markers_file = '../markers.json'
+markers_file = '../data/markers.json'
 world_path = 'Stalker2/Content/_Stalker_2/maps/_Stalker2_WorldMap/WorldMap_WP'
 
 bp_classes = {

@@ -779,7 +779,7 @@ function addMarker(feature) {
   if (o.clue) icon = 'stash';
   if (icon=='stash') group = 'stashes';
 
-  image = 'data/sprites/' + ((icons[icon] && icons[icon].image) || 'CompassMarker_2_3.png');
+  image = 'images/sprites/' + ((icons[icon] && icons[icon].image) || 'CompassMarker_2_3.png');
 
   let opacity = 1.0;
 
@@ -1199,9 +1199,9 @@ window.onload = function() {
   };
 
   let languages = {
-    'ua': 'data/Localization/language_01.json',
-    'en': 'data/Localization/language_02.json',
-    'ru': 'data/Localization/language_18.json',
+    'ua': 'Localization/language_01.json',
+    'en': 'Localization/language_02.json',
+    'ru': 'Localization/language_18.json',
   };
 
   let lang_file = languages[settings.language] || languages['en'];
@@ -1212,7 +1212,7 @@ window.onload = function() {
     'icons.json',
     'regions.json',
     'markers.json',
-  ].map(url=>fetch(url).then(r=>r.json()));
+  ].map(url=>fetch('data/'+url).then(r=>r.json()));
 
   Promise.all(promises).then(data => {
     [lang, types, icons, regions, markers] = data;
