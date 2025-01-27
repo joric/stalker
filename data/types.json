@@ -47,7 +47,7 @@
   "ESpawnType::Item": {
     "match": {
       "Drink|Bread|Food|Sausage|Energetic|Vodka|Water|Beer|Milk": {"icon": "bag", "category": "sid_misc_pda_reward_food_drink", "group": "misc" },
-      "AntiRad|Medkit": {"icon": "bag", "category": "sid_misc_pda_reward_medkit", "group": "items" },
+      "AntiRad|Medkit": {"icon": "bag", "category": "sid_misc_pda_reward_medkit", "group": "misc" },
       "^Ammo|AGA|AHEDP|AVOG|APG7V|(A\\d{3}[\\w]+)": {"icon": "chest", "category": "sid_misc_pda_reward_ammo_grenades", "group": "items" },
       "^Gun": {"icon": "chest", "category": "sid_misc_pda_reward_weapon", "group": "items" },
       "Armor": {"icon": "chest", "category": "sid_misc_pda_reward_armor", "group": "items" },
