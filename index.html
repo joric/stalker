@@ -32,12 +32,8 @@
 
 <div id="language-selector">
   <select>
-    <option>en</option>
-    <option>ua</option>
-    <option>ru</option>
   </select>
 </div>
-
 
 <div tabindex=0 id="map"></div>
 
@@ -1182,13 +1178,11 @@ window.onload = function() {
     }
 
   });
-  
+
+  let cc = settings.language;
+  let cc_list = ['ua','en','ru'];
   let select = document.querySelector('#language-selector select');
-  for (option of select.children) {
-    if (settings.language==option.value) {
-      option.setAttribute('selected', true);
-    }
-  }
+  select.innerHTML = cc_list.map(x=>`<option value="${x}"${cc==x ? 'selected':''}>${x}</option>`).join('');
 
   select.onchange = e=> {
     settings.language = e.target.value;
@@ -1196,13 +1190,7 @@ window.onload = function() {
     location.reload();
   };
 
-  let languages = {
-    'ua': 'Localization/language_01.json',
-    'en': 'Localization/language_02.json',
-    'ru': 'Localization/language_18.json',
-  };
-
-  let lang_file = languages[settings.language] || languages['en'];
+  let lang_file = `Localization/Localization_${(cc||'en').toUpperCase()}.json`;
 
   let promises = [
     lang_file,
