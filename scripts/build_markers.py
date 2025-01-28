@@ -397,14 +397,6 @@ def export_markers(cache):
                     data['SpawnType'] = 'ESpawnType::Marker'
                     data['SpawnedPrototypeSID'] = 'EMarkerType::RegionMarker'
 
-                # map spawn type to name field
-                type_map = {
-                    'ESpawnType::ContextualAction': 'ContextualActionSID',
-                    'ESpawnType::Trigger': 'TriggerShape',
-                    'ESpawnType::Hub': 'MarkerSID',
-                    'ESpawnType::Radiation': 'Radioactivity',
-                }
-
                 remap = {
                     'SpawnType': 'type',
                     'SpawnedPrototypeSID': 'name',
@@ -414,6 +406,7 @@ def export_markers(cache):
                     'SpawnInRadius': 'spawn_radius',
                     'RegionType': 'region',
 
+                    # remap to name for now
                     'TriggerShape': 'name',
                     'Radioactivity': 'name',
                     'ContextualActionSID': 'name',
