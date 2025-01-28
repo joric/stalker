@@ -11,12 +11,16 @@
 <meta property="og:type" content="object" />
 <meta property="og:title" content="Joric's Stalker" />
 <meta property="og:description" content="Interactive Map" />
+<link rel="stylesheet" href="css/base.css" />
 <link rel="stylesheet" href="css/main.css" />
+
+<link href="js/lib/font-awesome/css/all.min.css" rel="stylesheet">
 
 <link href="js/lib/maptalks-gl/maptalks.css" rel="stylesheet">
 <script type="text/javascript" src="js/lib/maptalks-gl/maptalks-gl.js"></script>
 
 <!--
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 <link href="js/lib/maptalks-gl/maptalks.css" rel="stylesheet">
 <script type="text/javascript" src="js/lib/maptalks-gl/maptalks-gl.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/maptalks/1.0.1/maptalks.min.css" integrity="sha512-DgQNythEg69g9pToBBZQZMXn/xM8ZF/96sutg5c6ODgxargtpteM9+HxACffdWzrzK5YgAdVs8CfucHm5dvbIA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -47,6 +51,31 @@
 
 <div id="map-tooltip" class="arrow-left"></div>
 
+<div id="popup" class="popup">
+  <div class="popup-content-wrapper">
+    <div class="popup-content">
+      <div id="popup-title">Popup Title</div>
+      <div id="popup-subtitle">Popup Subtitle</div>
+      <!--div id="popup-note">Popup Note</div-->
+      <div id="popup-subnote" class="collapsed">Popup Subnote</div>
+      <div id="popup-data" class="collapsed"></div>
+      <div id="popup-data-toggle" data-toggle="collapse" data-target="popup-data"><hr/></div>
+      <div class="popup-controls">
+        <input id="popup-found" type="checkbox">
+        <label for="popup-found" title="Toggle found">Found</label>
+        <a class="popup-link" id="popup-wiki-link" href="#" target="_blank" title="Fallout London Wiki"><i class="fa fa-brands fa-wikipedia-w"></i></a>
+        <a class="popup-link" id="popup-map-link" href="#" target="_blank" title="Copy Map Link to Clipboard"><i class="fa fa-link"></i></a>
+        <a class="popup-link" id="popup-form-id-link" href="#" target="_blank" title="Copy Marker SID to Clipboard"><i class="fa fa-hashtag"></i></a>
+        <a class="popup-link" id="popup-marker-id-link" href="#" target="_blank" title="Copy Marker Location to Clipboard"><i class="fa fa-location-crosshairs"></i></a>
+      </div>
+    </div>
+  </div>
+  <div class="popup-tip-container"><div class="popup-tip"></div></div>
+  <a id="popup-close" class="popup-close-button">&times;</a>
+</div>
+
+<div id="alert" class="closed">Copied To Clipboard</div>
+
 <script>
 let maxZoom = 19;
 let enableAltitude = false;
@@ -59,6 +88,7 @@ let autoAltitude = true;
 let textSize = 18;
 let labelGroups = ['regions'];//, 'locations'];
 let zoomGroups = {'polygons':[-99,99], 'regions':[-99,2], 'lines':[2,99], 'hubs': [2,99], 'bases': [2,99], 'circles':[2,99], 'locations': [2,99], 'stashes':[4,99], 'items':[5,99], 'enemies':[6,99], 'anomalies':[6,99], 'misc':[7,99] };
+let currentRegion = null;
 
 let scaleZ = 0.1; // postprocess coordinates beacuse enableAltitude and heightFactor doesn't seem to work at all
 
@@ -81,6 +111,10 @@ let icons = {};
 let lang = {};
 let markers = {};
 let regions = {};
+
+let mapParam = {};
+
+let markersData = null;
 
 let localDataName = 'joricsStalkerMapsGL';
 let localData = JSON.parse(localStorage.getItem(localDataName))||{};
@@ -106,6 +140,10 @@ function loadMap() {
 
   if (!localData[mapId]) {
     localData[mapId] = { language: 'en', activeItems: {'bases':true, 'hubs': true, 'locations': true, 'stashes': true, 'regions': true, 'items': true, 'enemies': true, 'circles': true, 'polygons': true} };
+  }
+
+  if (!localData[mapId].markedItems) {
+     localData[mapId].markedItems = {};
   }
 
   settings = localData[mapId];
@@ -375,6 +413,8 @@ function addMarkers(data) {
   console.timeEnd('markers');
   console.log('Total markers:', data.length);
 
+  markersData = data;
+
   addLines(data);
   addRegions(regions);
   addCircles(data);
@@ -423,7 +463,34 @@ function addMarkers(data) {
   }).addTo(map);
 
   updateView();
+
+
+  // marker link
+  let name = mapParam.markerName;
+  if (name) {
+    jumpToLocation(name);
+  }
 }
+
+function findLocation(id) {
+  for (m of markersData) {
+    let marker = m.marker;
+    let o = marker.feature.properties;
+    if (id == o.sid) {
+      return marker;
+    }
+  }
+}
+
+function jumpToLocation(name) {
+  if (marker = findLocation(name)) {
+    map.animateTo({center: marker.getCoordinates(), zoom:8, pitch:0, bearing:0});
+    marker.show();
+    popupOnClick({target: marker});
+    marker.openInfoWindow();
+  }
+}
+
 
 function loadMarkersIdle(data) {
   const features = data.features;
@@ -542,12 +609,170 @@ function humanReadable(o) {
 
   if (!title || !desc) {
     let prop = getIconProp(o);
-    return [ title || lang[o.title || prop.title] || o.name,  desc || lang[o.description || prop.description]||''];
+    return [ title || lang[o.title || prop.title] || prop.title || o.name,  desc || lang[o.description || prop.description]||''];
   }
 
   return [title, desc];
 }
 
+function setClass(e, set, c) { set ? e.classList.add(c) : e.classList.remove(c);}
+function toggleClass(e, c) { if (e.classList.contains(c)) { e.classList.remove(c); return false; } else { e.classList.add(c); return true; }}
+function toggleNav(e) { let input = document.querySelector('#search-input'); toggleClass(e.parentElement, 'closed') ? input.blur() : input.focus();}
+function toggleVisibility(a) { [].forEach.call(a, function(e) { toggleClass(document.querySelector(e), 'collapsed'); }) }
+const cmpNum = (a,b)=> b[1]!=a[1] ? (b[1]-a[1]) : a[0].localeCompare(b[0]);
+
+function copyToClipboard(text) {
+  let input = document.body.appendChild(document.createElement("input"));
+  input.value = text;
+  input.focus();
+  input.select();
+  document.execCommand('copy');
+  input.parentNode.removeChild(input);
+  document.getElementById('alert').classList.remove('closed');
+  setTimeout(function(e){ document.getElementById('alert').classList.add('closed') },1500);
+}
+
+
+function canonical(id) {
+  return id ? id.slice(2) : '';
+}
+
+function getBaseURL() {
+  return window.location.href.replace(/#.*$/,'');
+}
+
+function getMapURL(id) {
+  return getBaseURL() + '#' + encodeURIComponent(id);
+}
+
+function getWikiURL(title) {
+  title = title.replaceAll('«','').replaceAll('»','');
+  return wikiPrefix + (settings.language=='en' ? '': settings.language+'/') + 'wiki/' + encodeURIComponent(title);
+}
+
+function wikify(o) {
+  let location_id = o.title;
+  return location_id.replace(/[^A-Za-z0-9\s]/g, '').trim().replace(/\s+/g, '_');
+}
+
+let wikiPrefix = 'https://stalker.fandom.com/';
+
+let copyLink = e=>{ copyToClipboard(e.target.href); return false; };
+
+function renderItem(feature) {
+  let o = feature.properties;
+  let prop = getIconProp(o);
+  let [title, description] = humanReadable(o);
+  let group = prop.group || 'misc';
+  let category = lang[prop.category] || lang[prop.title] || prop.category || group;
+  let location = lang[`sid_locations_region_${currentRegion}_name`];
+
+  let t = feature.geometry.coordinates;
+  let teleport = `${t[0]} ${t[1]} ${t[2]}`;
+  //let location = `XTeleportTo ${teleport}`
+
+  return {
+    title: title,
+    category: category,
+    location: location,
+    group: group,
+    description: description,
+    prop: prop,
+  };
+}
+
+
+function popupOnClick(e) {
+  let marker = e.target;
+  let feature = marker.feature;
+  let o = marker.feature.properties;
+  let popup = document.querySelector('#popup').cloneNode(true);
+
+  let info = renderItem(marker.feature);
+
+  popup.querySelector('#popup-title').textContent = info.title;
+  popup.querySelector('#popup-subtitle').textContent = info.category;
+  //popup.querySelector('#popup-note').textContent = info.location;
+
+
+  let div = popup.querySelector('#popup-subnote');
+  div.replaceChildren();
+  div.classList.remove('collapsed');
+
+  if (info.description) {
+    let hr = document.createElement('hr');
+    let content = document.createElement('div');
+    content.textContent = info.description;
+    div.appendChild(hr);
+    div.appendChild(content);
+  }
+
+
+  popup.querySelector('#popup-data').innerHTML = '<hr/><pre>'+JSON.stringify(o, null, 2) + '</pre>';
+
+  popup.querySelector('#popup-data-toggle').onclick = function() {
+    let data_id = popup.querySelector('#popup-data-toggle').getAttribute('data-target');
+    settings.debugMode = !toggleClass(document.querySelector('#'+data_id),'collapsed');
+    saveSettings();
+  };
+
+  setClass(popup.querySelector('#popup-data'), settings.debugMode!=true, 'collapsed');
+
+  e.target._infoWindow.setOptions({custom: true, dy: 8});
+  e.target._infoWindow.setContent(popup);
+
+  popup.querySelector('#popup-close').onclick = function() {  e.target._infoWindow.hide(); };
+
+  popup.addEventListener('contextmenu', function(e) { e.stopPropagation()}, true); // enable default context menu
+
+  popup.querySelector('#popup-map-link').href = getMapURL(o.sid);
+  popup.querySelector('#popup-map-link').onclick = copyLink;
+  popup.querySelector('#popup-map-link').title = "Copy Map URL to Clipboard";
+  popup.querySelector('#popup-map-link').innerHTML = '<i class="fa fa-link"></i>';
+
+  popup.querySelector('#popup-wiki-link').href = getWikiURL(info.title);
+  popup.querySelector('#popup-wiki-link').onclick = null;
+  popup.querySelector('#popup-wiki-link').title = "Wiki";
+  popup.querySelector('#popup-wiki-link').innerHTML = '<i class="fa-brands fa-wikipedia-w"></i>';
+
+  let t = feature.geometry.coordinates;
+  let teleport = `${t[0]} ${t[1]} ${t[2]}`;
+  let location = `XTeleportTo ${teleport}`
+
+  popup.querySelector('#popup-marker-id-link').href = '#' + location;
+  popup.querySelector('#popup-marker-id-link').onclick = function(e){ copyToClipboard(e.target.href.split('#')[1].replaceAll('%20',' ')); return false; };
+
+  popup.querySelector('#popup-form-id-link').href = '#' + (o.sid || '00000010');
+  popup.querySelector('#popup-form-id-link').onclick = function(e){ copyToClipboard(e.target.href.split('#')[1]); return false; };
+
+  popup.querySelector('#popup-found').checked = settings.markedItems[o.sid]==true;
+
+  popup.querySelector('#popup-found').onclick = function() { toggleMarked(o.sid) };
+}
+
+function toggleMarked(id) {
+
+  if (settings.markedItems[id]) {
+    delete settings.markedItems[id];
+  } else {
+    settings.markedItems[id] = true;
+  }
+
+  for (m of markersData) {
+    let marker = m.marker;
+    let o = marker.feature.properties;
+    if (id == o.sid) {
+      let found = settings.markedItems[id];
+      if (!(marker.getSymbol() instanceof Array)) {
+        marker.updateSymbol({markerOpacity: found ? 0.25 : 1 });
+      }
+
+      break;
+    }
+  }
+
+  saveSettings();
+}
 
 function showPopup(e) {
 
@@ -763,7 +988,9 @@ function addMarker(feature) {
   if (o.area && !o.area.includes('WorldMap_WP')) return null;
   if (o.name=='Hub') return null; // 1 marker (special case)
 
-  let prop = getIconProp(o);
+  let info = renderItem(feature);
+
+  let prop = info.prop;
 
   let icon = prop.icon || 'question';
   let group = prop.group || 'misc';
@@ -777,14 +1004,14 @@ function addMarker(feature) {
 
   image = 'images/sprites/' + ((icons[icon] && icons[icon].image) || 'CompassMarker_2_3.png');
 
-  let opacity = 1.0;
-
   let size = iconSize;
 
   if (image.includes('CompassMarker')) {
-    //opacity = 0.75;
     size = 32;
   }
+
+  let found = settings.markedItems[o.sid];
+  let opacity = found ? 0.25 : 1;
 
   let symbol = {
     markerFile   : image,
@@ -796,7 +1023,7 @@ function addMarker(feature) {
     markerVerticalAlignment: 'middle',
   };
 
-  let [title, description] = humanReadable(o);
+  let title  = info.title;
 
   let markerDx = 0;
   let markerDy = 0;
@@ -845,36 +1072,6 @@ function addMarker(feature) {
 
   marker.feature = feature;
 
-  marker.on('click', showPopup);
-
-  marker.on('mouseover', function(e) {
-    let marker = e.target;
-
-    let symbol = marker.getSymbol();
-    let prop = { markerWidth: size*1.15, markerHeight: size*1.15 };
-    let textProp = { textSize: textSize * 1.0 };
-    marker.setSymbol((symbol instanceof Array) ? [{...symbol[0], ...prop}, {...symbol[1], ...textProp}] : {...symbol, ...prop});
-
-    clearTimeout(tooltipShowTimer);
-    tooltipShowTimer = setTimeout(function(){showTooltip(e)}, tooltipShowDelay);
-
-  });
-
-  marker.on('mouseout', function(e) {
-    let marker = e.target;
-
-    let symbol = marker.getSymbol();
-    let prop = { markerWidth: size, markerHeight: size };
-    let textProp = { textSize: textSize };
-
-    marker.setSymbol((symbol instanceof Array) ? [{...symbol[0], ...prop}, {...symbol[1], ...textProp}] : {...symbol, ...prop});
-
-    clearTimeout(tooltipShowTimer);
-    clearTimeout(tooltipHideTimer);
-
-    tooltipHideTimer = setTimeout(hideTooltip, tooltipHideDelay);
-  });
-
   // hub markers seem to use average coordinates
   // so we check the dedup structure if we have the marker then adjust coordinates accordingly
   if (o.type=='ESpawnType::Hub') {
@@ -899,6 +1096,50 @@ function addMarker(feature) {
     }
     dedup[key] = marker;
   }
+
+  //marker.on('click', showPopup);
+
+/*
+  marker.on('mouseover', function(e) {
+    let marker = e.target;
+
+    let symbol = marker.getSymbol();
+    let prop = { markerWidth: size*1.15, markerHeight: size*1.15 };
+    let textProp = { textSize: textSize * 1.0 };
+    marker.setSymbol((symbol instanceof Array) ? [{...symbol[0], ...prop}, {...symbol[1], ...textProp}] : {...symbol, ...prop});
+
+    //clearTimeout(tooltipShowTimer);
+    //tooltipShowTimer = setTimeout(function(){showTooltip(e)}, tooltipShowDelay);
+  });
+
+  marker.on('mouseout', function(e) {
+    let marker = e.target;
+
+    let symbol = marker.getSymbol();
+    let prop = { markerWidth: size, markerHeight: size };
+    let textProp = { textSize: textSize };
+
+    marker.setSymbol((symbol instanceof Array) ? [{...symbol[0], ...prop}, {...symbol[1], ...textProp}] : {...symbol, ...prop});
+
+    //clearTimeout(tooltipShowTimer);
+    //clearTimeout(tooltipHideTimer);
+    //tooltipHideTimer = setTimeout(hideTooltip, tooltipHideDelay);
+  });
+*/
+
+  // this shit eats 200 ms. find a way to use a single tooltip
+  const tooltip = new maptalks.ui.ToolTip(`${info.title} (${info.category})`, {
+    showTimeout: 5,
+  }).addTo(marker);
+
+  marker.setInfoWindow({autoCloseOn: 'click'})
+  //.on('dragend', onDragEnd)
+  .on('click', popupOnClick)
+  .on('contextmenu', e=> {
+    //if (mouseMoved) return;
+    //let o = e.target.properties;
+    //toggleMarked(o.ref_id);
+  })
 
   return {group: group, marker: marker};
 }
@@ -1032,6 +1273,8 @@ function addRegions(geojson) {
           polygon.updateSymbol(zoom > maxZoom ? defaultSymbol : hoverSymbol);
           selectedPolygon = polygon; // Update reference
 
+          currentRegion = polygon.properties.svgID.substring(1);
+
           if (zoom>maxZoom) selectedPolygon = null; // uncomment to prevent zoom on click (it's rather glitchy)
 
           lastZoom = zoom;
@@ -1134,7 +1377,20 @@ function applyTint(src, r,g,b, callback) {
   };
 }
 
-window.onload = function() {
+window.onload = function(event) {
+
+  if (location.hash.length>1) {
+    let param = decodeURIComponent(location.hash.slice(1));
+    mapParam.markerName = param;
+    mapParam.mapId = mapId;
+  }
+
+  try {
+  // clear location hash
+    history.pushState('', document.title, window.location.pathname + window.location.search);
+  } catch(error) {
+    console.log('handled error', error);
+  }
 
   loadMap();
 
