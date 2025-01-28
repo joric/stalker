@@ -1,11 +1,17 @@
 {
-  "EMarkerType::RegionMarker": { "icon": "region", "category": "sid_misc_pda_hint_region", "group": "regions" },
-  "EMarkerType::Bed": { "icon": "bed", "title": "sid_misc_pda_Map_MarkerBed", "category":"sid_misc_pda_Map_MarkerBed", "group": "bases" },
-  "EMarkerType::PlayerStorage": { "icon": "storage", "title": "sid_misc_pda_Map_MarkerPlayerStorage", "category": "sid_misc_pda_Map_MarkerPlayerStorage", "group": "bases" },
-  "EMarkerType::Teleport": { "icon": "circle_locked", "title": "sid_items_CArtifactBubble_name", "category": "sid_misc_pda_map_playerTags_anomaly", "group": "locations" },
-  "EMarkerType::TeleportTarget": { "icon": "circle_dot", "title": "sid_items_CArtifactBubble_name", "category": "sid_misc_pda_map_playerTags_anomaly", "group": "locations" },
-  "EMarkerType::Scanner": { "icon": "scanner", "title": "sid_character_skaner_0", "category": "sid_misc_inv_player_grid_name", "group": "locations" },
+  "ESpawnType::CustomMarker": {
+    "items": {
+      "EMarkerType::Bed": { "icon": "bed", "title": "sid_misc_pda_Map_MarkerBed", "category":"sid_misc_pda_Map_MarkerBed", "group": "bases" },
+      "EMarkerType::PlayerStorage": { "icon": "storage", "title": "sid_misc_pda_Map_MarkerPlayerStorage", "category": "sid_misc_pda_Map_MarkerPlayerStorage", "group": "bases" },
+      "EMarkerType::Teleport": { "icon": "circle_locked", "title": "sid_items_CArtifactBubble_name", "category": "sid_misc_pda_map_playerTags_anomaly", "group": "locations" },
+      "EMarkerType::TeleportTarget": { "icon": "circle_dot", "title": "sid_items_CArtifactBubble_name", "category": "sid_misc_pda_map_playerTags_anomaly", "group": "locations" },
+      "EMarkerType::Scanner": { "icon": "scanner", "title": "sid_character_skaner_0", "category": "sid_misc_inv_player_grid_name", "group": "locations" }
+    }
+  },
   "ESpawnType::Marker" : { "icon": "location", "category": "sid_misc_pda_Map_MarkerLocation", "group": "locations",
+    "items": {
+      "EMarkerType::RegionMarker": { "icon": "region", "category": "sid_misc_pda_hint_region", "group": "regions" }
+    },
     "match": {
       "archanomaly": {"icon": "arch_anomaly", "category": "sid_misc_pda_map_playerTags_anomaly", "group": "locations" }
     }
@@ -19,7 +25,6 @@
   "ESpawnType::Squad": { "icon": "soldier", "category": "squad", "group": "misc" },
   "ESpawnType::Patrol": { "icon": "soldier", "category": "patrol", "group": "misc" },
   "ESpawnType::SafeZone": { "icon": "circle", "category": "safe_zone", "group": "misc" },
-  "ESpawnType::ALifeGroup": { "icon": "circle", "category": "trigger", "group": "misc" },
   "ESpawnType::DailyScheduleZone": { "icon": "circle", "category": "trigger", "group": "misc" },
   "ESpawnType::MoveToPath": { "icon": "circle", "category": "trigger", "group": "misc" },
   "ESpawnType::LairSpawner": { "icon": "danger", "category": "lair", "group": "enemies" },

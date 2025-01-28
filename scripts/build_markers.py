@@ -10,8 +10,8 @@ markers_file = '../data/markers.json'
 world_path = 'Stalker2/Content/_Stalker_2/maps/_Stalker2_WorldMap/WorldMap_WP'
 
 bp_classes = {
-    'BP_PlayerStash_C':'EMarkerType::PlayerStorage',
     'BP_Bed_OnBed_C':'EMarkerType::Bed',
+    'BP_PlayerStash_C':'EMarkerType::PlayerStorage',
     'BP_TopazScanner':'EMarkerType::Scanner',
     'BP_Teleport_Portal_Bubble': 'EMarkerType::Teleport'
 }
@@ -347,7 +347,7 @@ def get_custom_markers(cells):
                         feature = {
                             'type': 'Feature',
                             'geometry': {'type':'Point', 'coordinates': coord},
-                            'properties': {'name': name, 'type': marker_type, 'sid': sid, 'cell': cell }
+                            'properties': {'type': 'ESpawnType::CustomMarker', 'name': marker_type, 'sid': sid, 'cell': cell }
                         }
 
                         features.append(feature)
@@ -361,7 +361,7 @@ def get_custom_markers(cells):
                             feature = {
                                 'type': 'Feature',
                                 'geometry': {'type':'Point', 'coordinates': target_coord},
-                                'properties': {'name': name, 'type': marker_type+'Target', 'sid': sid+'_target', 'cell': cell }
+                                'properties': {'type': 'ESpawnType::CustomMarker', 'name': marker_type+'Target', 'sid': sid+'_target', 'cell': cell }
                             }
 
                             features.append(feature)
@@ -387,39 +387,44 @@ def export_markers(cache):
 
                 prop = {'sid': sid}
 
-                # map spawn type to name field
-                type_map = {
-                    'ESpawnType::ContextualAction': 'ContextualActionSID',
-                    'ESpawnType::Trigger': 'TriggerShape',
-                    'ESpawnType::Hub': 'MarkerSID',
-                    'ESpawnType::Radiation': 'Radioactivity',
-                    'EMarkerType::RegionMarker': 'RegionType',
-                }
-
                 refkey = data.get('refkey')
                 if entries.get(refkey):
                     template = copy.copy(entries.get(refkey))
                     template.update(data)
                     data = template
 
-                type_field = next((t for t in ['MarkType'] if t in data), 'SpawnType')
-                name_field = type_map.get(data.get(type_field), 'SpawnedPrototypeSID')
+                if refkey == 'base_region':
+                    data['SpawnType'] = 'ESpawnType::Marker'
+                    data['SpawnedPrototypeSID'] = 'EMarkerType::RegionMarker'
+
+                # map spawn type to name field
+                type_map = {
+                    'ESpawnType::ContextualAction': 'ContextualActionSID',
+                    'ESpawnType::Trigger': 'TriggerShape',
+                    'ESpawnType::Hub': 'MarkerSID',
+                    'ESpawnType::Radiation': 'Radioactivity',
+                }
 
                 remap = {
-                    name_field: 'name',
-                    type_field: 'type',
+                    'SpawnType': 'type',
+                    'SpawnedPrototypeSID': 'name',
                     'ClueVariablePrototypeSID': 'clue',
                     'LevelName': 'area',
                     'CloseDoorRadius': 'radius',
                     'SpawnInRadius': 'spawn_radius',
+                    'RegionType': 'region',
+
+                    'TriggerShape': 'name',
+                    'Radioactivity': 'name',
+                    'ContextualActionSID': 'name',
+                    'MarkerSID': 'name',
                 }
 
                 prop.update({v: data[k] for k,v in remap.items() if k in data})
 
-                #if comment: prop['comment'] = comment # comments don't seem useful but take space
-
                 # skip some markers
                 if not prop: continue
+                if 'type' not in prop: continue
                 if prop.get('type')=='ESpawnType::DestructibleObject': continue
                 if prop.get('area') and 'WorldMap_WP' not in prop.get('area'): continue
 
@@ -433,13 +438,17 @@ def export_markers(cache):
                     if faction:
                         prop |= {'faction': faction}
 
-                # set title for region markers
-                if prop.get('type')=='EMarkerType::RegionMarker': prop['title'] = 'sid_locations_region_' + prop.get('sid') + '_name'
-
-                # set title for hubs
+                # set name and title for hubs
                 if prop.get('type')=='ESpawnType::Hub':
-                    prop['title'] = prop.get('name')
-                    if not prop.get('name'): continue # skip null hubs
+                    name = data.get('MarkerSID')
+                    if not name:
+                        continue # skip null hubs
+                    prop['name'] = name
+                    prop['title'] = name if name.startswith('sid_') else f'sid_locations_{name}_name'
+
+                # set title for region markers
+                if prop.get('name')=='EMarkerType::RegionMarker':
+                    prop['title'] = 'sid_locations_region_' + prop.get('sid') + '_name'
 
                 # set title for clues
                 clue = prop.get('clue')
