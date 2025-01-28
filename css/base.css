@@ -1,0 +1,141 @@
+html, body {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  background-color: #222;
+  font-family:sans-serif;
+  font-size: 16px;
+  overflow: hidden;
+}
+#map {
+  height: 100%;
+  width:  100%;
+}
+
+.maptalks-tooltip {
+  display: block;
+  background: #fff;
+  padding: 0px 4px 0px 4px;
+  height:24px;
+  line-height:24px;
+  font-size:14px;
+  white-space: nowrap;
+}
+
+#map-tooltip {
+  background-color: white;
+  color: black;
+  opacity: 0.95;
+
+  display:none;
+  position:absolute;
+  padding:5px;
+  border-radius:3px;
+  border-radius: 5px;
+  padding: 0.75em;
+  max-width: 350px;
+  //box-shadow: 3px 3px 20px black;
+}
+
+.overflow-container {
+  max-width: 350px;
+  width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: 14px;
+}
+
+.arrow-left::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: 100%; /* Position the triangle to the left of the popup */
+  margin-top: -8px; /* Half the height of the triangle */
+  border-width: 8px;
+  border-style: solid;
+  border-color: transparent white transparent transparent;
+}
+
+.arrow-right::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 100%; /* Position the triangle to the right of the popup */
+  margin-top: -8px; /* Half the height of the triangle */
+  border-width: 8px;
+  border-style: solid;
+  border-color: transparent transparent transparent white;
+}
+
+.search-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  // left: 50%; ransform: translateX(-50%);
+  padding: 20px;
+  z-index: 9999;
+}
+
+.search-box {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 240px;
+
+  //opacity: 0.85;
+
+  transition: all 0.3s ease;
+}
+
+.search-box:has(input:focus) {
+  width: 450px;
+  opacity: 1;
+}
+
+@media (max-width: 460px) {
+  .search-box:has(input:focus) {
+    width: 90vw;
+    opacity: 1;
+  }
+}
+
+.search-box input {
+  width: 100%;
+  padding: 12px 24px;
+  border: 1px solid #ddd;
+  border-radius: 24px;
+  outline: none;
+  background: white;
+  font-size: 17px;
+  padding-right: 80px;
+}
+
+.search-icon {
+  position: absolute;
+  font-size: 20px;
+  cursor: pointer;
+  opacity: 0.5;
+}
+
+.search-icon:hover {
+  opacity: 1;
+}
+
+.search-submit {
+  right: 48px;
+  margin-top: -3px;
+}
+
+.search-cancel {
+  font-size: 30px;
+  right: 15px;
+}
+
+#language-selector {
+  z-index: 1;
+  position: absolute;
+  right: 86px;
+  top: 16px;
+}
+
