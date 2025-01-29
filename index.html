@@ -87,7 +87,7 @@ let autoAltitude = true;
 let textSize = 18;
 let labelGroups = ['regions'];//, 'locations'];
 let zoomGroups = {'polygons':[-99,99], 'regions':[-99,2], 'lines':[2,99], 'hubs': [2,99], 'bases': [2,99], 'circles':[2,99], 'locations': [2,99], 'stashes':[4,99], 'items':[5,99], 'enemies':[6,99], 'anomalies':[6,99], 'misc':[7,99] };
-let currentRegion = null;
+let foundOpacity = 0.5;
 
 let scaleZ = 0.1; // postprocess coordinates beacuse enableAltitude and heightFactor doesn't seem to work at all
 
@@ -112,8 +112,8 @@ let markers = {};
 let regions = {};
 
 let mapParam = {};
-
 let markersData = null;
+let regionsData = null;
 
 let localDataName = 'joricsStalkerMapsGL';
 let localData = JSON.parse(localStorage.getItem(localDataName))||{};
@@ -659,17 +659,22 @@ let wikiPrefix = 'https://stalker.fandom.com/';
 
 let copyLink = e=>{ copyToClipboard(e.target.href); return false; };
 
-function renderItem(feature) {
+function renderItem(feature, extended = false) {
   let o = feature.properties;
+
   let prop = getIconProp(o);
   let [title, description] = humanReadable(o);
   let group = prop.group || 'misc';
   let category = lang[prop.category] || lang[prop.title] || prop.category || group;
-  let location = lang[`sid_locations_region_${currentRegion}_name`];
+  let location = '';
 
-  let t = feature.geometry.coordinates;
-  let teleport = `${t[0]} ${t[1]} ${t[2]}`;
-  //let location = `XTeleportTo ${teleport}`
+  if (extended) {
+    let c = feature.geometry.coordinates;
+    //let teleport = `${c[0]} ${c[1]} ${c[2]}`;
+    //let location = `XTeleportTo ${teleport}`
+    let currentRegion = getRegionName({x: c[0], y:c[1], z:c[2]}, regionsData);
+    location = lang[`sid_locations_region_${currentRegion}_name`];
+  }
 
   return {
     title: title || category || o.type,
@@ -711,7 +716,7 @@ function popupOnClick(e) {
   let o = marker.feature.properties;
   let popup = document.querySelector('#popup').cloneNode(true);
 
-  let info = renderItem(marker.feature);
+  let info = renderItem(marker.feature, true);
 
   popup.querySelector('#popup-title').textContent = info.title;
   popup.querySelector('#popup-subtitle').textContent = info.category;
@@ -815,7 +820,7 @@ function toggleMarked(id) {
     if (id == o.sid) {
       let found = settings.markedItems[id];
       if (!(marker.getSymbol() instanceof Array)) {
-        marker.updateSymbol({markerOpacity: found ? 0.25 : 1 });
+        marker.updateSymbol({markerOpacity: found ? foundOpacity : 1 });
       }
 
       break;
@@ -1040,7 +1045,7 @@ function addMarker(feature) {
   }
 
   let found = settings.markedItems[o.sid];
-  let opacity = found ? 0.25 : 1;
+  let opacity = found ? foundOpacity : 1;
 
   let symbol = {
     markerFile   : image,
@@ -1229,6 +1234,14 @@ function isPointInsidePolygon(point, polyPoints) {
   return inside;
 };
 
+function getRegionName(coord, polygons) {
+  if (!polygons || !coord) return null;
+  for (const polygon of polygons) {
+    if (isPointInsidePolygon(coord, polygon.getCoordinates()[0])) {
+      return polygon.properties.svgID.substring(1);
+    }
+  }
+}
 
 function addRegions(geojson) {
   const defaultSymbol = {
@@ -1270,6 +1283,8 @@ function addRegions(geojson) {
       //polygon.on('click', polygonClick); // doesn't work with overlapping labels, use global event for now
     }
   });
+
+  regionsData = polygons;
 
   map.on('click', polygonClick);
 
