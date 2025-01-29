@@ -708,7 +708,12 @@ function getSpawnContent(o, name) {
 
 }
 
-
+function setMarkerSize(marker, size) {
+  let symbol = marker.getSymbol();
+  let prop = { markerWidth: size, markerHeight: size };
+  let textProp = { textSize: textSize * 1.0 };
+  marker.setSymbol((symbol instanceof Array) ? [{...symbol[0], ...prop}, {...symbol[1], ...textProp}] : {...symbol, ...prop});
+}
 
 function popupOnClick(e) {
   let marker = e.target;
@@ -1136,25 +1141,13 @@ function addMarker(feature) {
   }
 
   marker.on('mouseover', function(e) {
-    let marker = e.target;
-
-    let symbol = marker.getSymbol();
-    let prop = { markerWidth: size*1.15, markerHeight: size*1.15 };
-    let textProp = { textSize: textSize * 1.0 };
-    marker.setSymbol((symbol instanceof Array) ? [{...symbol[0], ...prop}, {...symbol[1], ...textProp}] : {...symbol, ...prop});
-
+    setMarkerSize(e.target, size * 1.15);
     clearTimeout(tooltipShowTimer);
     tooltipShowTimer = setTimeout(function(){showTooltip(e)}, tooltipShowDelay);
   });
 
   marker.on('mouseout', function(e) {
-    let marker = e.target;
-
-    let symbol = marker.getSymbol();
-    let prop = { markerWidth: size, markerHeight: size };
-    let textProp = { textSize: textSize };
-    marker.setSymbol((symbol instanceof Array) ? [{...symbol[0], ...prop}, {...symbol[1], ...textProp}] : {...symbol, ...prop});
-
+    setMarkerSize(e.target, size * 1.0);
     clearTimeout(tooltipShowTimer);
     clearTimeout(tooltipHideTimer);
     tooltipHideTimer = setTimeout(hideTooltip, tooltipHideDelay);
