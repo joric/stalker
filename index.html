@@ -645,7 +645,7 @@ function getMapURL(id) {
 }
 
 function getWikiURL(title) {
-  title = title.replaceAll('«','').replaceAll('»','');
+  if (title.startsWith('«') && title.endsWith('«')) title = title.slice(1,-1);
   title = title.split(' ').map(capitalize).join(' ')
   return wikiPrefix + (settings.language=='en' ? '': settings.language+'/') + 'wiki/' + encodeURIComponent(title);
 }
