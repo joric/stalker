@@ -680,6 +680,29 @@ function renderItem(feature) {
   };
 }
 
+function getSpawnContent(o, name) {
+  let rank = null;
+
+  if (name.includes(':')) {
+    [rank, name] = name.split(':');
+  }
+
+  section = 'generators'
+
+  let data = markers[section]['gen_' + name];
+
+  for (item of Object.keys( data||{} )) {
+    if (markers[section][item]) {
+      //console.log(name, '->', item);
+      return markers[section][item];
+    }
+  }
+
+  return data;
+
+}
+
+
 
 function popupOnClick(e) {
   let marker = e.target;
@@ -693,7 +716,6 @@ function popupOnClick(e) {
   popup.querySelector('#popup-subtitle').textContent = info.category;
   popup.querySelector('#popup-note').textContent = info.location;
 
-
   let div = popup.querySelector('#popup-subnote');
   div.replaceChildren();
   div.classList.remove('collapsed');
@@ -706,6 +728,22 @@ function popupOnClick(e) {
     div.appendChild(content);
   }
 
+  if (o.spawns) {
+    let hr = document.createElement('hr');
+    let ul = document.createElement('ul');
+    ul.className = 'popup-subnote-ul';
+    for (spawn of o.spawns) {
+      let li = document.createElement('li');
+      let data = getSpawnContent(o, spawn);
+      let title = JSON.stringify(data || name);
+      li.textContent = spawn;
+      li.setAttribute('title', title);
+      li.className = 'popup-subnote-li';
+      ul.appendChild(li);
+    }
+    div.appendChild(hr);
+    div.appendChild(ul);
+  }
 
   popup.querySelector('#popup-data').innerHTML = '<hr/><pre>'+JSON.stringify(o, null, 2) + '</pre>';
 
@@ -841,28 +879,6 @@ function showTooltip(e) {
 
   if (description) {
     content += `<hr/>${description}`;
-  }
-
-  function getSpawnContent(o, name) {
-    let rank = null;
-
-    if (name.includes(':')) {
-      [rank, name] = name.split(':');
-    }
-
-    section = 'generators'
-
-    let data = markers[section]['gen_' + name];
-
-    for (item of Object.keys( data||{} )) {
-      if (markers[section][item]) {
-        //console.log(name, '->', item);
-        return markers[section][item];
-      }
-    }
-
-    return data;
-
   }
 
   if (o.spawns) {
