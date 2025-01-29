@@ -1147,7 +1147,7 @@ function addMarker(feature) {
   //let tooltipTitle = `${info.title} (${info.category})`;
   let tooltipTitle = info.title;
   const tooltip = new maptalks.ui.ToolTip(tooltipTitle, {
-    showTimeout: 5,
+    showTimeout: 0,
   }).addTo(marker);
 
   marker.setInfoWindow({autoCloseOn: 'click'})
