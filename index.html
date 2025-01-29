@@ -1144,7 +1144,9 @@ function addMarker(feature) {
 */
 
   // this shit eats 200 ms. find a way to use a single tooltip
-  const tooltip = new maptalks.ui.ToolTip(`${info.title} (${info.category})`, {
+  //let tooltipTitle = `${info.title} (${info.category})`;
+  let tooltipTitle = info.title;
+  const tooltip = new maptalks.ui.ToolTip(tooltipTitle, {
     showTimeout: 5,
   }).addTo(marker);
 
