@@ -456,8 +456,7 @@ hr { opacity: .6;}
   padding: 1px;
   text-align: left;
   border-radius: 12px;
-  min-width: 260px;
-
+  min-width: 300px;
 }
 
 .popup-content {
@@ -1021,7 +1020,7 @@ input::selection {
 
 .popup-subnote-ul {
   overflow: hidden;
-  max-width: 320px;
+  max-width: 300px;
   padding: 0px;
   margin: 0px;
 }
