@@ -907,16 +907,17 @@ input::selection {
 
   display:none;
   position:absolute;
-  padding:5px;
-  border-radius:3px;
-  border-radius: 5px;
+
+  border-radius: 3px;
   padding: 0.75em;
-  max-width: 350px;
+  max-width: 320px;
+
   //box-shadow: 3px 3px 20px black;
+  //min-width: 120px;
 }
 
 .overflow-container {
-  max-width: 350px;
+  max-width: 320px;
   width: 100%;
   overflow: hidden;
   white-space: nowrap;
@@ -929,8 +930,8 @@ input::selection {
   position: absolute;
   top: 50%;
   right: 100%; /* Position the triangle to the left of the popup */
-  margin-top: -8px; /* Half the height of the triangle */
-  border-width: 8px;
+  margin-top: -6px; /* Half the height of the triangle */
+  border-width: 6px;
   border-style: solid;
   border-color: transparent white transparent transparent;
 }

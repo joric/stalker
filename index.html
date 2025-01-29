@@ -99,8 +99,8 @@ let lineColor = '#fff';
 
 let tooltipShowTimer = null;
 let tooltipHideTimer = null;
-let tooltipHideDelay = 150;
-let tooltipShowDelay = 200;
+let tooltipHideDelay = 1;
+let tooltipShowDelay = 1;
 
 let groupLayer = null;
 let map = null;
@@ -900,6 +900,7 @@ function showTooltip(e) {
     content += `<hr/>${description}`;
   }
 
+/*
   if (o.spawns) {
     content +='<hr/><div class="overflow-container">';
     for (spawn of o.spawns) {
@@ -912,7 +913,9 @@ function showTooltip(e) {
     }
     content +='</div>';
   }
+*/
 
+  /*
   let t = marker.feature.geometry.coordinates;
 
   let teleport = `${t[0]} ${t[1]} ${t[2]}`;
@@ -925,6 +928,7 @@ function showTooltip(e) {
   content += `<br/><small><small>SID: ${sid}</small></small>`;
   content += `<br/><small><small>XTeleportTo ${teleport}</small></small>`;
 
+  */
   tooltip.innerHTML = content;
 
   //tooltip.innerHTML = '<pre>' + JSON.stringify(marker.feature.properties, null, 2) + '</pre>';
@@ -1131,9 +1135,6 @@ function addMarker(feature) {
     dedup[key] = marker;
   }
 
-  //marker.on('click', showPopup);
-
-/*
   marker.on('mouseover', function(e) {
     let marker = e.target;
 
@@ -1142,8 +1143,8 @@ function addMarker(feature) {
     let textProp = { textSize: textSize * 1.0 };
     marker.setSymbol((symbol instanceof Array) ? [{...symbol[0], ...prop}, {...symbol[1], ...textProp}] : {...symbol, ...prop});
 
-    //clearTimeout(tooltipShowTimer);
-    //tooltipShowTimer = setTimeout(function(){showTooltip(e)}, tooltipShowDelay);
+    clearTimeout(tooltipShowTimer);
+    tooltipShowTimer = setTimeout(function(){showTooltip(e)}, tooltipShowDelay);
   });
 
   marker.on('mouseout', function(e) {
@@ -1152,22 +1153,24 @@ function addMarker(feature) {
     let symbol = marker.getSymbol();
     let prop = { markerWidth: size, markerHeight: size };
     let textProp = { textSize: textSize };
-
     marker.setSymbol((symbol instanceof Array) ? [{...symbol[0], ...prop}, {...symbol[1], ...textProp}] : {...symbol, ...prop});
 
-    //clearTimeout(tooltipShowTimer);
-    //clearTimeout(tooltipHideTimer);
-    //tooltipHideTimer = setTimeout(hideTooltip, tooltipHideDelay);
+    clearTimeout(tooltipShowTimer);
+    clearTimeout(tooltipHideTimer);
+    tooltipHideTimer = setTimeout(hideTooltip, tooltipHideDelay);
   });
-*/
 
+
+  //marker.on('click', popupOnClick);
+
+/*
   // this shit eats 200 ms. find a way to use a single tooltip
   //let tooltipTitle = `${info.title} (${info.category})`;
   let tooltipTitle = info.title;
   const tooltip = new maptalks.ui.ToolTip(tooltipTitle, {
     showTimeout: 1,
   }).addTo(marker);
-
+*/
   marker.setInfoWindow({autoCloseOn: 'click'})
   //.on('dragend', onDragEnd)
   .on('click', popupOnClick)
