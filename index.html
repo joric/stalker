@@ -1180,7 +1180,8 @@ function scaleOrigin(coordinates, scaleFactor, origin) {
     const [x, y] = coord;
     return [
       origin[0] + (x - origin[0]) * scaleFactor,
-      origin[1] + (y - origin[1]) * scaleFactor
+      origin[1] + (y - origin[1]) * scaleFactor,
+      -10, // sink region outline a bit (some markers are -3)
     ];
   });
 }
