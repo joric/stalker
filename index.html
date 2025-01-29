@@ -774,11 +774,7 @@ function popupOnClick(e) {
 
   setClass(popup.querySelector('#popup-data'), settings.debugMode!=true, 'collapsed');
 
-  e.target._infoWindow.setOptions({custom: true, dy: 8});
-  e.target._infoWindow.setContent(popup);
-
   popup.querySelector('#popup-close').onclick = function() {  e.target._infoWindow.hide(); };
-
   popup.addEventListener('contextmenu', function(e) { e.stopPropagation()}, true); // enable default context menu
 
   popup.querySelector('#popup-map-link').href = getMapURL(o.sid);
@@ -804,6 +800,10 @@ function popupOnClick(e) {
   popup.querySelector('#popup-found').checked = settings.markedItems[o.sid]==true;
   popup.querySelector('#popup-found').onclick = function() { toggleMarked(o.sid) };
   popup.querySelector('#popup-found-label').textContent = lang['sid_misc_pda_hint_HidePlayerLandmark'] || 'Found';
+
+
+  e.target._infoWindow.setOptions({custom: true, dy: 16});
+  e.target._infoWindow.setContent(popup);
 }
 
 function toggleMarked(id) {
