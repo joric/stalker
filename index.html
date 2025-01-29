@@ -729,6 +729,17 @@ function popupOnClick(e) {
     div.appendChild(content);
   }
 
+  function customReplacer(key, value) {
+      if (value && typeof value === 'object') {
+          const depth = this.depth || 0;
+          if (depth === 1) {
+              return JSON.stringify(value);
+          }
+          return { ...value, depth: depth + 1 };
+      }
+      return value;
+  }
+
   if (o.spawns) {
     let hr = document.createElement('hr');
     let ul = document.createElement('ul');
@@ -736,7 +747,9 @@ function popupOnClick(e) {
     for (spawn of o.spawns) {
       let li = document.createElement('li');
       let data = getSpawnContent(o, spawn);
-      let title = JSON.stringify(data || name);
+
+      let title = JSON.stringify(data || name, customReplacer, 2);
+
       li.textContent = spawn;
       li.setAttribute('title', title);
       li.className = 'popup-subnote-li';
