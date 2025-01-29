@@ -709,6 +709,7 @@ function getSpawnContent(o, name) {
 }
 
 function setMarkerSize(marker, size) {
+  return; // do not do it yet
   let symbol = marker.getSymbol();
   let prop = { markerWidth: size, markerHeight: size };
   let textProp = { textSize: textSize * 1.0 };
