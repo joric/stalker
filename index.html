@@ -61,7 +61,7 @@
       <div id="popup-data-toggle" data-toggle="collapse" data-target="popup-data"><hr/></div>
       <div class="popup-controls">
         <input id="popup-found" type="checkbox">
-        <label for="popup-found" title="Toggle found">Found</label>
+        <label id="popup-found-label" for="popup-found" title="Toggle found">Found</label>
         <a class="popup-link" id="popup-wiki-link" href="#" target="_blank" title="Fallout London Wiki"><i class="fa fa-brands fa-wikipedia-w"></i></a>
         <a class="popup-link" id="popup-map-link" href="#" target="_blank" title="Copy Map Link to Clipboard"><i class="fa fa-link"></i></a>
         <a class="popup-link" id="popup-form-id-link" href="#" target="_blank" title="Copy Marker SID to Clipboard"><i class="fa fa-hashtag"></i></a>
@@ -797,12 +797,8 @@ function popupOnClick(e) {
   popup.querySelector('#popup-form-id-link').onclick = function(e){ copyToClipboard(e.target.href.split('#')[1]); return false; };
 
   popup.querySelector('#popup-found').checked = settings.markedItems[o.sid]==true;
-
   popup.querySelector('#popup-found').onclick = function() { toggleMarked(o.sid) };
-
-
-  popup.querySelector('#popup-found + label').textContent = lang['sid_misc_pda_hint_HidePlayerLandmark'] || 'Found';
-
+  popup.querySelector('#popup-found-label').textContent = lang['sid_misc_pda_hint_HidePlayerLandmark'] || 'Found';
 }
 
 function toggleMarked(id) {

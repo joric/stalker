@@ -1018,6 +1018,11 @@ input::selection {
 }
 
 
+#popup-found-label {
+  position: relative;
+  top: -2px;
+}
+
 .popup-subnote-ul {
   overflow: hidden;
   max-width: 300px;
