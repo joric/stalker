@@ -801,7 +801,7 @@ function popupOnClick(e) {
   popup.querySelector('#popup-found').onclick = function() { toggleMarked(o.sid) };
 
 
-  popup.querySelector('#popup-found + label').textContent = lang['sid_misc_pda_hint_HidePlayerLandmark'];
+  popup.querySelector('#popup-found + label').textContent = lang['sid_misc_pda_hint_HidePlayerLandmark'] || 'Found';
 
 }
 
