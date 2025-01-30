@@ -291,12 +291,11 @@ def export_generators(records):
 
     return entries
 
-counter = Counter()
-
 def get_filename(package_path):
     return os.path.normpath(os.path.join(cache_dir,package_path))+'.json'
 
-missing_files = []
+bp_counter = Counter()
+bp_missing_files = []
 
 def get_bp_cells(package_path):
     out = []
@@ -310,7 +309,6 @@ def get_bp_cells(package_path):
             for name in bp_classes:
                 if name in key:
                     out.append(cell)
-                    counter[key.split('_UAID')[0]] += 1
 
                     package_path = os.path.join(world_path,'_Generated_', cell)
                     filename = os.path.normpath(os.path.join(cache_dir, package_path)) + '.json'
@@ -329,32 +327,34 @@ def get_bp_markers(cells):
         filename = os.path.normpath(os.path.join(cache_dir, package_path)) + '.json'
 
         if not os.path.exists(filename):
-            missing_files.append(filename)
+            bp_missing_files.append(filename)
             continue
 
         properties = {}
         data = json.load(open(filename, 'r', encoding='utf-8-sig'))
         for o in data:
-            type = o['Type']
+            bp_type = o['Type']
 
-            if type == 'BP_DoorView_C':
+            if bp_type == 'BP_DoorView_C':
                 locked = o.get('Properties',{}).get('bIsLocked')
                 if locked != None:
                     properties['locked'] = locked
 
-            if type == 'BP_Teleport_Portal_Bubble_C':
+            if bp_type == 'BP_Teleport_Portal_Bubble_C':
                 target = o.get('Properties',{}).get('EndPoint',{}).get('Translation')
 
-            if type in ('SkeletalMeshComponent','StaticMeshComponent','SceneComponent'):
+            if bp_type in ('SkeletalMeshComponent','StaticMeshComponent','SceneComponent'):
                 outer = o['Outer']
 
                 for class_name, marker_type in bp_classes.items():
                     if class_name not in outer: continue
 
-                    #if 'BP_DoorView' in class_name and not properties.get('locked'): continue
+                    prefix = outer.split('_UAID_').pop(0)
+                    postfix = outer.split('_UAID_').pop()
+
+                    bp_counter[prefix] += 1
 
                     sid = outer
-                    #sid = outer.split('_UAID_').pop()
 
                     c = o.get('Properties',{}).get('RelativeLocation',{})
                     if c:
@@ -536,6 +536,7 @@ if __name__ == '__main__':
     tm = time.time()
     data = load_cache()
     export_markers(data)
-    print(len(missing_files), 'cell files missing')
+    print(len(bp_missing_files), 'cell files missing')
+    print('bp_counter', bp_counter)
     print(f'finished in {time.time()-tm:f} seconds')
 
