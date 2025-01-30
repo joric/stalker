@@ -63,6 +63,6 @@
   "ESpawnType::ElectroAnomaly": {"icon": "anomaly", "category": "sid_misc_pda_map_playerTags_anomaly", "group": "anomalies" },
   "ESpawnType::PillowAnomaly": {"icon": "anomaly", "category": "sid_misc_pda_map_playerTags_anomaly", "group": "anomalies" },
   "ESpawnType::AnomalySpawner": {"icon": "anomaly", "category": "sid_misc_pda_map_playerTags_anomaly", "group": "anomalies" },
-  "ESpawnType::Radiation": {"icon": "radiation", "category": "sid_misc_pda_map_playerTags_anomaly", "group": "misc" },
+  "ESpawnType::Radiation": {"icon": "radiation", "category": "sid_misc_pda_map_playerTags_radiation", "group": "misc" },
   "ESpawnType::ArtifactSpawner": {"icon": "artifact", "category": "sid_misc_pda_map_playerTags_habar", "group": "misc" }
 }
