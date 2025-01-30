@@ -12,7 +12,7 @@
     "items": {
       "EMarkerType::Location": { "icon": "location", "category": "sid_misc_pda_Map_MarkerLocation", "group": "locations" },
       "EMarkerType::RegionMarker": { "icon": "region", "category": "sid_misc_pda_hint_region", "group": "regions" },
-      "EMarkerType::ArchAnomaly": {"icon": "arch_anomaly", "category": "sid_misc_pda_map_playerTags_anomaly", "group": "locations" }
+      "EMarkerType::ArchAnomaly": {"icon": "arch_anomaly", "category": "sid_misc_pda_Map_ArchAnomaly", "group": "locations" }
     }
   },
   "ESpawnType::Hub": { "icon": "camp", "category": "sid_misc_LEGACY_pda_Map_MarkerFriendlyAreaDefault", "group": "hubs" },
