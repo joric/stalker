@@ -915,9 +915,6 @@ input::selection {
 
   //box-shadow: 3px 3px 20px black;
   //min-width: 120px;
-
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
 .overflow-container {
