@@ -676,7 +676,7 @@ function renderItem(feature, extended = false) {
     location = lang[`sid_locations_region_${currentRegion}_name`];
   }
 
-  return {
+  let info = {
     title: title || category || o.type,
     category: category,
     location: location,
@@ -684,6 +684,10 @@ function renderItem(feature, extended = false) {
     description: description,
     prop: prop,
   };
+
+  //if (o.type == 'ESpawnType::Radiation') console.log(info, prop);
+
+  return info;
 }
 
 function getSpawnContent(o, name) {
@@ -839,26 +843,6 @@ function toggleMarked(id) {
   saveSettings();
 }
 
-function showPopup(e) {
-
-  showTooltip(e);
-
-  //console.log(e.target.feature.geometry.coordinates, e.target.feature.properties);
-
-  /*
-  var popup = new maptalks.ui.InfoWindow({
-    content: '<pre>' + JSON.stringify(feature, null, 2) + '</pre>' + teleport,
-    title: o.title,
-    autoOpenOn: 'click',
-    autoCloseOn: 'click',
-    dy: iconSize/2+5,
-  });
-    
-  popup.addTo(marker);
-  popup.addEventListener('contextmenu', function(e) { e.stopPropagation()}, true); // enable default context menu
-  */
-}
-
 // Function to show the tooltip
 function showTooltip(e) {
 
@@ -886,82 +870,20 @@ function showTooltip(e) {
 
   let o = marker.feature.properties;
 
-  // for the artifacts, it's usually
-  if (o.type=='ESpawnType::ArtifactSpawner' && o.name!='UniversalArtifactSpawner') {
-    name = name.split('Artifact')[0];
+
+  let info = renderItem(marker.feature);
+
+  let content = `<b>${info.title}</b>`;
+
+  if (info.category) {
+    content += `<br/><small>${info.category}</small>`;
   }
 
-  let prop = getIconProp(o);
-
-  let [title, description] = humanReadable(o);
-
-  let group = prop.group || 'misc';
-
-  let category = lang[prop.category] || lang[prop.title] || prop.category || group;
-
-  let content = `<b>${title}</b>`;
-
-  if (category) {
-    content += `<br/><small>${category}</small>`;
+  if (info.description) {
+    content += `<hr/>${info.description}`;
   }
 
-  if (description) {
-    content += `<hr/>${description}`;
-  }
-
-/*
-  if (o.spawns) {
-    content +='<hr/><div class="overflow-container">';
-    for (spawn of o.spawns) {
-      let data = getSpawnContent(o, spawn);
-      //console.log(data);
-
-      let title = JSON.stringify(data || name);
-
-      content += `<div title='${title}'>${spawn}</div>`;
-    }
-    content +='</div>';
-  }
-*/
-
-  /*
-  let t = marker.feature.geometry.coordinates;
-
-  let teleport = `${t[0]} ${t[1]} ${t[2]}`;
-
-  let sid = marker.feature.properties.sid;
-  if (sid.includes('_C_')) sid = sid.split('_C_')[1];
-
-  content += `<hr/><small><small>Name: ${o.name}</small></small>`;
-  content += `<br/><small><small>Type: ${o.type}</small></small>`;
-  content += `<br/><small><small>SID: ${sid}</small></small>`;
-  content += `<br/><small><small>XTeleportTo ${teleport}</small></small>`;
-
-  */
   tooltip.innerHTML = content;
-
-  //tooltip.innerHTML = '<pre>' + JSON.stringify(marker.feature.properties, null, 2) + '</pre>';
-
-  //console.log(e);
-
-  // does not work really. use getContainerExtent. see https://github.com/maptalks/maptalks.js/issues/2486
-  function coordinateToContainerPoint(map, coordinate) {
-    const { x, y, z = 0 } = coordinate;
-    const baseContainerPoint = map.coordinateToContainerPoint(new maptalks.Coordinate(x, y));
-    const pitch = map.getPitch() * (Math.PI / 180); // Convert degrees to radians
-    const tilt = map.getBearing() * (Math.PI / 180); // Convert degrees to radians (if needed)
-    const resolution = map.getResolution();
-    const altitudeAdjustment = z / resolution;
-    const adjustedX = baseContainerPoint.x + altitudeAdjustment * Math.sin(tilt);
-    const adjustedY = baseContainerPoint.y - altitudeAdjustment * Math.cos(pitch);
-    return { x: adjustedX, y: adjustedY };
-  }
-
-  // Get the screen coordinates of the event
-  //let c = marker.getCoordinates();
-  //var screenPosition = coordinateToContainerPoint(map, c);
-  //var screenPosition = map.coordinateToContainerPoint(c);
-  //console.log('tooltip size', tooltipWidth, tooltipHeight);
 
   let c = marker.getContainerExtent();
   let screenPosition = {x: c.pxmin, y: c.pymin};

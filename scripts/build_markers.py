@@ -407,9 +407,9 @@ def export_markers(cache):
                     'RegionType': 'region',
 
                     # remap to name for now
-                    'TriggerShape': 'name',
-                    'Radioactivity': 'name',
-                    'ContextualActionSID': 'name',
+                    'TriggerShape': 'shape',
+                    'Radioactivity': 'radioactivity',
+                    'ContextualActionSID': 'action_sid',
                     'MarkerSID': 'name',
                 }
 
