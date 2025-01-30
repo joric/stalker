@@ -335,10 +335,14 @@ def get_bp_markers(cells):
         for o in data:
             bp_type = o['Type']
 
-            if bp_type == 'BP_DoorView_C':
-                locked = o.get('Properties',{}).get('bIsLocked')
-                if locked != None:
-                    properties['locked'] = locked
+            remap = {
+                'bIsLocked': 'locked',
+            }
+
+            for (key, field) in remap.items():
+                value = o.get('Properties',{}).get(key)
+                if value:
+                    properties[field] = value
 
             if bp_type == 'BP_Teleport_Portal_Bubble_C':
                 target = o.get('Properties',{}).get('EndPoint',{}).get('Translation')
