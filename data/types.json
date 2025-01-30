@@ -18,7 +18,7 @@
   "ESpawnType::Hub": { "icon": "camp", "category": "sid_misc_LEGACY_pda_Map_MarkerFriendlyAreaDefault", "group": "hubs" },
   "ESpawnType::ItemContainer": { "icon": "stash", "title": "sid_misc_pda_Map_MarkerCache", "category": "sid_misc_pda_map_playerTags_habar", "group": "stashes" },
   "ESpawnType::DeadBody": { "icon": "skull", "category": "sid_npc_name_mertvec", "group": "misc" },
-  "ESpawnType::PackOfItems": { "icon": "box", "category": "sid_misc_pda_Map_MarkerPlayerLandmarkHabar", "group": "misc" },
+  "ESpawnType::PackOfItems": { "icon": "box", "title": "sid_stashes_Gen_Stash197_name", "category": "sid_misc_pda_Map_MarkerPlayerLandmarkHabar", "group": "misc" },
   "ESpawnType::Shelter": { "icon": "cave", "category": "sid_misc_pda_Map_MarkerShellter", "group": "misc" },
   "ESpawnType::Squad": { "icon": "soldier", "category": "Squads", "group": "misc" },
   "ESpawnType::Patrol": { "icon": "soldier", "category": "Patrols", "group": "misc" },

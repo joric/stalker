@@ -161,7 +161,7 @@ def get_rank_code(enum):
 def add_spawns(data, prop):
     ranks = defaultdict(list)
 
-    for stash_sid in ('StashPrototypeSID', 'CorpseStashSID'):
+    for stash_sid in ('StashPrototypeSID', 'CorpseStashSID', 'PackOfItemsPrototypeSID'):
         stash = data.get(stash_sid)
         if stash:
             for x in stash.split(','):
@@ -411,7 +411,6 @@ def export_markers(cache):
                     'Radioactivity': 'name',
                     'ContextualActionSID': 'name',
                     'MarkerSID': 'name',
-                    'PackOfItemsPrototypeSID': 'name',
                 }
 
                 prop.update({v: data[k] for k,v in remap.items() if k in data})
