@@ -26,8 +26,8 @@
   "ESpawnType::DailyScheduleZone": { "icon": "circle", "category": "Schedulers", "group": "misc" },
   "ESpawnType::MoveToPath": { "icon": "circle", "category": "Helpers", "group": "misc" },
   "ESpawnType::LairSpawner": { "icon": "danger", "category": "lair", "group": "enemies" },
-  "ESpawnType::Trigger": { "icon": "circle", "category": "Triggers", "group": "misc" },
-  "ESpawnType::ContextualAction": { "icon": "circle", "category": "ContextualActions", "group": "misc",
+  "ESpawnType::Trigger": { "icon": "circle", "title": "Trigger", "category": "sid_misc_pda_reward_random", "group": "misc" },
+  "ESpawnType::ContextualAction": { "icon": "circle", "category":"Contextual Action", "category-": "sid_misc_pda_reward_random", "group": "misc",
     "match": {
       "Jerboa|PseudoDog|Bayun|Bloodsucker|Flesh|Blinddog|Tushkan|Boar|ZombieFoster|Rat|Snork|Zombie": { "icon": "danger", "category": "sid_npc_name_mutant", "group": "enemies" },
       "Deer|Pseudogiant|Burer|Poltergeist|Controller|Chimera": { "icon": "danger", "category": "sid_npc_name_mutant", "group": "enemies" },
