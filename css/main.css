@@ -819,8 +819,9 @@ input::selection {
   #categories .group-categories {
     column-count: 1;
   }
+
   input::placeholder {
-        color: transparent;
+        //color: transparent;
   }
 }
 
@@ -845,7 +846,7 @@ input::selection {
     column-count: 1;
   }
   input::placeholder {
-        color: transparent;
+        //color: transparent;
   }
 }
 

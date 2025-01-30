@@ -13,7 +13,11 @@ bp_classes = {
     'BP_Bed_OnBed_C':'EMarkerType::Bed',
     'BP_PlayerStash_C':'EMarkerType::PlayerStorage',
     'BP_TopazScanner':'EMarkerType::Scanner',
-    'BP_Teleport_Portal_Bubble': 'EMarkerType::Teleport'
+    'BP_Teleport_Portal_Bubble': 'EMarkerType::Teleport',
+    'BP_DoorView_C': 'EMarkerType::Door',
+    'BP_Stalker2Door_C': 'EMarkerType::Door',
+    'BP_BunkerDoor_': 'EMarkerType::Door',
+    'BP_gen_security_door_': 'EMarkerType::Door',
 }
 
 def parse_struct(reader, options={}):
@@ -292,10 +296,12 @@ counter = Counter()
 def get_filename(package_path):
     return os.path.normpath(os.path.join(cache_dir,package_path))+'.json'
 
-def get_cells(package_path):
+missing_files = []
+
+def get_bp_cells(package_path):
     out = []
     filename = get_filename(package_path)
-    data = json.load(open(filename, 'r'))
+    data = json.load(open(filename, 'r', encoding='utf-8-sig'))
     for o in data:
         p = o.get('Properties',{})
         r = p.get('SubObjectsToCellRemapping',{})
@@ -310,25 +316,32 @@ def get_cells(package_path):
                     filename = os.path.normpath(os.path.join(cache_dir, package_path)) + '.json'
 
                     if not os.path.exists(filename):
-                        print('NOT CACHED', cell, 'need for', key)
+                        #print('NOT CACHED', cell, 'need for', key)
                         continue
 
     #print('found items', counter)
     return out
 
-def get_custom_markers(cells):
+def get_bp_markers(cells):
     features = []
     for cell in cells:
         package_path = os.path.join(world_path,'_Generated_', cell)
         filename = os.path.normpath(os.path.join(cache_dir, package_path)) + '.json'
 
         if not os.path.exists(filename):
-            print('missing', filename)
+            missing_files.append(filename)
             continue
 
-        data = json.load(open(filename, 'r'))
+        properties = {}
+        data = json.load(open(filename, 'r', encoding='utf-8-sig'))
         for o in data:
             type = o['Type']
+
+            if type == 'BP_DoorView_C':
+                locked = o.get('Properties',{}).get('bIsLocked')
+                if locked != None:
+                    properties['locked'] = locked
+
             if type == 'BP_Teleport_Portal_Bubble_C':
                 target = o.get('Properties',{}).get('EndPoint',{}).get('Translation')
 
@@ -338,7 +351,10 @@ def get_custom_markers(cells):
                 for class_name, marker_type in bp_classes.items():
                     if class_name not in outer: continue
 
-                    name, sid = outer.split('_UAID_')
+                    #if 'BP_DoorView' in class_name and not properties.get('locked'): continue
+
+                    sid = outer
+                    #sid = outer.split('_UAID_').pop()
 
                     c = o.get('Properties',{}).get('RelativeLocation',{})
                     if c:
@@ -347,13 +363,16 @@ def get_custom_markers(cells):
                         feature = {
                             'type': 'Feature',
                             'geometry': {'type':'Point', 'coordinates': coord},
-                            'properties': {'type': 'ESpawnType::CustomMarker', 'name': marker_type, 'sid': sid, 'cell': cell }
+                            'properties': {'sid': sid, 'type': 'ESpawnType::CustomMarker', 'name': marker_type, 'cell': cell }
                         }
+
+                        for key,value in properties.items():
+                            feature['properties'][key] = value
+                        properties = {}
 
                         features.append(feature)
 
                         if 'BP_Teleport_Portal_Bubble_C' in o['Outer'] and target:
-
                             delta = [target[t] for t in 'XYZ']
                             target_coord = [coord[t]+delta[t] for t in range(3)]
                             feature['properties']['target'] = target_coord
@@ -361,7 +380,7 @@ def get_custom_markers(cells):
                             feature = {
                                 'type': 'Feature',
                                 'geometry': {'type':'Point', 'coordinates': target_coord},
-                                'properties': {'type': 'ESpawnType::CustomMarker', 'name': marker_type+'Target', 'sid': sid+'_target', 'cell': cell }
+                                'properties': {'sid': sid +'_target', 'type': 'ESpawnType::CustomMarker', 'name': marker_type + 'Target', 'cell': cell }
                             }
 
                             features.append(feature)
@@ -471,8 +490,8 @@ def export_markers(cache):
     out['generators'] = gen
 
     # partitions are read from WorldMap_WP and then exported with FModel as json (one by one)
-    cells = set(get_cells(world_path))
-    features2 = get_custom_markers(cells)
+    cells = set(get_bp_cells(world_path))
+    features2 = get_bp_markers(cells)
 
     features.extend(features2)
 
@@ -517,5 +536,6 @@ if __name__ == '__main__':
     tm = time.time()
     data = load_cache()
     export_markers(data)
+    print(len(missing_files), 'cell files missing')
     print(f'finished in {time.time()-tm:f} seconds')
 
