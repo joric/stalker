@@ -717,7 +717,10 @@ function setMarkerSize(marker, size) {
 }
 
 function popupOnClick(e) {
+  hideTooltipExt(e);
+
   let marker = e.target;
+
   let feature = marker.feature;
   let o = marker.feature.properties;
   let popup = document.querySelector('#popup').cloneNode(true);
@@ -1024,6 +1027,22 @@ function getIconProp(o) {
   return prop;
 }
 
+function showTooltipExt(e) {
+  let marker = e.target;
+    //setMarkerSize(e.target, size * 1.15);
+    clearTimeout(tooltipShowTimer);
+    if (marker.getInfoWindow() && marker.getInfoWindow().isVisible()) return; // do not open popup if there's an info window
+    tooltipShowTimer = setTimeout(function(){showTooltip(e)}, tooltipShowDelay);
+}
+
+function hideTooltipExt(e) {
+  let marker = e.target;
+  //setMarkerSize(e.target, size * 1.0);
+  clearTimeout(tooltipShowTimer);
+  clearTimeout(tooltipHideTimer);
+  tooltipHideTimer = setTimeout(hideTooltip, tooltipHideDelay);
+}
+
 dedup = {};
 
 function addMarker(feature) {
@@ -1141,19 +1160,8 @@ function addMarker(feature) {
     dedup[key] = marker;
   }
 
-  marker.on('mouseover', function(e) {
-    setMarkerSize(e.target, size * 1.15);
-    clearTimeout(tooltipShowTimer);
-    tooltipShowTimer = setTimeout(function(){showTooltip(e)}, tooltipShowDelay);
-  });
-
-  marker.on('mouseout', function(e) {
-    setMarkerSize(e.target, size * 1.0);
-    clearTimeout(tooltipShowTimer);
-    clearTimeout(tooltipHideTimer);
-    tooltipHideTimer = setTimeout(hideTooltip, tooltipHideDelay);
-  });
-
+  marker.on('mouseover', showTooltipExt);
+  marker.on('mouseout', hideTooltipExt);
 
   //marker.on('click', popupOnClick);
 
