@@ -411,6 +411,7 @@ def export_markers(cache):
                     'Radioactivity': 'name',
                     'ContextualActionSID': 'name',
                     'MarkerSID': 'name',
+                    'PackOfItemsPrototypeSID': 'name',
                 }
 
                 prop.update({v: data[k] for k,v in remap.items() if k in data})
