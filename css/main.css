@@ -913,8 +913,10 @@ input::selection {
   padding: 0.75em;
   max-width: 320px;
 
-  //box-shadow: 3px 3px 20px black;
+  //box-shadow: 1px 1px 2px black;
   //min-width: 120px;
+
+  //box-shadow: 1px 1px 1px black;
 }
 
 .overflow-container {

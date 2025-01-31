@@ -712,6 +712,14 @@ function getSpawnContent(o, name) {
 
 }
 
+function getMarkerSize(marker) {
+  let symbol = marker.getSymbol();
+  if (symbol instanceof Array) {
+    symbol = symbol[0];
+  }
+  return symbol.markerWidth || 32;
+}
+
 function setMarkerSize(marker, size) {
   return; // do not do it yet
   let symbol = marker.getSymbol();
@@ -898,7 +906,7 @@ function showTooltip(e) {
   var spaceRight = mapRect.width - screenPosition.x;
   var spaceLeft = screenPosition.x;
 
-  let gap = 30;//marker.getSymbol().markerWidth/2+5;
+  let gap = getMarkerSize(marker)/2+5;
 
   // Position the tooltip
   if (spaceRight > tooltipWidth) {
@@ -1279,6 +1287,10 @@ function passesFilter(marker) {
   let terms = text.split(' ');
   let o = marker.feature.properties;
   let tags = o.spawns || [''];
+
+  if (o.references) tags.push(...o.references);
+  if (o.guid) tags.push(o.guid);
+
 
   let prop = getIconProp(o);
   let [title, description] = humanReadable(o);

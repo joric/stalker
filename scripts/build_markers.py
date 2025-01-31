@@ -320,8 +320,14 @@ def get_bp_cells(package_path):
     #print('found items', counter)
     return out
 
+cached_signals = defaultdict(list)
+
 def get_bp_markers(cells):
     features = []
+    #properties = {}
+    cached_coord = {}
+    cached_prop = {}
+
     for cell in cells:
         package_path = os.path.join(world_path,'_Generated_', cell)
         filename = os.path.normpath(os.path.join(cache_dir, package_path)) + '.json'
@@ -330,9 +336,75 @@ def get_bp_markers(cells):
             bp_missing_files.append(filename)
             continue
 
-        properties = {}
         data = json.load(open(filename, 'r', encoding='utf-8-sig'))
+
+
+        # collect all properties for matching classes, group by name
         for o in data:
+            bp_type = o['Type']
+            for class_name_prefix, marker_type in bp_classes.items():
+                if bp_type.startswith(class_name_prefix):
+                    name = o['Name']
+                    #if name!='BP_DoorView_C_UAID_18C04D7E659CAACD01_1306808572': continue
+                    cached_prop[name] = {'sid': name, 'type': 'ESpawnType::CustomMarker', 'name': marker_type, 'cell': cell }
+
+                    # add base class properties
+                    prop = cached_prop[name]
+
+                    p = o.get('Properties',{})
+                    locked  = p.get('bIsLocked')
+                    if locked:
+                        prop['locked'] = locked
+
+                    target = p.get('EndPoint',{}).get('Translation')
+                    if target:
+                        prop['target'] = [target[t] for t in 'XYZ']
+
+                    #guid = p.get('Guid','').replace('-','')
+                    #if guid:
+                    #    prop['guids']['Default'] = guid
+
+        # collect outer properties, i.e. all entries that list current class name as "outer"
+        for o in data:
+            name = o.get('Outer')
+            if name in cached_prop:
+                prop = cached_prop[name]
+
+                bp_type = o['Type']
+                p = o.get('Properties',{})
+
+                if bp_type == 'SignalReceiverComponent':
+                    guid = p.get('Guid','').replace('-','')
+                    if guid:
+                        prop['guid'] = guid
+                        if guid in cached_signals:
+                            prop['references'] = cached_signals[guid]
+
+                if bp_type in ['SkeletalMeshComponent','StaticMeshComponent','SceneComponent']:
+                    c = p.get('RelativeLocation',{})
+                    if c:
+                        coord = [float(c[a]) for a in ('X','Y','Z')]
+                        cached_coord[name] = coord
+
+                        target = prop.get('target')
+                        if target:
+                            prop['target'] = [coord[i]+target[i] for i in range(3)]
+
+    for name in cached_prop:
+        prop = cached_prop[name]
+        coord = cached_coord[name]
+        if not coord: continue
+        feature = {
+            'type': 'Feature',
+            'geometry': {'type':'Point', 'coordinates': coord},
+            'properties': prop
+        }
+        features.append(feature)
+
+    return features
+
+'''
+
             bp_type = o['Type']
 
             remap = {
@@ -347,6 +419,7 @@ def get_bp_markers(cells):
             if bp_type == 'BP_Teleport_Portal_Bubble_C':
                 target = o.get('Properties',{}).get('EndPoint',{}).get('Translation')
 
+
             if bp_type in ('SkeletalMeshComponent','StaticMeshComponent','SceneComponent'):
                 outer = o['Outer']
 
@@ -359,6 +432,11 @@ def get_bp_markers(cells):
                     bp_counter[prefix] += 1
 
                     sid = outer
+
+                    if bp_type == 'SignalReceiverComponent':
+                        guid = o.get('Properties',{}).get('Guid','').replace('-','')
+                        if guid:
+                            properties['guid'] = guid
 
                     c = o.get('Properties',{}).get('RelativeLocation',{})
                     if c:
@@ -388,8 +466,7 @@ def get_bp_markers(cells):
                             }
 
                             features.append(feature)
-
-    return features
+'''
 
 def export_markers(cache):
     features = []
@@ -398,11 +475,17 @@ def export_markers(cache):
     quest_proto = load_map(cache['Stalker2/Content/GameLite/GameData/ObjPrototypes/QuestObjPrototypes.cfg'], {'NPCPrototypeSID': 'npc', 'Faction': 'faction'})
     npc_proto = load_map(cache['Stalker2/Content/GameLite/GameData/NPCPrototypes.cfg'], {'NameTextKey': 'title', 'Rank': 'rank'})
 
-
     for package_path, entries in cache.items():
         comment = entries.get('comment')
         for sid, data in entries.items():
             try:
+
+                if type(data) is dict:
+                    for signal_prop in ['SignalSenderGuid','SignalReceiverGuid']:
+                        signal = data.get(signal_prop)
+                        if signal:
+                            cached_signals[signal].append(sid)
+
                 coord = get_coordinates(data)
 
                 # skip markers without coordinates
