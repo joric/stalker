@@ -1289,8 +1289,7 @@ function passesFilter(marker) {
   let tags = o.spawns || [''];
 
   if (o.references) tags.push(...o.references);
-  if (o.guid) tags.push(o.guid);
-
+  //if (o.guid) tags.push(o.guid);
 
   let prop = getIconProp(o);
   let [title, description] = humanReadable(o);
