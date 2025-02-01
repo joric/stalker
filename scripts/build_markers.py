@@ -393,6 +393,12 @@ def get_bp_markers(cells):
                 add_guid(prop, p)
                 add_prop(prop, p, 'CorrectCode', 'keycode')
 
+                signals = p.get('Signals',[])
+                for sig in signals:
+                    ref = sig.get('ReceiverComponentRef',{}).get('OtherActor',{}).get('SubPathString')
+                    if ref:
+                        prop['other_actor'] = ref.split('.').pop()
+
                 if bp_type in ['SkeletalMeshComponent','StaticMeshComponent','SceneComponent']:
                     c = p.get('RelativeLocation',{})
                     if c:
