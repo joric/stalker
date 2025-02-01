@@ -372,9 +372,9 @@ def get_bp_markers(cells):
                     if locked:
                         prop['locked'] = locked
 
-                    target = p.get('EndPoint',{}).get('Translation')
-                    if target:
-                        prop['target'] = [target[t] for t in 'XYZ']
+                    delta = p.get('EndPoint',{}).get('Translation')
+                    if delta:
+                        prop['delta'] = [delta[t] for t in 'XYZ']
 
                     add_guid(prop, p)
 
@@ -405,9 +405,10 @@ def get_bp_markers(cells):
                         coord = [float(c[a]) for a in ('X','Y','Z')]
                         cached_coord[name] = coord
 
-                        target = prop.get('target')
-                        if target:
-                            prop['target'] = [coord[i]+target[i] for i in range(3)]
+                        delta = prop.get('delta')
+                        if delta:
+                            prop['target'] = [coord[i]+delta[i] for i in range(3)]
+                            del prop['delta']
 
     for name in cached_prop:
         prop = cached_prop[name]
