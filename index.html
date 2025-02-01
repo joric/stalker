@@ -1303,7 +1303,7 @@ function passesFilter(marker) {
 
   let prop = getIconProp(o);
   let [title, description] = humanReadable(o);
-  let c = lang[prop.category];
+  let c = lang[prop.category] || prop.category;
 
   let clue = lang['sid_stashes_'+o.clue+'_name'];
 
