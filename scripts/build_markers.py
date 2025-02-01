@@ -372,12 +372,11 @@ def get_bp_markers(cells):
                     if locked:
                         prop['locked'] = locked
 
-                    delta = p.get('EndPoint',{}).get('Translation')
-                    if delta:
-                        prop['delta'] = [delta[t] for t in 'XYZ']
+                    c = p.get('EndPoint',{}).get('Translation')
+                    if c:
+                        prop['delta'] = [float(c[t]) for t in 'XYZ']
 
                     add_guid(prop, p)
-
                     add_prop(prop, p, 'bUnbreakable', 'unbreakable')
                     add_prop(prop, p, 'bSelfSufficient', 'self_sufficient')
 
@@ -402,18 +401,18 @@ def get_bp_markers(cells):
                 if bp_type in ['SkeletalMeshComponent','StaticMeshComponent','SceneComponent']:
                     c = p.get('RelativeLocation',{})
                     if c:
-                        coord = [float(c[a]) for a in ('X','Y','Z')]
+                        coord = [float(c[t]) for t in 'XYZ']
                         cached_coord[name] = coord
-
-                        delta = prop.get('delta')
-                        if delta:
-                            prop['target'] = [coord[i]+delta[i] for i in range(3)]
-                            del prop['delta']
 
     for name in cached_prop:
         prop = cached_prop[name]
         coord = cached_coord[name]
         if not coord: continue
+
+        delta = prop.get('delta')
+        if delta:
+            prop['target'] = [coord[i]+delta[i] for i in range(3)]
+            del prop['delta']
 
         feature = {
             'type': 'Feature',
