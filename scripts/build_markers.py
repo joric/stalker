@@ -18,6 +18,8 @@ bp_classes = {
     'BP_Stalker2Door_C': 'EMarkerType::Door',
     'BP_BunkerDoor_': 'EMarkerType::Door',
     'BP_gen_security_door_': 'EMarkerType::Door',
+    'BP_CodeLock': 'EMarkerType::CodeLock',
+    'BP_Cardlock': 'EMarkerType::CardLock',
 }
 
 def parse_struct(reader, options={}):
@@ -338,6 +340,11 @@ def get_bp_markers(cells):
 
         data = json.load(open(filename, 'r', encoding='utf-8-sig'))
 
+        def add_prop(prop, p, name, k):
+            value = p.get(name)
+            if value:
+                prop[k] = value
+
         def add_guid(prop, p):
             guid = p.get('Guid','').replace('-','')
             if guid:
@@ -371,6 +378,9 @@ def get_bp_markers(cells):
 
                     add_guid(prop, p)
 
+                    add_prop(prop, p, 'bUnbreakable', 'unbreakable')
+                    add_prop(prop, p, 'bSelfSufficient', 'self_sufficient')
+
         # collect outer properties, i.e. all entries that list current class name as "outer"
         for o in data:
             name = o.get('Outer')
@@ -381,6 +391,7 @@ def get_bp_markers(cells):
                 p = o.get('Properties',{})
 
                 add_guid(prop, p)
+                add_prop(prop, p, 'CorrectCode', 'keycode')
 
                 if bp_type in ['SkeletalMeshComponent','StaticMeshComponent','SceneComponent']:
                     c = p.get('RelativeLocation',{})

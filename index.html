@@ -1297,7 +1297,7 @@ function passesFilter(marker) {
 
   let clue = lang['sid_stashes_'+o.clue+'_name'];
 
-  let s = [title||'', description||'', c||'', clue||'', o.title||'', o.name||'', o.type||'', o.description||'', o.sid||'', o.clue||'', ...tags].join(' ').toLowerCase();
+  let s = [title||'', description||'', c||'', clue||'', o.title||'', o.name||'', o.type||'', o.description||'', o.sid||'', o.clue||'', o.cell||'', ...tags].join(' ').toLowerCase();
 
   if (o.clue) s += ' clue';
 
