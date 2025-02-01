@@ -378,7 +378,6 @@ def get_bp_markers(cells):
 
                     add_guid(prop, p)
                     add_prop(prop, p, 'bUnbreakable', 'unbreakable')
-                    add_prop(prop, p, 'bSelfSufficient', 'self_sufficient')
 
         # collect outer properties, i.e. all entries that list current class name as "outer"
         for o in data:
