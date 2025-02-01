@@ -6,9 +6,9 @@
       "EMarkerType::Teleport": { "icon": "circle_locked", "title": "sid_misc_controlsSettings_movement_jump_MLI", "category": "sid_misc_pda_map_playerTags_anomaly", "group": "locations" },
       "EMarkerType::TeleportTarget": { "icon": "circle_dot", "title": "sid_misc_controlsSettings_movement_jump_MLI", "category": "sid_misc_pda_map_playerTags_anomaly", "group": "locations" },
       "EMarkerType::Scanner": { "icon": "scanner", "title": "sid_character_skaner_0", "category": "sid_misc_inv_player_grid_name", "group": "locations" },
-      "EMarkerType::Door": { "icon": "circle_dot", "title": "Door", "category": "Doors", "group": "misc" },
-      "EMarkerType::CodeLock": { "icon": "lock", "title": "Combination Lock", "category": "Door Locks", "group": "locations" },
-      "EMarkerType::CardLock": { "icon": "lock", "title": "Keycard Reader", "category": "Door Locks", "group": "misc" }
+      "EMarkerType::Door": { "icon": "lock", "title": "Door", "category": "Doors", "group": "misc" },
+      "EMarkerType::CodeLock": { "icon": "message", "title": "Combination Lock", "category": "Door Locks", "group": "locations" },
+      "EMarkerType::CardLock": { "icon": "message", "title": "Keycard Reader", "category": "Door Locks", "group": "misc" }
     }
   },
   "ESpawnType::Marker" : {
