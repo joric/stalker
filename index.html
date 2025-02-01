@@ -891,6 +891,11 @@ function showTooltip(e) {
     content += `<hr/>${info.description}`;
   }
 
+  if (o.keycode) {
+    content += `<hr/>Keycode: ${o.keycode}`;
+  }
+
+
   tooltip.innerHTML = content;
 
   let c = marker.getContainerExtent();
@@ -1290,6 +1295,8 @@ function passesFilter(marker) {
 
   if (o.references) tags.push(...o.references);
   //if (o.guid) tags.push(o.guid);
+
+  if (o.keycode) tags.push('keycode');
 
   let prop = getIconProp(o);
   let [title, description] = humanReadable(o);
