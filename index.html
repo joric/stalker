@@ -88,6 +88,7 @@ let textSize = 18;
 let labelGroups = ['regions'];//, 'locations'];
 let zoomGroups = {'polygons':[-99,99], 'regions':[-99,2], 'lines':[2,99], 'hubs': [2,99], 'bases': [2,99], 'circles':[2,99], 'locations': [2,99], 'stashes':[4,99], 'items':[5,99], 'enemies':[6,99], 'anomalies':[6,99], 'misc':[7,99] };
 let foundOpacity = 0.25;
+let arrowStyle = [2,3];
 
 let scaleZ = 0.1; // postprocess coordinates beacuse enableAltitude and heightFactor doesn't seem to work at all
 
@@ -351,7 +352,7 @@ function addLines(markers) {
     if (enableTeleportLines && o.target) {
       let target = {x: o.target[0], y: o.target[1], z: o.target[2]};
       let points = [c, scaleCoordinate(target)];
-      let line = new maptalks.LineString(points,{symbol:{lineColor: lineColor, lineWidth: lineWidth}});
+      let line = new maptalks.LineString(points,{arrowStyle:arrowStyle, symbol:{lineColor: lineColor, lineWidth: lineWidth}});
       geometry.push(line);
       line.feature =  m.marker.feature;
     }
@@ -982,6 +983,8 @@ dedup = {};
 
 function addMarker(feature) {
   let o = feature.properties;
+
+  if (o.sid.startsWith('BP_CodeLock_C') && !o.keycode) return null;
 
   if (o.area && !o.area.includes('WorldMap_WP')) return null;
   if (o.name=='Hub') return null; // 1 marker (special case)
