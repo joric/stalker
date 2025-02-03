@@ -1,0 +1,1500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Joric's Stalker</title>
+<meta charset="utf-8">
+<meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="icon" href="data:,">
+<meta property="og:image" content="https://joric.github.io/stalker/images/thumbnail.jpg" />
+<meta property="og:site_name" content="Joric" />
+<meta property="og:type" content="object" />
+<meta property="og:title" content="Joric's Stalker" />
+<meta property="og:description" content="Interactive Map" />
+<link rel="stylesheet" href="css/main.css" />
+
+<link href="js/lib/font-awesome/css/all.min.css" rel="stylesheet">
+
+<link href="js/lib/maptalks-gl/maptalks.css" rel="stylesheet">
+<script type="text/javascript" src="js/lib/maptalks-gl/maptalks-gl.js"></script>
+
+</head>
+<body>
+
+<div id="language-selector">
+  <select>
+  </select>
+</div>
+
+<div tabindex=0 id="map"></div>
+
+<div class="search-container">
+  <div class="search-box">
+    <input tabindex=1 type="text">
+    <span class="search-icon search-submit" title="Search">&#128269;&#xFE0E;</span>
+    <span class="search-icon search-cancel" title="Cancel">&times;</span>
+  </div>
+</div>
+
+<div id="map-tooltip" class="arrow-left"></div>
+
+<div id="popup" class="popup">
+  <div class="popup-content-wrapper">
+    <div class="popup-content">
+      <div id="popup-title">Popup Title</div>
+      <div id="popup-subtitle">Popup Subtitle</div>
+      <div id="popup-note">Popup Note</div>
+      <div id="popup-subnote" class="collapsed">Popup Subnote</div>
+      <div id="popup-data" class="collapsed"></div>
+      <div id="popup-data-toggle" data-toggle="collapse" data-target="popup-data"><hr/></div>
+      <div class="popup-controls">
+        <input id="popup-found" type="checkbox">
+        <label id="popup-found-label" for="popup-found" title="Toggle found">Found</label>
+        <a class="popup-link" id="popup-wiki-link" href="#" target="_blank" title="Fallout London Wiki"><i class="fa fa-brands fa-wikipedia-w"></i></a>
+        <a class="popup-link" id="popup-map-link" href="#" target="_blank" title="Copy Map Link to Clipboard"><i class="fa fa-link"></i></a>
+        <a class="popup-link" id="popup-form-id-link" href="#" target="_blank" title="Copy Marker SID to Clipboard"><i class="fa fa-hashtag"></i></a>
+        <a class="popup-link" id="popup-marker-id-link" href="#" target="_blank" title="Copy Marker Location to Clipboard"><i class="fa fa-location-crosshairs"></i></a>
+      </div>
+    </div>
+  </div>
+  <div class="popup-tip-container"><div class="popup-tip"></div></div>
+  <a id="popup-close" class="popup-close-button">&times;</a>
+</div>
+
+<div id="alert" class="closed">Copied To Clipboard</div>
+
+<script>
+let maxZoom = 19;
+let enableAltitude = false;
+let heightFactor = 1.0;
+let iconSize = 48;
+let startPitch = 0;
+let startZoom = 2;
+let defaultPitch = 45;
+let autoAltitude = true;
+let textSize = 18;
+let labelGroups = ['regions'];//, 'locations'];
+
+let zoomGroups = {
+  'polygons':[-99,99], 'regions':[-99,2],
+  'hubs': [2,99], 'bases': [2,99], 'circles':[2,99], 'locations': [2,99],
+  'actors': [3,99], 'lines':[3,99],
+  'stashes':[4,99], 'items':[5,99], 'enemies':[6,99], 'anomalies':[6,99], 'misc':[7,99] };
+
+let foundOpacity = 0.25;
+let arrowStyle = [2,3];
+
+let scaleZ = 0.1; // postprocess coordinates beacuse enableAltitude and heightFactor doesn't seem to work at all
+
+//weird shit's happening. lines seem to be flat rectangles so they dissapear at certain camera angles
+let enableTeleportLines = true;
+let enableHeightLines = false;
+let enableActorLines = true;
+
+let lineWidth = 2;
+let lineColor = '#fff';
+
+let tooltipShowTimer = null;
+let tooltipHideTimer = null;
+let tooltipHideDelay = 1;
+let tooltipShowDelay = 1;
+
+let groupLayer = null;
+let map = null;
+
+let types = {};
+let icons = {};
+let lang = {};
+let markers = {};
+let regions = {};
+
+let actor_lookup = {};
+
+let mapParam = {};
+let markersData = null;
+let regionsData = null;
+
+let localDataName = 'joricsStalkerMapsGL';
+let localData = JSON.parse(localStorage.getItem(localDataName))||{};
+let mapId = 's2hoc';
+
+let searchControl = null;
+
+let localImages = {};
+let firstRun = false;
+
+const capitalize = s => s[0].toUpperCase()+s.slice(1);
+const cmpAlphaNum = (a,b) => a[0].localeCompare(b[0], 'en', { numeric: true });
+
+function scaleCoordinate(c) {
+  return scaleZ < 1.0 ? {x: c.x, y:c.y, z:c.z*scaleZ} : c;
+}
+
+function scaleCoordinateArray(c) {
+  return scaleZ < 1.0 ? [ c[0], c[1], c[2]*scaleZ] : c;
+}
+
+function loadMap() {
+
+  if (!localData[mapId]) {
+    localData[mapId] = { language: 'en', activeItems: {'bases':true, 'hubs': true, 'locations': true, 'stashes': true, 'regions': true, 'items': true, 'enemies': true, 'circles': true, 'polygons': true} };
+  }
+
+  if (!localData[mapId].markedItems) {
+     localData[mapId].markedItems = {};
+  }
+
+  settings = localData[mapId];
+
+  settings.baseLayer = settings.baseLayer || 'PDA';
+  settings.language = settings.language || 'en';
+  settings.searchText = settings.searchText || '';
+
+  searchControl = document.querySelector('.search-box input');
+
+  searchControl.value = settings.searchText || '';
+
+  //console.log('current zoom:', settings.zoom);
+  let scrollWheelZoom = true; // maptalks uses fractional zoom by default
+  //let scrollWheelZoom = false;
+
+  let w = h = 812900;
+  let center = [w/2, h/2];
+  let [left,top,right,bottom] = [0, 0, w, h];
+  let tileSize = 512;
+
+  if (!settings.center) {
+    [settings.zoom, settings.pitch, settings.bearing, settings.center] = [startZoom, startPitch, 0, center];
+  }
+
+  map = new maptalks.Map('map', {
+
+    heightFactor: heightFactor,
+
+    zoom: settings.zoom,
+    pitch: settings.pitch,
+    bearing: settings.bearing,
+    center: settings.center,
+    maxPitch: 80,
+
+    maxZoom: maxZoom,
+
+    scrollWheelZoom: scrollWheelZoom,
+
+    spatialReference : {
+      projection : 'identity',
+      fullExtent : { top: top, left: left, bottom: bottom, right: right }, // mandatory to hide 404
+      resolutions: Array.from({length: maxZoom + 1},(_,i) => w / tileSize / (1<<i)), // mandatory zoom levels
+    },
+
+    baseLayer: new maptalks.GroupTileLayer('Base TileLayer', [
+
+      new maptalks.TileLayer('PDA', {
+        maxAvailableZoom: 7,
+        urlTemplate: 'https://joric.github.io/stalker2_tileset/tiles/{z}/{x}/{y}.jpg',
+        repeatWorld: false,
+        tileSize: 512,
+        visible: settings.baseLayer == 'PDA',
+      }),
+
+      new maptalks.TileLayer('GlobalMap', {
+        maxAvailableZoom: 5,
+        urlTemplate: 'https://joric.github.io/stalker2_tileset/extras/wb/{z}/{x}/{y}.jpg',
+        repeatWorld: false,
+        tileSize: 512,
+        visible: settings.baseLayer == 'GlobalMap',
+      }),
+
+      new maptalks.TileLayer('LDScheme', {
+        maxAvailableZoom: 3,
+        urlTemplate: 'https://joric.github.io/stalker2_tileset/extras/ld/{z}/{x}/{y}.png',
+        repeatWorld: false,
+        tileSize: 512,
+        visible: settings.baseLayer == 'LDScheme',
+      }),
+
+    ]),
+
+    zoomControl: {
+      //position  : 'bottom-right',
+      //position  : 'top-right',
+      position  : {bottom: 70, right: 20},
+      zoomLevel : false,
+    },
+
+    //seamlessZoom: true,
+    doubleClickZoom: true,
+
+    //maxExtent: extent,
+
+    /*
+    // overview is broken, due to a flat projection I guess
+    overviewControl: {
+      position: 'bottom-left',
+      size: [240,135],
+      level: 10,
+      symbol: {
+
+        'lineColor': '#fff',    // Border color
+        'lineWidth': 1.5,            // Border width
+        'polygonFill': '#fff',  // Fill color
+        'polygonOpacity': 0.0,      // Fill opacity
+        'lineOpacity': 0.5,
+      },
+    },
+    */
+
+    attribution: {
+      //position: {top: -50},
+    },
+  });
+
+
+  // Function to handle zooming
+  function handleZoom(event) {
+    event.preventDefault(); // Prevent the default scroll behavior
+    const currentZoom = map.getZoom();
+    const zoomStep = 1; // Define the zoom step
+    if (event.deltaY < 0) {
+      // Scroll up, zoom in
+      map.setZoom(currentZoom + zoomStep);
+    } else {
+      // Scroll down, zoom out
+      map.setZoom(currentZoom - zoomStep);
+    }
+  }
+
+  // Add event listener for mouse wheel
+  if (!scrollWheelZoom) map.getContainer().addEventListener('wheel', handleZoom);
+
+  map.on('viewchange', e=> {
+    settings.center = [e.new.center[0],e.new.center[1]];
+    settings.bearing = e.new.bearing;
+    settings.pitch = e.new.pitch;
+    settings.zoom = e.new.zoom;
+    if (enableAltitude && autoAltitude) {
+      groupLayer.setOptions({enableAltitude: map.getPitch()!=0});
+    }
+    //console.log('zoom', settings.zoom);
+    saveSettings();
+  });
+
+
+  let gap = w/2;
+  let extent = new maptalks.Extent(left-gap, top-gap, right+gap, bottom+gap);
+  map.setMaxExtent(extent);
+
+  new maptalks.TileLayer('Stalker1', {
+    maxAvailableZoom: 3,
+    urlTemplate: 'https://joric.github.io/stalker2_tileset/extras/s1/{z}/{x}/{y}.png',
+    repeatWorld: false,
+    tileSize: 512,
+    visible : false,
+  }).addTo(map);
+
+  groupLayer = new maptalks.GroupGLLayer('Features',[], {
+    enableAltitude: enableAltitude,
+    sortByDistanceToCamera: true,
+    forceRenderOnMoving: true,
+    forceRenderOnRotating: true,
+  }).addTo(map);
+
+  setTimeout(function() {
+    if (enableAltitude && autoAltitude) {
+      groupLayer.setOptions({enableAltitude: map.getPitch()!=0});
+    }
+  },500);
+
+  document.querySelector('.search-cancel').onclick = e=> {
+    clearFilter();
+    saveSettings();
+    updateView();
+  };
+
+  map.on('mousedown', function(e) {
+    document.getElementById('map').focus(); // needs tabindex on the map element
+  });
+
+  map.on('moving', hideTooltip);
+
+  map.on('zooming', e=>{
+    hideTooltip();
+    updateView();
+  });
+
+  map.on('zoomend', e=>{
+    updateView();
+  });
+
+  map.on('setbaselayer', e=> {
+    let layers = map.getBaseLayer().getLayers();
+    for (layer of layers) {
+      if (layer.isVisible()) {
+        settings.baseLayer = layer.getId();
+      }
+    }
+    saveSettings();
+  });
+}
+
+function addLines(markers) {
+  let geometry = [];
+
+  for (m of markers) {
+
+    // let's just do teleports for now
+    let o = m.marker.feature.properties;
+    let c = m.marker.getCoordinates();
+
+    if (enableTeleportLines && o.target) {
+      let target = {x: o.target[0], y: o.target[1], z: o.target[2]};
+      let points = [c, scaleCoordinate(target)];
+      let line = new maptalks.LineString(points,{arrowStyle:arrowStyle, symbol:{lineColor: lineColor, lineWidth: lineWidth}});
+      geometry.push(line);
+      line.feature =  m.marker.feature;
+    }
+
+    if (enableHeightLines) {
+      let points = [c, {x: c.x, y: c.y, z: 0}];
+      let line = new maptalks.LineString(points,{symbol:{lineColor: lineColor, lineWidth: lineWidth}});
+      geometry.push(line);
+      line.feature =  m.marker.feature;
+    }
+
+    if (enableActorLines) {
+      for (guid of (o.actors||[])) {
+        let actor = actor_lookup[guid];
+        if (!actor) continue;
+        let target = actor.getCoordinates();
+        let points = [c, target];
+        let line = new maptalks.LineString(points,{symbol:{lineColor: lineColor, lineWidth: lineWidth}});
+        geometry.push(line);
+        line.feature =  m.marker.feature;
+      }
+    }
+
+  }
+
+  let layerId = 'Lines'
+  let visible = settings.activeItems[layerId.toLowerCase()] == true;
+  let layer = new maptalks.LineStringLayer(layerId, geometry, { visible: visible, sceneConfig: { depthFunc: '<='} });
+  addHandler(layer);
+  layer.addTo(groupLayer);
+}
+
+function addCircles(markers) {
+  let geometry = [];
+
+  const defaultSymbol = {
+    'lineColor': '#fff',    // Border color
+    'lineWidth': 2.5,            // Border width
+    'polygonFill': '#fff',  // Fill color
+    'polygonOpacity': 0.1,      // Fill opacity
+    'lineOpacity': 0.85,
+  };
+
+  for (m of markers) {
+    let o = m.marker.feature.properties;
+    if (o.radius) {
+
+      let color = o.type.includes('Hub') ? '#e8a514' : '#fff';
+
+      //let numberOfShellPoints = Math.min(60, ~~(o.radius / 200));
+      var circle = new maptalks.Circle(m.marker.getCoordinates(), o.radius, {
+        symbol: {...defaultSymbol, lineColor: color, polygonFill: color},
+        properties: {
+          //numberOfShellPoints: numberOfShellPoints,
+        },
+      });
+      geometry.push(circle);
+
+      circle.feature = m.marker.feature;
+    }
+  }
+
+  let layerId = 'Circles'
+  let visible = settings.activeItems[layerId.toLowerCase()] == true;
+  let layer = new maptalks.PolygonLayer(layerId, geometry, { visible: visible });
+  addHandler(layer);
+  layer.addTo(groupLayer);
+}
+
+function addMarkers(data) {
+  console.timeEnd('markers');
+  console.log('Total markers:', data.length);
+
+  markersData = data;
+
+  addLines(data);
+  addRegions(regions);
+  addCircles(data);
+
+  // join markers by group name
+  let collection = {};
+
+  for (m of data) {
+    if (!collection[m.group]) collection[m.group] = [];
+    collection[m.group].push(m.marker);
+  }
+
+  let weights = {'regions': 1100, 'hubs': 1000, 'bases': 900, 'locations': 750, 'stashes': 500, 'items': 250, 'anomalies': -900, 'misc': -1000 };
+  let groups = Object.keys(collection);
+
+  groups = groups.sort( (a,b)=> (weights[b]||0)-(weights[a]||0) || cmpAlphaNum(a,b))
+
+  //console.log('sorted groups', groups);
+
+  for (const group of groups) {
+    let layerName = capitalize(group);
+    let geometries = collection[group];
+    let visible = settings.activeItems[group] == true;
+
+    layer = new maptalks.PointLayer(layerName, [], {
+      enableAltitude: enableAltitude,
+      sortByDistanceToCamera: true,
+      forceRenderOnMoving: true,
+      forceRenderOnRotating: true,
+      visible: visible,
+      sceneConfig: { depthFunc: '<='},
+    }).addTo(groupLayer);
+
+    layer.addGeometry(geometries);
+    //console.log('created layer', group, 'visible', settings.activeItems[group], geometries.length, 'markers');
+    addHandler(layer);
+  }
+
+  filterItems();
+
+  let LayerSwitcher = new maptalks.control.LayerSwitcher({
+    position  : 'bottom-left',
+    baseTitle : 'Base Layers',
+    overlayTitle : 'Overlays',
+    containerClass : 'maptalks-layer-switcher',
+  }).addTo(map);
+
+  updateView();
+
+
+  // marker link
+  let name = mapParam.markerName;
+  if (name) {
+    jumpToLocation(name);
+  }
+}
+
+function findLocation(id) {
+  for (m of markersData) {
+    let marker = m.marker;
+    let o = marker.feature.properties;
+    if (id == o.sid) {
+      return marker;
+    }
+  }
+}
+
+function jumpToLocation(name) {
+  if (marker = findLocation(name)) {
+    map.animateTo({center: marker.getCoordinates(), zoom:8, pitch:0, bearing:0});
+    marker.show();
+    popupOnClick({target: marker});
+    marker.openInfoWindow();
+  }
+}
+
+
+function loadMarkersIdle(data) {
+  const features = data.features;
+  let currentIndex = 0;
+  let result = [];
+  function processBatch(deadline) {
+    batch = [];
+    while (deadline.timeRemaining() > 0 && currentIndex < features.length) {
+      let marker = addMarker(features[currentIndex]);
+      if (marker) {
+        batch.push(marker);
+      }
+      currentIndex++;
+    }
+    //console.log(`Processed ${currentIndex}/${features.length} markers`);
+    if (currentIndex < features.length) {
+      result.push(...batch);
+      requestIdleCallback(processBatch); // Schedule the next batch during idle time
+    } else {
+      result.push(...batch);
+      addMarkers(result);
+    }
+  }
+  requestIdleCallback(processBatch, { timeout: 1000 });
+}
+
+function loadMarkers(data) {
+  markers = data;
+  console.time('markers');
+  loadMarkersIdle(data);
+}
+
+function addHandler(layer) {
+  const originalShow = layer.show;
+  const originalHide = layer.hide;
+
+  // Override the show method
+  layer.show = function () {
+    // Call the original show method
+    originalShow.call(this);
+    // Fire a custom 'visibilitychange' event
+    this.fire('visibilitychange', { visible: true });
+  };
+
+  // Override the hide method
+  layer.hide = function () {
+    // Call the original hide method
+    originalHide.call(this);
+    // Fire a custom 'visibilitychange' event
+    this.fire('visibilitychange', { visible: false });
+  };
+
+  // Listen for the custom 'visibilitychange' event
+  layer.on('visibilitychange', function (e) {
+    let group = e.target.getId().toLowerCase();
+    let show = e.visible;
+
+    if (show) {
+      settings.activeItems[group] = true;
+    } else {
+      delete settings.activeItems[group];
+    }
+
+    //console.log(settings);
+
+    saveSettings();
+
+  });
+}
+
+function clearSelection() {
+  if (window.getSelection) {
+    // Modern browsers
+    const selection = window.getSelection();
+    if (selection.removeAllRanges) {
+      selection.removeAllRanges();
+    } else if (selection.collapseToEnd) {
+      // For older WebKit browsers
+      selection.collapseToEnd();
+    }
+  } else if (document.selection) {
+    // Older versions of Internet Explorer
+    document.selection.empty();
+  }
+}
+
+function translate(fields, postfix) {
+  let prefixes = ['sid_locations_region_','sid_locations_', 'sid_items_','sid_stashes_','sid_questItemprototypes_','sid_items_FArtifact','sid_items_CArtifact','sid_items_AArtifact'];
+  for (field of fields) {
+    if (lang[field]) return lang[field];
+    for (prefix of prefixes) {
+      let res = lang[`${prefix}${field}${postfix}`];
+      if (res) return res;
+    }
+  }
+}
+
+function getTitleDesc(o) {
+  if (o.title || o.description) {
+    return [ lang[o.title], lang[o.description] || ''];
+  }
+
+  if (o.type=='ESpawnType::Item') {
+    return [
+      lang[`sid_items_${o.name}_name`] || lang[`sid_questItemprototypes_${o.name}_name`],
+      lang[`sid_items_${o.name}_desc`] || lang[`sid_questItemprototypes_${o.name}_desc`],
+    ];
+  }
+
+  return [o.title, o.desc];
+}
+
+function humanReadable(o) {
+
+  let [title, desc] = getTitleDesc(o);
+
+  if (!title || !desc) {
+    let prop = getIconProp(o);
+    return [ title || lang[o.title || prop.title] || prop.title || o.name,  desc || lang[o.description || prop.description]||''];
+  }
+
+  return [title, desc];
+}
+
+function setClass(e, set, c) { set ? e.classList.add(c) : e.classList.remove(c);}
+function toggleClass(e, c) { if (e.classList.contains(c)) { e.classList.remove(c); return false; } else { e.classList.add(c); return true; }}
+function toggleNav(e) { let input = document.querySelector('#search-input'); toggleClass(e.parentElement, 'closed') ? input.blur() : input.focus();}
+function toggleVisibility(a) { [].forEach.call(a, function(e) { toggleClass(document.querySelector(e), 'collapsed'); }) }
+const cmpNum = (a,b)=> b[1]!=a[1] ? (b[1]-a[1]) : a[0].localeCompare(b[0]);
+
+function copyToClipboard(text) {
+  let input = document.body.appendChild(document.createElement("input"));
+  input.value = text;
+  input.focus();
+  input.select();
+  document.execCommand('copy');
+  input.parentNode.removeChild(input);
+  document.getElementById('alert').classList.remove('closed');
+  setTimeout(function(e){ document.getElementById('alert').classList.add('closed') },1500);
+}
+
+
+function canonical(id) {
+  return id ? id.slice(2) : '';
+}
+
+function getBaseURL() {
+  return window.location.href.replace(/#.*$/,'');
+}
+
+function getMapURL(id) {
+  return getBaseURL() + '#' + encodeURIComponent(id);
+}
+
+function getWikiURL(title) {
+  if (title.startsWith('«') && title.endsWith('«')) title = title.slice(1,-1);
+  //title = title.split(' ').map(capitalize).join(' ')
+  return wikiPrefix + (settings.language=='en' ? '': settings.language+'/') + 'wiki/' + encodeURIComponent(title);
+}
+
+function wikify(o) {
+  let location_id = o.title;
+  return location_id.replace(/[^A-Za-z0-9\s]/g, '').trim().replace(/\s+/g, '_');
+}
+
+let wikiPrefix = 'https://stalker.fandom.com/';
+
+let copyLink = e=>{ copyToClipboard(e.target.href); return false; };
+
+function renderItem(feature, extended = false) {
+  let o = feature.properties;
+
+  let prop = getIconProp(o);
+  let [title, description] = humanReadable(o);
+  let group = prop.group || 'misc';
+  let category = lang[prop.category] || lang[prop.title] || prop.category || group;
+  let location = '';
+
+  if (extended) {
+    let c = feature.geometry.coordinates;
+    //let teleport = `${c[0]} ${c[1]} ${c[2]}`;
+    //let location = `XTeleportTo ${teleport}`
+    let currentRegion = getRegionName({x: c[0], y:c[1], z:c[2]}, regionsData);
+    location = lang[`sid_locations_region_${currentRegion}_name`];
+  }
+
+  let info = {
+    title: title || category || o.type,
+    category: category,
+    location: location,
+    group: group,
+    description: description,
+    prop: prop,
+  };
+
+  //if (o.type == 'ESpawnType::Radiation') console.log(info, prop);
+
+  return info;
+}
+
+function getSpawnContent(o, name) {
+  let rank = null;
+
+  if (name.includes(':')) {
+    [rank, name] = name.split(':');
+  }
+
+  section = 'generators'
+
+  let data = markers[section]['gen_' + name];
+
+  for (item of Object.keys( data||{} )) {
+    if (markers[section][item]) {
+      //console.log(name, '->', item);
+      return markers[section][item];
+    }
+  }
+
+  return data;
+
+}
+
+function getMarkerSize(marker) {
+  let symbol = marker.getSymbol();
+  if (symbol instanceof Array) {
+    symbol = symbol[0];
+  }
+  return symbol.markerWidth || 32;
+}
+
+function setMarkerSize(marker, size) {
+  return; // do not do it yet
+  let symbol = marker.getSymbol();
+  let prop = { markerWidth: size, markerHeight: size };
+  let textProp = { textSize: textSize * 1.0 };
+  marker.setSymbol((symbol instanceof Array) ? [{...symbol[0], ...prop}, {...symbol[1], ...textProp}] : {...symbol, ...prop});
+}
+
+function popupOnClick(e) {
+  hideTooltipExt(e);
+
+  let marker = e.target;
+
+  let feature = marker.feature;
+  let o = marker.feature.properties;
+  let popup = document.querySelector('#popup').cloneNode(true);
+
+  let info = renderItem(marker.feature, true);
+
+  popup.querySelector('#popup-title').textContent = info.title;
+  popup.querySelector('#popup-subtitle').textContent = info.category;
+  popup.querySelector('#popup-note').textContent = info.location;
+
+  let div = popup.querySelector('#popup-subnote');
+  div.replaceChildren();
+  div.classList.remove('collapsed');
+
+  if (info.description) {
+    let hr = document.createElement('hr');
+    let content = document.createElement('div');
+    content.textContent = info.description;
+    div.appendChild(hr);
+    div.appendChild(content);
+  }
+
+  function customReplacer(key, value) {
+      if (value && typeof value === 'object') {
+          const depth = this.depth || 0;
+          if (depth === 1) {
+              return JSON.stringify(value);
+          }
+          return { ...value, depth: depth + 1 };
+      }
+      return value;
+  }
+
+  if (o.spawns) {
+    let hr = document.createElement('hr');
+    let ul = document.createElement('ul');
+    ul.className = 'popup-subnote-ul';
+    for (spawn of o.spawns) {
+      let li = document.createElement('li');
+      let data = getSpawnContent(o, spawn);
+
+      let title = JSON.stringify(data || name, customReplacer, 2);
+
+      li.textContent = spawn;
+      li.setAttribute('title', title);
+      li.className = 'popup-subnote-li';
+      ul.appendChild(li);
+    }
+    div.appendChild(hr);
+    div.appendChild(ul);
+  }
+
+  if (o.keycode) {
+    let content = document.createElement('div');
+    content.innerHTML = `<hr/>Keycode: ${o.keycode}`;
+    div.appendChild(content);
+  }
+
+  popup.querySelector('#popup-data').innerHTML = '<hr/><pre>'+JSON.stringify(o, null, 2) + '</pre>';
+
+  popup.querySelector('#popup-data-toggle').onclick = function() {
+    let data_id = popup.querySelector('#popup-data-toggle').getAttribute('data-target');
+    settings.debugMode = !toggleClass(document.querySelector('#'+data_id),'collapsed');
+    saveSettings();
+  };
+
+  setClass(popup.querySelector('#popup-data'), settings.debugMode!=true, 'collapsed');
+
+  popup.querySelector('#popup-close').onclick = function() {  e.target._infoWindow.hide(); };
+  popup.addEventListener('contextmenu', function(e) { e.stopPropagation()}, true); // enable default context menu
+
+  popup.querySelector('#popup-map-link').href = getMapURL(o.sid);
+  popup.querySelector('#popup-map-link').onclick = copyLink;
+  popup.querySelector('#popup-map-link').title = "Copy Map URL to Clipboard";
+  popup.querySelector('#popup-map-link').innerHTML = '<i class="fa fa-link"></i>';
+
+  popup.querySelector('#popup-wiki-link').href = getWikiURL(info.title);
+  popup.querySelector('#popup-wiki-link').onclick = null;
+  popup.querySelector('#popup-wiki-link').title = "Wiki";
+  popup.querySelector('#popup-wiki-link').innerHTML = '<i class="fa-brands fa-wikipedia-w"></i>';
+
+  let t = feature.geometry.coordinates;
+  let teleport = `${t[0]} ${t[1]} ${t[2]}`;
+  let location = `XTeleportTo ${teleport}`
+
+  popup.querySelector('#popup-marker-id-link').href = '#' + location;
+  popup.querySelector('#popup-marker-id-link').onclick = function(e){ copyToClipboard(e.target.href.split('#')[1].replaceAll('%20',' ')); return false; };
+
+  popup.querySelector('#popup-form-id-link').href = '#' + (o.sid || '00000010');
+  popup.querySelector('#popup-form-id-link').onclick = function(e){ copyToClipboard(e.target.href.split('#')[1]); return false; };
+
+  popup.querySelector('#popup-found').checked = settings.markedItems[o.sid]==true;
+  popup.querySelector('#popup-found').onclick = function() { toggleMarked(o.sid) };
+  popup.querySelector('#popup-found-label').textContent = lang['sid_misc_pda_hint_HidePlayerLandmark'] || 'Found';
+
+
+  e.target._infoWindow.setOptions({custom: true, dy: 16});
+  e.target._infoWindow.setContent(popup);
+}
+
+function toggleMarked(id) {
+
+  if (settings.markedItems[id]) {
+    delete settings.markedItems[id];
+  } else {
+    settings.markedItems[id] = true;
+  }
+
+  for (m of markersData) {
+    let marker = m.marker;
+    let o = marker.feature.properties;
+    if (id == o.sid) {
+      let found = settings.markedItems[id];
+      if (!(marker.getSymbol() instanceof Array)) {
+        marker.updateSymbol({markerOpacity: found ? foundOpacity : 1 });
+      }
+
+      break;
+    }
+  }
+
+  saveSettings();
+}
+
+// Function to show the tooltip
+function showTooltip(e) {
+
+  //if (e.target.feature.properties.description.includes('Region')) return;
+
+  var tooltip = document.getElementById('map-tooltip');
+
+  clearTimeout(tooltipHideTimer);
+
+  tooltip.onmouseover = function(e) {
+    clearTimeout(tooltipHideTimer);
+  };
+
+  tooltip.onmouseout = function(e) {
+    tooltipHideTimer = setTimeout(hideTooltip, tooltipHideDelay);
+  };
+
+
+  // Show the tooltip to calculate the size
+  // Since browsers do not repaint the screen during synchronous JavaScript execution,
+  // temporarily changing the display property within a script will not cause the element to flash visibly on the screen.
+  tooltip.style.display = 'block';
+
+  let marker = e.target;
+
+  let o = marker.feature.properties;
+
+
+  let info = renderItem(marker.feature);
+
+  let content = `<b>${info.title}</b>`;
+
+  if (info.category) {
+    content += `<br/><small>${info.category}</small>`;
+  }
+
+  if (info.description) {
+    content += `<hr/>${info.description}`;
+  }
+
+  if (o.keycode) {
+    content += `<hr/>Keycode: ${o.keycode}`;
+  }
+
+  if (o.actors) {
+    content += `<hr/>`;
+    for (actor of o.actors) {
+      content += `${actor}<br/>`;
+    }
+  }
+
+  if (o.unlock && (o.locked || o.unbreakable)) {
+    content += `<hr/>${o.unlock}`;
+  }
+
+  if (o.enable) {
+    content += `<hr/>${o.enable}`;
+  }
+
+  tooltip.innerHTML = content;
+
+  let c = marker.getContainerExtent();
+  let screenPosition = {x: c.pxmin, y: c.pymin};
+
+  // Determine the tooltip position
+  var mapContainer = map.getContainer();
+  var mapRect = mapContainer.getBoundingClientRect();
+  var tooltipWidth = tooltip.offsetWidth;
+  var tooltipHeight = tooltip.offsetHeight;
+
+  // Calculate available space
+  var spaceRight = mapRect.width - screenPosition.x;
+  var spaceLeft = screenPosition.x;
+
+  let gap = getMarkerSize(marker)/2+5;
+
+  // Position the tooltip
+  if (spaceRight > tooltipWidth) {
+    // Place tooltip to the right
+    tooltip.style.left = mapRect.left + screenPosition.x + gap + 'px';
+    tooltip.className = 'arrow-left';
+  } else {
+    // Place tooltip to the left
+    tooltip.style.left =  mapRect.left + screenPosition.x - tooltipWidth - gap + 'px';
+    tooltip.className = 'arrow-right';
+  }
+
+  tooltip.style.top = mapRect.top + screenPosition.y - tooltipHeight/2 + 'px';
+
+}
+
+// Function to hide the tooltip
+function hideTooltip() {
+  var tooltip = document.getElementById('map-tooltip');
+  tooltip.style.display = 'none';
+  clearSelection();
+}
+
+function getIconName(o) {
+  return getIconProp(o).icon;
+}
+
+function getIconProp(o) {
+  let prop = {icon: 'question', group: 'misc'};
+
+  let name = o.name;
+  let type = o.type;
+
+  let section = types[type] || (type && types[type.split('::')[0]+'::*']);
+
+  prop = {...prop, ...section};
+
+  if (section && section.items && section.items[name]) {
+    return section.items[name];
+  }
+
+  if (section && section.match) {
+    for (const [regex, entry] of Object.entries(section.match)) {
+      if (regex && (name||'').match(new RegExp(regex, "i"))) return entry;
+    }
+  }
+
+  return prop;
+}
+
+function showTooltipExt(e) {
+  let marker = e.target;
+    //setMarkerSize(e.target, size * 1.15);
+    clearTimeout(tooltipShowTimer);
+    if (marker.getInfoWindow() && marker.getInfoWindow().isVisible()) return; // do not open popup if there's an info window
+    tooltipShowTimer = setTimeout(function(){showTooltip(e)}, tooltipShowDelay);
+}
+
+function hideTooltipExt(e) {
+  let marker = e.target;
+  //setMarkerSize(e.target, size * 1.0);
+  clearTimeout(tooltipShowTimer);
+  clearTimeout(tooltipHideTimer);
+  tooltipHideTimer = setTimeout(hideTooltip, tooltipHideDelay);
+}
+
+dedup = {};
+
+function addMarker(feature) {
+  let o = feature.properties;
+
+  if (o.area && !o.area.includes('WorldMap_WP')) return null;
+  if (o.name=='Hub') return null; // 1 marker (special case)
+
+  let info = renderItem(feature);
+
+  let prop = info.prop;
+
+  let icon = prop.icon || 'question';
+  let group = prop.group || 'misc';
+
+  // clue is always a stash
+  if (o.clue) icon = 'stash';
+  if (icon=='stash') group = 'stashes';
+
+  image = 'images/sprites/' + ((icons[icon] && icons[icon].image) || 'CompassMarker_2_3.png');
+
+  let size = iconSize;
+
+  if (image.includes('CompassMarker')) {
+    size = 32;
+  }
+
+  let found = settings.markedItems[o.sid];
+  let opacity = found ? foundOpacity : 1;
+
+  let symbol = {
+    markerFile   : image,
+    markerWidth  : size,
+    markerHeight : size,
+    markerDx     : 0,
+    markerDy     : 0,
+    markerOpacity: opacity,
+    markerVerticalAlignment: 'middle',
+  };
+
+  let title  = info.title;
+
+  let markerDx = 0;
+  let markerDy = 0;
+  let textDx = iconSize * 0.55;
+  let textDy = 0;
+
+  if (group=='regions') {
+    textDx = 16;
+  }
+
+  if (labelGroups.includes(group)) {
+    symbol = [
+       {
+        markerFile   : image,
+        markerWidth  : size,
+        markerHeight : size,
+        markerDx     : markerDx,
+        markerDy     : markerDy,
+        markerOpacity: opacity,
+        markerVerticalAlignment: 'middle',
+      },
+      {
+        textFaceName : 'sans-serif',
+        textName : title,
+        textFill : '#fff',
+
+        textHaloFill      : '#000',
+        textHaloRadius    : 3,
+        textHaloOpacity   : 0.15,
+
+        textHorizontalAlignment : 'right',
+        textSize : textSize,
+        textDx: textDx,
+        textDy: textDy,
+      },
+    ]
+  }
+
+  //c = {x: c[0], y:c[1], z:c[2] };
+  //c = scaleAltitude(c);
+
+  let c = feature.geometry.coordinates;
+  c = scaleCoordinateArray(c);
+
+  var marker = new maptalks.Marker(c, {symbol: symbol});
+
+  marker.feature = feature;
+
+  // hub markers seem to use average coordinates
+  // so we check the dedup structure if we have the marker then adjust coordinates accordingly
+  if (o.type=='ESpawnType::Hub') {
+    let key = o.type + o.name;
+    if (dedup[key]) {
+      let marker = dedup[key];
+      function average(a,b) {
+        return [ (a.x+b.x)/2, (a.y+b.y)/2, (a.z+b.z)/2 ];
+      };
+      marker.setCoordinates(average(marker.getCoordinates(), {x: c[0], y: c[1], z:c[2]}));
+      return null;
+    }
+    dedup[key] = marker;
+  }
+
+  // deduplicate bulba anomaly (it's BulbArchAnomaly vs sid_locations_archanomaly_bulba_name but titles are the same)
+  if (o.type=='ESpawnType::Marker') {
+    let key = o.type + o.title;
+    if (dedup[key]) {
+      //console.log(key);
+      return null;
+    }
+    dedup[key] = marker;
+  }
+
+  marker.on('mouseover', showTooltipExt);
+  marker.on('mouseout', hideTooltipExt);
+
+  //marker.on('click', popupOnClick);
+
+/*
+  // this shit eats 200 ms. find a way to use a single tooltip
+  //let tooltipTitle = `${info.title} (${info.category})`;
+  let tooltipTitle = info.title;
+  const tooltip = new maptalks.ui.ToolTip(tooltipTitle, {
+    showTimeout: 1,
+  }).addTo(marker);
+*/
+  marker.setInfoWindow({autoCloseOn: 'click'})
+  //.on('dragend', onDragEnd)
+  .on('click', popupOnClick)
+  .on('contextmenu', e=> {
+    //if (mouseMoved) return;
+    //let o = e.target.properties;
+    //toggleMarked(o.ref_id);
+  })
+
+  if (o.unlock) actor_lookup[o.unlock] = marker;
+  if (o.enable) actor_lookup[o.enable] = marker;
+
+  return {group: group, marker: marker};
+}
+
+function scaleOrigin(coordinates, scaleFactor, origin) {
+  return coordinates.map(coord => {
+    const [x, y] = coord;
+    return [
+      origin[0] + (x - origin[0]) * scaleFactor,
+      origin[1] + (y - origin[1]) * scaleFactor,
+      -10, // sink region outline a bit (some markers are -3)
+    ];
+  });
+}
+
+function scaleGeoJSON(geojson, scaleFactor, origin) {
+  geojson.features.forEach(feature => {
+    feature.geometry.coordinates = feature.geometry.coordinates.map(ring =>
+      scaleOrigin(ring, scaleFactor, origin)
+    );
+  });
+  return geojson;
+}
+
+
+function updateView(e) {
+  let zoom = map.getZoom();
+  if (settings.searchText!='') {
+    return;
+  }
+
+  for(const [layerName, zoomLevel] of Object.entries(zoomGroups)) {
+    let layer = groupLayer.getLayer(capitalize(layerName));
+    if (layer) {
+      let [minZoom, maxZoom] = zoomLevel;
+      if (zoom>=minZoom+0.5 && zoom < maxZoom+0.5) {
+        layer.show();
+      } else {
+        layer.hide();
+      }
+    }
+  }
+
+}
+
+function isPointInsidePolygon(point, polyPoints) {
+  let [x,y] = [point.x, point.y];
+  let inside = false;
+  for (let i = 0, j = polyPoints.length - 1; i < polyPoints.length; j = i++) {
+    var xi = polyPoints[i].x, yi = polyPoints[i].y;
+    var xj = polyPoints[j].x, yj = polyPoints[j].y;
+    var intersect = ((yi > y) != (yj > y))
+        && (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
+    if (intersect) inside = !inside;
+  }
+  return inside;
+};
+
+function getRegionName(coord, polygons) {
+  if (!polygons || !coord) return null;
+  for (const polygon of polygons) {
+    if (isPointInsidePolygon(coord, polygon.getCoordinates()[0])) {
+      return polygon.properties.svgID.substring(1);
+    }
+  }
+}
+
+function addRegions(geojson) {
+  const defaultSymbol = {
+    'lineColor': '#fff',    // Border color
+    'lineWidth': 1.5,            // Border width
+    'polygonFill': '#fff',  // Fill color
+    'polygonOpacity': 0.0,      // Fill opacity
+    'lineOpacity': 0.5,
+  };
+
+  // Define the hover style
+  const hoverSymbol = {
+    'polygonOpacity': 0.20 // Increased opacity
+  };
+
+  const polygons = maptalks.GeoJSON.toGeometry(scaleGeoJSON(geojson, 812900/8192, [0,0]));
+
+  // Store a reference to the currently "hovered" polygon
+  let selectedPolygon = null;
+  let lastZoom = null;
+
+  let polygonClick = e=> {
+    if (selectedPolygon) {
+      const extent = selectedPolygon.getExtent();
+      let zoom = map.getZoom();
+      if (extent && zoom <= 4) {
+        //map.fitExtent(extent);
+        const center = extent.getCenter();
+        map.animateTo({center: center, zoom: 4});
+      }
+    }
+  }
+
+  polygons.forEach(polygon => {
+    if (polygon.getType() === 'Polygon') { // Ensure it's a polygon
+      polygon.setSymbol(defaultSymbol);
+      let name = polygon.properties.svgID.substring(1).replaceAll('_','');
+      polygon.feature = {properties: {title: name}};
+      //polygon.on('click', polygonClick); // doesn't work with overlapping labels, use global event for now
+    }
+  });
+
+  regionsData = polygons;
+
+  map.on('click', polygonClick);
+
+  // Add mousemove listener to the map
+  map.on('mousemove', e => {
+
+    let zoom = map.getZoom();
+    let maxZoom = 3;
+
+    const mouseCoord = e.coordinate; // Geographic coordinate of the mouse
+    //let mouseCoord = map.containerPointToCoord(e.containerPoint); // same
+
+    let found = false;
+
+    // Iterate through polygons to find if the point is inside any
+    for (const polygon of polygons) {
+
+      if (!polygon.isVisible()) continue;
+
+      //if (polygon.containsPoint(mouseCoord)) { // doesn't work for some reason
+      if (isPointInsidePolygon(mouseCoord, polygon.getCoordinates()[0])) {
+
+        found = true;
+
+        if (selectedPolygon !== polygon || lastZoom != zoom) {
+          // New polygon hovered, update appearance
+          if (selectedPolygon) {
+            // Reset the previous polygon
+            selectedPolygon.updateSymbol(defaultSymbol);
+          }
+
+          // Highlight the currently hovered polygon
+          polygon.updateSymbol(zoom > maxZoom ? defaultSymbol : hoverSymbol);
+          selectedPolygon = polygon; // Update reference
+
+          currentRegion = polygon.properties.svgID.substring(1);
+
+          if (zoom>maxZoom) selectedPolygon = null; // uncomment to prevent zoom on click (it's rather glitchy)
+
+          lastZoom = zoom;
+        }
+        break; // Stop checking once a match is found
+      }
+    }
+
+    if (!found && selectedPolygon) {
+      // Mouse is not over any polygon, reset the previous one
+      selectedPolygon.updateSymbol(defaultSymbol);
+      selectedPolygon = null; // Clear reference
+    }
+  });
+
+  let layerId = 'Polygons'
+  let visible = settings.activeItems[layerId.toLowerCase()] == true;
+  let layer = new maptalks.PolygonLayer(layerId, polygons, { visible: visible });
+  addHandler(layer);
+  layer.addTo(groupLayer);
+}
+
+function saveSettings() {
+  localStorage.setItem(localDataName, JSON.stringify(localData));
+}
+
+function passesFilter(marker) {
+  // will be replaced with fuzzy search
+  let text = settings.searchText && settings.searchText.toLowerCase() || '';
+
+  let terms = text.split(' ');
+  let o = marker.feature.properties;
+  let tags = [];
+
+  if (o.spawns) tags.push(o.spawns);
+  if (o.references) tags.push(...o.references);
+  if (o.actors) tags.push(...o.actors);
+
+  if (o.keycode) tags.push('keycode');
+
+  for (p of [o.unlock, o.lock, o.enable, o.keycode, o.outer]) {
+    if (p) tags.push(p);
+  }
+
+  let prop = getIconProp(o);
+  let [title, description] = humanReadable(o);
+  let c = lang[prop.category] || prop.category;
+
+  let clue = lang['sid_stashes_'+o.clue+'_name'];
+
+  let s = [title, description, c, clue, o.title, o.name, o.type, o.description, o.sid, o.clue, o.cell, ...tags].map(x=>x||'').join(' ').toLowerCase();
+
+  if (o.clue) s += ' clue';
+
+  //if (o.sid=='CDE91184435C143289155888681CE033') console.log(o.description);
+  //if (o.sid=='808555354BB77360B5AB0BBE568B8952') console.log(o.spawns);
+
+  return !(text!='' && !terms.every(term=>s.includes(term)));
+}
+
+function filterItems() {
+
+  for (const layer of groupLayer.getLayers()) {
+
+    //if (!layer.isVisible()) continue; // skip hidden layers altogether (for now)
+
+    for (marker of layer._geoList) {
+      if (passesFilter(marker)){
+        marker.show();
+        let parent = marker.getLayer();
+        if (parent && !parent.isVisible())
+          parent.show();
+      } else {
+        marker.hide();
+      }
+    }
+  }
+
+}
+
+function clearFilter() {
+  searchControl.value = '';
+  settings.searchText = '';
+  filterItems();
+}
+
+
+function applyTint(src, r,g,b, callback) {
+  const canvas = document.createElement('canvas');
+  const ctx = canvas.getContext('2d');
+  const img = new Image();
+  img.crossOrigin = 'Anonymous';
+  img.src = src;
+  img.onload = () => {
+    canvas.width = img.width;
+    canvas.height = img.height;
+    ctx.drawImage(img, 0, 0);
+    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const data = imageData.data;
+    for (let i = 0; i < data.length; i += 4) {
+
+      data[i + 0] = data[i + 0] * r / 255;
+      data[i + 1] = data[i + 1] * g / 255;
+      data[i + 2] = data[i + 2] * b / 255;
+
+    }
+    ctx.putImageData(imageData, 0, 0);
+    canvas.toBlob((blob) => {
+      callback(blob);
+    }, 'image/png');
+  };
+}
+
+window.onload = function(event) {
+
+  if (location.hash.length>1) {
+    let param = decodeURIComponent(location.hash.slice(1));
+    mapParam.markerName = param;
+    mapParam.mapId = mapId;
+  }
+
+  try {
+  // clear location hash
+    history.pushState('', document.title, window.location.pathname + window.location.search);
+  } catch(error) {
+    console.log('handled error', error);
+  }
+
+  loadMap();
+
+  let compassControl = new maptalks.control.Compass({position  : 'bottom-right'}).addTo(map)
+    ._compass.onclick = (e)=>map.getBearing()==0 && map.animateTo({ pitch: map.getPitch()==0 ? defaultPitch : 0 })
+
+  window.addEventListener("keydown",function (e) {
+
+    if (e.code == 'Escape' || e.code == 'Enter') {
+      if (e.code=='Escape') {
+        document.querySelector('#map').focus();
+      }
+      settings.searchText = searchControl.value || '';
+
+      if (settings.searchText=='') {
+        clearFilter();
+        updateView();
+      } else {
+        filterItems();
+      }
+
+      saveSettings();
+
+      return;
+    }
+
+    if (document.activeElement != document.querySelector('#map')) {
+      return;
+    }
+
+    if (e.code=='KeyF' && e.ctrlKey) {
+      searchControl.focus();
+      e.preventDefault();
+      return;
+    }
+
+    if (e.code=='KeyR' && !e.ctrlKey) {
+      if (map.getBearing()!=0) {
+        map.animateTo({ bearing: 0 });
+      } else {
+        map.animateTo({ pitch: map.getPitch()==0 ? defaultPitch : 0 });
+      }
+    }
+
+  });
+
+  let cc = settings.language || 'en';
+  let cc_list = ['ua','en','ru'];
+  let select = document.querySelector('#language-selector select');
+  select.innerHTML = cc_list.map(x=>`<option${cc==x?' selected':''}>${x}</option>`).join('');
+  select.onchange = e=> {
+    settings.language = e.target.value;
+    saveSettings();
+    location.reload();
+  };
+
+  let promises = [
+    `Localization/Localization_${cc.toUpperCase()}.json`,
+    'types.json',
+    'icons.json',
+    'regions.json',
+    'markers.json',
+  ].map(url=>fetch('data/'+url).then(r=>r.json()));
+
+  Promise.all(promises).then(data => {
+    [lang, types, icons, regions, markers] = data;
+    document.querySelector('.search-box input').setAttribute('placeholder', lang['sid_misc_hint_loot'] +'...');
+    loadMarkers(markers);
+  });
+
+};
+
+</script>
+
+<a href="https://github.com/joric/maps/wiki/Stalker-2" target="_blank" class="github-corner" aria-label="View source on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" style="fill:#151513; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"/><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"/><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"/></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
+
+</body>
+</html>

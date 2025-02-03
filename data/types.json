@@ -1,0 +1,83 @@
+{
+  "ESpawnType::CustomMarker": {
+    "items": {
+      "EMarkerType::Bed": { "icon": "bed", "title": "sid_misc_pda_Map_MarkerBed", "category":"sid_stashes_Gen_Stash285_name", "group": "bases" },
+      "EMarkerType::PlayerStorage": { "icon": "storage", "title": "sid_misc_pda_Map_MarkerPlayerStorage", "category": "sid_stashes_Gen_Stash285_name", "group": "bases" },
+      "EMarkerType::Scanner": { "icon": "scanner", "title": "sid_character_skaner_0", "category": "sid_misc_inv_player_grid_name", "group": "locations" },
+
+
+      "EMarkerType::Teleport": { "icon": "circle_locked", "title": "sid_misc_controlsSettings_movement_jump_MLI", "category": "sid_misc_pda_map_playerTags_anomaly", "group": "actors" },
+      "EMarkerType::TeleportTarget": { "icon": "circle_dot", "title": "sid_misc_controlsSettings_movement_jump_MLI", "category": "sid_misc_pda_map_playerTags_anomaly", "group": "actors" },
+
+      "EMarkerType::Door": { "icon": "lock", "title": "sid_journal_stage_E11_MQ01_enter_the_room", "category": "sid_npc_name_zamok", "group": "actors" },
+      "EMarkerType::CodeLock": { "icon": "message", "title": "Keypad", "category": "sid_misc_pda_hint_Controls", "group": "actors" },
+      "EMarkerType::CardLock": { "icon": "message", "title": "Сard Reader", "category": "sid_misc_pda_hint_Controls", "group": "actors" },
+
+      "EMarkerType::FusePanel": { "icon": "circle_dot", "title": "Fuse Panel", "category": "sid_misc_pda_hint_Controls", "group": "actors" },
+
+      "EMarkerType::Lever": { "icon": "circle_dot", "title": "Lever", "category": "sid_misc_pda_hint_Controls", "group": "actors" },
+      "EMarkerType::PadLock": { "icon": "circle_dot", "title": "Padlock", "category": "sid_misc_pda_hint_Controls", "group": "actors" },
+      "EMarkerType::Button": { "icon": "circle_dot", "title": "Button", "category": "sid_misc_pda_hint_Controls", "group": "actors" },
+      "EMarkerType::Latch": { "icon": "circle_dot", "title": "Latch", "category": "sid_misc_pda_hint_Controls", "group": "actors" },
+      "EMarkerType::Valve": { "icon": "circle_dot", "title": "Valve", "category": "sid_misc_pda_hint_Controls", "group": "actors" }
+    }
+  },
+  "ESpawnType::Marker" : {
+    "items": {
+      "EMarkerType::Location": { "icon": "location", "category": "sid_misc_pda_Map_MarkerLocation", "group": "locations" },
+      "EMarkerType::RegionMarker": { "icon": "region", "category": "sid_misc_pda_hint_region", "group": "regions" },
+      "EMarkerType::ArchAnomaly": {"icon": "arch_anomaly", "category": "sid_misc_pda_Map_ArchAnomaly", "group": "locations" }
+    }
+  },
+  "ESpawnType::Hub": { "icon": "camp", "category": "sid_misc_LEGACY_pda_Map_MarkerFriendlyAreaDefault", "group": "hubs" },
+  "ESpawnType::ItemContainer": { "icon": "stash", "title": "sid_misc_pda_Map_MarkerCache", "category": "sid_misc_pda_map_playerTags_habar", "group": "stashes" },
+  "ESpawnType::DeadBody": { "icon": "skull", "category": "sid_npc_name_mertvec", "group": "misc" },
+  "ESpawnType::PackOfItems": { "icon": "box", "title": "sid_stashes_Gen_Stash197_name", "category": "sid_misc_pda_Map_MarkerPlayerLandmarkHabar", "group": "misc" },
+  "ESpawnType::Shelter": { "icon": "cave", "category": "sid_misc_pda_Map_MarkerShellter", "group": "misc" },
+  "ESpawnType::Squad": { "icon": "soldier", "category": "Squads", "group": "misc" },
+  "ESpawnType::Patrol": { "icon": "soldier", "category": "Patrols", "group": "misc" },
+  "ESpawnType::SafeZone": { "icon": "circle", "category": "SafeZones", "group": "misc" },
+  "ESpawnType::DailyScheduleZone": { "icon": "circle", "category": "Daily Schedule Zone", "group": "misc" },
+  "ESpawnType::MoveToPath": { "icon": "circle", "category": "Helpers", "group": "misc" },
+  "ESpawnType::LairSpawner": { "icon": "danger", "category": "lair", "group": "enemies" },
+  "ESpawnType::ALifeGroup": { "icon": "danger", "category": "Alife Group", "group": "enemies" },
+  "ESpawnType::Trigger": { "icon": "circle", "category": "Trigger", "group": "misc" },
+  "ESpawnType::ContextualAction": { "icon": "circle", "category":"Contextual Action", "-category": "sid_misc_pda_reward_random", "group": "misc",
+    "match": {
+      "Jerboa|PseudoDog|Bayun|Bloodsucker|Flesh|Blinddog|Tushkan|Boar|ZombieFoster|Rat|Snork|Zombie": { "icon": "danger", "category": "sid_npc_name_mutant", "group": "enemies" },
+      "Deer|Pseudogiant|Burer|Poltergeist|Controller|Chimera": { "icon": "danger", "category": "sid_npc_name_mutant", "group": "enemies" },
+      "CA_Quest_Hub_Medic": { "icon": "medic", "title": "sid_misc_pda_Map_MarkerMedic", "category": "sid_misc_pda_Map_MarkerMedic", "group": "bases" }
+    }
+  },
+  "ESpawnType::Obj": {
+    "items": {
+      "Faust": { "icon": "guide", "category": "NPC", "group": "locations" }
+    },
+    "match": {
+      "PseudoDog|Bayun|Bloodsucker|Flesh|Blinddog|Tushkan|Boar|ZombieFoster|Rat|Snork|Zombie": { "icon": "danger", "category": "sid_npc_name_mutant", "group": "enemies" },
+      "Deer|Pseudogiant|Burer|Poltergeist|Controller|Chimera": { "icon": "danger", "category": "sid_npc_name_mutant", "group": "enemies" },
+      "^(Grom|GeneralNPC_|Duty|Mono|Bandit|Spark|Neutral|Mercenaries)": { "icon": "soldier", "category": "NPC", "group": "misc" },
+      "Trader|Sidorovich": { "icon": "trader", "title":"sid_misc_pda_Map_MarkerTrader", "category": "sid_misc_pda_Map_MarkerTrader", "group": "bases" },
+      "Technician": { "icon": "technician", "title": "sid_misc_pda_Map_MarkerTechnician", "category": "sid_misc_pda_Map_MarkerTechnician", "group": "bases" },
+      "Guide": { "icon": "guide", "title": "sid_misc_pda_Map_MarkerGuide", "category": "sid_misc_pda_Map_MarkerGuide", "group": "bases" },
+      "Medic|VartanikolajBurahovskij": { "icon": "medic", "title": "sid_misc_pda_Map_MarkerMedic", "category": "sid_misc_pda_Map_MarkerMedic", "group": "bases" }
+    }
+  },
+  "ESpawnType::Item": { "category": "sid_misc_pda_reward_random",
+    "match": {
+      "Drink|Bread|Food|Sausage|Energetic|Vodka|Water|Beer|Milk": {"icon": "bag", "category": "sid_misc_pda_reward_food_drink", "group": "misc" },
+      "Bandage|AntiRad|Medkit": {"icon": "bag", "category": "sid_misc_pda_reward_medkit", "group": "misc" },
+      "^Ammo|AGA|AHEDP|AVOG|APG7V|(A\\d{3}[\\w]+)": {"icon": "chest", "category": "sid_misc_pda_reward_ammo_grenades", "group": "items" },
+      "^Gun": {"icon": "chest", "category": "sid_misc_pda_reward_weapon", "group": "items" },
+      "Armor": {"icon": "chest", "category": "sid_misc_pda_reward_armor", "group": "items" },
+      "PDA|Note": {"icon": "follow", "category": "sid_questItemprototypes_BasePDA_name", "group": "items" },
+      "FArtifact": {"icon": "artifact", "category": "sid_misc_pda_map_playerTags_habar", "group": "misc" }
+    }
+  },
+  "ESpawnType::Anomaly": {"icon": "anomaly", "category": "sid_misc_pda_map_playerTags_anomaly", "group": "anomalies" },
+  "ESpawnType::ElectroAnomaly": {"icon": "anomaly", "category": "sid_misc_pda_map_playerTags_anomaly", "group": "anomalies" },
+  "ESpawnType::PillowAnomaly": {"icon": "anomaly", "category": "sid_misc_pda_map_playerTags_anomaly", "group": "anomalies" },
+  "ESpawnType::AnomalySpawner": {"icon": "anomaly", "category": "sid_misc_pda_map_playerTags_anomaly", "group": "anomalies" },
+  "ESpawnType::Radiation": {"icon": "radiation", "title": "sid_misc_pda_map_playerTags_radiation", "category": "sid_misc_pda_reward_random", "group": "misc" },
+  "ESpawnType::ArtifactSpawner": {"icon": "artifact", "category": "sid_misc_pda_map_playerTags_habar", "group": "misc" }
+}
