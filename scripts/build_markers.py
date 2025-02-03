@@ -363,11 +363,19 @@ def get_bp_markers(cells):
             guid = p.get('Guid','').replace('-','')
             if guid:
                 if add_references:
+
                     if guid in cached_guids:
                         k = 'references'
                         if k not in prop:
                             prop[k] = []
                         prop[k].extend(list(cached_guids[guid].keys()))
+
+                    if guid in cached_keys:
+                        k = 'keys'
+                        if k not in prop:
+                            prop[k] = []
+                        prop[k].extend(list(cached_keys[guid].keys()))
+
             return guid
 
         # collect all properties for matching classes, group by name
@@ -456,6 +464,7 @@ def get_bp_markers(cells):
     return features
 
 cached_guids = defaultdict(dict)
+cached_keys = defaultdict(dict)
 
 def get_connections(data):
     out = set()
@@ -486,7 +495,7 @@ def export_markers(cache):
                         for conn_sid in get_connections(data):
                             item_sid = (package.get(conn_sid)or{}).get('ItemPrototypeSID')
                             if item_sid:
-                                cached_guids[guid]['key:' + item_sid] = True
+                                cached_keys[guid][item_sid] = True
 
     # 2-nd pass, collect coordinates
     for package_path, package in cache.items():
@@ -502,6 +511,9 @@ def export_markers(cache):
 
                 if sid in cached_guids:
                     prop['references'] = list(cached_guids[sid].keys())
+
+                if sid in cached_keys:
+                    prop['keys'] = list(cached_keys[sid].keys())
 
                 refkey = data.get('refkey')
                 if package.get(refkey):
@@ -633,7 +645,7 @@ if __name__ == '__main__':
     tm = time.time()
     data = load_cache()
     export_markers(data)
-    print(len(bp_missing_files), 'cell files missing')
+    if bp_missing_files: print(len(bp_missing_files), 'cell files missing')
     #print('bp_counter', bp_counter)
     print(f'finished in {time.time()-tm:f} seconds')
 
