@@ -942,6 +942,8 @@ function showTooltip(e) {
 
   let info = renderItem(marker.feature);
 
+  if (o.locked) info.title = lang['sid_misc_hint_cantopen'];
+
   let content = `<b>${info.title}</b>`;
 
   if (info.category) {
@@ -1064,8 +1066,6 @@ function addMarker(feature) {
   // clue is always a stash
   if (o.clue) icon = 'stash';
   if (icon=='stash') group = 'stashes';
-
-  //if (icon=='lock' && !o.locked) icon = 'unlocked';
 
   image = 'images/sprites/' + ((icons[icon] && icons[icon].image) || 'CompassMarker_2_3.png');
 
