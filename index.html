@@ -1374,13 +1374,15 @@ function passesFilter(marker) {
   let tags = [];
 
   if (o.spawns) tags.push(o.spawns);
+
   if (o.references) tags.push(...o.references);
   if (o.actors) tags.push(...o.actors);
+  if (o.keys) tags.push(...o.keys);
 
   if (o.keycode) tags.push('keycode');
   if (o.keys) tags.push('keys');
 
-  for (p of [o.unlock, o.lock, o.enable, o.keycode, o.outer, o.keys]) {
+  for (p of [o.unlock, o.lock, o.enable, o.keycode, o.outer]) {
     if (p) tags.push(p);
   }
 
