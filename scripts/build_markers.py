@@ -423,11 +423,6 @@ def get_bp_markers(cells):
 
                 guid = get_guid(prop, p, True)
 
-                # store unlock receiver guid if any
-                if guid:
-                    if name in ('UnlockDoorReceiver','ReceiverOn','Receiver_Set_Object_2','ReceiverOpen'):
-                        prop['receiver'] = guid
-
                 # signal sender component (usually in BP_Cardlock)
                 for e in p.get('Signals',[]):
                     ref = e.get('ReceiverComponentRef',{}).get('OtherActor',{}).get('SubPathString')

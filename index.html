@@ -362,15 +362,14 @@ function addLines(markers) {
     }
 
     if (enableActorLines) {
-      for (const[guid,path] of Object.entries(o.actors||{})) {
-        let actor = actor_lookup[guid];
-        if (!actor) continue;
-        let target = actor.getCoordinates();
-        let points = [c, target];
-        let line = new maptalks.LineString(points,{symbol:{lineColor: lineColor, lineWidth: lineWidth}});
-        geometry.push(line);
-        line.feature =  m.marker.feature;
-      }
+      let marker = actor_lookup[o.outer];
+      if (!marker) continue;
+
+      let target = marker.getCoordinates();
+      let points = [c, target];
+      let line = new maptalks.LineString(points,{symbol:{lineColor: lineColor, lineWidth: lineWidth}});
+      geometry.push(line);
+      line.feature =  m.marker.feature;
     }
 
   }
@@ -1209,7 +1208,11 @@ function addMarker(feature) {
     //toggleMarked(o.ref_id);
   })
 
-  if (o.receiver) actor_lookup[o.receiver] = marker;
+  if (o.actors) {
+    for(const [guid, outer] of Object.entries(o.actors)) {
+      actor_lookup[outer] = marker;
+    }
+  }
 
   return {group: group, marker: marker};
 }
@@ -1399,7 +1402,7 @@ function passesFilter(marker) {
   if (o.keycode) tags.push('keycode');
   if (o.items) tags.push('items');
 
-  for (p of [o.receiver, o.lock, o.enable, o.keycode, o.outer]) {
+  for (p of [o.lock, o.enable, o.keycode, o.outer]) {
     if (p) tags.push(p);
   }
 
