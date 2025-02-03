@@ -48,7 +48,8 @@
     "match": {
       "Jerboa|PseudoDog|Bayun|Bloodsucker|Flesh|Blinddog|Tushkan|Boar|ZombieFoster|Rat|Snork|Zombie": { "icon": "danger", "category": "sid_npc_name_mutant", "group": "enemies" },
       "Deer|Pseudogiant|Burer|Poltergeist|Controller|Chimera": { "icon": "danger", "category": "sid_npc_name_mutant", "group": "enemies" },
-      "CA_Quest_Hub_Medic": { "icon": "medic", "title": "sid_misc_pda_Map_MarkerMedic", "category": "sid_misc_pda_Map_MarkerMedic", "group": "bases" }
+      "CA_Quest_Hub_Medic": { "icon": "medic", "title": "sid_misc_pda_Map_MarkerMedic", "category": "sid_misc_pda_Map_MarkerMedic", "group": "bases" },
+      "_sit|_stand": { "icon": "fire", "category": "Contextual Action", "group": "misc" }
     }
   },
   "ESpawnType::Obj": {
@@ -58,7 +59,7 @@
     "match": {
       "PseudoDog|Bayun|Bloodsucker|Flesh|Blinddog|Tushkan|Boar|ZombieFoster|Rat|Snork|Zombie": { "icon": "danger", "category": "sid_npc_name_mutant", "group": "enemies" },
       "Deer|Pseudogiant|Burer|Poltergeist|Controller|Chimera": { "icon": "danger", "category": "sid_npc_name_mutant", "group": "enemies" },
-      "^(Grom|GeneralNPC_|Duty|Mono|Bandit|Spark|Neutral|Mercenaries)": { "icon": "soldier", "category": "NPC", "group": "misc" },
+      "^(Radovoj|Varta|Grom|GeneralNPC_|Duty|Mono|Bandit|Spark|Neutral|Mercenaries)": { "icon": "soldier", "category": "NPC", "group": "misc" },
       "Trader|Sidorovich": { "icon": "trader", "title":"sid_misc_pda_Map_MarkerTrader", "category": "sid_misc_pda_Map_MarkerTrader", "group": "bases" },
       "Technician": { "icon": "technician", "title": "sid_misc_pda_Map_MarkerTechnician", "category": "sid_misc_pda_Map_MarkerTechnician", "group": "bases" },
       "Guide": { "icon": "guide", "title": "sid_misc_pda_Map_MarkerGuide", "category": "sid_misc_pda_Map_MarkerGuide", "group": "bases" },
