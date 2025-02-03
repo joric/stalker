@@ -1,3 +1,9 @@
+# (c) 2024-2025 Joric, https://github.com/joric/maps/wiki/Stalker-2
+# Needs cfg json files to work, use FModel to extract subdirectores:
+# as raw (uasset): Exports/Stalker2/Content/GameLite/GameData
+# and Exports/Stalker2/Content/GameLite/DLCGameData
+# as json: Exports/Stalker2/Content/_Stalker_2/maps/_Stalker2_WorldMap
+
 import json, re, glob, os, sys, time, copy
 from collections import defaultdict
 from collections import Counter
