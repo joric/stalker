@@ -362,7 +362,7 @@ function addLines(markers) {
     }
 
     if (enableActorLines) {
-      for (guid of (o.actors||[])) {
+      for (const[guid,path] of Object.entries(o.actors||{})) {
         let actor = actor_lookup[guid];
         if (!actor) continue;
         let target = actor.getCoordinates();
@@ -801,7 +801,8 @@ function popupOnClick(e) {
     let hr = document.createElement('hr');
     let ul = document.createElement('ul');
     ul.className = 'popup-subnote-ul';
-    for (name of o.references) {
+
+    for (const[name,path] of Object.entries(o.references)) {
       let li = document.createElement('li');
       let title = name;
       li.textContent = name;
@@ -823,10 +824,10 @@ function popupOnClick(e) {
     div.appendChild(el);
   }
 
-  if (o.keys) {
+  if (o.items) {
     let content = `<hr/>`;
 
-    for (name of o.keys) {
+    for (constn[name,path] of Object.entries(o.items)) {
       let title = lang[`sid_questItemprototypes_${name}_name`];
       content += `${title || name}<br/>`;
     }
@@ -946,30 +947,13 @@ function showTooltip(e) {
     content += `<hr/>${o.keycode}`;
   }
 
-  if (o.keys) {
+  if (o.items) {
     content += `<hr/>`;
-    for (name of o.keys) {
+    for (const[name,path] of Object.entries(o.items)) {
       let title = lang[`sid_questItemprototypes_${name}_name`];
       content += `${title || name}<br/>`;
     }
   }
-
-  /*
-  if (o.actors) {
-    content += `<hr/>`;
-    for (actor of o.actors) {
-      content += `${actor}<br/>`;
-    }
-  }
-
-  if (o.unlock && (o.locked || o.unbreakable)) {
-    content += `<hr/>${o.unlock}`;
-  }
-
-  if (o.enable) {
-    content += `<hr/>${o.enable}`;
-  }
-  */
 
   tooltip.innerHTML = content;
 
@@ -1191,8 +1175,7 @@ function addMarker(feature) {
     //toggleMarked(o.ref_id);
   })
 
-  if (o.unlock) actor_lookup[o.unlock] = marker;
-  if (o.enable) actor_lookup[o.enable] = marker;
+  if (o.receiver) actor_lookup[o.receiver] = marker;
 
   return {group: group, marker: marker};
 }
@@ -1375,14 +1358,14 @@ function passesFilter(marker) {
 
   if (o.spawns) tags.push(o.spawns);
 
-  if (o.references) tags.push(...o.references);
-  if (o.actors) tags.push(...o.actors);
-  if (o.keys) tags.push(...o.keys);
+  if (o.references) tags.push(...Object.keys(o.references));
+  if (o.actors) tags.push(...Object.keys(o.actors));
+  if (o.items) tags.push(...Object.keys(o.items));
 
   if (o.keycode) tags.push('keycode');
-  if (o.keys) tags.push('keys');
+  if (o.items) tags.push('items');
 
-  for (p of [o.unlock, o.lock, o.enable, o.keycode, o.outer]) {
+  for (p of [o.receiver, o.lock, o.enable, o.keycode, o.outer]) {
     if (p) tags.push(p);
   }
 

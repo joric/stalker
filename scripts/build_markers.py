@@ -41,6 +41,7 @@ bp_classes = {
     'BP_Valve': 'EMarkerType::Valve',
 
     'BP_FusePanel': 'EMarkerType::FusePanel',
+    'BP_BunkerHatch': 'EMarkerType::Door',
 }
 
 def parse_struct(reader, options={}):
@@ -367,14 +368,14 @@ def get_bp_markers(cells):
                     if guid in cached_guids:
                         k = 'references'
                         if k not in prop:
-                            prop[k] = []
-                        prop[k].extend(list(cached_guids[guid].keys()))
+                            prop[k] = {}
+                        prop[k].update(cached_guids[guid])
 
-                    if guid in cached_keys:
-                        k = 'keys'
+                    if guid in cached_items:
+                        k = 'items'
                         if k not in prop:
-                            prop[k] = []
-                        prop[k].extend(list(cached_keys[guid].keys()))
+                            prop[k] = {}
+                        prop[k].update(cached_items[guid])
 
             return guid
 
@@ -416,28 +417,22 @@ def get_bp_markers(cells):
 
                 # store unlock receiver guid if any
                 if guid:
-                    if name=='UnlockDoorReceiver': prop['unlock'] = guid
-                    if name=='ReceiverOn' or name=='Receiver_Set_Object_2': prop['enable'] = guid
+                    if name in ('UnlockDoorReceiver','ReceiverOn','Receiver_Set_Object_2','ReceiverOpen'):
+                        prop['receiver'] = guid
 
                 # signal sender component (usually in BP_Cardlock)
                 for e in p.get('Signals',[]):
-
-                    '''
                     ref = e.get('ReceiverComponentRef',{}).get('OtherActor',{}).get('SubPathString')
-                    if ref:
-                        prop['other_actor'] = ref.split('.').pop()
-
-                    rcell = e.get('ReceiverComponentRef',{}).get('OtherActor',{}).get('AssetPathName')
-                    if rcell:
-                        prop['other_cell'] = rcell.split('/').pop()
-                    '''
-
+                    rcl = e.get('ReceiverComponentRef',{}).get('OtherActor',{}).get('AssetPathName')
                     guid = e.get('ReceiverGuid','').replace('-','')
                     if guid:
+                        ref = (ref or 'null').split('.').pop()
+                        rcl = (rcl or 'null').split('/').pop()
+
                         k = 'actors'
                         if k not in prop:
-                            prop[k] = []
-                        prop[k].append(guid)
+                            prop[k] = {}
+                        prop[k][guid] = ref
 
                 if not cached_coord.get(outer):
                     if bp_type in ['SceneComponent','SkeletalMeshComponent','StaticMeshComponent']:
@@ -464,7 +459,7 @@ def get_bp_markers(cells):
     return features
 
 cached_guids = defaultdict(dict)
-cached_keys = defaultdict(dict)
+cached_items = defaultdict(dict)
 
 def get_connections(data):
     out = set()
@@ -489,13 +484,13 @@ def export_markers(cache):
                 for guid_prop in ['SignalSenderGuid','SignalReceiverGuid','TargetQuestGuid','InteractableQuestGuid','VolumeGuid','PlaceholderActorGuid','TargetQuestGuid']:
                     guid = data.get(guid_prop)
                     if guid:
-                        cached_guids[guid][sid] = True
+                        cached_guids[guid][sid] = guid
 
                         # add items, e.g. E03_MQ04_Key from Garbage_L_Factory_Camp_SendSignal_Basement_Entrance
                         for conn_sid in get_connections(data):
                             item_sid = (package.get(conn_sid)or{}).get('ItemPrototypeSID')
                             if item_sid:
-                                cached_keys[guid][item_sid] = True
+                                cached_items[guid][item_sid] = guid
 
     # 2-nd pass, collect coordinates
     for package_path, package in cache.items():
@@ -510,10 +505,10 @@ def export_markers(cache):
                 prop = {'sid': sid}
 
                 if sid in cached_guids:
-                    prop['references'] = list(cached_guids[sid].keys())
+                    prop['references'] = cached_guids[sid]
 
-                if sid in cached_keys:
-                    prop['keys'] = list(cached_keys[sid].keys())
+                if sid in cached_items:
+                    prop['items'] = cached_items[sid]
 
                 refkey = data.get('refkey')
                 if package.get(refkey):
