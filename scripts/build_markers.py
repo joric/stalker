@@ -387,6 +387,11 @@ def get_bp_markers(cells):
 
             return guid
 
+        def add_key(prop, k, name, value):
+            if k not in prop:
+                prop[k] = {}
+            prop[k][name] = value
+
         # collect all properties for matching classes, group by name
         for o in data:
             bp_type = o['Type']
@@ -431,6 +436,7 @@ def get_bp_markers(cells):
                     if guid:
                         ref = (ref or 'null').split('.').pop()
                         rcl = (rcl or 'null').split('/').pop()
+                        add_key(prop, 'actors', guid, ref)
 
                         k = 'actors'
                         if k not in prop:
@@ -442,9 +448,7 @@ def get_bp_markers(cells):
                     count = e.get('Count', 0)
                     once = e.get('bConsumeOnce')
                     if sid:
-                        k = 'items'
-                        if k not in prop: prop[k] = {}
-                        prop[k][sid] = count
+                        add_key(prop, 'items', sid, count)
 
                 if not cached_coord.get(outer):
                     if bp_type in ['SceneComponent','SkeletalMeshComponent','StaticMeshComponent']:
