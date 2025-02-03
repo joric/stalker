@@ -797,10 +797,26 @@ function popupOnClick(e) {
   }
 
   if (o.keycode) {
-    let content = document.createElement('div');
-    content.innerHTML = `<hr/>Keycode: ${o.keycode}`;
-    div.appendChild(content);
+    let content = `<hr/>Keycode: ${o.keycode}`;
+
+    let el = document.createElement('div');
+    el.innerHTML = content;
+    div.appendChild(el);
   }
+
+  if (o.keys) {
+    let content = `<hr/>`;
+
+    for (name of o.keys) {
+      let title = lang[`sid_questItemprototypes_${name}_name`];
+      content += `${title || name}<br/>`;
+    }
+
+    let el = document.createElement('div');
+    el.innerHTML = content;
+    div.appendChild(el);
+  }
+
 
   popup.querySelector('#popup-data').innerHTML = '<hr/><pre>'+JSON.stringify(o, null, 2) + '</pre>';
 
@@ -913,9 +929,11 @@ function showTooltip(e) {
   }
 
   if (o.keys) {
-    let name = o.keys[0];
-    let title = lang[`sid_questItemprototypes_${name}_name`];
-    content += `<hr/>${title || name}`;
+    content += `<hr/>`;
+    for (name of o.keys) {
+      let title = lang[`sid_questItemprototypes_${name}_name`];
+      content += `${title || name}<br/>`;
+    }
   }
 
   /*
