@@ -527,6 +527,31 @@ function loadMarkersIdle(data) {
   requestIdleCallback(processBatch, { timeout: 1000 });
 }
 
+function loadMarkersBatched(data) {
+  const features = data.features;
+  const batchSize = 5000;
+  let currentIndex = 0;
+  let result = [];
+  function processBatch() {
+    const batch = [];
+    const endIndex = Math.min(currentIndex + batchSize, features.length);
+    for (; currentIndex < endIndex; currentIndex++) {
+      let marker = addMarker(features[currentIndex]);
+      if (marker) {
+        batch.push(marker);
+      }
+    }
+    result.push(...batch);
+    if (currentIndex < features.length) {
+      setTimeout(processBatch, 1); // Yield control to avoid blocking
+    } else {
+      addMarkers(result);
+    }
+  }
+  
+  processBatch();
+}
+
 function loadMarkersSimple(data) {
   let result = []
   for (const feature of data.features) {
@@ -539,6 +564,7 @@ function loadMarkersSimple(data) {
 function loadMarkers(data) {
   markers = data;
   console.time('markers');
+  //loadMarkersBatched(data);
   loadMarkersSimple(data);
 }
 
@@ -1517,19 +1543,24 @@ window.onload = function(event) {
     location.reload();
   };
 
-  let promises = [
-    `Localization/Localization_${cc.toUpperCase()}.json`,
-    'types.json',
-    'icons.json',
-    'regions.json',
-    'markers.json',
-  ].map(url=>fetch('data/'+url).then(r=>r.json()));
-
-  Promise.all(promises).then(data => {
-    [lang, types, icons, regions, markers] = data;
+  fetch(`data/Localization/Localization_${cc.toUpperCase()}.json`).then(r=>r.json()).then(data=>{
+    lang = data;
     document.querySelector('.search-box input').setAttribute('placeholder', lang['sid_misc_hint_loot'] +'...');
-    loadMarkers(markers);
+
+    let promises = [
+      'data/types.json',
+      'data/icons.json',
+      'data/regions.json',
+      'data/markers.json',
+    ].map(url=>fetch(url).then(r=>r.json()));
+
+    Promise.all(promises).then(data => {
+      [types, icons, regions, markers] = data;
+      loadMarkers(markers);
+    });
+
   });
+
 
 };
 
