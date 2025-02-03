@@ -909,9 +909,10 @@ function showTooltip(e) {
   }
 
   if (o.keycode) {
-    content += `<hr/>Keycode: ${o.keycode}`;
+    content += `<hr/>${o.keycode}`;
   }
 
+  /*
   if (o.actors) {
     content += `<hr/>`;
     for (actor of o.actors) {
@@ -926,6 +927,7 @@ function showTooltip(e) {
   if (o.enable) {
     content += `<hr/>${o.enable}`;
   }
+  */
 
   tooltip.innerHTML = content;
 
