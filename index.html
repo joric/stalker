@@ -836,7 +836,7 @@ function popupOnClick(e) {
   if (o.items) {
     let content = `<hr/>`;
 
-    for (constn[name,path] of Object.entries(o.items)) {
+    for (const [name,path] of Object.entries(o.items)) {
       let title = lang[`sid_questItemprototypes_${name}_name`];
       content += `${title || name}<br/>`;
     }
