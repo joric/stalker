@@ -27,7 +27,7 @@ colors = {
 
 tints = {
     'claws': colors['red'],
-    'box': colors['cyan'],
+    #'box': colors['cyan'],
     #'anomaly': colors['orange'],
     'character': colors['khaki'],
     'radiation': colors['orange'],
