@@ -543,13 +543,12 @@ function loadMarkersBatched(data) {
     }
     result.push(...batch);
     if (currentIndex < features.length) {
-      setTimeout(processBatch, 1); // Yield control to avoid blocking
+      setTimeout(processBatch, 0); // Allow time for browser events
     } else {
       addMarkers(result);
     }
   }
-  
-  processBatch();
+  setTimeout(processBatch, 0); // Start processing asynchronously
 }
 
 function loadMarkersSimple(data) {
@@ -564,8 +563,8 @@ function loadMarkersSimple(data) {
 function loadMarkers(data) {
   markers = data;
   console.time('markers');
-  //loadMarkersBatched(data);
-  loadMarkersSimple(data);
+  loadMarkersBatched(data);
+  //loadMarkersSimple(data);
 }
 
 function addHandler(layer) {
