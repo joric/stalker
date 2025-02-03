@@ -1054,6 +1054,8 @@ function addMarker(feature) {
   if (o.clue) icon = 'stash';
   if (icon=='stash') group = 'stashes';
 
+  //if (icon=='lock' && !o.locked) icon = 'unlocked';
+
   image = 'images/sprites/' + ((icons[icon] && icons[icon].image) || 'CompassMarker_2_3.png');
 
   let size = iconSize;
