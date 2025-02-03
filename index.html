@@ -543,7 +543,7 @@ function loadMarkersBatched(data) {
     }
     result.push(...batch);
     if (currentIndex < features.length) {
-      setTimeout(processBatch, 10); // Allow time for browser events
+      setTimeout(processBatch, 0); // Allow time for browser events
     } else {
       addMarkers(result);
     }
