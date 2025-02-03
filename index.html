@@ -108,7 +108,8 @@ let lang = {};
 let markers = {};
 let regions = {};
 
-let actor_lookup = {};
+let actors_lookup = {};
+let items_lookup = {};
 
 let mapParam = {};
 let markersData = null;
@@ -362,16 +363,30 @@ function addLines(markers) {
     }
 
     if (enableActorLines) {
-      let marker = actor_lookup[o.outer];
-      if (!marker) continue;
-
-      let target = marker.getCoordinates();
-      let points = [c, target];
-      let line = new maptalks.LineString(points,{symbol:{lineColor: lineColor, lineWidth: lineWidth}});
-      geometry.push(line);
-      line.feature =  m.marker.feature;
+      let marker = actors_lookup[o.outer];
+      if (marker) {
+        let target = marker.getCoordinates();
+        let points = [c, target];
+        let line = new maptalks.LineString(points,{symbol:{lineColor: lineColor, lineWidth: lineWidth}});
+        geometry.push(line);
+        line.feature =  m.marker.feature;
+      }
     }
 
+    /*  too many lines
+    if (enableActorLines) {
+      let group = items_lookup[o.name];
+      if (group && o.name != 'Vodka') {
+        for (marker of group) {
+          let target = marker.getCoordinates();
+          let points = [c, target];
+          let line = new maptalks.LineString(points,{symbol:{lineColor: lineColor, lineWidth: lineWidth}});
+          geometry.push(line);
+          line.feature =  m.marker.feature;
+        }
+      }
+    }
+    */
   }
 
   let layerId = 'Lines'
@@ -1210,9 +1225,18 @@ function addMarker(feature) {
 
   if (o.actors) {
     for(const [guid, outer] of Object.entries(o.actors)) {
-      actor_lookup[outer] = marker;
+      actors_lookup[outer] = marker;
     }
   }
+
+  /*
+  if (o.items) {
+    for(const [name, param] of Object.entries(o.items)) {
+      if (!items_lookup[name]) items_lookup[name] = [];
+      items_lookup[name].push(marker);
+    }
+  }
+  */
 
   return {group: group, marker: marker};
 }

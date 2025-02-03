@@ -437,6 +437,15 @@ def get_bp_markers(cells):
                             prop[k] = {}
                         prop[k][guid] = ref
 
+                for e in p.get('ObjectsNeededToInteract',[]):
+                    sid = e.get('PrototypeSID',{}).get('Value')
+                    count = e.get('Count', 0)
+                    once = e.get('bConsumeOnce')
+                    if sid:
+                        k = 'items'
+                        if k not in prop: prop[k] = {}
+                        prop[k][sid] = count
+
                 if not cached_coord.get(outer):
                     if bp_type in ['SceneComponent','SkeletalMeshComponent','StaticMeshComponent']:
                         if loc := p.get('RelativeLocation'):
