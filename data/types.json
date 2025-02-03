@@ -19,7 +19,9 @@
       "EMarkerType::PadLock": { "icon": "circle_dot", "title": "Padlock", "category": "sid_misc_pda_hint_Controls", "group": "actors" },
       "EMarkerType::Button": { "icon": "circle_dot", "title": "Button", "category": "sid_misc_pda_hint_Controls", "group": "actors" },
       "EMarkerType::Latch": { "icon": "circle_dot", "title": "Latch", "category": "sid_misc_pda_hint_Controls", "group": "actors" },
-      "EMarkerType::Valve": { "icon": "circle_dot", "title": "Valve", "category": "sid_misc_pda_hint_Controls", "group": "actors" }
+      "EMarkerType::Valve": { "icon": "circle_dot", "title": "Valve", "category": "sid_misc_pda_hint_Controls", "group": "actors" },
+
+      "EMarkerType::Container": { "icon": "lock", "title": "sid_effects_general_container_name", "category": "sid_misc_pda_map_playerTags_habar", "group": "actors" }
     }
   },
   "ESpawnType::Marker" : {

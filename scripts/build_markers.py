@@ -48,6 +48,8 @@ bp_classes = {
 
     'BP_FusePanel': 'EMarkerType::FusePanel',
     'BP_BunkerHatch': 'EMarkerType::Door',
+
+    'BP_Safe': 'EMarkerType::Container',
 }
 
 def parse_struct(reader, options={}):
