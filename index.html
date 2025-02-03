@@ -501,7 +501,7 @@ function jumpToLocation(name) {
   }
 }
 
-
+// doesn't work in safari
 function loadMarkersIdle(data) {
   const features = data.features;
   let currentIndex = 0;
@@ -527,10 +527,19 @@ function loadMarkersIdle(data) {
   requestIdleCallback(processBatch, { timeout: 1000 });
 }
 
+function loadMarkersSimple(data) {
+  let result = []
+  for (const feature of data.features) {
+    let marker = addMarker(feature);
+    if (marker) result.push(marker);
+  }
+  addMarkers(result);
+}
+
 function loadMarkers(data) {
   markers = data;
   console.time('markers');
-  loadMarkersIdle(data);
+  loadMarkersSimple(data);
 }
 
 function addHandler(layer) {
