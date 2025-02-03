@@ -781,13 +781,13 @@ function popupOnClick(e) {
     let hr = document.createElement('hr');
     let ul = document.createElement('ul');
     ul.className = 'popup-subnote-ul';
-    for (spawn of o.spawns) {
+    for (name of o.spawns) {
       let li = document.createElement('li');
-      let data = getSpawnContent(o, spawn);
+      let data = getSpawnContent(o, name);
 
       let title = JSON.stringify(data || name, customReplacer, 2);
 
-      li.textContent = spawn;
+      li.textContent = name;
       li.setAttribute('title', title);
       li.className = 'popup-subnote-li';
       ul.appendChild(li);
@@ -795,6 +795,25 @@ function popupOnClick(e) {
     div.appendChild(hr);
     div.appendChild(ul);
   }
+
+
+  if (o.references) {
+    let hr = document.createElement('hr');
+    let ul = document.createElement('ul');
+    ul.className = 'popup-subnote-ul';
+    for (name of o.references) {
+      let li = document.createElement('li');
+      let title = name;
+      li.textContent = name;
+      li.setAttribute('title', title);
+      li.className = 'popup-subnote-li';
+      ul.appendChild(li);
+    }
+    div.appendChild(hr);
+    div.appendChild(ul);
+  }
+
+
 
   if (o.keycode) {
     let content = `<hr/>Keycode: ${o.keycode}`;
@@ -816,7 +835,6 @@ function popupOnClick(e) {
     el.innerHTML = content;
     div.appendChild(el);
   }
-
 
   popup.querySelector('#popup-data').innerHTML = '<hr/><pre>'+JSON.stringify(o, null, 2) + '</pre>';
 
