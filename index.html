@@ -912,6 +912,12 @@ function showTooltip(e) {
     content += `<hr/>${o.keycode}`;
   }
 
+  if (o.keys) {
+    let name = o.keys[0];
+    let title = lang[`sid_questItemprototypes_${name}_name`];
+    content += `<hr/>${title || name}`;
+  }
+
   /*
   if (o.actors) {
     content += `<hr/>`;
@@ -1334,8 +1340,9 @@ function passesFilter(marker) {
   if (o.actors) tags.push(...o.actors);
 
   if (o.keycode) tags.push('keycode');
+  if (o.keys) tags.push('keys');
 
-  for (p of [o.unlock, o.lock, o.enable, o.keycode, o.outer]) {
+  for (p of [o.unlock, o.lock, o.enable, o.keycode, o.outer, o.keys]) {
     if (p) tags.push(p);
   }
 
