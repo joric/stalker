@@ -863,7 +863,6 @@ function popupOnClick(e) {
   }
 
 
-
   if (o.keycode) {
     let content = `<hr/>Keycode: ${o.keycode}`;
 
@@ -1004,6 +1003,16 @@ function showTooltip(e) {
       content += `${title || name}<br/>`;
     }
   }
+
+  /*
+  if (o.references) {
+    content += `<hr/>`;
+    for (const[name,path] of Object.entries(o.references)) {
+      let title = lang[`sid_questItemprototypes_${name}_name`];
+      content += `${title || name}<br/>`;
+    }
+  }
+  */
 
   tooltip.innerHTML = content;
 
