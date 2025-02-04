@@ -439,11 +439,6 @@ def get_bp_markers(cells):
                         rcl = (rcl or 'null').split('/').pop()
                         add_key(prop, 'actors', guid, ref)
 
-                        k = 'actors'
-                        if k not in prop:
-                            prop[k] = {}
-                        prop[k][guid] = ref
-
                 for e in p.get('ObjectsNeededToInteract',[]):
                     sid = e.get('PrototypeSID',{}).get('Value')
                     count = e.get('Count', 0)
