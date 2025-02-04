@@ -837,7 +837,6 @@ function popupOnClick(e) {
     div.appendChild(ul);
   }
 
-
   if (o.references) {
     let hr = document.createElement('hr');
     let ul = document.createElement('ul');
@@ -996,6 +995,33 @@ function showTooltip(e) {
       content += `${title || name}<br/>`;
     }
   }
+
+  if (o.spawns) {
+    for (name of o.spawns) {
+      let data = getSpawnContent(o, name);
+      for (name of Object.keys(data)) {
+        let proto = markers.prototypes[name];
+        if (proto) {
+          let lsid = proto.lsid;
+          let title = lang[`sid_upgrades_${lsid}_name`];
+          let desc = lang[`sid_upgrades_${lsid}_description`];
+          if (title) {
+            let items = [];
+            for (item of proto.items) {
+              let s = lang[`sid_items_${item}_name`];
+              if (s) items.push(s);
+            }
+            let items_str = items.join(', ');
+            content += `<hr/><b>${title}</b><br/>${items_str}`;
+          }
+          if (desc) {
+            content += `<hr/>${desc}`;
+          }
+        }
+      }
+    }
+  }
+
 
   /*
   if (o.references) {

@@ -218,6 +218,17 @@ def add_spawns(data, prop):
     if spawns:
         prop['spawns'] = spawns
 
+
+def export_prototypes(records):
+    entries = {}
+    # just export localization sids for now
+    for key, config in records.items():
+        if type(config) is not dict: continue
+        lsid = config.get('LocalizationSID')
+        if lsid:
+            entries[key] = {'lsid':lsid, 'items': list((config.get('FittingWeaponsSIDs')or{}).values())}
+    return entries
+
 def export_stashes(records):
     entries = {}
     for key, config in records.items():
@@ -610,6 +621,10 @@ def export_markers(cache):
     features2 = get_bp_markers(cells)
 
     features.extend(features2)
+
+    protos = {}
+    protos.update(export_prototypes(cache['Stalker2/Content/GameLite/GameData/ItemPrototypes/BlueprintPrototypes.cfg']))
+    out['prototypes'] = protos
 
     print(f'writing {markers_file} ({len(features)} features)...')
     f = open(markers_file, 'w', encoding='utf-8', newline='\n')
