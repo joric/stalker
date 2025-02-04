@@ -35,7 +35,7 @@ bp_classes = {
     'BP_Stalker2PhysicsDoor': 'EMarkerType::Door',
     'BP_gen_security_door_': 'EMarkerType::Door',
     'BP_TrainDoor': 'EMarkerType::Door',
-    'BP_DynamicObject_2states_final': 'EMarkerType::Door', # see BP_CodeLock_C_UAID_00D861D9738D06F901_1800936926
+    'BP_DynamicObject_2states_final': 'EMarkerType::DynamicObject', # see BP_CodeLock_C_UAID_00D861D9738D06F901_1800936926
 
     'BP_CodeLock': 'EMarkerType::CodeLock',
     'BP_Cardlock': 'EMarkerType::CardLock',
