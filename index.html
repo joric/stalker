@@ -1108,6 +1108,10 @@ function addMarker(feature) {
   if (o.clue) icon = 'stash';
   if (icon=='stash') group = 'stashes';
 
+  let isSpecialDoor = o.outer && !o.outer.startsWith('BP_DoorView');
+
+  if (icon=='lock' && o.locked!=true && !isSpecialDoor) icon='unlocked'; // mark all unlocked doors as open. doesn't look pretty. 
+
   image = 'images/sprites/' + ((icons[icon] && icons[icon].image) || 'CompassMarker_2_3.png');
 
   let size = iconSize;

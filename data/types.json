@@ -44,7 +44,7 @@
   "ESpawnType::LairSpawner": { "icon": "danger", "category": "lair", "group": "enemies" },
   "ESpawnType::ALifeGroup": { "icon": "danger", "category": "Alife Group", "group": "enemies" },
   "ESpawnType::Trigger": { "icon": "circle", "category": "Trigger", "group": "misc" },
-  "ESpawnType::ContextualAction": { "icon": "circle", "category":"Contextual Action", "group": "misc",
+  "ESpawnType::ContextualAction": { "icon": "exclamation", "category":"Contextual Action", "group": "misc",
     "match": {
       "Jerboa|PseudoDog|Bayun|Bloodsucker|Flesh|Blinddog|Tushkan|Boar|ZombieFoster|Rat|Snork|Zombie": { "icon": "danger", "category": "sid_npc_name_mutant", "group": "enemies" },
       "Deer|Pseudogiant|Burer|Poltergeist|Controller|Chimera": { "icon": "danger", "category": "sid_npc_name_mutant", "group": "enemies" },
