@@ -23,7 +23,7 @@
 
       "EMarkerType::Container": { "icon": "box", "title": "sid_effects_general_container_name", "category": "sid_misc_pda_map_playerTags_habar", "group": "misc" },
 
-      "EMarkerType::DynamicObject": { "icon": "lock", "title": "sid_misc_hint_cantopen", "category": "sid_npc_name_zamok", "group": "misc" }
+      "EMarkerType::DynamicObject": { "icon": "lock", "title": "sid_misc_hint_cantopen", "category": "sid_npc_name_zamok", "group": "actors" }
 
     }
   },
