@@ -338,55 +338,48 @@ function loadMap() {
   });
 }
 
+function addLine(marker, target, c) {
+  let pt = target ? target.getCoordinates() : scaleCoordinate( {x: c[0], y: c[1], z: c[2]} );
+  let line = new maptalks.LineString([marker.getCoordinates(), pt],{arrowStyle:arrowStyle, symbol:{lineColor: lineColor, lineWidth: lineWidth}});
+  line.feature =  marker.feature;
+  return line;
+}
+
 function addLines(markers) {
   let geometry = [];
 
   for (m of markers) {
 
-    // let's just do teleports for now
-    let o = m.marker.feature.properties;
-    let c = m.marker.getCoordinates();
+    let marker = m.marker;
+    let o = marker.feature.properties;
 
     if (enableTeleportLines && o.target) {
-      let target = {x: o.target[0], y: o.target[1], z: o.target[2]};
-      let points = [c, scaleCoordinate(target)];
-      let line = new maptalks.LineString(points,{arrowStyle:arrowStyle, symbol:{lineColor: lineColor, lineWidth: lineWidth}});
-      geometry.push(line);
-      line.feature =  m.marker.feature;
+      geometry.push( addLine(marker, null, m.marker.feature.properties.target) );
     }
 
     if (enableHeightLines) {
-      let points = [c, {x: c.x, y: c.y, z: 0}];
-      let line = new maptalks.LineString(points,{symbol:{lineColor: lineColor, lineWidth: lineWidth}});
-      geometry.push(line);
-      line.feature =  m.marker.feature;
+      let c = m.marker.getCoordinates();
+      geometry.push( addLine(marker, null, [c.x,c.y,0] ) );
     }
 
     if (enableActorLines) {
-      let marker = actors_lookup[o.outer];
-      if (marker) {
-        let target = marker.getCoordinates();
-        let points = [c, target];
-        let line = new maptalks.LineString(points,{symbol:{lineColor: lineColor, lineWidth: lineWidth}});
-        geometry.push(line);
-        line.feature =  m.marker.feature;
+      let target = actors_lookup[o.outer];
+      if (target) {
+        geometry.push( addLine(marker, target) );
       }
     }
 
-    /*  too many lines
+    // draw lines from each items to corresponding names
     if (enableActorLines) {
       let group = items_lookup[o.name];
       if (group && o.name != 'Vodka') {
-        for (marker of group) {
-          let target = marker.getCoordinates();
-          let points = [c, target];
-          let line = new maptalks.LineString(points,{symbol:{lineColor: lineColor, lineWidth: lineWidth}});
-          geometry.push(line);
-          line.feature =  m.marker.feature;
+        for (target of group) {
+          // the big issue here is that target may be invisible, needs fixing lines vs zoom levels
+          //geometry.push( addLine(marker, target) );
         }
       }
     }
-    */
+
   }
 
   let layerId = 'Lines'
@@ -1238,14 +1231,12 @@ function addMarker(feature) {
     }
   }
 
-  /*
   if (o.items) {
     for(const [name, param] of Object.entries(o.items)) {
       if (!items_lookup[name]) items_lookup[name] = [];
       items_lookup[name].push(marker);
     }
   }
-  */
 
   return {group: group, marker: marker};
 }
