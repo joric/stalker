@@ -456,7 +456,7 @@ function addMarkers(data) {
     let geometries = collection[group];
     let visible = settings.activeItems[group] == true;
 
-    layer = new maptalks.PointLayer(layerName, [], {
+    layer = new maptalks.PointLayer(layerName, geometries, {
       enableAltitude: enableAltitude,
       sortByDistanceToCamera: true,
       forceRenderOnMoving: true,
@@ -465,7 +465,6 @@ function addMarkers(data) {
       sceneConfig: { depthFunc: '<='},
     }).addTo(groupLayer);
 
-    layer.addGeometry(geometries);
     //console.log('created layer', group, 'visible', settings.activeItems[group], geometries.length, 'markers');
     addHandler(layer);
   }
