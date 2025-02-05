@@ -843,10 +843,18 @@ function popupOnClick(e) {
 
     for (const[name,path] of Object.entries(o.references)) {
       let li = document.createElement('li');
-      let title = name;
-      li.textContent = name;
-      li.setAttribute('title', title);
+
+      let node = document.createElement('span');
+      node.textContent = name;
+      node.setAttribute('title', `XStartQuestNodeBySID ${name}`);
+
+      node.style.cursor = 'pointer';
+      node.onclick = function(e) {
+        copyToClipboard(`XStartQuestNodeBySID ${e.target.textContent}`);
+      };
+
       li.className = 'popup-subnote-li';
+      li.appendChild(node);
       ul.appendChild(li);
     }
     div.appendChild(hr);
@@ -863,15 +871,15 @@ function popupOnClick(e) {
   }
 
   if (o.items) {
-    let content = `<hr/>`;
-
-    for (const [name,path] of Object.entries(o.items)) {
-      let title = lang[`sid_questItemprototypes_${name}_name`];
-      content += `${title || name}<br/>`;
-    }
-
     let el = document.createElement('div');
-    el.innerHTML = content;
+    for (const [name,path] of Object.entries(o.items)) {
+      let node = document.createElement('div');
+      let title = lang[`sid_questItemprototypes_${name}_name`];
+      node.textContent = `${title || name}`;
+      el.appendChild(node);
+    }
+    let hr = document.createElement('hr');
+    div.appendChild(hr);
     div.appendChild(el);
   }
 
