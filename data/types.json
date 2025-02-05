@@ -52,7 +52,7 @@
       "Jerboa|PseudoDog|Bayun|Bloodsucker|Flesh|Blinddog|Tushkan|Boar|ZombieFoster|Rat|Snork|Zombie": { "icon": "danger", "category": "sid_npc_name_mutant", "group": "enemies" },
       "Deer|Pseudogiant|Burer|Poltergeist|Controller|Chimera": { "icon": "danger", "category": "sid_npc_name_mutant", "group": "enemies" },
       "CA_Quest_Hub_Medic": { "icon": "medic", "title": "sid_misc_pda_Map_MarkerMedic", "category": "sid_misc_pda_Map_MarkerMedic", "group": "bases" },
-      "_sit|_stand": { "icon": "fire", "category": "Contextual Action", "group": "misc" }
+      "_sit|_stand|_lie": { "icon": "fire", "category": "Contextual Action", "group": "misc" }
     }
   },
   "ESpawnType::OnlineModifierZone" : {"icon": "circle", "category":"Modifiers", "group": "misc" },
