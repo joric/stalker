@@ -498,7 +498,7 @@ def export_markers(cache):
 
     marker_proto = load_map(cache['Stalker2/Content/GameLite/GameData/MarkerPrototypes.cfg'], {'MarkerRadius':'radius', 'MarkType': 'name', 'Title':'title', 'Description':'description'})
     quest_proto = load_map(cache['Stalker2/Content/GameLite/GameData/ObjPrototypes/QuestObjPrototypes.cfg'], {'NPCPrototypeSID': 'npc', 'Faction': 'faction'})
-    npc_proto = load_map(cache['Stalker2/Content/GameLite/GameData/NPCPrototypes.cfg'], {'NameTextKey': 'title', 'Rank': 'rank'})
+    npc_proto = load_map(cache['Stalker2/Content/GameLite/GameData/NPCPrototypes.cfg'], {'NameTextKey': 'title', 'Rank': 'rank', 'NPCType': 'subtype'})
 
     # 1-st pass, collect references
     for package_path, package in cache.items():
@@ -574,8 +574,7 @@ def export_markers(cache):
                     prop |= marker_proto.get(name,{})
                     npc = quest_proto.get(name,{}).get('npc')
                     prop |= npc_proto.get(npc,{})
-                    faction = quest_proto.get(name,{}).get('faction')
-                    if faction:
+                    if faction := quest_proto.get(name,{}).get('faction'):
                         prop |= {'faction': faction}
 
                 # set name and title for hubs

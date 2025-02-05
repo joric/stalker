@@ -1082,12 +1082,15 @@ function getIconProp(o) {
   let name = o.name;
   let type = o.type;
 
-  let section = types[type] || (type && types[type.split('::')[0]+'::*']);
+  let section = types[type];
 
   prop = {...prop, ...section};
 
-  if (section && section.items && section.items[name]) {
-    return section.items[name];
+  if (section && section.items) {
+    let m1 = section.items[o.subtype];
+    if (m1) return m1;
+    let m2 = section.items[o.name];
+    if (m2) return m2;
   }
 
   if (section && section.match) {
