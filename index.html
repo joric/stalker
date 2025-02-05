@@ -115,6 +115,8 @@ let mapParam = {};
 let markersData = null;
 let regionsData = null;
 
+let tileset_base = location.protocol === 'file:' ? '../stalker2_tileset' : 'https://joric.github.io/stalker2_tileset';
+
 let localDataName = 'joricsStalkerMapsGL';
 let localData = JSON.parse(localStorage.getItem(localDataName))||{};
 let mapId = 's2hoc';
@@ -192,7 +194,7 @@ function loadMap() {
 
       new maptalks.TileLayer('PDA', {
         maxAvailableZoom: 7,
-        urlTemplate: 'https://joric.github.io/stalker2_tileset/tiles/{z}/{x}/{y}.jpg',
+        urlTemplate: `${tileset_base}/tiles/{z}/{x}/{y}.jpg`,
         repeatWorld: false,
         tileSize: 512,
         visible: settings.baseLayer == 'PDA',
@@ -200,7 +202,7 @@ function loadMap() {
 
       new maptalks.TileLayer('GlobalMap', {
         maxAvailableZoom: 5,
-        urlTemplate: 'https://joric.github.io/stalker2_tileset/extras/wb/{z}/{x}/{y}.jpg',
+        urlTemplate: `${tileset_base}/extras/wb/{z}/{x}/{y}.jpg`,
         repeatWorld: false,
         tileSize: 512,
         visible: settings.baseLayer == 'GlobalMap',
@@ -208,7 +210,7 @@ function loadMap() {
 
       new maptalks.TileLayer('LDScheme', {
         maxAvailableZoom: 3,
-        urlTemplate: 'https://joric.github.io/stalker2_tileset/extras/ld/{z}/{x}/{y}.png',
+        urlTemplate: `${tileset_base}/extras/ld/{z}/{x}/{y}.png`,
         repeatWorld: false,
         tileSize: 512,
         visible: settings.baseLayer == 'LDScheme',
@@ -287,7 +289,7 @@ function loadMap() {
 
   new maptalks.TileLayer('Stalker1', {
     maxAvailableZoom: 3,
-    urlTemplate: 'https://joric.github.io/stalker2_tileset/extras/s1/{z}/{x}/{y}.png',
+    urlTemplate: `${tileset_base}/extras/s1/{z}/{x}/{y}.png`,
     repeatWorld: false,
     tileSize: 512,
     visible : false,
