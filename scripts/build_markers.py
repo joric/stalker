@@ -1,5 +1,5 @@
 # (c) 2024-2025 Joric, https://github.com/joric/maps/wiki/Stalker-2
-# Needs json files to work, use FModel to extract subdirectores:
+# Needs data files to work, use FModel to extract subdirectores:
 # * Stalker2/Content/GameLite/GameData
 # * Stalker2/Content/GameLite/DLCGameData
 # * Stalker2/Content/_Stalker_2/maps/_Stalker2_WorldMap
