@@ -576,7 +576,6 @@ def export_markers(cache):
                     prop |= npc_proto.get(npc,{})
                     if faction := quest_proto.get(name,{}).get('faction'):
                         prop |= {'faction': faction}
-                    #if npc=='MedicNPC': prop['subtype'] = 'ENPCType::Medic' # does not exist really, all medics are traders
 
                 # set name and title for hubs
                 if prop.get('type')=='ESpawnType::Hub':
