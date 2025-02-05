@@ -498,7 +498,7 @@ def export_markers(cache):
 
     marker_proto = load_map(cache['Stalker2/Content/GameLite/GameData/MarkerPrototypes.cfg'], {'MarkerRadius':'radius', 'MarkType': 'name', 'Title':'title', 'Description':'description'})
     quest_proto = load_map(cache['Stalker2/Content/GameLite/GameData/ObjPrototypes/QuestObjPrototypes.cfg'], {'NPCPrototypeSID': 'npc', 'Faction': 'faction'})
-    npc_proto = load_map(cache['Stalker2/Content/GameLite/GameData/NPCPrototypes.cfg'], {'NameTextKey': 'title', 'Rank': 'rank', 'NPCType': 'subtype'})
+    npc_proto = load_map(cache['Stalker2/Content/GameLite/GameData/NPCPrototypes.cfg'], {'NameTextKey': 'title', 'Rank': 'rank', 'NPCMarker': 'subtype'})
 
     # 1-st pass, collect references
     for package_path, package in cache.items():
@@ -576,6 +576,7 @@ def export_markers(cache):
                     prop |= npc_proto.get(npc,{})
                     if faction := quest_proto.get(name,{}).get('faction'):
                         prop |= {'faction': faction}
+                    #if npc=='MedicNPC': prop['subtype'] = 'ENPCType::Medic' # does not exist really, all medics are traders
 
                 # set name and title for hubs
                 if prop.get('type')=='ESpawnType::Hub':
