@@ -418,6 +418,9 @@ def get_bp_markers(cells):
                     guid = get_guid(prop, p)
 
                     # use blueprint guid as sid for the blueprint items
+                    tags = p.get('Tags',[])
+                    if len(tags)>0:
+                        prop['sid'] = tags[0][1:]
                     if guid: prop['sid'] = guid
 
                     add_prop(prop, p, 'bUnbreakable', 'unbreakable')
