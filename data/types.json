@@ -45,7 +45,7 @@
   "ESpawnType::DailyScheduleZone": { "icon": "circle", "category": "Daily Schedule Zone", "group": "misc" },
   "ESpawnType::MoveToPath": { "icon": "circle", "title": "Move To Path", "category": "Helpers", "group": "misc" },
   "ESpawnType::LairSpawner": { "icon": "danger", "category": "lair", "group": "enemies" },
-  "ESpawnType::ALifeGroup": { "icon": "danger", "category": "Alife Group", "group": "enemies" },
+  "ESpawnType::ALifeGroup": { "icon": "question", "category": "Alife Group", "group": "misc" },
   "ESpawnType::Trigger": { "icon": "circle", "category": "Trigger", "group": "misc" },
   "ESpawnType::ContextualAction": { "icon": "exclamation", "category":"Contextual Action", "group": "misc",
     "match": {
