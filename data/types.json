@@ -14,7 +14,7 @@
       "EMarkerType::CodeLock": { "icon": "message", "title": "Keypad", "category": "sid_misc_pda_hint_Controls", "group": "actors" },
       "EMarkerType::CardLock": { "icon": "lock", "title": "Сard Reader", "category": "sid_misc_pda_hint_Controls", "group": "actors" },
 
-      "EMarkerType::FusePanel": { "icon": "repair", "title": "Fuse Panel", "category": "sid_misc_pda_hint_Controls", "group": "actors" },
+      "EMarkerType::FusePanel": { "icon": "message", "title": "Fuse Panel", "category": "sid_misc_pda_hint_Controls", "group": "actors" },
 
       "EMarkerType::Lever": { "icon": "repair", "title": "Lever", "category": "sid_misc_pda_hint_Controls", "group": "actors" },
       "EMarkerType::PadLock": { "icon": "lock", "title": "sid_npc_name_zamok", "category": "sid_misc_pda_hint_Controls", "group": "actors" },
@@ -77,7 +77,8 @@
       "Armor": {"icon": "chest", "category": "sid_misc_pda_reward_armor", "group": "items" },
       "PDA|Note": {"icon": "follow", "category": "sid_questItemprototypes_BasePDA_name", "group": "items" },
       "FArtifact": {"icon": "artifact", "category": "sid_misc_pda_map_playerTags_habar", "group": "misc" },
-      "_Key_": {"icon": "repair", "category": "sid_misc_pda_map_playerTags_habar", "group": "actors" }
+      "_Key_": {"icon": "repair", "category": "sid_misc_pda_map_playerTags_habar", "group": "actors" },
+      "_Fuse": {"icon": "repair", "category": "sid_misc_pda_map_playerTags_habar", "group": "actors" }
     }
   },
   "ESpawnType::Anomaly": {"icon": "anomaly", "category": "sid_misc_pda_map_playerTags_anomaly", "group": "anomalies" },
