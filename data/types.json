@@ -14,13 +14,13 @@
       "EMarkerType::CodeLock": { "icon": "message", "title": "Keypad", "category": "sid_misc_pda_hint_Controls", "group": "actors" },
       "EMarkerType::CardLock": { "icon": "lock", "title": "Сard Reader", "category": "sid_misc_pda_hint_Controls", "group": "actors" },
 
-      "EMarkerType::FusePanel": { "icon": "message", "title": "Fuse Panel", "category": "sid_misc_pda_hint_Controls", "group": "actors" },
+      "EMarkerType::FusePanel": { "icon": "repair", "title": "Fuse Panel", "category": "sid_misc_pda_hint_Controls", "group": "actors" },
 
       "EMarkerType::Lever": { "icon": "repair", "title": "Lever", "category": "sid_misc_pda_hint_Controls", "group": "actors" },
       "EMarkerType::PadLock": { "icon": "lock", "title": "sid_npc_name_zamok", "category": "sid_misc_pda_hint_Controls", "group": "actors" },
-      "EMarkerType::Button": { "icon": "circle_dot", "title": "Button", "category": "sid_misc_pda_hint_Controls", "group": "actors" },
-      "EMarkerType::Latch": { "icon": "circle_dot", "title": "Latch", "category": "sid_misc_pda_hint_Controls", "group": "actors" },
-      "EMarkerType::Valve": { "icon": "circle_dot", "title": "Valve", "category": "sid_misc_pda_hint_Controls", "group": "actors" },
+      "EMarkerType::Button": { "icon": "repair", "title": "Button", "category": "sid_misc_pda_hint_Controls", "group": "actors" },
+      "EMarkerType::Latch": { "icon": "repair", "title": "Latch", "category": "sid_misc_pda_hint_Controls", "group": "actors" },
+      "EMarkerType::Valve": { "icon": "repair", "title": "Valve", "category": "sid_misc_pda_hint_Controls", "group": "actors" },
 
       "EMarkerType::Container": { "icon": "box", "title": "sid_effects_general_container_name", "category": "sid_misc_pda_map_playerTags_habar", "group": "misc" }
     }
