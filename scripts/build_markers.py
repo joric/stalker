@@ -504,7 +504,7 @@ def export_markers(cache):
     for package_path, package in cache.items():
         for sid, data in package.items():
             if type(data) is dict:
-                for guid_prop in ['SignalSenderGuid','SignalReceiverGuid','TargetQuestGuid','InteractableQuestGuid','VolumeGuid','PlaceholderActorGuid','TargetQuestGuid']:
+                for guid_prop in ['SignalSenderGuid','SignalReceiverGuid','TargetQuestGuid','InteractableQuestGuid','VolumeGuid','PlaceholderActorGuid','TargetQuestGuid','TriggerQuestGuid']:
                     guid = data.get(guid_prop)
                     if guid:
                         cached_guids[guid][sid] = guid
