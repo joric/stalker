@@ -39,9 +39,9 @@
   "ESpawnType::Shelter": { "icon": "cave", "category": "sid_misc_pda_Map_MarkerShellter", "group": "misc" },
   "ESpawnType::Squad": { "icon": "soldier", "category": "Squads", "group": "misc" },
   "ESpawnType::Patrol": { "icon": "soldier", "category": "Patrols", "group": "misc" },
-  "ESpawnType::SafeZone": { "icon": "circle", "category": "SafeZones", "group": "misc" },
-  "ESpawnType::DailyScheduleZone": { "icon": "circle", "category": "Daily Schedule Zone", "group": "misc" },
-  "ESpawnType::MoveToPath": { "icon": "circle", "title": "Move To Path", "category": "Helpers", "group": "misc" },
+  "ESpawnType::SafeZone": { "icon": "exclamation", "category": "SafeZones", "group": "misc" },
+  "ESpawnType::DailyScheduleZone": { "icon": "exclamation", "category": "Daily Schedule Zone", "group": "misc" },
+  "ESpawnType::MoveToPath": { "icon": "exclamation", "title": "Move To Path", "category": "Helpers", "group": "misc" },
   "ESpawnType::LairSpawner": { "icon": "danger", "category": "lair", "group": "enemies" },
   "ESpawnType::ALifeGroup": { "icon": "question", "category": "Alife Group", "group": "misc" },
   "ESpawnType::Trigger": { "icon": "exclamation", "category": "Trigger", "group": "misc" },
@@ -52,7 +52,7 @@
       "_sit|_stand|_lie": { "icon": "fire", "category": "Contextual Action", "group": "misc" }
     }
   },
-  "ESpawnType::OnlineModifierZone" : {"icon": "circle", "category":"Modifiers", "group": "misc" },
+  "ESpawnType::OnlineModifierZone" : {"icon": "exclamation", "category":"Modifiers", "group": "misc" },
   "ESpawnType::Obj": {
     "items": {
       "Faust": { "icon": "guide", "category": "NPC", "group": "locations" },
