@@ -1147,7 +1147,7 @@ function addMarker(feature) {
   if (o.clue) icon = 'stash';
   if (icon=='stash') group = 'stashes';
 
-  if (o.name=='EMarkerType::Door' && o.locked!=true && o.unbreakable!=true) icon='unlocked'; // mark all unlocked doors as open. doesn't look pretty. 
+  if (o.name=='EMarkerType::Door' && o.locked!=true && o.unbreakable!=true) icon='circle'; // mark all unlocked doors as open. doesn't look pretty. 
 
   image = 'images/sprites/' + ((icons[icon] && icons[icon].image) || 'CompassMarker_2_3.png');
 

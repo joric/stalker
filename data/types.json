@@ -9,15 +9,15 @@
       "EMarkerType::Teleport": { "icon": "circle_locked", "title": "sid_misc_controlsSettings_movement_jump_MLI", "category": "sid_misc_pda_map_playerTags_anomaly", "group": "actors" },
       "EMarkerType::TeleportTarget": { "icon": "circle_dot", "title": "sid_misc_controlsSettings_movement_jump_MLI", "category": "sid_misc_pda_map_playerTags_anomaly", "group": "actors" },
 
-      "EMarkerType::Door": { "icon": "lock", "title": "sid_journal_stage_E11_MQ01_enter_the_room", "category": "sid_misc_pda_hint_Controls", "group": "actors" },
-      "EMarkerType::DynamicObject": { "icon": "lock", "title": "sid_misc_hint_cantopen", "category": "sid_misc_pda_hint_Controls", "group": "actors" },
+      "EMarkerType::Door": { "icon": "circle_dot", "title": "sid_journal_stage_E11_MQ01_enter_the_room", "category": "sid_misc_pda_hint_Controls", "group": "actors" },
+      "EMarkerType::DynamicObject": { "icon": "circle_dot", "title": "sid_misc_hint_cantopen", "category": "sid_misc_pda_hint_Controls", "group": "actors" },
       "EMarkerType::CodeLock": { "icon": "message", "title": "Keypad", "category": "sid_misc_pda_hint_Controls", "group": "actors" },
-      "EMarkerType::CardLock": { "icon": "message", "title": "Сard Reader", "category": "sid_misc_pda_hint_Controls", "group": "actors" },
+      "EMarkerType::CardLock": { "icon": "lock", "title": "Сard Reader", "category": "sid_misc_pda_hint_Controls", "group": "actors" },
 
-      "EMarkerType::FusePanel": { "icon": "circle_dot", "title": "Fuse Panel", "category": "sid_misc_pda_hint_Controls", "group": "actors" },
+      "EMarkerType::FusePanel": { "icon": "message", "title": "Fuse Panel", "category": "sid_misc_pda_hint_Controls", "group": "actors" },
 
-      "EMarkerType::Lever": { "icon": "circle_dot", "title": "Lever", "category": "sid_misc_pda_hint_Controls", "group": "actors" },
-      "EMarkerType::PadLock": { "icon": "circle_dot", "title": "sid_npc_name_zamok", "category": "sid_misc_pda_hint_Controls", "group": "actors" },
+      "EMarkerType::Lever": { "icon": "repair", "title": "Lever", "category": "sid_misc_pda_hint_Controls", "group": "actors" },
+      "EMarkerType::PadLock": { "icon": "lock", "title": "sid_npc_name_zamok", "category": "sid_misc_pda_hint_Controls", "group": "actors" },
       "EMarkerType::Button": { "icon": "circle_dot", "title": "Button", "category": "sid_misc_pda_hint_Controls", "group": "actors" },
       "EMarkerType::Latch": { "icon": "circle_dot", "title": "Latch", "category": "sid_misc_pda_hint_Controls", "group": "actors" },
       "EMarkerType::Valve": { "icon": "circle_dot", "title": "Valve", "category": "sid_misc_pda_hint_Controls", "group": "actors" },
@@ -44,7 +44,7 @@
   "ESpawnType::MoveToPath": { "icon": "circle", "title": "Move To Path", "category": "Helpers", "group": "misc" },
   "ESpawnType::LairSpawner": { "icon": "danger", "category": "lair", "group": "enemies" },
   "ESpawnType::ALifeGroup": { "icon": "question", "category": "Alife Group", "group": "misc" },
-  "ESpawnType::Trigger": { "icon": "circle", "category": "Trigger", "group": "misc" },
+  "ESpawnType::Trigger": { "icon": "exclamation", "category": "Trigger", "group": "misc" },
   "ESpawnType::ContextualAction": { "icon": "exclamation", "category":"Contextual Action", "group": "misc",
     "match": {
       "Jerboa|PseudoDog|Bayun|Bloodsucker|Flesh|Blinddog|Tushkan|Boar|ZombieFoster|Rat|Snork|Zombie": { "icon": "danger", "category": "sid_npc_name_mutant", "group": "enemies" },
