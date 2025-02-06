@@ -91,6 +91,7 @@ let scaleZ = 0.1; // postprocess coordinates beacuse enableAltitude and heightFa
 let enableTeleportLines = true;
 let enableHeightLines = false;
 let enableActorLines = true;
+let enableItemLines = true;
 
 let lineWidth = 2;
 let lineColor = '#fff';
@@ -372,13 +373,17 @@ function addLines(markers) {
       }
     }
 
-    // draw lines from each items to corresponding names
-    if (enableActorLines) {
+    if (enableItemLines) {
       let group = items_lookup[o.name];
       if (group && o.name != 'Vodka') {
         for (target of group) {
           // the big issue here is that target may be invisible, needs fixing lines vs zoom levels
-          //geometry.push( addLine(marker, target) );
+          // limit line length here
+
+          let a = marker.getCoordinates();
+          let b = target.getCoordinates();
+          let dist = Math.sqrt(Math.pow(a.x-b.x,2)+Math.pow(a.y-b.y,2)+Math.pow(a.z-b.z,2));
+          if (dist < 5000) geometry.push( addLine(marker, target) );
         }
       }
     }

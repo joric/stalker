@@ -51,6 +51,8 @@ bp_classes = {
     'BP_BunkerHatch': 'EMarkerType::Door',
 
     'BP_Safe': 'EMarkerType::Container',
+
+    'BP_Trap': 'EMarkerType::Trap',
 }
 
 def parse_struct(reader, options={}):
@@ -514,6 +516,14 @@ def export_markers(cache):
                             item_sid = (package.get(conn_sid)or{}).get('ItemPrototypeSID')
                             if item_sid:
                                 cached_items[guid][item_sid] = guid
+
+                # add markers/conditions/trigger
+                for marker in (data.get('Markers')or{}).values():
+                    for condition in (marker.get('Conditions')or{}).values():
+                        for entry in condition.values():
+                            guid = entry.get('Trigger')
+                            if guid:
+                                cached_guids[guid][sid] = guid
 
     # 2-nd pass, collect coordinates
     for package_path, package in cache.items():

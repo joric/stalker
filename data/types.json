@@ -21,6 +21,7 @@
       "EMarkerType::Button": { "icon": "repair", "title": "Button", "category": "sid_misc_pda_hint_Controls", "group": "actors" },
       "EMarkerType::Latch": { "icon": "repair", "title": "Latch", "category": "sid_misc_pda_hint_Controls", "group": "actors" },
       "EMarkerType::Valve": { "icon": "repair", "title": "Valve", "category": "sid_misc_pda_hint_Controls", "group": "actors" },
+      "EMarkerType::Trap": { "icon": "unlocked", "title": "Trap", "category": "sid_misc_pda_hint_Controls", "group": "actors" },
 
       "EMarkerType::Container": { "icon": "box", "title": "sid_effects_general_container_name", "category": "sid_misc_pda_map_playerTags_habar", "group": "misc" }
     }
@@ -75,7 +76,8 @@
       "^Gun": {"icon": "chest", "category": "sid_misc_pda_reward_weapon", "group": "items" },
       "Armor": {"icon": "chest", "category": "sid_misc_pda_reward_armor", "group": "items" },
       "PDA|Note": {"icon": "follow", "category": "sid_questItemprototypes_BasePDA_name", "group": "items" },
-      "FArtifact": {"icon": "artifact", "category": "sid_misc_pda_map_playerTags_habar", "group": "misc" }
+      "FArtifact": {"icon": "artifact", "category": "sid_misc_pda_map_playerTags_habar", "group": "misc" },
+      "_Key_": {"icon": "repair", "category": "sid_misc_pda_map_playerTags_habar", "group": "actors" }
     }
   },
   "ESpawnType::Anomaly": {"icon": "anomaly", "category": "sid_misc_pda_map_playerTags_anomaly", "group": "anomalies" },
