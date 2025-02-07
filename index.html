@@ -139,6 +139,28 @@ function scaleCoordinateArray(c) {
   return scaleZ < 1.0 ? [ c[0], c[1], c[2]*scaleZ] : c;
 }
 
+class CustomTooltip extends maptalks.ui.ToolTip {
+    constructor(options) {
+        super(options);
+    }
+
+    /*
+    buildOn() {
+        // Create a DOM element for the tooltip
+        const tooltip = document.createElement('div');
+        tooltip.className = 'custom-tooltip';
+        tooltip.innerHTML = this.options.content;
+        return tooltip;
+    }
+
+
+    getOffset() {
+        // Adjust the offset of the tooltip relative to the marker
+        return new maptalks.Point(0,0);
+    }
+    */
+}
+
 function loadMap() {
 
   if (!localData[mapId]) {
@@ -1014,7 +1036,7 @@ function showTooltip(e) {
   if (o.spawns) {
     for (name of o.spawns) {
       let data = getSpawnContent(o, name);
-      for (name of Object.keys(data)) {
+      for (name of Object.keys(data||{})) {
         let proto = markers.prototypes[name];
         if (proto) {
           let lsid = proto.lsid;
@@ -1119,10 +1141,14 @@ function getIconProp(o) {
 
 function showTooltipExt(e) {
   let marker = e.target;
-    //setMarkerSize(e.target, size * 1.15);
-    clearTimeout(tooltipShowTimer);
-    if (marker.getInfoWindow() && marker.getInfoWindow().isVisible()) return; // do not open popup if there's an info window
-    tooltipShowTimer = setTimeout(function(){showTooltip(e)}, tooltipShowDelay);
+  //setMarkerSize(e.target, size * 1.15);
+  clearTimeout(tooltipShowTimer);
+
+  if (marker.getInfoWindow() && marker.getInfoWindow().isVisible()) return; // do not open popup if there's an info window
+
+  //tooltipShowTimer = setTimeout(showTooltip, tooltipShowDelay, e);
+
+  showTooltip(e); // parameter bug
 }
 
 function hideTooltipExt(e) {
@@ -1253,6 +1279,8 @@ function addMarker(feature) {
   marker.on('mouseout', hideTooltipExt);
 
   //marker.on('click', popupOnClick);
+
+  //const tooltip = new CustomTooltip(info.title,{}).addTo(marker);
 
 /*
   // this shit eats 200 ms. find a way to use a single tooltip
