@@ -22,6 +22,7 @@
       "EMarkerType::Latch": { "icon": "repair", "title": "Latch", "category": "sid_misc_pda_hint_Controls", "group": "actors" },
       "EMarkerType::Valve": { "icon": "repair", "title": "Valve", "category": "sid_misc_pda_hint_Controls", "group": "actors" },
       "EMarkerType::Trap": { "icon": "unlocked", "title": "Trap", "category": "sid_misc_pda_hint_Controls", "group": "actors" },
+      "EMarkerType::Generator": { "icon": "repair", "title": "Diesel Generator", "category": "sid_misc_pda_hint_Controls", "group": "actors" },
 
       "EMarkerType::Container": { "icon": "box", "title": "sid_effects_general_container_name", "category": "sid_misc_pda_map_playerTags_habar", "group": "misc" }
     }

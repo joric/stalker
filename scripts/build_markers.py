@@ -53,6 +53,8 @@ bp_classes = {
     'BP_Safe': 'EMarkerType::Container',
 
     'BP_Trap': 'EMarkerType::Trap',
+
+    'BP_Diesel_Generator': 'EMarkerType::Generator',
 }
 
 def parse_struct(reader, options={}):
