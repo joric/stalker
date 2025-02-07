@@ -405,7 +405,7 @@ function addLines(markers) {
           let a = marker.getCoordinates();
           let b = target.getCoordinates();
           let dist = Math.sqrt(Math.pow(a.x-b.x,2)+Math.pow(a.y-b.y,2)+Math.pow(a.z-b.z,2));
-          if (dist < 100000) geometry.push( addLine(marker, target) );
+          if (dist < 50000) geometry.push( addLine(marker, target) );
         }
       }
     }
