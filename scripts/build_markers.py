@@ -165,6 +165,9 @@ def get_coordinates(data):
     coord =  [pts[k] for k in('X','Y','Z')if k in pts]
     if coord: return coord
 
+def get_item_properties(data, remap):
+    return {v: data[k] for k,v in remap.items() if k in data}
+
 def load_map(records, remap):
     entries = {}
     for key, data in records.items():
@@ -172,8 +175,11 @@ def load_map(records, remap):
         sid = data.get('SID')
         if sid:
             entries[sid] = {}
-            prop = entries[sid]
-            prop.update({v: data[k] for k,v in remap.items() if k in data})
+            if 'refkey' in data:
+                ref = data['refkey']
+                if ref in records:
+                    entries[sid].update(get_item_properties(records[ref], remap))
+            entries[sid].update(get_item_properties(data, remap))
     return entries
 
 def cleanup(prop):
@@ -504,10 +510,31 @@ def export_markers(cache):
     quest_proto = load_map(cache['Stalker2/Content/GameLite/GameData/ObjPrototypes/QuestObjPrototypes.cfg'], {'NPCPrototypeSID': 'npc', 'Faction': 'faction'})
     npc_proto = load_map(cache['Stalker2/Content/GameLite/GameData/NPCPrototypes.cfg'], {'NameTextKey': 'title', 'Rank': 'rank', 'NPCMarker': 'subtype'})
 
+    item_proto = {}
+
+    pfs=[
+        'AmmoPrototypes.cfg',
+        'ArmorPrototypes.cfg',
+        'ArtifactPrototypes.cfg',
+        'AttachPrototypes.cfg',
+        'BlueprintPrototypes.cfg',
+        'ConsumablePrototypes.cfg',
+        'DetectorPrototypes.cfg',
+        'GDItemPrototypes.cfg',
+        'GrenadePrototypes.cfg',
+        'KeyItemPrototypes.cfg',
+        'QuestItemPrototypes.cfg',
+        'WeaponPrototypes.cfg'
+    ]
+
+    for name in pfs:
+        item_proto.update(  load_map(cache['Stalker2/Content/GameLite/GameData/ItemPrototypes/'+name], {'LocalizationSID':'localization'}))
+
     # 1-st pass, collect references
     for package_path, package in cache.items():
         for sid, data in package.items():
             if type(data) is dict:
+
                 for guid_prop in ['SignalSenderGuid','SignalReceiverGuid','TargetQuestGuid','InteractableQuestGuid','VolumeGuid','PlaceholderActorGuid','TargetQuestGuid','TriggerQuestGuid']:
                     guid = data.get(guid_prop)
                     if guid:
@@ -606,6 +633,12 @@ def export_markers(cache):
                 if clue and clue != 'EmptyInherited':
                     prop['title'] = f'sid_stashes_{clue}_name'
                     prop['description'] = f'sid_stashes_{clue}_description'
+
+                # set title for items
+                lid = item_proto.get(name,{}).get('localization')
+                if lid:
+                    prop['title'] = f'sid_questItemprototypes_{lid}_name'
+                    prop['description'] = f'sid_questItemprototypes_{lid}_description'
 
                 cleanup(prop)
                 add_spawns(data, prop)
