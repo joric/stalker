@@ -423,7 +423,7 @@ def get_bp_markers(cells):
                 if bp_type.startswith(class_name_prefix):
                     name = o['Name']
                     #if name!='BP_DoorView_C_UAID_18C04D7E659CAACD01_1306808572': continue
-                    cached_prop[name] = {'sid': name, 'uaid': name, 'type': 'ESpawnType::CustomMarker', 'name': marker_type}
+                    cached_prop[name] = {'sid': name, 'uaid': name, 'type': 'ESpawnType::CustomMarker', 'name': marker_type, 'cell': cell}
                     prop = cached_prop[name]
                     p = o.get('Properties',{})
 
