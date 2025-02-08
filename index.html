@@ -1018,7 +1018,7 @@ function showTooltip(e) {
   }
 
   if (info.description) {
-    content += `<hr/>${info.description}`;
+    content += `<hr/><span title="${o.name}">${info.description}</span>`;
   }
 
   if (o.keycode) {

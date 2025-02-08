@@ -55,6 +55,8 @@ bp_classes = {
     'BP_Trap': 'EMarkerType::Trap',
 
     'BP_Diesel_Generator': 'EMarkerType::Generator',
+
+    'BP_ExplosivesPackage': 'EMarkerType::Explosives',
 }
 
 def parse_struct(reader, options={}):
@@ -433,6 +435,7 @@ def get_bp_markers(cells):
                     add_prop(prop, p, 'bUnbreakable', 'unbreakable')
                     add_prop(prop, p, 'bIsLocked', 'locked')
 
+
                     c = p.get('EndPoint',{}).get('Translation')
                     if c:
                         prop['delta'] = [float(c[t]) for t in 'XYZ']
@@ -545,7 +548,8 @@ def export_markers(cache):
         for sid, data in package.items():
             if type(data) is dict:
 
-                for guid_prop in ['SignalSenderGuid','SignalReceiverGuid','TargetQuestGuid','InteractableQuestGuid','VolumeGuid','PlaceholderActorGuid','TargetQuestGuid','TriggerQuestGuid']:
+                for guid_prop in data:
+                    if not guid_prop.endswith('Guid'): continue
                     guid = data.get(guid_prop)
                     if guid:
                         cached_guids[guid][sid] = guid
