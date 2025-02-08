@@ -506,14 +506,10 @@ def get_connections(data):
     return out
 
 def cleanup_prop(prop):
-    # convert items, references and actors to lists
-
-    filtered = ['BP_VentBlades','VolumeForEffects','BP_L_ele_lamp','BP_L_gen_lamp','BP_L_ind_lamp','BP_DynamicObject_Decal','BP_DynamicObject_VFX']
-
     for k in ['items','references','actors']:
         if k in prop:
             value = prop[k]
-            prop[k] = list(filter(lambda x:not any(x.startswith(t)for t in filtered), value.keys()))
+            prop[k] = list(filter(lambda x:not re.match(r'^BP.*(VentBlades|_lamp|_Decal|_VFX|_spotlight)|^VolumeForEffects',x), value.keys()))
             if not prop[k]:
                 del prop[k]
 
