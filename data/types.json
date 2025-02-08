@@ -22,7 +22,7 @@
       "EMarkerType::Latch": { "icon": "repair", "title": "Latch", "category": "sid_misc_pda_hint_Controls", "group": "actors" },
       "EMarkerType::Valve": { "icon": "repair", "title": "Valve", "category": "sid_misc_pda_hint_Controls", "group": "actors" },
 
-      "EMarkerType::Generator": { "icon": "question", "title": "Diesel Generator", "category": "sid_misc_pda_hint_Controls", "group": "actors" },
+      "EMarkerType::Generator": { "icon": "repair", "title": "Diesel Generator", "category": "sid_misc_pda_hint_Controls", "group": "actors" },
       "EMarkerType::Container": { "icon": "box", "title": "sid_effects_general_container_name", "category": "sid_misc_pda_map_playerTags_habar", "group": "misc" },
       "EMarkerType::Trap": { "icon": "unlocked", "title": "Trap", "category": "sid_misc_pda_hint_Controls", "group": "actors" }
     }
@@ -78,8 +78,8 @@
       "Armor": {"icon": "chest", "category": "sid_misc_pda_reward_armor", "group": "items" },
       "PDA|Note": {"icon": "follow", "category": "sid_questItemprototypes_BasePDA_name", "group": "items" },
       "FArtifact": {"icon": "artifact", "category": "sid_misc_pda_map_playerTags_habar", "group": "misc" },
-      "_Key_": {"icon": "question", "category": "sid_misc_pda_map_playerTags_habar", "group": "actors" },
-      "_Fuse": {"icon": "question", "category": "sid_misc_pda_map_playerTags_habar", "group": "actors" }
+      "_Key_": {"icon": "yen", "category": "sid_misc_pda_map_playerTags_habar", "group": "actors" },
+      "_Fuse": {"icon": "yen", "category": "sid_misc_pda_map_playerTags_habar", "group": "actors" }
     }
   },
   "ESpawnType::Anomaly": {"icon": "anomaly", "category": "sid_misc_pda_map_playerTags_anomaly", "group": "anomalies" },
