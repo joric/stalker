@@ -1064,7 +1064,7 @@ function showTooltip(e) {
     content += `<hr/><div class="overflow-container">`;
     for (const name of o.references) {
       let title = lang[`sid_questItemprototypes_${name}_name`];
-      content += `<a href="#${name}" onclick="copyToClipboard('XStartQuestNodeBySID' + this.textContent)" title="${name}">${name}</a><br/>`;
+      content += `<a href="#${name}" onclick="copyToClipboard('XStartQuestNodeBySID ' + this.textContent)" title="${name}">${name}</a><br/>`;
     }
     content +='</div>';
   }
