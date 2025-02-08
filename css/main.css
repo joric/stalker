@@ -929,6 +929,11 @@ input::selection {
   font-size: 14px;
 }
 
+.overflow-container a {
+  color: black;
+  text-decoration: none;
+}
+
 .arrow-left::before {
   content: "";
   position: absolute;
