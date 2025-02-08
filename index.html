@@ -1029,7 +1029,7 @@ function showTooltip(e) {
     content += `<hr/>`;
     for (const name of o.items) {
       let title = lang[`sid_questItemprototypes_${name}_name`];
-      content += `${title || name}<br/>`;
+      content += `[${title || name}]<br/>`;
     }
   }
 
@@ -1058,7 +1058,6 @@ function showTooltip(e) {
       }
     }
   }
-
 
   if (o.references) {
     content += `<hr/><div class="overflow-container">`;
