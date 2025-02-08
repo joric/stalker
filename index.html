@@ -389,7 +389,7 @@ function addLines(markers) {
     }
 
     if (enableActorLines) {
-      let target = actors_lookup[o.outer];
+      let target = actors_lookup[o.uaid];
       if (target) {
         geometry.push( addLine(marker, target) );
       }
@@ -871,7 +871,7 @@ function popupOnClick(e) {
     let ul = document.createElement('ul');
     ul.className = 'popup-subnote-ul';
 
-    for (const[name,path] of Object.entries(o.references)) {
+    for (const name of o.references) {
       let li = document.createElement('li');
 
       let node = document.createElement('span');
@@ -902,7 +902,7 @@ function popupOnClick(e) {
 
   if (o.items) {
     let el = document.createElement('div');
-    for (const [name,path] of Object.entries(o.items)) {
+    for (const name of o.items) {
       let node = document.createElement('div');
       let title = lang[`sid_questItemprototypes_${name}_name`];
       node.textContent = `${title || name}`;
@@ -1027,7 +1027,7 @@ function showTooltip(e) {
 
   if (o.items) {
     content += `<hr/>`;
-    for (const[name,path] of Object.entries(o.items)) {
+    for (const name of o.items) {
       let title = lang[`sid_questItemprototypes_${name}_name`];
       content += `${title || name}<br/>`;
     }
@@ -1178,7 +1178,7 @@ function addMarker(feature) {
   if (o.clue) icon = 'stash';
   if (icon=='stash') group = 'stashes';
 
-  if (o.outer && o.outer.startsWith('BP_DoorView') && o.locked!=true) icon='circle'; // mark all unlocked doors as open. doesn't look pretty. 
+  if (o.uaid && o.uaid.startsWith('BP_DoorView') && o.locked!=true) icon='circle'; // mark all unlocked doors as open. doesn't look pretty. 
 
   image = 'images/sprites/' + ((icons[icon] && icons[icon].image) || 'CompassMarker_2_3.png');
 
@@ -1300,13 +1300,13 @@ function addMarker(feature) {
   })
 
   if (o.actors) {
-    for(const [guid, outer] of Object.entries(o.actors)) {
-      actors_lookup[outer] = marker;
+    for(const uaid of o.actors) {
+      actors_lookup[uaid] = marker;
     }
   }
 
   if (o.items) {
-    for(const [name, param] of Object.entries(o.items)) {
+    for(const name of o.items) {
       if (!items_lookup[name]) items_lookup[name] = [];
       items_lookup[name].push(marker);
     }
@@ -1493,14 +1493,14 @@ function passesFilter(marker) {
 
   if (o.spawns) tags.push(o.spawns);
 
-  if (o.references) tags.push(...Object.keys(o.references));
-  if (o.actors) tags.push(...Object.keys(o.actors));
-  if (o.items) tags.push(...Object.keys(o.items));
+  if (o.references) tags.push(...o.references);
+  if (o.actors) tags.push(...o.actors);
+  if (o.items) tags.push(...o.items);
 
   if (o.keycode) tags.push('keycode');
   if (o.items) tags.push('items');
 
-  for (p of [o.lock, o.enable, o.keycode, o.outer]) {
+  for (p of [o.lock, o.enable, o.keycode, o.uaid]) {
     if (p) tags.push(p);
   }
 

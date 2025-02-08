@@ -421,7 +421,7 @@ def get_bp_markers(cells):
                 if bp_type.startswith(class_name_prefix):
                     name = o['Name']
                     #if name!='BP_DoorView_C_UAID_18C04D7E659CAACD01_1306808572': continue
-                    cached_prop[name] = {'sid': name, 'outer': name, 'type': 'ESpawnType::CustomMarker', 'name': marker_type, 'cell': cell}
+                    cached_prop[name] = {'sid': name, 'uaid': name, 'type': 'ESpawnType::CustomMarker', 'name': marker_type}
                     prop = cached_prop[name]
                     p = o.get('Properties',{})
 
@@ -458,7 +458,7 @@ def get_bp_markers(cells):
                     if guid:
                         ref = (ref or 'null').split('.').pop()
                         rcl = (rcl or 'null').split('/').pop()
-                        add_key(prop, 'actors', guid, ref)
+                        add_key(prop, 'actors', ref, guid)
 
                 for e in p.get('ObjectsNeededToInteract',[]):
                     sid = e.get('PrototypeSID',{}).get('Value')
@@ -482,6 +482,8 @@ def get_bp_markers(cells):
             prop['target'] = [coord[i]+delta[i] for i in range(3)]
             del prop['delta']
 
+        cleanup_prop(prop)
+
         feature = {
             'type': 'Feature',
             'geometry': {'type':'Point', 'coordinates': coord},
@@ -502,6 +504,18 @@ def get_connections(data):
             if sid:
                 out.add(sid)
     return out
+
+def cleanup_prop(prop):
+    # convert items, references and actors to lists
+
+    filtered = ['BP_VentBlades','VolumeForEffects','BP_L_ele_lamp','BP_L_gen_lamp','BP_L_ind_lamp','BP_DynamicObject_Decal','BP_DynamicObject_VFX']
+
+    for k in ['items','references','actors']:
+        if k in prop:
+            value = prop[k]
+            prop[k] = list(filter(lambda x:not any(x.startswith(t)for t in filtered), value.keys()))
+            if not prop[k]:
+                del prop[k]
 
 def export_markers(cache):
     features = []
@@ -642,6 +656,8 @@ def export_markers(cache):
 
                 cleanup(prop)
                 add_spawns(data, prop)
+
+                cleanup_prop(prop)
 
                 features.append({'type':'Feature','geometry': {'type':'Point', 'coordinates': coord }, 'properties': prop})
                 #sys.stderr.write(f'added {len(features)} markers    \r')
