@@ -530,7 +530,7 @@ function findLocation(id) {
 
 function jumpToLocation(name) {
   if (marker = findLocation(name)) {
-    map.animateTo({center: marker.getCoordinates(), zoom:8, pitch:0, bearing:0});
+    map.setView({center: marker.getCoordinates(), zoom:8, pitch:0, bearing:0});
     marker.show();
     popupOnClick({target: marker});
     marker.openInfoWindow();
