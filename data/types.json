@@ -78,7 +78,7 @@
       "Armor": {"icon": "chest", "category": "sid_misc_pda_reward_armor", "group": "items" },
       "PDA|Note": {"icon": "follow", "category": "sid_questItemprototypes_BasePDA_name", "group": "items" },
       "FArtifact": {"icon": "artifact", "category": "sid_misc_pda_map_playerTags_habar", "group": "misc" },
-      "_Key_": {"icon": "yen", "category": "sid_misc_pda_map_playerTags_habar", "group": "actors" },
+      "_Key_|Key$|Keycard$": {"icon": "yen", "category": "sid_misc_pda_map_playerTags_habar", "group": "actors" },
       "_Fuse": {"icon": "yen", "category": "sid_misc_pda_map_playerTags_habar", "group": "actors" }
     }
   },

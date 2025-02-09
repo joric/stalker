@@ -803,6 +803,17 @@ function getSpawnContent(o, name) {
 
 }
 
+function customReplacer(key, value) {
+  if (value && typeof value === 'object') {
+      const depth = this.depth || 0;
+      if (depth === 1) {
+          return JSON.stringify(value);
+      }
+      return { ...value, depth: depth + 1 };
+  }
+  return value;
+}
+
 function getMarkerSize(marker) {
   let symbol = marker.getSymbol();
   if (symbol instanceof Array) {
@@ -844,17 +855,6 @@ function popupOnClick(e) {
     content.textContent = info.description;
     div.appendChild(hr);
     div.appendChild(content);
-  }
-
-  function customReplacer(key, value) {
-      if (value && typeof value === 'object') {
-          const depth = this.depth || 0;
-          if (depth === 1) {
-              return JSON.stringify(value);
-          }
-          return { ...value, depth: depth + 1 };
-      }
-      return value;
   }
 
   if (o.spawns) {
@@ -1044,6 +1044,17 @@ function showTooltip(e) {
     content +='</div>';
   }
 
+  /*
+  if (o.spawns) {
+    content += `<hr/><div class="overflow-container small">`;
+    for (name of o.spawns) {
+      content += `<div>${name}</div>`;
+    }
+    content +='</div>';
+  }
+  */
+
+  // show upgrade thingy, if any
   if (o.spawns) {
     for (name of o.spawns) {
       let data = getSpawnContent(o, name);
@@ -1067,6 +1078,7 @@ function showTooltip(e) {
           }
         }
       }
+
     }
   }
 
