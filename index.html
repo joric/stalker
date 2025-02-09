@@ -1187,7 +1187,8 @@ function addMarker(feature) {
   if (o.clue) icon = 'stash';
   if (icon=='stash') group = 'stashes';
 
-  if (o.locked) icon='circle_dot';
+  // all doors are closed by default unless it's DoorView without locked property
+  if (o.uaid && o.uaid.startsWith('BP_DoorView') && !o.locked) icon='circle';
 
   image = 'images/sprites/' + ((icons[icon] && icons[icon].image) || 'CompassMarker_2_3.png');
 
