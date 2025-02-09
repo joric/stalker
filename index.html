@@ -1187,7 +1187,7 @@ function addMarker(feature) {
   if (o.clue) icon = 'stash';
   if (icon=='stash') group = 'stashes';
 
-  if (o.locked) icon='circle_dot';
+  if (o.name=='EMarkerType::Door' &&(o.locked || o.broken || o.unbreakable)) icon='circle_dot';
 
   image = 'images/sprites/' + ((icons[icon] && icons[icon].image) || 'CompassMarker_2_3.png');
 

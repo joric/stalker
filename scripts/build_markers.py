@@ -441,6 +441,7 @@ def get_bp_markers(cells):
 
                     add_prop(prop, p, 'bUnbreakable', 'unbreakable')
                     add_prop(prop, p, 'bIsLocked', 'locked')
+                    add_prop(prop, p, 'bBroken', 'broken')
 
 
                     c = p.get('EndPoint',{}).get('Translation')
