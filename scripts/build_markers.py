@@ -51,6 +51,7 @@ bp_classes = {
     'BP_BunkerHatch': 'EMarkerType::Door',
 
     'BP_Safe': 'EMarkerType::Container',
+    'BP_Dalins_Safe': 'EMarkerType::Container',
 
     'BP_Trap': 'EMarkerType::Trap',
 
