@@ -508,13 +508,13 @@ function addMarkers(data) {
     containerClass : 'maptalks-layer-switcher',
   }).addTo(map);
 
-  updateView();
-
-
   // marker link
   let name = mapParam.markerName;
   if (name) {
+    mapParam = {};
     jumpToLocation(name);
+  } else {
+    updateView();
   }
 }
 
