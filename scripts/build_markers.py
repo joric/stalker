@@ -127,6 +127,11 @@ def load_files():
         'Stalker2/Content/GameLite/GameData',
         'Stalker2/Content/GameLite/DLCGameData',
     ]
+
+    exclude = [
+        'Stalker2/Content/GameLite/GameData/ContextualActionNodePrototypes'
+    ],
+
     total = 0
     processed = 0
     data = {}
@@ -135,6 +140,8 @@ def load_files():
         total += len(g)
         print('found', total, '.cfg files in', folder)
         for filename in g:
+            if any(filename in s for s in exclude): continue
+
             reader = open(filename,'r', encoding='utf-8-sig')
 
             try:
@@ -460,7 +467,7 @@ def get_bp_markers(cells):
 
                 add_prop(prop, p, 'CorrectCode', 'keycode') # BP_Cardlock property
 
-                guid = get_guid(prop, p, True)
+                guid = get_guid(prop, p, add_references=True)
 
                 # signal sender component (usually in BP_Cardlock)
                 for e in p.get('Signals',[]):
@@ -561,13 +568,13 @@ def export_markers(cache):
                     if not guid_prop.endswith('Guid'): continue
                     guid = data.get(guid_prop)
                     if guid:
-                        cached_guids[guid][sid] = guid
+                        cached_guids[guid][sid] = package
 
                         # add items, e.g. E03_MQ04_Key from Garbage_L_Factory_Camp_SendSignal_Basement_Entrance
                         for conn_sid in get_connections(data):
                             item_sid = (package.get(conn_sid)or{}).get('ItemPrototypeSID')
                             if item_sid:
-                                cached_items[guid][item_sid] = guid
+                                cached_items[guid][item_sid] = package
 
                 # add markers/conditions/trigger
                 for marker in (data.get('Markers')or{}).values():
@@ -575,7 +582,7 @@ def export_markers(cache):
                         for entry in condition.values():
                             guid = entry.get('Trigger')
                             if guid:
-                                cached_guids[guid][sid] = guid
+                                cached_guids[guid][sid] = package
 
     # 2-nd pass, collect coordinates
     for package_path, package in cache.items():
