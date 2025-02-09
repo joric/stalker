@@ -57,6 +57,9 @@ bp_classes = {
     'BP_Diesel_Generator': 'EMarkerType::Generator',
 
     'BP_ExplosivesPackage': 'EMarkerType::Explosives',
+
+    'BP_OpeningContainer': 'EMarkerType::OpeningContainer',
+    'BP_Turnstile':  'EMarkerType::Turnstile',
 }
 
 def parse_struct(reader, options={}):
@@ -427,9 +430,13 @@ def get_bp_markers(cells):
                     prop = cached_prop[name]
                     p = o.get('Properties',{})
 
-                    guid = get_guid(prop, p)
+                    sp = name.split('_UAID_')
+                    if len(sp)==2:
+                        cname, uaid = sp
+                        prop['sid'] = uaid
 
                     # use blueprint guid as sid for the blueprint items
+                    guid = get_guid(prop, p)
                     if guid: prop['sid'] = guid
 
                     add_prop(prop, p, 'bUnbreakable', 'unbreakable')
@@ -541,7 +548,7 @@ def export_markers(cache):
     ]
 
     for name in pfs:
-        item_proto.update(  load_map(cache['Stalker2/Content/GameLite/GameData/ItemPrototypes/'+name], {'LocalizationSID':'localization'}))
+        item_proto.update(  load_map(cache['Stalker2/Content/GameLite/GameData/ItemPrototypes/'+name], {'LocalizationSID':'lsid'}))
 
     # 1-st pass, collect references
     for package_path, package in cache.items():
@@ -642,17 +649,10 @@ def export_markers(cache):
                 if prop.get('name')=='EMarkerType::RegionMarker':
                     prop['title'] = 'sid_locations_region_' + prop.get('sid') + '_name'
 
-                # set title for clues
-                clue = prop.get('clue')
-                if clue and clue != 'EmptyInherited':
-                    prop['title'] = f'sid_stashes_{clue}_name'
-                    prop['description'] = f'sid_stashes_{clue}_description'
-
                 # set title for items
-                lid = item_proto.get(name,{}).get('localization')
-                if lid:
-                    prop['title'] = f'sid_questItemprototypes_{lid}_name'
-                    prop['description'] = f'sid_questItemprototypes_{lid}_description'
+                lsid = item_proto.get(name,{}).get('lsid')
+                if lsid:
+                    prop['lsid'] = lsid
 
                 cleanup(prop)
                 add_spawns(data, prop)

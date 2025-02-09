@@ -1051,3 +1051,6 @@ input::selection {
   padding-right: 8px;
 }
 
+.small * {
+  font-size: 85%;
+}

@@ -757,6 +757,16 @@ function renderItem(feature, extended = false) {
     location = lang[`sid_locations_region_${currentRegion}_name`];
   }
 
+  if (o.lsid) {
+    title = lang[`sid_questItemprototypes_${o.lsid}_name`];
+    description = lang[`sid_questItemprototypes_${o.lsid}_description`];
+  }
+
+  if (o.clue) {
+    title = lang[`sid_stashes_${o.clue}_name`];
+    description = lang[`sid_stashes_${o.clue}_description`];
+  }
+
   let info = {
     title: title || category || o.type,
     category: category,
@@ -1026,7 +1036,7 @@ function showTooltip(e) {
   }
 
   if (o.items) {
-    content += `<hr/><div class="overflow-container">`;
+    content += `<hr/><div class="overflow-container small">`;
     for (const name of o.items) {
       let title = lang[`sid_questItemprototypes_${name}_name`];
       content += `<span title="${name}">[${title || name}]</span><br/>`;
@@ -1061,7 +1071,7 @@ function showTooltip(e) {
   }
 
   if (o.references) {
-    content += `<hr/><div class="overflow-container">`;
+    content += `<hr/><div class="overflow-container small">`;
     for (const name of o.references) {
       let title = lang[`sid_questItemprototypes_${name}_name`];
       content += `<a href="#${name}" onclick="copyToClipboard('XStartQuestNodeBySID ${name}')" title="${name}">${name}</a><br/>`;
