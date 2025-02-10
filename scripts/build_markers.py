@@ -108,7 +108,9 @@ def parse_struct(reader, options={}):
 
         elif "=" in line:
             key, value = map(str.strip, line.split("=", 1))
-            result[parse_key(key)] = parse_value(value)
+            value = parse_value(value)
+            if value is not None:
+                result[parse_key(key)] = value
 
         options = {}
 
@@ -181,7 +183,7 @@ def get_coordinates(data):
 def get_item_properties(data, remap):
     return {v: data[k] for k,v in remap.items() if k in data}
 
-def load_map(records, remap):
+def load_proto(records, remap):
     entries = {}
     for key, data in records.items():
         if type(data) is not dict: continue
@@ -193,6 +195,14 @@ def load_map(records, remap):
                 if ref in records:
                     entries[sid].update(get_item_properties(records[ref], remap))
             entries[sid].update(get_item_properties(data, remap))
+
+            if weapons:= data.get('FittingWeaponsSIDs'):
+                entries[sid].update({'compatible':list( (data.get('FittingWeaponsSIDs')or{}).values()) })
+
+            if proto:=entries[sid].get('proto'):
+                if proto=='[0]' or proto=='Empty':
+                    del entries[sid]['proto']
+
     return entries
 
 def cleanup(prop):
@@ -240,17 +250,6 @@ def add_spawns(data, prop):
 
     if spawns:
         prop['spawns'] = spawns
-
-
-def export_prototypes(records):
-    entries = {}
-    # just export localization sids for now
-    for key, config in records.items():
-        if type(config) is not dict: continue
-        lsid = config.get('LocalizationSID')
-        if lsid:
-            entries[key] = {'lsid':lsid, 'items': list((config.get('FittingWeaponsSIDs')or{}).values())}
-    return entries
 
 def export_stashes(records):
     entries = {}
@@ -492,28 +491,22 @@ def get_bp_markers(cells):
                             cached_coord[outer] = [float(loc[t]) for t in 'XYZ']
 
     def addTarget(feature):
-        # update base feature
         prop = feature['properties']
         target = prop.get('target')
         coord = feature['geometry']['coordinates']
         target = [coord[i]+target[i] for i in range(3)]
-        del prop['target']
         prop['actors'] = [ prop['uaid'] + '_Target' ]
-
-        prop2 = {
-            'type': 'ESpawnType::CustomMarker',
-            'name': 'EMarkerType::TeleportTarget',
-            'sid': prop['sid']+'_Target',
-            'uaid': prop['uaid']+'_Target',
-        }
-
-        feature = {
+        del prop['target']
+        return {
             'type': 'Feature',
             'geometry': {'type':'Point', 'coordinates': target},
-            'properties': prop2,
+            'properties': {
+                'type': 'ESpawnType::CustomMarker',
+                'name': 'EMarkerType::TeleportTarget',
+                'sid': prop['sid']+'_Target',
+                'uaid': prop['uaid']+'_Target',
+            }
         }
-
-        return feature
 
     for name in cached_prop:
         prop = cached_prop[name]
@@ -551,39 +544,34 @@ def cleanup_prop(prop):
     for k in ['items','references','actors']:
         if k in prop:
             value = prop[k]
-            prop[k] = list(filter(lambda x:not re.match(r'^BP.*(VentBlades|_lamp|_Decal|_VFX|_spotlight)|^VolumeForEffects',x), value.keys()))
+
+            if type(value) is dict:
+                prop[k] = list(filter(lambda x:not re.match(r'^BP.*(VentBlades|_lamp|_Decal|_VFX|_spotlight)|^VolumeForEffects',x), value.keys()))
+
             if not prop[k]:
                 del prop[k]
 
 def export_markers(cache):
     features = []
 
-    marker_proto = load_map(cache['Stalker2/Content/GameLite/GameData/MarkerPrototypes.cfg'], {'MarkerRadius':'radius', 'MarkType': 'name', 'Title':'title', 'Description':'description'})
-    quest_proto = load_map(cache['Stalker2/Content/GameLite/GameData/ObjPrototypes/QuestObjPrototypes.cfg'], {'NPCPrototypeSID': 'npc', 'Faction': 'faction'})
-    npc_proto = load_map(cache['Stalker2/Content/GameLite/GameData/NPCPrototypes.cfg'], {'NameTextKey': 'title', 'Rank': 'rank', 'NPCMarker': 'subtype'})
+    #marker_proto = load_map(cache['Stalker2/Content/GameLite/GameData/MarkerPrototypes.cfg'], {'MarkerRadius':'radius', 'MarkType': 'name', 'Title':'title', 'Description':'description'})
+    #quest_proto = load_map(cache['Stalker2/Content/GameLite/GameData/ObjPrototypes/QuestObjPrototypes.cfg'], {'NPCPrototypeSID': 'npc', 'Faction': 'faction'})
+    #npc_proto = load_map(cache['Stalker2/Content/GameLite/GameData/NPCPrototypes.cfg'], {'NameTextKey': 'title', 'Rank': 'rank', 'NPCMarker': 'subtype'})
 
-    item_proto = {}
-
-    pfs=[
-        'AmmoPrototypes.cfg',
-        'ArmorPrototypes.cfg',
-        'ArtifactPrototypes.cfg',
-        'AttachPrototypes.cfg',
-        'BlueprintPrototypes.cfg',
-        'ConsumablePrototypes.cfg',
-        'DetectorPrototypes.cfg',
-        'GDItemPrototypes.cfg',
-        'GrenadePrototypes.cfg',
-        'KeyItemPrototypes.cfg',
-        'QuestItemPrototypes.cfg',
-        'WeaponPrototypes.cfg'
-    ]
-
-    for name in pfs:
-        item_proto.update(  load_map(cache['Stalker2/Content/GameLite/GameData/ItemPrototypes/'+name], {'LocalizationSID':'lsid'}))
+    protos = {}
 
     # 1-st pass, collect references
     for package_path, package in cache.items():
+
+        if package_path.endswith('Prototypes.cfg'):
+            protos.update(load_proto(package, {
+                'MarkerRadius':'radius', 'MarkType': 'name', 'Title':'title', 'Description':'description',
+                'NPCPrototypeSID': 'npc', 'Faction': 'faction',
+                'NameTextKey': 'title', 'Rank': 'rank', 'NPCMarker': 'subtype',
+                'LocalizationSID': 'lsid',
+                'refkey': 'proto',
+            }))
+
         for sid, data in package.items():
             if type(data) is dict:
 
@@ -660,8 +648,11 @@ def export_markers(cache):
                 if prop.get('type')=='ESpawnType::DestructibleObject': continue
                 if prop.get('area') and 'WorldMap_WP' not in prop.get('area'): continue
 
-                # update with prototype properties
+
                 name = data.get('SpawnedPrototypeSID')
+
+                '''
+                # update with prototype properties
                 if name:
                     prop |= marker_proto.get(name,{})
                     npc = quest_proto.get(name,{}).get('npc')
@@ -676,15 +667,24 @@ def export_markers(cache):
                         continue # skip null hubs
                     prop['name'] = name
                     prop['title'] = name if name.startswith('sid_') else f'sid_locations_{name}_name'
+                '''
 
                 # set title for region markers
                 if prop.get('name')=='EMarkerType::RegionMarker':
                     prop['title'] = 'sid_locations_region_' + prop.get('sid') + '_name'
 
-                # set title for items
-                lsid = item_proto.get(name,{}).get('lsid')
-                if lsid:
-                    prop['lsid'] = lsid
+                # update proto
+                prop |= protos.get(name,{})
+
+                # set npc props
+                if npc := prop.get('npc'):
+                    prop |= protos.get(npc,{})
+
+                # set title for hubs
+                if prop.get('type')=='ESpawnType::Hub':
+                    name = prop.get('name')
+                    prop['title'] = name
+                    #del prop['name']
 
                 cleanup(prop)
                 add_spawns(data, prop)
@@ -714,9 +714,7 @@ def export_markers(cache):
 
     features.extend(features2)
 
-    protos = {}
-    protos.update(export_prototypes(cache['Stalker2/Content/GameLite/GameData/ItemPrototypes/BlueprintPrototypes.cfg']))
-    out['prototypes'] = protos
+    out['prototypes'] = {k:protos[k] for k in protos if protos[k] and 'Blueprint' in k}
 
     print(f'writing {markers_file} ({len(features)} features)...')
     f = open(markers_file, 'w', encoding='utf-8', newline='\n')

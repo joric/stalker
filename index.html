@@ -1053,12 +1053,13 @@ function showTooltip(e) {
     content +='</div>';
   }
   */
-
+  
   // show upgrade thingy, if any
   if (o.spawns) {
     for (name of o.spawns) {
       let data = getSpawnContent(o, name);
       for (name of Object.keys(data||{})) {
+
         let proto = markers.prototypes[name];
         if (proto) {
           let lsid = proto.lsid;
@@ -1066,7 +1067,7 @@ function showTooltip(e) {
           let desc = lang[`sid_upgrades_${lsid}_description`];
           if (title) {
             let items = [];
-            for (item of proto.items) {
+            for (item of (proto.compatible||{})) {
               let s = lang[`sid_items_${item}_name`];
               if (s) items.push(s);
             }
@@ -1077,11 +1078,12 @@ function showTooltip(e) {
             content += `<hr/>${desc}`;
           }
         }
-      }
 
+      }
     }
   }
 
+  /*
   if (o.references) {
     content += `<hr/><div class="overflow-container small">`;
     for (const name of o.references) {
@@ -1090,6 +1092,7 @@ function showTooltip(e) {
     }
     content +='</div>';
   }
+  */
 
   tooltip.innerHTML = content;
 
@@ -1206,7 +1209,7 @@ function addMarker(feature) {
   if (o.clue) icon = 'stash';
   if (icon=='stash') group = 'stashes';
 
-  if (isLocked(o)) icon='circle_dot';
+  if (isLocked(o)) icon='circle-dot';
 
   image = 'images/sprites/' + ((icons[icon] && icons[icon].image) || 'CompassMarker_2_3.png');
 
