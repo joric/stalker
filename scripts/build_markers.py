@@ -553,11 +553,6 @@ def cleanup_prop(prop):
 
 def export_markers(cache):
     features = []
-
-    #marker_proto = load_map(cache['Stalker2/Content/GameLite/GameData/MarkerPrototypes.cfg'], {'MarkerRadius':'radius', 'MarkType': 'name', 'Title':'title', 'Description':'description'})
-    #quest_proto = load_map(cache['Stalker2/Content/GameLite/GameData/ObjPrototypes/QuestObjPrototypes.cfg'], {'NPCPrototypeSID': 'npc', 'Faction': 'faction'})
-    #npc_proto = load_map(cache['Stalker2/Content/GameLite/GameData/NPCPrototypes.cfg'], {'NameTextKey': 'title', 'Rank': 'rank', 'NPCMarker': 'subtype'})
-
     protos = {}
 
     # 1-st pass, collect references
@@ -648,26 +643,7 @@ def export_markers(cache):
                 if prop.get('type')=='ESpawnType::DestructibleObject': continue
                 if prop.get('area') and 'WorldMap_WP' not in prop.get('area'): continue
 
-
                 name = data.get('SpawnedPrototypeSID')
-
-                '''
-                # update with prototype properties
-                if name:
-                    prop |= marker_proto.get(name,{})
-                    npc = quest_proto.get(name,{}).get('npc')
-                    prop |= npc_proto.get(npc,{})
-                    if faction := quest_proto.get(name,{}).get('faction'):
-                        prop |= {'faction': faction}
-
-                # set name and title for hubs
-                if prop.get('type')=='ESpawnType::Hub':
-                    name = data.get('MarkerSID')
-                    if not name:
-                        continue # skip null hubs
-                    prop['name'] = name
-                    prop['title'] = name if name.startswith('sid_') else f'sid_locations_{name}_name'
-                '''
 
                 # set title for region markers
                 if prop.get('name')=='EMarkerType::RegionMarker':
@@ -720,40 +696,7 @@ def export_markers(cache):
     f = open(markers_file, 'w', encoding='utf-8', newline='\n')
     json.dump(out, f, indent=2)
 
-def test():
-    # Example usage
-    input_text = """
-    // taken from Stalker2/Content/GameLite/GameData/DialogChainPrototypes.cfg
-    [0] : struct.begin
-    SID = Empty
-    ID = 0
-    Factions: struct.begin
-        [*] = None{bskipref}
-    struct.end
-    struct.end
-    [1] : struct.begin {refkey=[0]}
-    SID = HumanoidRestrictions
-    ID = 2
-    Factions: struct.begin
-        [*] = Bandits
-        [*] = Monolith
-        [*] = Duty
-    struct.end
-    struct.end
-    """
-    string_io = StringIO(input_text)
-
-    #string_io = open('parser_test1.cfg','r')
-    #string_io = open('parser_test2.cfg','r')
-    string_io = open('parser_test3.cfg','r')
-    #string_io = open('cfg/MarkerPrototypes.cfg','r')
-    #string_io = open('cfg/ItemGeneratorPrototypes.cfg','r', encoding='utf-8-sig')
-
-    result = parse_struct(string_io)
-    print(json.dumps(result, indent=2, sort_keys=False))
-
 if __name__ == '__main__':
-    #test()
     tm = time.time()
     data = load_cache()
     export_markers(data)

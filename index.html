@@ -1021,14 +1021,14 @@ function showTooltip(e) {
 
   if (isLocked(o)) info.title = lang['sid_misc_hint_cantopen'];
 
-  let content = `<b>${info.title}</b>`;
+  let content = `<b title="${o.name}">${info.title}</b>`;
 
   if (info.category) {
     content += `<br/><small>${info.category}</small>`;
   }
 
   if (info.description) {
-    content += `<hr/><span title="${o.name}">${info.description}</span>`;
+    content += `<hr/>${info.description}`;
   }
 
   if (o.keycode) {
