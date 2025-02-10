@@ -454,7 +454,7 @@ def get_bp_markers(cells):
 
                     c = p.get('EndPoint',{}).get('Translation')
                     if c:
-                        prop['delta'] = [float(c[t]) for t in 'XYZ']
+                        prop['target'] = [float(c[t]) for t in 'XYZ']
 
         # collect outer properties, i.e. all entries that list current class name as "outer"
         for o in data:
@@ -491,15 +491,32 @@ def get_bp_markers(cells):
                         if loc := p.get('RelativeLocation'):
                             cached_coord[outer] = [float(loc[t]) for t in 'XYZ']
 
+    def addTarget(prop, target):
+        prop2 = {
+            'type': 'ESpawnType::CustomMarker',
+            'name': 'EMarkerType::TeleportTarget',
+            'sid': prop['sid']+'_Target',
+            'uaid': prop['uaid']+'_Target',
+        }
+        feature = {
+            'type': 'Feature',
+            'geometry': {'type':'Point', 'coordinates': target},
+            'properties': prop2,
+        }
+        return feature
+
     for name in cached_prop:
         prop = cached_prop[name]
         coord = cached_coord.get(name)
         if not coord: continue
 
-        delta = prop.get('delta')
-        if delta:
-            prop['target'] = [coord[i]+delta[i] for i in range(3)]
-            del prop['delta']
+        target = prop.get('target')
+
+        if target:
+            target = [coord[i]+target[i] for i in range(3)]
+            del prop['target']
+            features.append(addTarget(prop, target))
+            prop['actors'] = { prop['uaid'] + '_Target' : True }
 
         cleanup_prop(prop)
 
@@ -508,6 +525,7 @@ def get_bp_markers(cells):
             'geometry': {'type':'Point', 'coordinates': coord},
             'properties': prop
         }
+
         features.append(feature)
 
     return features

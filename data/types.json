@@ -6,8 +6,8 @@
       "EMarkerType::Scanner": { "icon": "scanner", "title": "sid_character_skaner_0", "category": "sid_misc_inv_player_grid_name", "group": "locations" },
 
 
-      "EMarkerType::Teleport": { "icon": "circle_locked", "title": "sid_misc_controlsSettings_movement_jump_MLI", "category": "sid_misc_pda_map_playerTags_anomaly", "group": "actors" },
-      "EMarkerType::TeleportTarget": { "icon": "circle", "title": "sid_misc_controlsSettings_movement_jump_MLI", "category": "sid_misc_pda_map_playerTags_anomaly", "group": "actors" },
+      "EMarkerType::Teleport": { "icon": "circle", "title": "sid_misc_controlsSettings_movement_jump_MLI", "category": "sid_misc_pda_map_playerTags_anomaly", "group": "actors" },
+      "EMarkerType::TeleportTarget": { "icon": "circle_locked", "title": "sid_npc_name_tocka", "category": "sid_misc_pda_map_playerTags_anomaly", "group": "actors" },
 
       "EMarkerType::Door": { "icon": "circle", "title": "sid_journal_stage_E11_MQ01_enter_the_room", "category": "sid_misc_pda_hint_Controls", "group": "actors" },
       "EMarkerType::DynamicObject": { "icon": "circle", "title": "sid_misc_hint_cantopen", "category": "sid_misc_pda_hint_Controls", "group": "actors" },
@@ -78,7 +78,7 @@
       "Armor": {"icon": "chest", "category": "sid_misc_pda_reward_armor", "group": "items" },
       "PDA|Note": {"icon": "follow", "category": "sid_questItemprototypes_BasePDA_name", "group": "items" },
       "FArtifact": {"icon": "artifact", "category": "sid_misc_pda_map_playerTags_habar", "group": "misc" },
-      "_Key_|Key$|Keycard$": {"icon": "yen", "category": "sid_misc_pda_map_playerTags_habar", "group": "actors" },
+      "_Key_|FactoryKey|(Key|Keycard)$": {"icon": "yen", "category": "sid_misc_pda_map_playerTags_habar", "group": "actors" },
       "_Fuse": {"icon": "yen", "category": "sid_misc_pda_map_playerTags_habar", "group": "actors" }
     }
   },
