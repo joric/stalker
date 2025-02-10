@@ -41,15 +41,15 @@
   "ESpawnType::Shelter": { "icon": "cave", "category": "sid_misc_pda_Map_MarkerShellter", "group": "misc" },
   "ESpawnType::Squad": { "icon": "soldier", "category": "Squads", "group": "misc" },
   "ESpawnType::Patrol": { "icon": "soldier", "category": "Patrols", "group": "misc" },
-  "ESpawnType::SafeZone": { "icon": "exclamation", "category": "SafeZones", "group": "misc" },
-  "ESpawnType::DailyScheduleZone": { "icon": "exclamation", "category": "Daily Schedule Zone", "group": "misc" },
-  "ESpawnType::MoveToPath": { "icon": "exclamation", "title": "Move To Path", "category": "Helpers", "group": "misc" },
+  "ESpawnType::SafeZone": { "icon": "exclamation", "category": "SafeZones", "group": "helpers" },
+  "ESpawnType::DailyScheduleZone": { "icon": "exclamation", "category": "Daily Schedule Zone", "group": "helpers" },
+  "ESpawnType::MoveToPath": { "icon": "exclamation", "title": "Move To Path", "category": "Helpers", "group": "helpers" },
   "ESpawnType::LairSpawner": { "icon": "danger", "category": "lair", "group": "enemies" },
-  "ESpawnType::ALifeGroup": { "icon": "question", "category": "Alife Group", "group": "misc" },
-  "ESpawnType::Trigger": { "icon": "exclamation", "category": "Trigger", "group": "misc" },
-  "ESpawnType::ContextualAction": { "icon": "exclamation", "category":"Contextual Action", "group": "misc",
+  "ESpawnType::ALifeGroup": { "icon": "soldier", "category": "Alife Group", "group": "misc" },
+  "ESpawnType::Trigger": { "icon": "exclamation", "category": "Trigger", "group": "helpers" },
+  "ESpawnType::ContextualAction": { "icon": "exclamation", "category":"Contextual Action", "group": "helpers",
     "match": {
-      "_sit|_stand|_lie": { "icon": "fire", "category": "Contextual Action", "group": "misc" }
+      "_sit|_stand|_lie": { "icon": "fire", "category": "Contextual Action", "group": "helpers" }
     },
     "backup": {
       "Jerboa|PseudoDog|Bayun|Bloodsucker|Flesh|Blinddog|Tushkan|Boar|ZombieFoster|Rat|Snork|Zombie": { "icon": "danger", "category": "sid_npc_name_mutant", "group": "enemies" },
