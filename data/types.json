@@ -43,6 +43,7 @@
   "ESpawnType::Patrol": { "icon": "soldier", "category": "Patrols", "group": "misc" },
   "ESpawnType::SafeZone": { "icon": "exclamation", "category": "SafeZones", "group": "helpers" },
   "ESpawnType::DailyScheduleZone": { "icon": "exclamation", "category": "Daily Schedule Zone", "group": "helpers" },
+  "ESpawnType::WeatherSelection": { "icon": "exclamation", "category": "Daily Schedule Zone", "group": "helpers" },
   "ESpawnType::MoveToPath": { "icon": "exclamation", "title": "Move To Path", "category": "Helpers", "group": "helpers" },
   "ESpawnType::LairSpawner": { "icon": "danger", "category": "lair", "group": "enemies" },
   "ESpawnType::ALifeGroup": { "icon": "soldier", "category": "Alife Group", "group": "misc" },
