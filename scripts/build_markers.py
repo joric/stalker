@@ -491,32 +491,34 @@ def get_bp_markers(cells):
                         if loc := p.get('RelativeLocation'):
                             cached_coord[outer] = [float(loc[t]) for t in 'XYZ']
 
-    def addTarget(prop, target):
+    def addTarget(feature):
+        # update base feature
+        prop = feature['properties']
+        target = prop.get('target')
+        coord = feature['geometry']['coordinates']
+        target = [coord[i]+target[i] for i in range(3)]
+        del prop['target']
+        prop['actors'] = [ prop['uaid'] + '_Target' ]
+
         prop2 = {
             'type': 'ESpawnType::CustomMarker',
             'name': 'EMarkerType::TeleportTarget',
             'sid': prop['sid']+'_Target',
             'uaid': prop['uaid']+'_Target',
         }
+
         feature = {
             'type': 'Feature',
             'geometry': {'type':'Point', 'coordinates': target},
             'properties': prop2,
         }
+
         return feature
 
     for name in cached_prop:
         prop = cached_prop[name]
         coord = cached_coord.get(name)
         if not coord: continue
-
-        target = prop.get('target')
-
-        if target:
-            target = [coord[i]+target[i] for i in range(3)]
-            del prop['target']
-            features.append(addTarget(prop, target))
-            prop['actors'] = { prop['uaid'] + '_Target' : True }
 
         cleanup_prop(prop)
 
@@ -527,6 +529,9 @@ def get_bp_markers(cells):
         }
 
         features.append(feature)
+
+        if prop.get('target'):
+            features.append(addTarget(feature))
 
     return features
 
