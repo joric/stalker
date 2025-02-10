@@ -49,9 +49,11 @@
   "ESpawnType::Trigger": { "icon": "exclamation", "category": "Trigger", "group": "misc" },
   "ESpawnType::ContextualAction": { "icon": "exclamation", "category":"Contextual Action", "group": "misc",
     "match": {
-      "Jerboa|PseudoDog|Bayun|Bloodsucker|Flesh|Blinddog|Tushkan|Boar|ZombieFoster|Rat|Snork|Zombie": { "icon": "danger", "category": "sid_npc_name_mutant", "group": "enemies" },
-      "Deer|Pseudogiant|Burer|Poltergeist|Controller|Chimera": { "icon": "danger", "category": "sid_npc_name_mutant", "group": "enemies" },
       "_sit|_stand|_lie": { "icon": "fire", "category": "Contextual Action", "group": "misc" }
+    },
+    "backup": {
+      "Jerboa|PseudoDog|Bayun|Bloodsucker|Flesh|Blinddog|Tushkan|Boar|ZombieFoster|Rat|Snork|Zombie": { "icon": "danger", "category": "sid_npc_name_mutant", "group": "enemies" },
+      "Deer|Pseudogiant|Burer|Poltergeist|Controller|Chimera": { "icon": "danger", "category": "sid_npc_name_mutant", "group": "enemies" }
     }
   },
   "ESpawnType::OnlineModifierZone" : {"icon": "exclamation", "category":"Modifiers", "group": "misc" },
