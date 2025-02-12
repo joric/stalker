@@ -954,10 +954,9 @@ function popupOnClick(e) {
   popup.querySelector('#popup-wiki-link').innerHTML = '<i class="fa-brands fa-wikipedia-w"></i>';
 
   let t = feature.geometry.coordinates;
-  let teleport = `${t[0]} ${t[1]} ${t[2]}`;
-  let location = `XTeleportTo ${teleport}`
+  let teleport = `XTeleportTo ${t[0]} ${t[1]} ${t[2]}`
 
-  popup.querySelector('#popup-marker-id-link').href = '#' + location;
+  popup.querySelector('#popup-marker-id-link').href = '#' + teleport;
   popup.querySelector('#popup-marker-id-link').onclick = function(e){ copyToClipboard(e.target.href.split('#')[1].replaceAll('%20',' ')); return false; };
 
   popup.querySelector('#popup-form-id-link').href = '#' + (o.sid || '00000010');
