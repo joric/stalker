@@ -39,6 +39,7 @@
 
 <div id="map-tooltip" class="arrow-left"></div>
 
+<template id="popup-template">
 <div id="popup" class="popup">
   <div class="popup-content-wrapper">
     <div class="popup-content">
@@ -61,6 +62,7 @@
   <div class="popup-tip-container"><div class="popup-tip"></div></div>
   <a id="popup-close" class="popup-close-button">&times;</a>
 </div>
+</template>
 
 <div id="alert" class="closed">Copied To Clipboard</div>
 
@@ -842,7 +844,8 @@ function popupOnClick(e) {
 
   let feature = marker.feature;
   let o = marker.feature.properties;
-  let popup = document.querySelector('#popup').cloneNode(true);
+
+  const popup = document.querySelector('#popup-template').content.cloneNode(true);
 
   let info = renderItem(marker.feature, true);
 
@@ -965,9 +968,9 @@ function popupOnClick(e) {
   popup.querySelector('#popup-found').onclick = function() { toggleMarked(o.sid) };
   popup.querySelector('#popup-found-label').textContent = lang['sid_misc_pda_hint_HidePlayerLandmark'] || 'Found';
 
-
   e.target._infoWindow.setOptions({custom: true, dy: 16});
-  e.target._infoWindow.setContent(popup);
+  e.target._infoWindow.setContent(popup.firstElementChild);
+
 }
 
 function toggleMarked(id) {
