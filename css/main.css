@@ -562,6 +562,11 @@ pre {
   white-space: pre-wrap;
   word-wrap: break-all;
   overflow-wrap: break-word;
+
+  max-width: 300px;
+  max-height: 300px;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 #popup-data-toggle {
@@ -1034,15 +1039,13 @@ input::selection {
 }
 
 .popup-subnote-ul {
-  max-width: 300px;
   padding: 0px;
   margin: 0px;
 
-
+  max-width: 300px;
   max-height: 300px;
-  oveflow: auto;
-  display: block;
-  clip-path: inset(0 0 0 0);
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 .popup-subnote-li {
