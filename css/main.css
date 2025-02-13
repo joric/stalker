@@ -1042,7 +1042,7 @@ input::selection {
   padding: 0px;
   margin: 0px;
 
-  max-width: 360px;
+  max-width: 300px;
   max-height: 360px;
   overflow-x: hidden;
   overflow-y: auto;
