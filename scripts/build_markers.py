@@ -659,7 +659,10 @@ def export_markers(cache):
                 # set title for hubs
                 if prop.get('type')=='ESpawnType::Hub':
                     name = prop.get('name')
-                    prop['title'] = name
+                    if name:
+                        prop['title'] = name if name.startswith('sid_') else f'sid_locations_{name}_name'
+                    else:
+                        continue
                     #del prop['name']
 
                 cleanup(prop)
