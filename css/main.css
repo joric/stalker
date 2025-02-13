@@ -1043,7 +1043,7 @@ input::selection {
   margin: 0px;
 
   max-width: 300px;
-  max-height: 360px;
+  max-height: 160px;
   overflow-x: hidden;
   overflow-y: auto;
 }
