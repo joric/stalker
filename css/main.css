@@ -1034,10 +1034,15 @@ input::selection {
 }
 
 .popup-subnote-ul {
-  overflow: hidden;
   max-width: 300px;
   padding: 0px;
   margin: 0px;
+
+
+  max-height: 300px;
+  oveflow: auto;
+  display: block;
+  clip-path: inset(0 0 0 0);
 }
 
 .popup-subnote-li {
