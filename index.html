@@ -1226,7 +1226,7 @@ function addMarker(feature) {
 
   if (isLocked(o)) icon='circle-dot';
   
-  //if (isNPC(o)) icon='soldier';
+  //if (isNPC(o)) icon='soldier'; // fucks up traders
 
   image = 'images/sprites/' + ((icons[icon] && icons[icon].image) || 'CompassMarker_2_3.png');
 
