@@ -9,8 +9,8 @@
       "EMarkerType::Teleport": { "icon": "circle-locked", "title": "sid_misc_controlsSettings_movement_jump_MLI", "category": "sid_misc_pda_hint_Controls", "group": "actors" },
       "EMarkerType::TeleportTarget": { "icon": "circle-dot", "title": "sid_npc_name_tocka", "category": "sid_misc_pda_hint_Controls", "group": "actors" },
 
-      "EMarkerType::Door": { "icon": "circle", "title": "sid_journal_stage_E11_MQ01_enter_the_room", "category": "sid_npc_name_agent;", "group": "actors" },
-      "EMarkerType::DynamicObject": { "icon": "circle", "title": "sid_misc_hint_cantopen", "category": "sid_npc_name_agent;", "group": "actors" },
+      "EMarkerType::Door": { "icon": "circle", "title": "sid_journal_stage_E11_MQ01_enter_the_room", "category": "sid_misc_pda_Map_MarkerLocation", "group": "actors" },
+      "EMarkerType::DynamicObject": { "icon": "circle", "title": "sid_misc_hint_cantopen", "category": "sid_misc_pda_Map_MarkerLocation", "group": "actors" },
       "EMarkerType::CodeLock": { "icon": "message", "title": "Keypad", "category": "sid_misc_pda_hint_Controls", "group": "actors" },
       "EMarkerType::CardLock": { "icon": "lock", "title": "Сard Reader", "category": "sid_misc_pda_hint_Controls", "group": "actors" },
 
