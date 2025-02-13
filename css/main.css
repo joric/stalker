@@ -563,8 +563,8 @@ pre {
   word-wrap: break-all;
   overflow-wrap: break-word;
 
-  max-width: 300px;
-  max-height: 300px;
+  max-width: 360px;
+  max-height: 360px;
   overflow-x: hidden;
   overflow-y: auto;
 }
@@ -1042,8 +1042,8 @@ input::selection {
   padding: 0px;
   margin: 0px;
 
-  max-width: 300px;
-  max-height: 300px;
+  max-width: 360px;
+  max-height: 360px;
   overflow-x: hidden;
   overflow-y: auto;
 }
