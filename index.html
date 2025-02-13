@@ -998,6 +998,19 @@ function toggleMarked(id) {
   saveSettings();
 }
 
+function isLocked(o) {
+  // all doors are closed by default unless it's DoorView without locked property
+  let door = o.name=='EMarkerType::DynamicObject' || o.name=='EMarkerType::Door';
+  let doorview = door && o.uaid && o.uaid.startsWith('BP_DoorView');
+  return doorview ? o.locked : door;
+}
+
+function isNPC(o) {
+  // all doors are closed by default unless it's DoorView without locked property
+  return o.type=='ESpawnType::Obj' && o.proto=='QuestNPCBase';
+}
+
+
 // Function to show the tooltip
 function showTooltip(e) {
 
@@ -1172,13 +1185,6 @@ function getIconProp(o) {
   return prop;
 }
 
-function isLocked(o) {
-  // all doors are closed by default unless it's DoorView without locked property
-  let door = o.name=='EMarkerType::DynamicObject' || o.name=='EMarkerType::Door';
-  let doorview = door && o.uaid && o.uaid.startsWith('BP_DoorView');
-  return doorview ? o.locked : door;
-}
-
 function showTooltipExt(e) {
   let marker = e.target;
   //setMarkerSize(e.target, size * 1.15);
@@ -1219,6 +1225,8 @@ function addMarker(feature) {
   if (icon=='stash') group = 'stashes';
 
   if (isLocked(o)) icon='circle-dot';
+  
+  if (isNPC(o)) icon='soldier';
 
   image = 'images/sprites/' + ((icons[icon] && icons[icon].image) || 'CompassMarker_2_3.png');
 
