@@ -787,7 +787,7 @@ function renderItem(feature, extended = false) {
     for (const name of o.references) {
       if (name.includes('SetQuestGiver')) {
         const quest = name.split('_SetQuestGiver')[0].replace('_P','');
-        let title = lang[`sid_journal_${quest}_Name`] || quest;
+        let title = lang[`sid_journal_${quest}_Name`];
         if (title) {
           info['quest'] = title;
         }
