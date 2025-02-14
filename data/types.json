@@ -65,7 +65,7 @@
       "Technician": { "icon": "technician", "title": "sid_misc_pda_Map_MarkerTechnician", "category": "sid_misc_pda_Map_MarkerTechnician", "group": "bases" },
       "Medic": { "icon": "medic", "title": "sid_misc_pda_Map_MarkerMedic", "category": "sid_misc_pda_Map_MarkerMedic", "group": "bases" },
       "Guide": { "icon": "guide", "title": "sid_misc_pda_Map_MarkerGuide", "category": "sid_misc_pda_Map_MarkerGuide", "group": "bases" },
-      "QuestGiver": { "icon": "quest-giver", "title": "NPC", "category": "sid_misc_answer_sidequest", "group": "actors" }
+      "QuestGiver": { "icon": "quest-giver", "title": "NPC", "category": "sid_misc_answer_sidequest", "group": "bases" }
     },
     "match": {
       "PseudoDog|Bayun|Bloodsucker|Flesh|Blinddog|Tushkan|Boar|ZombieFoster|Rat|Snork": { "icon": "danger", "category": "sid_npc_name_mutant", "group": "enemies" },
