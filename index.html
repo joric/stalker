@@ -1178,7 +1178,7 @@ function getIconProp(o) {
 
   if (section && section.match) {
     for (const [regex, entry] of Object.entries(section.match)) {
-      if (regex && (name||'').match(new RegExp(regex, "i"))) return entry;
+      if (regex && (name||'').match(new RegExp(regex, ""))) return entry;
     }
   }
 
