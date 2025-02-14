@@ -783,6 +783,19 @@ function renderItem(feature, extended = false) {
     prop: prop,
   };
 
+  if (o.references) {
+    for (const name of o.references) {
+      if (name.includes('QuestGiver')) {
+        const quest = name.split('_SetQuestGiver')[0].replace('_P','');
+        let title = lang[`sid_journal_${quest}_Name`] || quest;
+        if (title) {
+          info['quest'] = title;
+        }
+      }
+    }
+  }
+
+
   //if (o.type == 'ESpawnType::Radiation') console.log(info, prop);
 
   return info;
@@ -884,6 +897,8 @@ function popupOnClick(e) {
     div.appendChild(ul);
   }
 
+  let quest = null;
+
   if (o.references) {
     let hr = document.createElement('hr');
     let ul = document.createElement('ul');
@@ -900,6 +915,7 @@ function popupOnClick(e) {
       node.onclick = function(e) {
         copyToClipboard(`XStartQuestNodeBySID ${e.target.textContent}`);
       };
+
 
       li.className = 'popup-subnote-li';
       li.appendChild(node);
@@ -1115,6 +1131,10 @@ function showTooltip(e) {
     content +='</div>';
   }
   */
+
+  if (info.quest) {
+    content += `<hr/><div class="overflow-container small">${info.quest}</div>`;
+  }
 
   tooltip.innerHTML = content;
 
@@ -1539,6 +1559,8 @@ function passesFilter(marker) {
   let o = marker.feature.properties;
   let tags = [];
 
+  let info = renderItem(marker.feature);
+
   if (o.spawns) tags.push(o.spawns);
 
   if (o.references) tags.push(...o.references);
@@ -1558,7 +1580,7 @@ function passesFilter(marker) {
 
   let clue = lang['sid_stashes_'+o.clue+'_name'];
 
-  let s = [title, description, c, clue, o.title, o.name, o.type, o.description, o.sid, o.clue, o.cell, ...tags].map(x=>x||'').join(' ').toLowerCase();
+  let s = [title, description, c, clue, o.title, o.name, o.type, o.description, o.sid, o.clue, o.cell, info.quest, ...tags].map(x=>x||'').join(' ').toLowerCase();
 
   if (o.clue) s += ' clue';
 
