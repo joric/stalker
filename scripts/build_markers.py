@@ -655,6 +655,8 @@ def export_markers(cache):
                 # set npc props
                 if npc := prop.get('npc'):
                     prop |= protos.get(npc,{})
+                    if 'subtype' not in prop and any('QuestGiver' in s for s in prop.get('references',{})):
+                        prop['subtype'] = 'QuestGiver';
 
                 # set title for hubs
                 if prop.get('type')=='ESpawnType::Hub':
