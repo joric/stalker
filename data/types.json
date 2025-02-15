@@ -39,14 +39,14 @@
   "ESpawnType::DeadBody": { "icon": "skull", "category": "sid_npc_name_mertvec", "group": "misc" },
   "ESpawnType::PackOfItems": { "icon": "box", "title": "sid_stashes_Gen_Stash197_name", "category": "sid_misc_pda_Map_MarkerPlayerLandmarkHabar", "group": "misc" },
   "ESpawnType::Shelter": { "icon": "cave", "category": "sid_misc_pda_Map_MarkerShellter", "group": "misc" },
-  "ESpawnType::Squad": { "icon": "soldier", "category": "Squads", "group": "misc" },
-  "ESpawnType::Patrol": { "icon": "soldier", "category": "Patrols", "group": "misc" },
+  "ESpawnType::Squad": { "icon": "question", "category": "Squads", "group": "misc" },
+  "ESpawnType::Patrol": { "icon": "question", "category": "Patrols", "group": "misc" },
   "ESpawnType::SafeZone": { "icon": "exclamation", "category": "SafeZones", "group": "helpers" },
   "ESpawnType::DailyScheduleZone": { "icon": "exclamation", "category": "Daily Schedule Zone", "group": "helpers" },
   "ESpawnType::WeatherSelection": { "icon": "exclamation", "category": "Daily Schedule Zone", "group": "helpers" },
   "ESpawnType::MoveToPath": { "icon": "exclamation", "title": "Move To Path", "category": "Helpers", "group": "helpers" },
   "ESpawnType::LairSpawner": { "icon": "danger", "category": "lair", "group": "enemies" },
-  "ESpawnType::ALifeGroup": { "icon": "soldier", "category": "Alife Group", "group": "misc" },
+  "ESpawnType::ALifeGroup": { "icon": "question", "category": "Alife Group", "group": "misc" },
   "ESpawnType::Trigger": { "icon": "exclamation", "category": "Trigger", "group": "helpers" },
   "ESpawnType::ContextualAction": { "icon": "exclamation", "category":"Contextual Action", "group": "helpers",
     "match": {
@@ -66,7 +66,8 @@
       "Medic": { "icon": "medic", "title": "sid_misc_pda_Map_MarkerMedic", "category": "sid_misc_pda_Map_MarkerMedic", "group": "bases" },
       "Guide": { "icon": "guide", "title": "sid_misc_pda_Map_MarkerGuide", "category": "sid_misc_pda_Map_MarkerGuide", "group": "bases" },
       "QuestGiver": { "icon": "quest-giver", "title": "NPC", "category": "sid_misc_answer_sidequest", "group": "actors" },
-      "QuestNPCBase": { "icon": "soldier", "title": "NPC", "category": "NPC", "group": "misc" }
+      "QuestNPCBase": { "icon": "soldier", "title": "NPC", "category": "NPC", "group": "misc" },
+      "HumanBase": { "icon": "soldier", "title": "NPC", "category": "NPC", "group": "misc" }
     },
     "match": {
       "PseudoDog|Bayun|Bloodsucker|Flesh|Blinddog|Tushkan|Boar|ZombieFoster|Rat|Snork": { "icon": "danger", "category": "sid_npc_name_mutant", "group": "enemies" },
