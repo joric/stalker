@@ -789,9 +789,16 @@ function renderItem(feature, extended = false) {
         const quest = name.split('_SetQuestGiver')[0].replace('_P','');
         let title = lang[`sid_journal_${quest}_Name`];
         if (title) {
-          info['quest'] = title;
+          info.quest = title;
         }
       }
+    }
+  }
+
+  if (o.faction) {
+    let title = lang[`sid_misc_answer_faction_${o.faction}`];
+    if (title) {
+      info.category = title;
     }
   }
 
