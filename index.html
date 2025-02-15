@@ -1190,10 +1190,10 @@ function getIconProp(o) {
   prop = {...prop, ...section};
 
   if (section && section.items) {
-    let m1 = section.items[o.subtype];
-    if (m1) return m1;
-    let m2 = section.items[o.name];
-    if (m2) return m2;
+    for (field of [o.subtype, o.name, o.proto]) {
+      let t = section.items[field];
+      if (t) return t;
+    }
   }
 
   if (section && section.match) {
