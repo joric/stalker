@@ -3,7 +3,7 @@
 # * Stalker2/Content/GameLite/GameData
 # * Stalker2/Content/GameLite/DLCGameData
 # * Stalker2/Content/_Stalker_2/maps/_Stalker2_WorldMap
-# (export cfg as raw data (uasset), export umap files as json)
+# export cfg as raw data (uasset), export umap files as json
 
 import json, re, glob, os, sys, time, copy
 from collections import defaultdict
