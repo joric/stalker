@@ -219,13 +219,7 @@ def cleanup(prop):
 
 RANK_ANY = 'ERank::Any'
 def get_rank_code(enum):
-    rank_code = {
-        'ERank::Newbie':'0',
-        'ERank::Experienced':'1',
-        'ERank::Veteran':'2',
-        'ERank::Master':'3',
-    }
-    return rank_code.get(enum)
+    return enum.split('::').pop()
 
 def add_spawns(data, prop):
     spawns = []
