@@ -802,8 +802,32 @@ function renderItem(feature, extended = false) {
     }
   }
 
-
-  //if (o.type == 'ESpawnType::Radiation') console.log(info, prop);
+  // add upgrade thingy, if any
+  if (o.spawns) {
+    for (name of o.spawns) {
+      let data = getSpawnContent(o, name);
+      for (name of Object.keys(data||{})) {
+        let proto = markers.prototypes[name];
+        if (proto) {
+          let lsid = proto.lsid;
+          let title = lang[`sid_upgrades_${lsid}_name`];
+          let desc = lang[`sid_upgrades_${lsid}_description`];
+          if (title) {
+            let items = [];
+            for (item of (proto.compatible||{})) {
+              let s = lang[`sid_items_${item}_name`];
+              if (s) items.push(s);
+            }
+            let items_str = items.join(', ');
+            info.upgrade = `<b>${title}</b><br/>${items_str}`;
+          }
+          if (desc) {
+            info.upgrade = (info.upgrade||'') + `<hr/>${desc}`;
+          }
+        }
+      }
+    }
+  }
 
   return info;
 }
@@ -1099,35 +1123,6 @@ function showTooltip(e) {
   }
   */
   
-  // show upgrade thingy, if any
-  if (o.spawns) {
-    for (name of o.spawns) {
-      let data = getSpawnContent(o, name);
-      for (name of Object.keys(data||{})) {
-
-        let proto = markers.prototypes[name];
-        if (proto) {
-          let lsid = proto.lsid;
-          let title = lang[`sid_upgrades_${lsid}_name`];
-          let desc = lang[`sid_upgrades_${lsid}_description`];
-          if (title) {
-            let items = [];
-            for (item of (proto.compatible||{})) {
-              let s = lang[`sid_items_${item}_name`];
-              if (s) items.push(s);
-            }
-            let items_str = items.join(', ');
-            content += `<hr/><b>${title}</b><br/>${items_str}`;
-          }
-          if (desc) {
-            content += `<hr/>${desc}`;
-          }
-        }
-
-      }
-    }
-  }
-
   /*
   if (o.references) {
     content += `<hr/><div class="overflow-container small">`;
@@ -1138,6 +1133,10 @@ function showTooltip(e) {
     content +='</div>';
   }
   */
+
+  if (info.upgrade) {
+    content += `<hr/>${info.upgrade}`;
+  }
 
   if (info.quest) {
     content += `<hr/><div class="overflow-container small">${info.quest}</div>`;
@@ -1587,7 +1586,7 @@ function passesFilter(marker) {
 
   let clue = lang['sid_stashes_'+o.clue+'_name'];
 
-  let s = [title, description, c, clue, o.title, o.name, o.type, o.description, o.sid, o.clue, o.cell, info.quest, ...tags].map(x=>x||'').join(' ').toLowerCase();
+  let s = [title, description, c, clue, o.title, o.name, o.type, o.description, o.sid, o.clue, o.cell, info.quest, info.upgrade, ...tags].map(x=>x||'').join(' ').toLowerCase();
 
   if (o.clue) s += ' clue';
 
