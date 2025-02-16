@@ -1,9 +1,8 @@
 # (c) 2024-2025 Joric, https://github.com/joric/maps/wiki/Stalker-2
 # Needs data files to work, use FModel to extract subdirectores:
-# * Stalker2/Content/GameLite/GameData
-# * Stalker2/Content/GameLite/DLCGameData
-# * Stalker2/Content/_Stalker_2/maps/_Stalker2_WorldMap
-# export cfg as raw data (uasset), export umap files as json
+# * Stalker2/Content/GameLite/GameData (as raw data)
+# * Stalker2/Content/GameLite/DLCGameData (as raw data)
+# * Stalker2/Content/_Stalker_2/maps/_Stalker2_WorldMap (as json)
 
 import json, re, glob, os, sys, time, copy
 from collections import defaultdict
