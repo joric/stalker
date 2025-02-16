@@ -277,7 +277,7 @@ def export_stashes(records):
                         fields = {'MinCount':'min', 'MaxCount':'max', 'Weight':'weight'}
                         ranks[rank]['items'][name] = {v: item[k] for k,v in fields.items() if k in item}
 
-        entries['gen_' + key] = ranks
+        entries[key] = ranks
     return entries
 
 def export_packs(records):
@@ -294,7 +294,7 @@ def export_packs(records):
                 weight = item.get('Weight')
                 if weight:
                     ranks[rank][name] = weight
-        entries['gen_' + key] = ranks
+        entries[key] = ranks
     return entries
 
 gen_remap = {
@@ -331,7 +331,7 @@ def export_generators(records):
             if not data:
                 refkey = config.get('refkey')
                 if refkey:
-                    entries['gen_' + sid] = { 'gen_' + refkey: {} }
+                    entries[sid] = { refkey: {} }
 
             continue
 
@@ -343,10 +343,9 @@ def export_generators(records):
                 if not name:
                     name = item.get('ItemGeneratorPrototypeSID')
                     if not name: continue
-                    name = 'gen_' + name;
                 entry[name] = {v: item[k] for k,v in gen_remap.items() if k in item}
 
-        entries['gen_' + sid] = entry
+        entries[sid] = entry
 
     return entries
 
@@ -553,18 +552,34 @@ def cleanup_prop(prop):
 def export_markers(cache):
     features = []
     protos = {}
+    gen = {}
 
     # 1-st pass, collect references
     for package_path, package in cache.items():
 
-        if package_path.endswith('Prototypes.cfg'):
+        if package_path.endswith('Prototypes.cfg') and ('PackOfItems' not in package_path):
             protos.update(load_proto(package, {
                 'MarkerRadius':'radius', 'MarkType': 'name', 'Title':'title', 'Description':'description',
                 'NPCPrototypeSID': 'npc', 'Faction': 'faction',
                 'NameTextKey': 'title', 'Rank': 'rank', 'NPCMarker': 'subtype',
                 'LocalizationSID': 'lsid',
                 'refkey': 'proto',
+
+                'Weight':'weight',
+                'Cost':'cost',
+                'Caliber':'caliber',
+                'AmmoType':'ammo_type',
+                'AmmoPackCount':'ammo_pack_count',
             }))
+
+        if 'PackOfItemsGroupPrototypes.cfg' in package_path:
+            gen.update(export_packs(package))
+
+        if 'StashPrototypes.cfg' in package_path:
+            gen.update(export_stashes(package))
+
+        if 'ItemGenerator' in package_path:
+            gen.update(export_generators(package))
 
         for sid, data in package.items():
             if type(data) is dict:
@@ -681,20 +696,14 @@ def export_markers(cache):
 
     out = {"type": "FeatureCollection", "features": features}
 
-    gen = {}
-    gen.update(export_packs(cache['Stalker2/Content/GameLite/GameData/PackOfItemsGroupPrototypes.cfg']))
-    gen.update(export_stashes(cache['Stalker2/Content/GameLite/GameData/StashPrototypes.cfg']))
-    gen.update(export_generators(cache['Stalker2/Content/GameLite/GameData/ItemGeneratorPrototypes.cfg']))
-    gen.update(export_generators(cache['Stalker2/Content/GameLite/GameData/ItemGeneratorPrototypes/Gamepass_ItemGenerators.cfg']))
-    out['generators'] = gen
-
     # partitions are read from WorldMap_WP and then exported with FModel as json (one by one)
     cells = sorted(set(get_bp_cells(world_path))) # just "set" shuffles items on each commit
     features2 = get_bp_markers(cells)
 
     features.extend(features2)
 
-    out['prototypes'] = {k:protos[k] for k in protos if protos[k] and 'Blueprint' in k}
+    out['prototypes'] = {k:protos[k] for k in protos if protos[k]}
+    out['generators'] = {k:gen[k] for k in gen if gen[k]}
 
     print(f'writing {markers_file} ({len(features)} features)...')
     f = open(markers_file, 'w', encoding='utf-8', newline='\n')

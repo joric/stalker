@@ -841,7 +841,7 @@ function getSpawnContent(o, name) {
 
   section = 'generators'
 
-  let data = markers[section]['gen_' + name];
+  let data = markers[section][name];
 
   for (item of Object.keys( data||{} )) {
     if (markers[section][item]) {
@@ -1188,10 +1188,7 @@ function getIconName(o) {
 function getIconProp(o) {
   let prop = {icon: 'question', group: 'misc'};
 
-  let name = o.name;
-  let type = o.type;
-
-  let section = types[type];
+  let section = types[o.type];
 
   prop = {...prop, ...section};
 
@@ -1204,7 +1201,8 @@ function getIconProp(o) {
 
   if (section && section.match) {
     for (const [regex, entry] of Object.entries(section.match)) {
-      if (regex && (name||'').match(new RegExp(regex, ""))) return entry;
+      if (regex && (o.name ||'').match(new RegExp(regex, ""))) return entry;
+      if (regex && (o.proto||'').match(new RegExp(regex, ""))) return entry;
     }
   }
 
@@ -1586,7 +1584,7 @@ function passesFilter(marker) {
 
   let clue = lang['sid_stashes_'+o.clue+'_name'];
 
-  let s = [title, description, c, clue, o.title, o.name, o.type, o.description, o.sid, o.clue, o.cell, info.quest, info.upgrade, ...tags].map(x=>x||'').join(' ').toLowerCase();
+  let s = [title, description, c, clue, o.title, o.name, o.type, o.description, o.sid, o.clue, o.cell, o.proto, info.quest, info.upgrade, ...tags].map(x=>x||'').join(' ').toLowerCase();
 
   if (o.clue) s += ' clue';
 
