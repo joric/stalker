@@ -254,24 +254,33 @@ def export_stashes(records):
         for values in data.values():
             rank = values.get('Rank', RANK_ANY)
             loot = values.get('SmartLootParams',{})
+
+            ranks[rank] = {}
+
             for field in ['PrimaryWeaponParams','GrenadesParams','ConsumablesParams', 'HealthParams', 'AttachParams']:
                 params = loot.get(field) or {}
+
                 for param in params.values():
-                    ranks[rank] = {}
+
                     fields = {'ItemSetCount': 'count', 'MinSpawnChance':'min','MaxSpawnChance': 'max'}
+
                     ranks[rank].update({v: param[k] for k,v in fields.items() if k in param})
 
                     items = param.get('Items',{})
 
-                    if items:
+                    if 'items' not in ranks[rank]:
                         ranks[rank]['items'] = {}
 
                     for item in items.values():
                         name = item.get('ItemPrototypeSID')
+
                         fields = {'MinCount':'min', 'MaxCount':'max', 'Weight':'weight'}
+
+
                         ranks[rank]['items'][name] = {v: item[k] for k,v in fields.items() if k in item}
 
         entries[key] = ranks
+
     return entries
 
 def export_packs(records):
