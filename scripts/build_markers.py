@@ -334,7 +334,7 @@ def export_generators(records):
             if not data:
                 refkey = config.get('refkey')
                 if refkey:
-                    entries[sid] = { refkey: {} }
+                    entries[sid] = { refkey: { 'type': 'generator' } }
 
             continue
 
@@ -347,6 +347,8 @@ def export_generators(records):
                     name = item.get('ItemGeneratorPrototypeSID')
                     if not name: continue
                 entry[name] = {v: item[k] for k,v in gen_remap.items() if k in item}
+                if 'ItemGeneratorPrototypeSID' in item:
+                    entry[name]['type'] = 'generator'
 
         entries[sid] = entry
 

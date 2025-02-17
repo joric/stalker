@@ -747,22 +747,17 @@ let wikiPrefix = 'https://stalker.fandom.com/';
 
 let copyLink = e=>{ copyToClipboard(e.target.href); return false; };
 
-function renderItem(feature, extended = false) {
+function renderItem(feature, extended=false) {
   let o = feature.properties;
 
   let prop = getIconProp(o);
+
+  if (!extended) return {prop: prop};
+
   let [title, description] = humanReadable(o);
   let group = prop.group || 'misc';
   let category = lang[prop.category] || lang[prop.title] || prop.category || group;
   let location = '';
-
-  if (extended) {
-    let c = feature.geometry.coordinates;
-    //let teleport = `${c[0]} ${c[1]} ${c[2]}`;
-    //let location = `XTeleportTo ${teleport}`
-    let currentRegion = getRegionName({x: c[0], y:c[1], z:c[2]}, regionsData);
-    location = lang[`sid_locations_region_${currentRegion}_name`];
-  }
 
   if (o.lsid) {
     title = lang[`sid_questItemprototypes_${o.lsid}_name`];
@@ -782,6 +777,12 @@ function renderItem(feature, extended = false) {
     description: description,
     prop: prop,
   };
+
+  let c = feature.geometry.coordinates;
+  //let teleport = `${c[0]} ${c[1]} ${c[2]}`;
+  //let location = `XTeleportTo ${teleport}`
+  let currentRegion = getRegionName({x: c[0], y:c[1], z:c[2]}, regionsData);
+  prop.location = lang[`sid_locations_region_${currentRegion}_name`];
 
   if (o.references) {
     for (const name of o.references) {
@@ -1086,7 +1087,7 @@ function showTooltip(e) {
   let o = marker.feature.properties;
 
 
-  let info = renderItem(marker.feature);
+  let info = renderItem(marker.feature, true);
 
   if (isLocked(o)) info.title = lang['sid_misc_hint_cantopen'];
 
