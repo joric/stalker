@@ -777,7 +777,7 @@ function renderItem(feature, extended=false) {
     prop: prop,
   };
 
-  if (!extended) return info;
+  if (!extended) return info; // region markers need title
 
   let c = feature.geometry.coordinates;
   //let teleport = `${c[0]} ${c[1]} ${c[2]}`;
