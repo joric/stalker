@@ -752,9 +752,8 @@ function renderItem(feature, extended=false) {
 
   let prop = getIconProp(o);
 
-  if (!extended) return {prop: prop};
-
   let [title, description] = humanReadable(o);
+
   let group = prop.group || 'misc';
   let category = lang[prop.category] || lang[prop.title] || prop.category || group;
   let location = '';
@@ -777,6 +776,8 @@ function renderItem(feature, extended=false) {
     description: description,
     prop: prop,
   };
+
+  if (!extended) return info;
 
   let c = feature.geometry.coordinates;
   //let teleport = `${c[0]} ${c[1]} ${c[2]}`;
