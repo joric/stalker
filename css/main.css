@@ -1104,7 +1104,7 @@ input::selection {
   cursor: pointer;
   font-size: 90%;
 
-  max-width: 150px;
+  max-width: 120px;
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
