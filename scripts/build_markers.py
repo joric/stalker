@@ -256,20 +256,24 @@ def export_stashes(records):
             loot = values.get('SmartLootParams',{})
 
             ranks[rank] = {}
+            groups = []
 
             for field in ['PrimaryWeaponParams','GrenadesParams','ConsumablesParams', 'HealthParams', 'AttachParams']:
                 params = loot.get(field) or {}
 
+
                 for param in params.values():
+
+                    group = {}
 
                     fields = {'ItemSetCount': 'count', 'MinSpawnChance':'min','MaxSpawnChance': 'max'}
 
-                    ranks[rank].update({v: param[k] for k,v in fields.items() if k in param})
+                    group.update({v: param[k] for k,v in fields.items() if k in param})
 
                     items = param.get('Items',{})
 
-                    if 'items' not in ranks[rank]:
-                        ranks[rank]['items'] = {}
+                    if 'items' not in group:
+                        group['items'] = {}
 
                     for item in items.values():
                         name = item.get('ItemPrototypeSID')
@@ -277,7 +281,9 @@ def export_stashes(records):
                         fields = {'MinCount':'min', 'MaxCount':'max', 'Weight':'weight'}
 
 
-                        ranks[rank]['items'][name] = {v: item[k] for k,v in fields.items() if k in item}
+                        group['items'][name] = {v: item[k] for k,v in fields.items() if k in item}
+                    groups.append(group)
+            ranks[rank] = groups
 
         entries[key] = ranks
 
@@ -296,7 +302,7 @@ def export_packs(records):
                 name = item.get('ItemPrototypeSID')
                 weight = item.get('Weight')
                 if weight:
-                    ranks[rank][name] = weight
+                    ranks[rank][name] = {'weight': weight}
         entries[key] = ranks
     return entries
 
@@ -347,8 +353,8 @@ def export_generators(records):
                     name = item.get('ItemGeneratorPrototypeSID')
                     if not name: continue
                 entry[name] = {v: item[k] for k,v in gen_remap.items() if k in item}
-                if 'ItemGeneratorPrototypeSID' in item:
-                    entry[name]['type'] = 'generator'
+
+                if 'ItemGeneratorPrototypeSID' in item: entry[name]['type'] = 'generator'
 
         entries[sid] = entry
 

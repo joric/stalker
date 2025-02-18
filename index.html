@@ -783,7 +783,7 @@ function renderItem(feature, extended=false) {
   //let teleport = `${c[0]} ${c[1]} ${c[2]}`;
   //let location = `XTeleportTo ${teleport}`
   let currentRegion = getRegionName({x: c[0], y:c[1], z:c[2]}, regionsData);
-  prop.location = lang[`sid_locations_region_${currentRegion}_name`];
+  info.location = lang[`sid_locations_region_${currentRegion}_name`];
 
   if (o.references) {
     for (const name of o.references) {
@@ -845,10 +845,10 @@ function getSpawnContent(o, name) {
 
   let data = markers[section][name];
 
-  for (item of Object.keys( data||{} )) {
-    if (markers[section][item]) {
+  for ( key of Object.keys( data||{} )) {
+    if (markers[section][name][key].type == 'generator') {
       //console.log(name, '->', item);
-      return markers[section][item];
+      return markers[section][key];
     }
   }
 
@@ -911,6 +911,105 @@ function popupOnClick(e) {
     div.appendChild(content);
   }
 
+  let rank = 'Master';
+
+  if (o.spawns) {
+
+/*
+    let dice = document.createElement('div');
+
+    let ranks_t = {
+      'Newbie': 'one',
+      'Experienced': 'two',
+      'Veteran': 'three',
+      'Master': 'four',
+    };
+
+    let s = '';
+
+    for (const [key,value] of Object.entries(ranks_t)) {
+      s += `<i title="${key}" class="fa-solid fa-dice-${value}" style="color: grey;"></i> `;
+    }
+
+    dice.innerHTML = s;
+    div.appendChild(dice);
+*/
+    let current_rank = 'Master';
+
+    function getSpawnGroups(data, current_rank, smart) {
+      if (smart) {
+        return data['ERank::'+current_rank] || [];
+      }
+      return [{min:0, max:1, items:data}];
+    }
+
+    let groups = {};
+
+    for (name of o.spawns) {
+
+      let data = getSpawnContent(o, name) || {};
+
+      //console.log(name, data);
+
+      if (o.type=='ESpawnType::PackOfItems') {
+
+        // for packs of items we have {itemname: weight, ... } entries
+
+        let items = data['ERank::'+current_rank] || {};
+        groups[name] = [{min:0, max:1, items:items}];
+
+      } else {
+        let rank = null;
+        if (name.includes(':')) {
+          [rank, name] = name.split(':');
+        }
+        if (rank && rank!=current_rank) continue;
+        let smart = rank==null;
+        let batch = getSpawnGroups(data, current_rank, smart);
+        groups[name] = batch;
+      }
+
+      //console.log(name, smart, batch);
+
+    }
+
+    function createTag(title, alt) {
+      let span = document.createElement('span');
+      span.textContent = title;
+      if (alt) span.title = alt;
+      span.className = 'tag-item';
+      span.href = '#' + title;
+      span.onclick = function(e) { copyToClipboard(e.target.textContent); };
+      return span;
+    }
+
+    //console.log(groups);
+
+    // add all groups into flex container
+    for (const [key,entries] of Object.entries(groups)) {
+
+      let hr = document.createElement('hr');
+      div.appendChild(hr);
+
+      let container = document.createElement('div');
+      container.className = 'icon-container';
+      container.title = key + ' (' + current_rank + ')';
+
+      //container.appendChild(createTag(key, current_rank));
+
+      for (group of (entries)) {
+        for (const [name,props] of Object.entries(group.items||{})) {
+          let span = document.createElement('span');
+          container.appendChild(createTag(name, JSON.stringify(props)));
+        }
+      }
+
+      div.appendChild(container);
+    }
+
+  }
+
+/*
   if (o.spawns) {
     let hr = document.createElement('hr');
     let ul = document.createElement('ul');
@@ -929,6 +1028,7 @@ function popupOnClick(e) {
     div.appendChild(hr);
     div.appendChild(ul);
   }
+*/
 
   let quest = null;
 

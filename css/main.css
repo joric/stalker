@@ -1062,3 +1062,22 @@ input::selection {
 .small * {
   font-size: 85%;
 }
+
+.icon-container {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.tag-item {
+  margin: 2px;
+  padding-left: 7px;
+  padding-right: 7px;
+  background-color: #eee;
+  border-radius: 7px;
+  cursor: pointer;
+}
+
+.tag-item:hover {
+  background-color: #ccc;
+}
+
