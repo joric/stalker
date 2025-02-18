@@ -963,7 +963,7 @@ function popupOnClick(e) {
         if (name.includes(':')) {
           [rank, name] = name.split(':');
         }
-        //if (rank && rank!=current_rank) continue;
+        if (rank && rank!=current_rank) continue;
         let smart = rank==null;
         let batch = getSpawnGroups(data, current_rank, smart);
         groups[name] = batch;
