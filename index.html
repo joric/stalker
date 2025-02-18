@@ -974,13 +974,13 @@ function popupOnClick(e) {
 
     }
 
-    function createTag(title, alt) {
+    function createTag(title, alt, name) {
       let span = document.createElement('span');
       span.textContent = title;
       if (alt) span.title = alt;
       span.className = 'tag-item';
-      span.href = '#' + title;
-      span.onclick = function(e) { copyToClipboard(e.target.textContent); };
+      span.setAttribute('alt', name);
+      span.onclick = function(e) { copyToClipboard(e.target.getAttribute('alt')); };
       return span;
     }
 
@@ -995,14 +995,12 @@ function popupOnClick(e) {
     // add all groups into flex container
     for (const [key,entries] of Object.entries(groups)) {
 
-
-
       //container.appendChild(createTag(key, current_rank));
 
       for (group of (entries)) {
         for (const [name,props] of Object.entries(group.items||{})) {
           let span = document.createElement('span');
-          container.appendChild(createTag(lang[`sid_items_${name.replace('Antirad','AntiRad')}_name`] || name, JSON.stringify(props)));
+          container.appendChild(createTag(lang[`sid_items_${name.replace('Antirad','AntiRad')}_name`] || name, name +': '+JSON.stringify(props), name));
         }
       }
     }
