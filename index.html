@@ -1015,7 +1015,8 @@ function popupOnClick(e) {
       for (group of (entries)) {
         for (const [name,props] of Object.entries(group.items||{})) {
           let span = document.createElement('span');
-          container.appendChild(createTag(translate_item(name), name +': '+JSON.stringify(props), name));
+          let title = translate_item(name);
+          container.appendChild(createTag(title, name +': '+JSON.stringify(props)+'\n'+title, name));
         }
       }
     }
