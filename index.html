@@ -951,9 +951,10 @@ function popupOnClick(e) {
 */
     let current_rank = 'Master';
 
-    function getSpawnGroups(data, current_rank, smart) {
+    function getSpawnGroups(data, current_rank) {
+      let smart = Object.keys(data).every(key => key.includes('ERank::'));
       if (smart) {
-        return data['ERank::'+current_rank] || [];
+        return data['ERank::'+current_rank];
       }
       return [{min:0, max:1, items:data}];
     }
@@ -989,7 +990,7 @@ function popupOnClick(e) {
 
     }
 
-    function createTag(title, alt, name) {
+    function createTag(title, alt, name, color) {
       let span = document.createElement('a');
       span.textContent = title;
       if (alt) span.title = alt;
@@ -999,6 +1000,9 @@ function popupOnClick(e) {
       //span.onclick = function(e) { popup.querySelector('#popup-wiki-link').href = getWikiURL(info.title);
       span.href = getWikiURL(title);
       span.target = '_blank';
+
+      if (color) span.style.backgroundColor = color;
+
       return span;
     }
 
@@ -1010,6 +1014,11 @@ function popupOnClick(e) {
     let container = document.createElement('div');
     container.className = 'tag-container';
 
+    let i = 0;
+    //colors = ['rgb(33,175,214)', 'rgb(136,133,197)', 'rgb(74,211,172,1)'];
+
+    colors = ['lightgreen', 'lightblue', 'lightgrey'];
+
     // add all groups into flex container
     for (const [key,entries] of Object.entries(groups)) {
 
@@ -1019,9 +1028,15 @@ function popupOnClick(e) {
         for (const [name,props] of Object.entries(group.items||{})) {
           let span = document.createElement('span');
           let title = translate_item(name);
-          container.appendChild(createTag(title, name +': '+JSON.stringify(props)+'\n'+title, name));
+
+          container.appendChild(createTag(title, name +': '+JSON.stringify(props)+'\n'+title, name, colors[i]));
+
         }
       }
+
+
+      i = (i + 1) % colors.length;
+
     }
 
     div.appendChild(container);

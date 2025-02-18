@@ -1096,7 +1096,7 @@ input::selection {
 
 .tag-item {
   margin: 1px;
-  padding: 2px;
+  padding: 0px;
   padding-left: 7px;
   padding-right: 7px;
   background-color: #eee;
@@ -1116,6 +1116,6 @@ input::selection {
 .tag-item:hover { text-decoration: none; }
 
 .tag-item:hover {
-  background-color: #ccc;
+  //opacity: .8; // somehow makes the whole window blurry
 }
 
