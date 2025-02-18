@@ -664,6 +664,21 @@ function clearSelection() {
   }
 }
 
+function translate_item(name) {
+  name = name.replace('Antirad','AntiRad');
+  let title = lang[`sid_items_${name}_name`];
+  if (!title) {
+    let proto = markers.prototypes[name];
+    if (proto) {
+      let lsid = proto.lsid;
+      if (lsid) {
+        title = lang[`sid_upgrades_${lsid}_name`];
+      }
+    }
+  }
+  return title || name;
+}
+
 function translate(fields, postfix) {
   let prefixes = ['sid_locations_region_','sid_locations_', 'sid_items_','sid_stashes_','sid_questItemprototypes_','sid_items_FArtifact','sid_items_CArtifact','sid_items_AArtifact'];
   for (field of fields) {
@@ -1000,7 +1015,7 @@ function popupOnClick(e) {
       for (group of (entries)) {
         for (const [name,props] of Object.entries(group.items||{})) {
           let span = document.createElement('span');
-          container.appendChild(createTag(lang[`sid_items_${name.replace('Antirad','AntiRad')}_name`] || name, name +': '+JSON.stringify(props), name));
+          container.appendChild(createTag(translate_item(name), name +': '+JSON.stringify(props), name));
         }
       }
     }
