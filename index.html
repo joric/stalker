@@ -986,26 +986,28 @@ function popupOnClick(e) {
 
     //console.log(groups);
 
+    let hr = document.createElement('hr');
+    div.appendChild(hr);
+
+    let container = document.createElement('div');
+    container.className = 'tag-container';
+
     // add all groups into flex container
     for (const [key,entries] of Object.entries(groups)) {
 
-      let hr = document.createElement('hr');
-      div.appendChild(hr);
 
-      let container = document.createElement('div');
-      container.className = 'icon-container';
 
       //container.appendChild(createTag(key, current_rank));
 
       for (group of (entries)) {
         for (const [name,props] of Object.entries(group.items||{})) {
           let span = document.createElement('span');
-          container.appendChild(createTag(name, JSON.stringify(props)));
+          container.appendChild(createTag(lang[`sid_items_${name.replace('Antirad','AntiRad')}_name`] || name, JSON.stringify(props)));
         }
       }
-
-      div.appendChild(container);
     }
+
+    div.appendChild(container);
 
   }
 
