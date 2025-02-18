@@ -1070,7 +1070,7 @@ input::selection {
 
 .tag-item {
   margin: 1px;
-  padding: 1px;
+  padding: 2px;
   padding-left: 7px;
   padding-right: 7px;
   background-color: #eee;
