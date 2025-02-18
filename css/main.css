@@ -1069,12 +1069,14 @@ input::selection {
 }
 
 .tag-item {
-  margin: 2px;
+  margin: 1px;
+  padding: 1px;
   padding-left: 7px;
   padding-right: 7px;
   background-color: #eee;
-  border-radius: 7px;
+  border-radius: 16px;
   cursor: pointer;
+  font-size: 90%;
 }
 
 .tag-item:hover {
