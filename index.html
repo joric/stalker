@@ -990,12 +990,15 @@ function popupOnClick(e) {
     }
 
     function createTag(title, alt, name) {
-      let span = document.createElement('span');
+      let span = document.createElement('a');
       span.textContent = title;
       if (alt) span.title = alt;
       span.className = 'tag-item';
       span.setAttribute('alt', name);
-      span.onclick = function(e) { copyToClipboard(e.target.getAttribute('alt')); };
+      //span.onclick = function(e) { copyToClipboard(e.target.getAttribute('alt')); };
+      //span.onclick = function(e) { popup.querySelector('#popup-wiki-link').href = getWikiURL(info.title);
+      span.href = getWikiURL(title);
+      span.target = '_blank';
       return span;
     }
 
