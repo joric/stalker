@@ -1103,6 +1103,11 @@ input::selection {
   border-radius: 16px;
   cursor: pointer;
   font-size: 90%;
+
+  max-width: 150px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
 }
 
 .tag-item:hover {
