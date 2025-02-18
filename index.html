@@ -946,7 +946,6 @@ function popupOnClick(e) {
     let groups = {};
 
     for (name of o.spawns) {
-
       let data = getSpawnContent(o, name) || {};
 
       //console.log(name, data);
@@ -963,10 +962,12 @@ function popupOnClick(e) {
         if (name.includes(':')) {
           [rank, name] = name.split(':');
         }
-        if (rank && rank!=current_rank) continue;
+
+        //if (rank && rank!=current_rank) continue;
         let smart = rank==null;
         let batch = getSpawnGroups(data, current_rank, smart);
-        groups[name] = batch;
+
+        groups[ smart ? name : current_rank] = batch;
       }
 
       //console.log(name, smart, batch);
@@ -993,7 +994,6 @@ function popupOnClick(e) {
 
       let container = document.createElement('div');
       container.className = 'icon-container';
-      container.title = key + ' (' + current_rank + ')';
 
       //container.appendChild(createTag(key, current_rank));
 
