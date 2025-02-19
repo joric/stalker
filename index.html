@@ -1077,14 +1077,22 @@ function popupOnClick(e) {
     div.appendChild(ul);
   }
 
+  let content =  '';
+
+  if (info.upgrade) {
+    content += `<hr/>${info.upgrade}`;
+  }
 
   if (o.keycode) {
-    let content = `<hr/>Keycode: ${o.keycode}`;
+    content += `<hr/>Keycode: ${o.keycode}`;
+  }
 
+  if (content) {
     let el = document.createElement('div');
     el.innerHTML = content;
     div.appendChild(el);
   }
+
 
   if (o.items) {
     let el = document.createElement('div');
@@ -1134,12 +1142,12 @@ function popupOnClick(e) {
   popup.querySelector('#popup-found').onclick = function() { toggleMarked(o.sid) };
   popup.querySelector('#popup-found-label').textContent = lang['sid_misc_pda_hint_HidePlayerLandmark'] || 'Found';
 
-  let content = popup.firstElementChild;
+  let contentElement = popup.firstElementChild;
 
   e.target._infoWindow.setOptions({custom: true, dy: 16});
-  e.target._infoWindow.setContent( content );
+  e.target._infoWindow.setContent(contentElement);
 
-  content.addEventListener('contextmenu', function(e) { e.stopPropagation()}, true); // enable default context menu
+  contentElement.addEventListener('contextmenu', function(e) { e.stopPropagation()}, true); // enable default context menu
 }
 
 function toggleMarked(id) {
