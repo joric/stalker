@@ -1067,7 +1067,7 @@ input::selection {
   display: flex;
   flex-wrap: wrap;
 
-  max-height: 156px;
+  max-height: 162px;
   overflow-x: hidden;
   overflow-y: auto;
 }
@@ -1096,7 +1096,7 @@ input::selection {
 
 .tag-item {
   margin: 1px;
-  padding: 0px;
+  padding: 1px;
   padding-left: 7px;
   padding-right: 7px;
   background-color: #eee;

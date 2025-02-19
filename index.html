@@ -794,6 +794,8 @@ function renderItem(feature, extended=false) {
 
   if (!extended) return info; // region markers need title
 
+  if (!feature.geometry) return info;
+
   let c = feature.geometry.coordinates;
   //let teleport = `${c[0]} ${c[1]} ${c[2]}`;
   //let location = `XTeleportTo ${teleport}`
@@ -845,6 +847,45 @@ function renderItem(feature, extended=false) {
       }
     }
   }
+
+  let current_rank = 'Master';
+
+  function getSpawnGroups(data, current_rank) {
+    let smart = Object.keys(data).every(key => key.includes('ERank::'));
+    if (smart) {
+      return data['ERank::'+current_rank];
+    }
+    return [{min:0, max:1, items:data}];
+  }
+
+  let groups = {};
+
+  if (o.spawns) {
+    for (name of o.spawns) {
+      let data = getSpawnContent(o, name) || {};
+      //console.log(name, data);
+
+      if (o.type=='ESpawnType::PackOfItems') {
+        // for packs of items we have {itemname: weight, ... } entries
+        let items = data['ERank::'+current_rank] || {};
+        groups[name] = [{min:0, max:1, items:items}];
+
+      } else {
+        let rank = null;
+        if (name.includes(':')) {
+          [rank, name] = name.split(':');
+        }
+        //if (rank && rank!=current_rank) continue;
+        let smart = rank==null;
+        let batch = getSpawnGroups(data, current_rank, smart);
+        groups[ smart ? name : current_rank] = batch;
+      }
+      //console.log(name, smart, batch);
+    }
+  }
+
+  info.groups = groups;
+
 
   return info;
 }
@@ -930,66 +971,6 @@ function popupOnClick(e) {
 
   if (o.spawns) {
 
-/*
-    let dice = document.createElement('div');
-
-    let ranks_t = {
-      'Newbie': 'one',
-      'Experienced': 'two',
-      'Veteran': 'three',
-      'Master': 'four',
-    };
-
-    let s = '';
-
-    for (const [key,value] of Object.entries(ranks_t)) {
-      s += `<i title="${key}" class="fa-solid fa-dice-${value}" style="color: grey;"></i> `;
-    }
-
-    dice.innerHTML = s;
-    div.appendChild(dice);
-*/
-    let current_rank = 'Master';
-
-    function getSpawnGroups(data, current_rank) {
-      let smart = Object.keys(data).every(key => key.includes('ERank::'));
-      if (smart) {
-        return data['ERank::'+current_rank];
-      }
-      return [{min:0, max:1, items:data}];
-    }
-
-    let groups = {};
-
-    for (name of o.spawns) {
-      let data = getSpawnContent(o, name) || {};
-
-      //console.log(name, data);
-
-      if (o.type=='ESpawnType::PackOfItems') {
-
-        // for packs of items we have {itemname: weight, ... } entries
-
-        let items = data['ERank::'+current_rank] || {};
-        groups[name] = [{min:0, max:1, items:items}];
-
-      } else {
-        let rank = null;
-        if (name.includes(':')) {
-          [rank, name] = name.split(':');
-        }
-
-        //if (rank && rank!=current_rank) continue;
-        let smart = rank==null;
-        let batch = getSpawnGroups(data, current_rank, smart);
-
-        groups[ smart ? name : current_rank] = batch;
-      }
-
-      //console.log(name, smart, batch);
-
-    }
-
     function createTag(title, alt, name, color) {
       let span = document.createElement('a');
       span.textContent = title;
@@ -1006,7 +987,7 @@ function popupOnClick(e) {
       return span;
     }
 
-    //console.log(groups);
+    let groups = info.groups;
 
     let hr = document.createElement('hr');
     div.appendChild(hr);
@@ -1017,26 +998,18 @@ function popupOnClick(e) {
     let i = 0;
     //colors = ['rgb(33,175,214)', 'rgb(136,133,197)', 'rgb(74,211,172,1)'];
 
-    colors = ['lightgreen', 'lightblue', 'lightgrey'];
+    colors = ['#ded', '#dde', '#eee'];
 
     // add all groups into flex container
     for (const [key,entries] of Object.entries(groups)) {
-
-      //container.appendChild(createTag(key, current_rank));
-
-      for (group of (entries)) {
+      for (group of (entries||[])) {
         for (const [name,props] of Object.entries(group.items||{})) {
           let span = document.createElement('span');
           let title = translate_item(name);
-
           container.appendChild(createTag(title, name +': '+JSON.stringify(props)+'\n'+title, name, colors[i]));
-
         }
       }
-
-
       i = (i + 1) % colors.length;
-
     }
 
     div.appendChild(container);
@@ -1699,7 +1672,7 @@ function passesFilter(marker) {
   let o = marker.feature.properties;
   let tags = [];
 
-  let info = renderItem(marker.feature);
+  let info = renderItem(marker.feature, true);
 
   if (o.spawns) tags.push(o.spawns);
 
@@ -1712,6 +1685,16 @@ function passesFilter(marker) {
 
   for (p of [o.lock, o.enable, o.keycode, o.uaid]) {
     if (p) tags.push(p);
+  }
+
+  for (const [key,entries] of Object.entries(info.groups||{})) {
+    for (group of (entries||[])) {
+      for (const [name,props] of Object.entries(group.items||{})) {
+        tags.push(name);
+        let title = translate_item(name);
+        tags.push(title);
+      }
+    }
   }
 
   let prop = getIconProp(o);
