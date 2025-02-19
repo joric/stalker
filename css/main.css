@@ -1063,14 +1063,6 @@ input::selection {
   font-size: 85%;
 }
 
-.tag-container {
-  display: flex;
-  flex-wrap: wrap;
-
-  max-height: 162px;
-  overflow-x: hidden;
-  overflow-y: auto;
-}
 
 .tag-container::-webkit-scrollbar {
   width: 8px
@@ -1094,6 +1086,15 @@ input::selection {
   background: hsla(0, 0%, 53%, .1);
 }
 
+
+.tag-container {
+  display: flex;
+  flex-wrap: wrap;
+  max-height: 162px;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
 .tag-item {
   margin: 1px;
   padding: 1px;
@@ -1103,12 +1104,10 @@ input::selection {
   border-radius: 16px;
   cursor: pointer;
   font-size: 90%;
-
   max-width: 300px;
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
-
   color: black;
   text-decoration: none;
 }
