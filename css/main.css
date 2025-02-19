@@ -1068,7 +1068,7 @@ input::selection {
 }
 
 .scrollbar::-webkit-scrollbar-thumb {
-  background: hsla(0, 0%, 53%, .2);
+  background: hsla(0, 0%, 53%, .0);
   border-radius: 4px;
 }
 
