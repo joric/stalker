@@ -1009,8 +1009,6 @@ function popupOnClick(e) {
     container.className = 'tag-container';
 
     let i = 0;
-    //colors = ['rgb(33,175,214)', 'rgb(136,133,197)', 'rgb(74,211,172,1)'];
-
     colors = ['#eee', '#dde', '#ded'];
 
     // add all groups into flex container
@@ -1019,7 +1017,7 @@ function popupOnClick(e) {
         for (const [name,props] of Object.entries(group.items||{})) {
           let span = document.createElement('span');
           let title = translate_item(name);
-          container.appendChild(createTag(title, name +': '+JSON.stringify(props)+'\n'+title, name, colors[i]));
+          container.appendChild(createTag(title, [title,key,name +': '+JSON.stringify(props)].join('\n'), name, colors[i]));
         }
       }
       i = (i + 1) % colors.length;
