@@ -1694,19 +1694,20 @@ function passesFilter(marker) {
 
   let info = renderItem(marker.feature, true);
 
-  if (o.spawns) tags.push(o.spawns);
-
+  if (o.spawns) tags.push(...o.spawns);
   if (o.references) tags.push(...o.references);
   if (o.actors) tags.push(...o.actors);
   if (o.items) tags.push(...o.items);
 
   if (o.keycode) tags.push('keycode');
   if (o.items) tags.push('items');
+  if (o.clue) tags.push('clue');
 
   for (p of [o.lock, o.enable, o.keycode, o.uaid]) {
     if (p) tags.push(p);
   }
 
+  // spawn items (all titles and names)
   for (const [key,entries] of Object.entries(info.groups||{})) {
     for (group of (entries||[])) {
       for (const [name,props] of Object.entries(group.items||{})) {
@@ -1716,8 +1717,6 @@ function passesFilter(marker) {
       }
     }
   }
-
-  let prop = getIconProp(o);
 
   let s = [o.title, o.name, o.type, o.description, o.sid, o.clue, o.cell, o.proto,
 
@@ -1731,11 +1730,6 @@ function passesFilter(marker) {
     info.location,
 
     ...tags].map(x=>x||'').join(' ').toLowerCase();
-
-  if (o.clue) s += ' clue';
-
-  //if (o.sid=='CDE91184435C143289155888681CE033') console.log(o.description);
-  //if (o.sid=='808555354BB77360B5AB0BBE568B8952') console.log(o.spawns);
 
   return !(text!='' && !terms.every(term=>s.includes(term)));
 }
