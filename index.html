@@ -848,43 +848,56 @@ function renderItem(feature, extended=false) {
     }
   }
 
-  let current_rank = 'Master';
-
-  function getSpawnGroups(data, current_rank) {
-    let smart = Object.keys(data).every(key => key.includes('ERank::'));
-    if (smart) {
-      return data['ERank::'+current_rank];
-    }
-    return [{min:0, max:1, items:data}];
-  }
-
-  let groups = {};
+  // we need to group rank-prefixed spawns by rank
+  // e.g. 3612452147E4E0C44DED9B84F755461F has two Newbie entries
 
   if (o.spawns) {
+
+    let current_rank = 'Master';
+
+    function getSpawnGroups(data, current_rank) {
+      let smart = Object.keys(data).every(key => key.includes('ERank::'));
+      if (smart) {
+        return data['ERank::'+current_rank];
+      }
+      return [{min:0, max:1, items:data}];
+    }
+
+    let groups = {};
+
+    // process the smart spawns first
     for (name of o.spawns) {
       let data = getSpawnContent(o, name) || {};
-      //console.log(name, data);
-
       if (o.type=='ESpawnType::PackOfItems') {
-        // for packs of items we have {itemname: weight, ... } entries
-        let items = data['ERank::'+current_rank] || {};
-        groups[name] = [{min:0, max:1, items:items}];
-
-      } else {
-        let rank = null;
-        if (name.includes(':')) {
-          [rank, name] = name.split(':');
-        }
-        //if (rank && rank!=current_rank) continue;
-        let smart = rank==null;
-        let batch = getSpawnGroups(data, current_rank, smart);
-        groups[ smart ? name : current_rank] = batch;
+        groups[name] = [{min:0, max:1, items:data['ERank::'+current_rank] || {}}];
+      } else if (!name.includes(':')) {
+        groups[name] = getSpawnGroups(data, current_rank);
       }
-      //console.log(name, smart, batch);
     }
-  }
 
-  info.groups = groups;
+    // pre-process ranked spawns to group them by rank
+    let ranked = {};
+    for (name of o.spawns) {
+      if (name.includes(':')) {
+        [rank, name] = name.split(':');
+        if (!ranked[rank]) ranked[rank] = [];
+        ranked[rank].push(name);
+      }
+    }
+
+    // add ranked spawns using the best possible rank
+    let best = [];
+    let rank_score = { 'Newbie': 1, 'Experienced': 2, 'Veteran': 3, 'Master': 4 };
+    for (const [rank, names] of Object.entries(ranked)) {
+      if (rank_score[current_rank] >= rank_score[rank]) best = names;
+    }
+    for (const name of best) {
+      let data = getSpawnContent(o, name) || {};
+      groups[name] = getSpawnGroups(data);
+    }
+
+    info.groups = groups;
+  }
 
 
   return info;
