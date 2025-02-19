@@ -1063,29 +1063,27 @@ input::selection {
   font-size: 85%;
 }
 
-
-.tag-container::-webkit-scrollbar {
+.scrollbar::-webkit-scrollbar {
   width: 8px
 }
 
-.tag-container::-webkit-scrollbar-thumb {
-  background: hsla(0, 0%, 53%, .2);
+.scrollbar::-webkit-scrollbar-thumb {
+  background: hsla(0, 0%, 53%, .0);
   border-radius: 4px;
 }
 
-.tag-container:hover::-webkit-scrollbar-thumb {
+.scrollbar:hover::-webkit-scrollbar-thumb {
   background: hsla(0, 0%, 53%, .4);
   border-radius: 4px;
 }
 
-.tag-container::-webkit-scrollbar-thumb:hover {
+.scrollbar::-webkit-scrollbar-thumb:hover {
   background: hsla(0, 0%, 53%, .8);
 }
 
-.tag-container:hover::-webkit-scrollbar-track {
+.scrollbar:hover::-webkit-scrollbar-track {
   background: hsla(0, 0%, 53%, .1);
 }
-
 
 .tag-container {
   display: flex;
