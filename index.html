@@ -851,9 +851,10 @@ function renderItem(feature, extended=false) {
   // we need to group rank-prefixed spawns by rank
   // e.g. 3612452147E4E0C44DED9B84F755461F has two Newbie entries
 
-  if (o.spawns) {
+  let current_rank = 'Master';
+  info.rank = current_rank;
 
-    let current_rank = 'Master';
+  if (o.spawns) {
 
     function getSpawnGroups(data, current_rank) {
       let smart = Object.keys(data).every(key => key.includes('ERank::'));
@@ -1017,7 +1018,7 @@ function popupOnClick(e) {
         for (const [name,props] of Object.entries(group.items||{})) {
           let span = document.createElement('span');
           let title = translate_item(name);
-          container.appendChild(createTag(title, [title,key,name +': '+JSON.stringify(props)].join('\n'), name, colors[i]));
+          container.appendChild(createTag(title, [title,info.rank+': '+key,name +': '+JSON.stringify(props)].join('\n'), name, colors[i]));
         }
       }
       i = (i + 1) % colors.length;
