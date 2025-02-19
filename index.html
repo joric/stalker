@@ -1718,12 +1718,19 @@ function passesFilter(marker) {
   }
 
   let prop = getIconProp(o);
-  let [title, description] = humanReadable(o);
-  let c = lang[prop.category] || prop.category;
 
-  let clue = lang['sid_stashes_'+o.clue+'_name'];
+  let s = [o.title, o.name, o.type, o.description, o.sid, o.clue, o.cell, o.proto,
 
-  let s = [title, description, c, clue, o.title, o.name, o.type, o.description, o.sid, o.clue, o.cell, o.proto, info.quest, info.upgrade, ...tags].map(x=>x||'').join(' ').toLowerCase();
+    info.title,
+    info.category,
+    info.group,
+    info.description,
+    info.upgrade,
+    info.description,
+    info.quest,
+    info.location,
+
+    ...tags].map(x=>x||'').join(' ').toLowerCase();
 
   if (o.clue) s += ' clue';
 
