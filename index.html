@@ -1037,54 +1037,33 @@ function popupOnClick(e) {
 
   }
 
-/*
-  if (o.spawns) {
-    let hr = document.createElement('hr');
-    let ul = document.createElement('ul');
-    ul.className = 'popup-subnote-ul';
-    for (name of o.spawns) {
-      let li = document.createElement('li');
-      let data = getSpawnContent(o, name);
-
-      let title = JSON.stringify(data || name, customReplacer, 2);
-
-      li.textContent = name;
-      li.setAttribute('title', title);
-      li.className = 'popup-subnote-li';
-      ul.appendChild(li);
-    }
-    div.appendChild(hr);
-    div.appendChild(ul);
-  }
-*/
-
-  let quest = null;
-
   if (o.references) {
+
     let hr = document.createElement('hr');
-    let ul = document.createElement('ul');
-    ul.className = 'popup-subnote-ul';
+    div.appendChild(hr);
+
+    let container = document.createElement('div');
+    container.classList.add('scrollbar','tag-container');
+
+    function createTag(title, alt, name, color) {
+      let span = document.createElement('a');
+      span.textContent = title;
+      if (alt) span.title = alt;
+      span.className = 'tag-item';
+      span.setAttribute('alt', alt);
+      span.onclick = function(e) { copyToClipboard(  `${e.target.getAttribute('alt')}`  )  };
+      if (color) span.style.backgroundColor = color;
+      return span;
+    }
 
     for (const name of o.references) {
-      let li = document.createElement('li');
-
-      let node = document.createElement('span');
-      node.textContent = name;
-      node.setAttribute('title', `XStartQuestNodeBySID ${name}`);
-
-      node.style.cursor = 'pointer';
-      node.onclick = function(e) {
-        copyToClipboard(`XStartQuestNodeBySID ${e.target.textContent}`);
-      };
-
-
-      li.className = 'popup-subnote-li';
-      li.appendChild(node);
-      ul.appendChild(li);
+      container.appendChild(createTag(name, `XStartQuestNodeBySID ${name}`, name, '#ede'));
     }
-    div.appendChild(hr);
-    div.appendChild(ul);
+
+    div.appendChild(container);
   }
+
+
 
   let content =  '';
 
