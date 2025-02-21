@@ -821,6 +821,15 @@ function renderItem(feature, extended=false) {
     }
   }
 
+  // add items
+  if (o.items) {
+    let items = [];
+    for (const name of o.items) {
+      items.push(lang[`sid_questItemprototypes_${name}_name`]);
+    }
+    info.items = items;
+  }
+
   // add upgrade thingy, if any
   if (o.spawns) {
     for (name of o.spawns) {
@@ -1018,7 +1027,7 @@ function popupOnClick(e) {
         for (const [name,props] of Object.entries(group.items||{})) {
           let span = document.createElement('span');
           let title = translate_item(name);
-          container.appendChild(createTag(title, [title,info.rank+': '+key,name +': '+JSON.stringify(props)].join('\n'), name, colors[i]));
+          container.appendChild(createTag(title, [title,info.rank+': '+key, name +': '+JSON.stringify(props)].join('\n'), name, colors[i]));
         }
       }
       i = (i + 1) % colors.length;
@@ -1234,10 +1243,10 @@ function showTooltip(e) {
   }
 
   if (o.items) {
-    content += `<hr/><div class="overflow-container small">`;
+    content += `<hr/><div class="overflow-container">`;
     for (const name of o.items) {
       let title = lang[`sid_questItemprototypes_${name}_name`];
-      content += `<span title="${name}">[${title || name}]</span><br/>`;
+      content += `<span title="${name}">${title || name}</span><br/>`;
     }
     content +='</div>';
   }
@@ -1705,6 +1714,10 @@ function passesFilter(marker) {
 
   for (p of [o.lock, o.enable, o.keycode, o.uaid]) {
     if (p) tags.push(p);
+  }
+
+  for (name of (info.items||[])) {
+    tags.push(name);
   }
 
   // spawn items (all titles and names)
