@@ -963,6 +963,8 @@ function setMarkerSize(marker, size) {
 }
 
 function popupOnClick(e) {
+  console.log('clicked', e.target.feature);
+
   hideTooltipExt(e);
 
   let marker = e.target;
