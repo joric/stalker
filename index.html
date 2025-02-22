@@ -1014,14 +1014,12 @@ function popupOnClick(e) {
 
     let groups = info.groups;
 
-    let hr = document.createElement('hr');
-    div.appendChild(hr);
-
     let container = document.createElement('div');
     container.classList.add('scrollbar','tag-container');
 
-    let i = 0;
-    colors = ['#eee', '#dde', '#ded'];
+    let g = 0;
+    let colors = ['#eee', '#dde', '#ded'];
+    let count = 0;
 
     // add all groups into flex container
     for (const [key,entries] of Object.entries(groups)) {
@@ -1029,24 +1027,22 @@ function popupOnClick(e) {
         for (const [name,props] of Object.entries(group.items||{})) {
           let span = document.createElement('span');
           let title = translate_item(name);
-          container.appendChild(createTag(title, [title,info.rank+': '+key, name +': '+JSON.stringify(props)].join('\n'), name, colors[i]));
+          container.appendChild(createTag(title, [title,info.rank+': '+key, name +': '+JSON.stringify(props)].join('\n'), name, colors[g % colors.length]));
+          count++;
         }
       }
-      i = (i + 1) % colors.length;
+      g++;
     }
 
-    div.appendChild(container);
+    if (count) {
+      let hr = document.createElement('hr');
+      div.appendChild(hr);
+      div.appendChild(container);
+    }
 
   }
 
   if (o.references) {
-
-    let hr = document.createElement('hr');
-    div.appendChild(hr);
-
-    let container = document.createElement('div');
-    container.classList.add('scrollbar','tag-container');
-
     function createTag(title, alt, name, color) {
       let span = document.createElement('a');
       span.textContent = title;
@@ -1059,10 +1055,15 @@ function popupOnClick(e) {
       return span;
     }
 
+    let container = document.createElement('div');
+    container.classList.add('scrollbar','tag-container');
+
     for (const name of o.references) {
       container.appendChild(createTag(name, `XStartQuestNodeBySID ${name}`, name, '#ede'));
     }
 
+    let hr = document.createElement('hr');
+    div.appendChild(hr);
     div.appendChild(container);
   }
 
