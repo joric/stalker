@@ -1063,6 +1063,7 @@ input::selection {
   font-size: 85%;
 }
 
+/*
 .scrollbar::-webkit-scrollbar {
   width: 8px
 }
@@ -1084,6 +1085,7 @@ input::selection {
 .scrollbar:hover::-webkit-scrollbar-track {
   background: hsla(0, 0%, 53%, .1);
 }
+*/
 
 .tag-container {
   display: flex;
