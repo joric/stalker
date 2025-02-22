@@ -1141,6 +1141,8 @@ function popupOnClick(e) {
   e.target._infoWindow.setContent(contentElement);
 
   contentElement.addEventListener('contextmenu', function(e) { e.stopPropagation()}, true); // enable default context menu
+
+  e.target.openInfoWindow();
 }
 
 function toggleMarked(id) {
