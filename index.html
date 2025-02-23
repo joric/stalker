@@ -666,7 +666,7 @@ function clearSelection() {
 
 function translate_item(name, verbose=false) {
   name = name.replace('Antirad','AntiRad');
-  let title = lang[`sid_items_${name}_name`];
+  let title = lang[`sid_items_${name}_name`] || lang[`sid_questItemprototypes_${name}_name`];
   if (!title) {
     let proto = markers.prototypes[name];
     if (proto) {
