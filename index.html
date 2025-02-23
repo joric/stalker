@@ -848,8 +848,6 @@ function renderItem(feature, extended=false) {
 
     // pre-filter ranks
     let best_rank = null;
-    let rank_score = { 'Newbie': 1, 'Experienced': 2, 'Veteran': 3, 'Master': 4 };
-
     for (const generator of generators) {
       if (generator.rank && rank_score[current_rank] >= rank_score[generator.rank.split('::').pop()]) best_rank = generator.rank;
     }
@@ -895,15 +893,24 @@ function renderItem(feature, extended=false) {
 
   let current_rank = 'Master';
   let diff = 'Normal';
+  let matching_rank = null;
   info.rank = current_rank;
 
   if (o.spawns) {
     let items = [];
 
+    // ranked spawns are structured the way we only have one matching rank
     for (name of o.spawns) {
-      let rank = null;
       if (name.includes(':')) {
         [rank, name] = name.split(':');
+        if (rank_score[current_rank]>=rank_score[rank]) matching_rank = rank;
+      }
+    }
+
+    for (name of o.spawns) {
+      if (name.includes(':')) {
+        [rank, name] = name.split(':');
+        if (rank!= matching_rank) continue;
       }
       items.push(...getGeneratorItems(name, rank || current_rank, diff));
     }
@@ -1048,30 +1055,13 @@ function popupOnClick(e) {
     let g = 0;
     let colors = ['#eee', '#dde', '#ded', '#ede'];
     let count = 0;
-
-    /*
-    // add all groups into flex container
-    for (const [key,entries] of Object.entries(info.groups||{})) {
-      for (group of (entries||[])) {
-        for (const [name,props] of Object.entries(group.items||{})) {
-          let title = translate_item(name);
-          container.appendChild(createTag(title, [title,info.rank+': '+key, name +': '+JSON.stringify(props)].join('\n'), name, colors[g % colors.length]));
-          count++;
-        }
-      }
-      g++;
-    }
-    */
-
     let tmp = {}
 
     for (const data of (info.groups||{})) {
       let name = data.name;
       let title = translate_item(name);
-
       tmp[data.generator] = true;
       let g = Object.keys(tmp).length-1;
-
       container.appendChild(createTag(title, [title, name, info.rank, data.generator, JSON.stringify(data.props)].join('\n'), name, colors[g % colors.length]));
       count++;
     }
