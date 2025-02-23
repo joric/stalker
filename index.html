@@ -1089,7 +1089,7 @@ function popupOnClick(e) {
     let container = document.createElement('div');
     container.classList.add('scrollbar','tag-container');
     for (const name of o.items) {
-      let title = lang[`sid_questItemprototypes_${name}_name`];
+      let title = lang[`sid_questItemprototypes_${name}_name`] || name;
       container.appendChild(createTag(0, name, title, name, name));
     }
     div.appendChild(document.createElement('hr'));
