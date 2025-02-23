@@ -199,7 +199,7 @@ def load_proto(records, remap):
                 entries[sid].update({'compatible':list( (data.get('FittingWeaponsSIDs')or{}).values()) })
 
             if proto:=entries[sid].get('proto'):
-                if proto=='[0]' or proto=='Empty':
+                if proto=='[0]' or ('Empty' in proto) or ('empty' in proto):
                     del entries[sid]['proto']
 
     return entries
@@ -244,66 +244,37 @@ def add_spawns(data, prop):
     if spawns:
         prop['spawns'] = spawns
 
-def export_stashes(records):
-    entries = {}
-    for key, config in records.items():
-        if key in ['comment','empty']: continue
-        data = type(config) is dict and config.get('ItemGenerators') or {}
-        ranks = defaultdict(dict)
-
-        for values in data.values():
-            rank = values.get('Rank', RANK_ANY)
-            loot = values.get('SmartLootParams',{})
-
-            ranks[rank] = {}
-            groups = []
-
-            for field in ['PrimaryWeaponParams','GrenadesParams','ConsumablesParams', 'HealthParams', 'AttachParams']:
-                params = loot.get(field) or {}
-
-
-                for param in params.values():
-
-                    group = {}
-
-                    fields = {'ItemSetCount': 'count', 'MinSpawnChance':'min','MaxSpawnChance': 'max'}
-
-                    group.update({v: param[k] for k,v in fields.items() if k in param})
-
-                    items = param.get('Items',{})
-
-                    if 'items' not in group:
-                        group['items'] = {}
-
-                    for item in items.values():
-                        name = item.get('ItemPrototypeSID')
-
-                        fields = {'MinCount':'min', 'MaxCount':'max', 'Weight':'weight'}
-
-
-                        group['items'][name] = {v: item[k] for k,v in fields.items() if k in item}
-                    groups.append(group)
-            ranks[rank] = groups
-
-        entries[key] = ranks
-
-    return entries
-
 def export_packs(records):
     entries = {}
     for key, config in records.items():
         if key in ['comment','empty']: continue
         data = type(config) is dict and config.get('PackOfItemsSettings') or {}
-        ranks = defaultdict(dict)
+
+        entry = []
+
         for values in data.values():
+            record = {'groups': []}
+
             rank = values.get('PlayerRank', RANK_ANY)
+            if rank:
+                record['rank'] = rank
+
+            group = defaultdict(dict)
+
             items = values.get('Items',{})
             for item in items.values():
                 name = item.get('ItemPrototypeSID')
                 weight = item.get('Weight')
+
                 if weight:
-                    ranks[rank][name] = {'weight': weight}
-        entries[key] = ranks
+                    group['items'][name] = {'weight': weight}
+
+            record['groups'].append(group)
+
+            entry.append(record)
+
+        entries[key] = entry
+
     return entries
 
 gen_remap = {
@@ -317,19 +288,7 @@ gen_remap = {
     'AmmoMaxCount': 'max_ammo',
 }
 
-def export_generators(records):
-    entries = {}
-
-    for key, config in records.items():
-        if key in ['comment','empty']: continue
-        sid = type(config) is dict and config.get('SID')
-        if not sid:
-            continue
-
-        entry = defaultdict(dict)
-
-        data = type(config) is dict and config.get('ItemGenerator') or {}
-
+'''
         if not data:
             data = config.get('MoneyGenerator')
             if data:
@@ -341,22 +300,140 @@ def export_generators(records):
                 refkey = config.get('refkey')
                 if refkey:
                     entries[sid] = { refkey: { 'type': 'generator' } }
+            continue
+'''
+def export_generators(records):
+    entries = {}
+
+    for key, config in records.items():
+        if key in ['comment','empty']: continue
+        sid = type(config) is dict and config.get('SID')
+        if not sid:
+            continue
+
+        entry = []
+        record = {}
+
+        data = type(config) is dict and config.get('ItemGenerator') or {}
+
+        if not data:
+
+            '''
+            if data:=config.get('MoneyGenerator'):
+                name = "Money"
+                item = data
+                entry[name] = {v: item[k] for k,v in gen_remap.items() if k in item}
+                entries[sid] = entry
+                continue
+            '''
+
+            #if refkey := config.get('refkey'):
+            #    entries[sid] = [ { "groups": [ { "category": "SubItemGenerator", "items": { refkey: { "chance": 1.0 } } }] } ]
+
+            # just take it from markers.proto
 
             continue
 
         for values in data.values():
             if type(values) is not dict: continue
             items = values.get('PossibleItems') or {}
+
+            diff = values.get('Diff')
+            if diff:
+                record['diff'] = diff
+
+            group = defaultdict(dict)
+
             for item in items.values():
                 name = item.get('ItemPrototypeSID')
                 if not name:
                     name = item.get('ItemGeneratorPrototypeSID')
                     if not name: continue
-                entry[name] = {v: item[k] for k,v in gen_remap.items() if k in item}
 
-                if 'ItemGeneratorPrototypeSID' in item: entry[name]['type'] = 'generator'
+                if not group:
+                    cat = values.get('Category')
+                    if cat:
+                        group['category'] = cat.split('::').pop()
+
+                    allow = values.get('bAllowSameCategoryGeneration')
+                    if allow:
+                        group['allow'] = allow
+
+                group['items'][name] = {v: item[k] for k,v in gen_remap.items() if k in item}
+
+                #if 'ItemGeneratorPrototypeSID' in item:
+                #    group['items'][name]['generator'] = True
+
+            if group:
+                if 'groups' not in record:
+                    record['groups'] = []
+                record['groups'].append(group)
+
+        if record:
+            entry.append(record)
 
         entries[sid] = entry
+
+        #if sid=='AllAmmosNPCGenerator':
+        #    print(sid, entry)
+
+        #if key=='GamePass_Stash_ItemGenerator_Cheap':
+        #    print(entry)
+
+    return entries
+
+def export_stashes(records):
+    entries = {}
+    for key, config in records.items():
+        if key in ['comment','empty']: continue
+
+        sid = type(config) is dict and config.get('SID')
+        if not sid:
+            continue
+
+        entry = []
+        data = type(config) is dict and config.get('ItemGenerators') or {}
+
+        for values in data.values():
+            rank = values.get('Rank', RANK_ANY)
+            loot = values.get('SmartLootParams',{})
+
+            record = {'groups': []}
+
+            if rank:
+                record['rank'] = rank
+
+            for field, params in loot.items():
+
+                if not field.endswith('Params'):
+                    continue
+
+                for param in params.values():
+                    group = {}
+
+                    fields = {'ItemSetCount': 'count', 'MinSpawnChance':'min','MaxSpawnChance': 'max', 'PriorityCaliber': 'caliber'}
+                    group.update({v: param[k] for k,v in fields.items() if k in param})
+
+                    items = param.get('Items',{})
+
+                    if 'items' not in group:
+                        group['items'] = {}
+
+                    for item in items.values():
+                        name = item.get('ItemPrototypeSID')
+
+                        fields = {'MinCount':'min', 'MaxCount':'max', 'Weight':'weight'}
+
+                        group['items'][name] = {v: item[k] for k,v in fields.items() if k in item}
+
+                    record['groups'].append(group)
+
+            entry.append(record)
+
+        entries[sid] = entry
+
+        #if sid=='StashMedicine_Smart':
+        #    print(entry)
 
     return entries
 

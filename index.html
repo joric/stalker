@@ -830,83 +830,113 @@ function renderItem(feature, extended=false) {
     info.items = items;
   }
 
-  // add upgrade thingy, if any
-  if (o.spawns) {
-    for (name of o.spawns) {
-      let data = getSpawnContent(o, name);
-      for (name of Object.keys(data||{})) {
-        let proto = markers.prototypes[name];
-        if (proto) {
-          let lsid = proto.lsid;
-          let title = lang[`sid_upgrades_${lsid}_name`];
-          let desc = lang[`sid_upgrades_${lsid}_description`];
-          if (title) {
-            let items = [];
-            for (item of (proto.compatible||{})) {
-              let s = lang[`sid_items_${item}_name`];
-              if (s) items.push(s);
-            }
-            let items_str = items.join(', ');
-            info.upgrade = `<b>${title}</b><br/>${items_str}`;
-          }
-          if (desc) {
-            info.upgrade = (info.upgrade||'') + `<hr/>${desc}`;
-          }
-        }
-      }
-    }
-  }
-
   // we need to group rank-prefixed spawns by rank
   // e.g. 3612452147E4E0C44DED9B84F755461F has two Newbie entries
 
+  let rank_score = { 'Newbie': 1, 'Experienced': 2, 'Veteran': 3, 'Master': 4 };
+
+  function getGeneratorItems(gen_name, rank, diff) {
+    let items = [];
+
+    if (!markers.generators[gen_name]) {
+      gen_name = markers.prototypes[gen_name] && markers.prototypes[gen_name].proto;
+    }
+
+    let generators = markers.generators[gen_name]||[];
+
+    //console.log(gen_name, generators);
+
+    // pre-filter ranks
+    let best_rank = null;
+    let rank_score = { 'Newbie': 1, 'Experienced': 2, 'Veteran': 3, 'Master': 4 };
+
+    for (const generator of generators) {
+      if (generator.rank && rank_score[current_rank] >= rank_score[generator.rank.split('::').pop()]) best_rank = generator.rank;
+    }
+
+    for (const generator of generators) {
+      if (generator.rank && best_rank && generator.rank!=best_rank) continue;
+
+      for (const group of (generator.groups || [])) {
+
+        // calculate count of items in pack
+        let total = 0;
+        for (const [name, props] of Object.entries(group.items||{})) {
+          if (group.category!='SubItemGenerator') {
+            total ++;
+          }
+        }
+
+        let random_choice = ~~(Math.random()*total);
+
+        let count = 0;
+
+        for (const [name, props] of Object.entries(group.items||{})) {
+
+          if (group.category=='SubItemGenerator') {
+            items.push(...getGeneratorItems(name, rank, diff));
+          } else {
+
+            // add one random item for now
+            if (count==random_choice) {
+              items.push({name: name, generator: gen_name, props: props });
+            }
+            count ++;
+          }
+        }
+
+      }
+    }
+
+    //console.log(items);
+
+    return items;
+  }
+
   let current_rank = 'Master';
+  let diff = 'Normal';
   info.rank = current_rank;
 
   if (o.spawns) {
+    let items = [];
 
-    function getSpawnGroups(data, current_rank) {
-      let smart = Object.keys(data).every(key => key.includes('ERank::'));
-      if (smart) {
-        return data['ERank::'+current_rank];
-      }
-      return [{min:0, max:1, items:data}];
-    }
-
-    let groups = {};
-
-    // process the smart spawns first
     for (name of o.spawns) {
-      let data = getSpawnContent(o, name) || {};
-      if (o.type=='ESpawnType::PackOfItems') {
-        groups[name] = [{min:0, max:1, items:data['ERank::'+current_rank] || {}}];
-      } else if (!name.includes(':')) {
-        groups[name] = getSpawnGroups(data, current_rank);
-      }
-    }
-
-    // pre-process ranked spawns to group them by rank
-    let ranked = {};
-    for (name of o.spawns) {
+      let rank = null;
       if (name.includes(':')) {
         [rank, name] = name.split(':');
-        if (!ranked[rank]) ranked[rank] = [];
-        ranked[rank].push(name);
+      }
+      items.push(...getGeneratorItems(name, rank || current_rank, diff));
+    }
+
+    info.groups = items;
+  }
+
+
+  // add upgrade thingy, if any
+  if (info.groups) {
+
+    for (prop of info.groups) {
+      let name = prop.name;
+      let proto = markers.prototypes[name];
+      if (proto) {
+        let lsid = proto.lsid;
+        let title = lang[`sid_upgrades_${lsid}_name`];
+        let desc = lang[`sid_upgrades_${lsid}_description`];
+
+        if (title) {
+          let items = [];
+          for (item of (proto.compatible||{})) {
+            let s = lang[`sid_items_${item}_name`];
+            if (s) items.push(s);
+          }
+          let items_str = items.join(', ');
+          info.upgrade = `<b>${title}</b><br/>${items_str}`;
+        }
+        if (desc) {
+          info.upgrade = (info.upgrade||'') + `<hr/>${desc}`;
+        }
       }
     }
-
-    // add ranked spawns using the best possible rank
-    let best = [];
-    let rank_score = { 'Newbie': 1, 'Experienced': 2, 'Veteran': 3, 'Master': 4 };
-    for (const [rank, names] of Object.entries(ranked)) {
-      if (rank_score[current_rank] >= rank_score[rank]) best = names;
-    }
-    for (const name of best) {
-      let data = getSpawnContent(o, name) || {};
-      groups[name] = getSpawnGroups(data);
-    }
-
-    info.groups = groups;
   }
 
 
@@ -1012,26 +1042,38 @@ function popupOnClick(e) {
       return span;
     }
 
-    let groups = info.groups;
-
     let container = document.createElement('div');
     container.classList.add('scrollbar','tag-container');
 
     let g = 0;
-    let colors = ['#eee', '#dde', '#ded'];
+    let colors = ['#eee', '#dde', '#ded', '#ede'];
     let count = 0;
 
+    /*
     // add all groups into flex container
-    for (const [key,entries] of Object.entries(groups)) {
+    for (const [key,entries] of Object.entries(info.groups||{})) {
       for (group of (entries||[])) {
         for (const [name,props] of Object.entries(group.items||{})) {
-          let span = document.createElement('span');
           let title = translate_item(name);
           container.appendChild(createTag(title, [title,info.rank+': '+key, name +': '+JSON.stringify(props)].join('\n'), name, colors[g % colors.length]));
           count++;
         }
       }
       g++;
+    }
+    */
+
+    let tmp = {}
+
+    for (const props of (info.groups||{})) {
+      let name = props.name;
+      let title = translate_item(name);
+
+      tmp[props.generator] = true;
+      let g = Object.keys(tmp).length-1;
+
+      container.appendChild(createTag(title, [title, info.rank, JSON.stringify(props)].join('\n'), name, colors[g % colors.length]));
+      count++;
     }
 
     if (count) {
@@ -1043,6 +1085,7 @@ function popupOnClick(e) {
   }
 
   if (o.references) {
+
     function createTag(title, alt, name, color) {
       let span = document.createElement('a');
       span.textContent = title;
@@ -1058,15 +1101,16 @@ function popupOnClick(e) {
     let container = document.createElement('div');
     container.classList.add('scrollbar','tag-container');
 
+    //add signals
+
     for (const name of o.references) {
-      container.appendChild(createTag(name, `XStartQuestNodeBySID ${name}`, name, '#ede'));
+      container.appendChild(createTag(name, `XStartQuestNodeBySID ${name}`, name, '#eed'));
     }
 
     let hr = document.createElement('hr');
     div.appendChild(hr);
     div.appendChild(container);
   }
-
 
 
   let content =  '';
@@ -1204,6 +1248,9 @@ function showTooltip(e) {
   // Show the tooltip to calculate the size
   // Since browsers do not repaint the screen during synchronous JavaScript execution,
   // temporarily changing the display property within a script will not cause the element to flash visibly on the screen.
+
+  if (tooltip.style.display == 'block') return;
+
   tooltip.style.display = 'block';
 
   let marker = e.target;
@@ -1684,6 +1731,8 @@ function passesFilter(marker) {
   // will be replaced with fuzzy search
   let text = settings.searchText && settings.searchText.toLowerCase() || '';
 
+  if (!text) return true;
+
   let terms = text.split(' ');
   let o = marker.feature.properties;
   let tags = [];
@@ -1708,14 +1757,11 @@ function passesFilter(marker) {
   }
 
   // spawn items (all titles and names)
-  for (const [key,entries] of Object.entries(info.groups||{})) {
-    for (group of (entries||[])) {
-      for (const [name,props] of Object.entries(group.items||{})) {
-        tags.push(name);
-        let title = translate_item(name);
-        tags.push(title);
-      }
-    }
+  for (const prop of info.groups||[]) {
+    let name = prop.name;
+    let title = translate_item(name);
+    tags.push(name);
+    tags.push(title);
   }
 
   let s = [o.title, o.name, o.type, o.description, o.sid, o.clue, o.cell, o.proto,
@@ -1885,5 +1931,5 @@ window.onload = function(event) {
 </body>
 </html>
 
-<script src="https://cdn.jsdelivr.net/npm/eruda"></script><script>eruda.init();</script>
+<!--script src="https://cdn.jsdelivr.net/npm/eruda"></script><script>eruda.init();</script-->
 
