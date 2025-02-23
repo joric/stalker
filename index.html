@@ -1031,75 +1031,70 @@ function popupOnClick(e) {
 
   let rank = 'Master';
 
-  if (o.spawns) {
+  function createTag(color, name, title, tooltip, action) {
+    let span = document.createElement('a');
 
-    function createTag(title, alt, name, color) {
-      let span = document.createElement('a');
-      span.textContent = title;
-      if (alt) span.title = alt;
-      span.className = 'tag-item';
-      span.setAttribute('alt', name);
-      //span.onclick = function(e) { copyToClipboard(e.target.getAttribute('alt')); };
-      //span.onclick = function(e) { popup.querySelector('#popup-wiki-link').href = getWikiURL(info.title);
-      span.href = getWikiURL(title);
+    span.textContent = title;
+    span.title = tooltip;
+    span.className = 'tag-item';
+
+    if (action.startsWith('http')) {
+      span.href = action;
       span.target = '_blank';
-
-      if (color) span.style.backgroundColor = color;
-
-      return span;
+    } else {
+      span.setAttribute('action', action);
+      span.onclick = function(e) { copyToClipboard(  `${e.target.getAttribute('action')}`  )  };
     }
 
-    let container = document.createElement('div');
-    container.classList.add('scrollbar','tag-container');
-
-    let g = 0;
-    let colors = ['#eee', '#dde', '#ded', '#ede'];
-    let count = 0;
-    let tmp = {}
-
-    for (const data of (info.groups||{})) {
-      let name = data.name;
-      let title = translate_item(name);
-      tmp[data.generator] = true;
-      let g = Object.keys(tmp).length-1;
-      container.appendChild(createTag(title, [title, name, info.rank, data.generator, JSON.stringify(data.props), data.category].filter(e=>e).join('\n'), name, colors[g % colors.length]));
-      count++;
+    let colors = ['#eee', '#dde', '#ded', '#ede', '#eed'];
+    if (color>0) {
+      span.style.backgroundColor = colors[(color-1) % colors.length];
     }
 
-    if (count) {
-      let hr = document.createElement('hr');
-      div.appendChild(hr);
-      div.appendChild(container);
-    }
-
+    return span;
   }
 
-  if (o.references) {
 
-    function createTag(title, alt, name, color) {
-      let span = document.createElement('a');
-      span.textContent = title;
-      span.title = title;
-      //if (alt) span.title = alt;
-      span.className = 'tag-item';
-      span.setAttribute('alt', alt);
-      span.onclick = function(e) { copyToClipboard(  `${e.target.getAttribute('alt')}`  )  };
-      if (color) span.style.backgroundColor = color;
-      return span;
-    }
-
+  if (o.spawns) {
     let container = document.createElement('div');
     container.classList.add('scrollbar','tag-container');
 
-    //add signals
+    let groups = {}
 
-    for (const name of o.references) {
-      container.appendChild(createTag(name, `XStartQuestNodeBySID ${name}`, name, '#eed'));
+    for (const data of (info.groups||{})) {
+      groups[data.generator] = true;
+      let color = Object.keys(groups).length;
+      let name = data.name;
+      let title = translate_item(name);
+      let tooltip = [title, name, info.rank, data.generator, JSON.stringify(data.props), data.category].filter(e=>e).join('\n');
+      container.appendChild(createTag(color+1, name, title, tooltip, getWikiURL(title)));
     }
 
-    let hr = document.createElement('hr');
-    div.appendChild(hr);
+    div.appendChild(document.createElement('hr'));
     div.appendChild(container);
+  }
+
+  if (o.references) { // add signals
+    let container = document.createElement('div');
+    container.classList.add('scrollbar','tag-container');
+    for (const name of o.references) {
+      container.appendChild(createTag(5, name, name, name, `XStartQuestNodeBySID ${name}`));
+    }
+    div.appendChild(document.createElement('hr'));
+    div.appendChild(container);
+  }
+
+
+  if (o.items) { // add items
+    let container = document.createElement('div');
+    container.classList.add('scrollbar','tag-container');
+    for (const name of o.items) {
+      let title = lang[`sid_questItemprototypes_${name}_name`];
+      container.appendChild(createTag(0, name, title, name, name));
+    }
+    div.appendChild(document.createElement('hr'));
+    div.appendChild(container);
+
   }
 
 
@@ -1121,19 +1116,6 @@ function popupOnClick(e) {
     div.appendChild(el);
   }
 
-
-  if (o.items) {
-    let el = document.createElement('div');
-    for (const name of o.items) {
-      let node = document.createElement('div');
-      let title = lang[`sid_questItemprototypes_${name}_name`];
-      node.textContent = `${title || name}`;
-      el.appendChild(node);
-    }
-    let hr = document.createElement('hr');
-    div.appendChild(hr);
-    div.appendChild(el);
-  }
 
   popup.querySelector('#popup-data').innerHTML = '<hr/><pre>'+JSON.stringify(o, null, 2) + '</pre>';
 
