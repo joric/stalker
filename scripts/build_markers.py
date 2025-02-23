@@ -312,35 +312,23 @@ def export_generators(records):
             continue
 
         entry = []
-        record = {}
 
         data = type(config) is dict and config.get('ItemGenerator') or {}
 
         if not data:
-
-            '''
-            if data:=config.get('MoneyGenerator'):
-                name = "Money"
-                item = data
-                entry[name] = {v: item[k] for k,v in gen_remap.items() if k in item}
-                entries[sid] = entry
-                continue
-            '''
-
-            #if refkey := config.get('refkey'):
-            #    entries[sid] = [ { "groups": [ { "category": "SubItemGenerator", "items": { refkey: { "chance": 1.0 } } }] } ]
-
-            # just take it from markers.proto
-
             continue
 
         for values in data.values():
             if type(values) is not dict: continue
             items = values.get('PossibleItems') or {}
 
-            diff = values.get('Diff')
-            if diff:
+            record = {}
+
+            if diff := values.get('Diff'):
                 record['diff'] = diff
+
+            if rank := values.get('PlayerRank'):
+                record['rank'] = rank
 
             group = defaultdict(dict)
 
@@ -361,16 +349,13 @@ def export_generators(records):
 
                 group['items'][name] = {v: item[k] for k,v in gen_remap.items() if k in item}
 
-                #if 'ItemGeneratorPrototypeSID' in item:
-                #    group['items'][name]['generator'] = True
-
             if group:
                 if 'groups' not in record:
                     record['groups'] = []
                 record['groups'].append(group)
 
-        if record:
-            entry.append(record)
+            if record:
+                entry.append(record)
 
         entries[sid] = entry
 
