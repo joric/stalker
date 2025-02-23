@@ -877,7 +877,7 @@ function renderItem(feature, extended=false) {
 
             // add one random item for now
             if (count==random_choice) {
-              items.push({name: name, generator: gen_name, props: props });
+              items.push({name: name, generator: gen_name, category: group.category, props: props });
             }
             count ++;
           }
@@ -1062,7 +1062,7 @@ function popupOnClick(e) {
       let title = translate_item(name);
       tmp[data.generator] = true;
       let g = Object.keys(tmp).length-1;
-      container.appendChild(createTag(title, [title, name, info.rank, data.generator, JSON.stringify(data.props)].join('\n'), name, colors[g % colors.length]));
+      container.appendChild(createTag(title, [title, name, info.rank, data.generator, JSON.stringify(data.props), data.category].filter(e=>e).join('\n'), name, colors[g % colors.length]));
       count++;
     }
 
