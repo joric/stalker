@@ -1065,14 +1065,14 @@ function popupOnClick(e) {
 
     let tmp = {}
 
-    for (const props of (info.groups||{})) {
-      let name = props.name;
+    for (const data of (info.groups||{})) {
+      let name = data.name;
       let title = translate_item(name);
 
-      tmp[props.generator] = true;
+      tmp[data.generator] = true;
       let g = Object.keys(tmp).length-1;
 
-      container.appendChild(createTag(title, [title, info.rank, JSON.stringify(props)].join('\n'), name, colors[g % colors.length]));
+      container.appendChild(createTag(title, [title, name, info.rank, data.generator, JSON.stringify(data.props)].join('\n'), name, colors[g % colors.length]));
       count++;
     }
 
