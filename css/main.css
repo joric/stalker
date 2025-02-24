@@ -1063,6 +1063,10 @@ input::selection {
   font-size: 12px;
 }
 
+.padded {
+  margin-bottom: 3px;
+}
+
 .scrollbar::-webkit-scrollbar {
   width: 8px
 }

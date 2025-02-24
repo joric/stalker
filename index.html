@@ -939,7 +939,7 @@ function renderItem(feature, extended=false) {
             if (s) items.push(s);
           }
           let items_str = items.join(', ');
-          info.upgrade = `<b>${title}</b><div class="small">${items_str}</div>`;
+          info.upgrade = `<b>${title}</b><div class="small padded">${items_str}</div>`;
         }
         if (desc) {
           info.upgrade = (info.upgrade||'') + `${desc}`;
