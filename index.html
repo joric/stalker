@@ -22,10 +22,16 @@
 </head>
 <body>
 
+<div id="rank-selector">
+  <select>
+  </select>
+</div>
+
 <div id="language-selector">
   <select>
   </select>
 </div>
+
 
 <div tabindex=0 id="map"></div>
 
@@ -183,6 +189,7 @@ function loadMap() {
   settings.baseLayer = settings.baseLayer || 'PDA';
   settings.language = settings.language || 'en';
   settings.searchText = settings.searchText || '';
+  settings.rank = settings.rank || 'Master';
 
   searchControl = document.querySelector('.search-box input');
 
@@ -834,6 +841,10 @@ function renderItem(feature, extended=false) {
   // we need to group rank-prefixed spawns by rank
   // e.g. 3612452147E4E0C44DED9B84F755461F has two Newbie entries
 
+  let current_rank = settings.rank;
+  let diff = 'Normal';
+  let matching_rank = null;
+
   let rank_score = { 'Newbie': 1, 'Experienced': 2, 'Veteran': 3, 'Master': 4 };
 
   function getGeneratorItems(gen_name, rank, diff) {
@@ -891,11 +902,6 @@ function renderItem(feature, extended=false) {
 
     return items;
   }
-
-  let current_rank = 'Master';
-  let diff = 'Normal';
-  let matching_rank = null;
-  info.rank = current_rank;
 
   if (o.spawns) {
     let items = [];
@@ -1076,7 +1082,7 @@ function popupOnClick(e) {
       let color = Object.keys(groups).length;
       let name = data.name;
       let title = translate_item(name);
-      let tooltip = [title, name, info.rank, data.generator, JSON.stringify(data.props), data.category].filter(e=>e).join('\n');
+      let tooltip = [title, name, settings.rank, data.generator, JSON.stringify(data.props), data.category].filter(e=>e).join('\n');
       container.appendChild(createTag(color+1, name, title, tooltip, getWikiURL(title)));
     }
 
@@ -1746,6 +1752,17 @@ function passesFilter(marker) {
   return !(text!='' && !terms.every(term=>s.includes(term)));
 }
 
+function updatePopup() {
+  for (const layer of groupLayer.getLayers()) {
+    for (marker of layer._geoList) {
+      if (marker.getInfoWindow() && marker.getInfoWindow().isVisible()) {
+        popupOnClick({target: marker});
+        marker.openInfoWindow();
+      }
+    }
+  }
+}
+
 function filterItems() {
 
   for (const layer of groupLayer.getLayers()) {
@@ -1859,15 +1876,26 @@ window.onload = function(event) {
 
   });
 
+  let rank = settings.rank || 'Master';
+  let rank_list = [ 'Newbie', 'Experienced', 'Veteran', 'Master' ];
+  let rankSelect = document.querySelector('#rank-selector select');
+  rankSelect.innerHTML = rank_list.map(x=>`<option${rank==x?' selected':''}>${x}</option>`).join('');
+  rankSelect.onchange = e=> {
+    settings.rank = e.target.value;
+    saveSettings();
+    updatePopup();
+  };
+
   let cc = settings.language || 'en';
   let cc_list = ['ua','en','ru'];
-  let select = document.querySelector('#language-selector select');
-  select.innerHTML = cc_list.map(x=>`<option${cc==x?' selected':''}>${x}</option>`).join('');
-  select.onchange = e=> {
+  let langSelect = document.querySelector('#language-selector select');
+  langSelect.innerHTML = cc_list.map(x=>`<option${cc==x?' selected':''}>${x}</option>`).join('');
+  langSelect.onchange = e=> {
     settings.language = e.target.value;
     saveSettings();
     location.reload();
   };
+
 
   fetch(`data/Localization/Localization_${cc.toUpperCase()}.json`).then(r=>r.json()).then(data=>{
     lang = data;

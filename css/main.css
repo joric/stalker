@@ -1025,14 +1025,6 @@ input::selection {
   right: 15px;
 }
 
-#language-selector {
-  z-index: 1;
-  position: absolute;
-  right: 86px;
-  top: 16px;
-}
-
-
 #popup-found-label {
   position: relative;
   top: -2px;
@@ -1120,5 +1112,18 @@ input::selection {
   //opacity: .8; // somehow makes the whole window blurry
 }
 
+#language-selector {
+  z-index: 1;
+  position: absolute;
+  right: 86px;
+  top: 16px;
+}
+
+#rank-selector {
+  z-index: 1;
+  position: absolute;
+  right: 140px;
+  top: 16px;
+}
 
 
