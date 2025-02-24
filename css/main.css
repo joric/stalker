@@ -1059,8 +1059,8 @@ input::selection {
   padding-right: 8px;
 }
 
-.small * {
-  font-size: 85%;
+.small {
+  font-size: 12px;
 }
 
 .scrollbar::-webkit-scrollbar {
