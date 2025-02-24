@@ -1262,7 +1262,7 @@ function showTooltip(e) {
     content += `<hr/><div class="overflow-container">`;
     for (const name of o.items) {
       let title = translate_item(name);
-      content += `<span title="${name}">${title}</span><br/>`;
+      content += `<span title="${name}">[${title}]</span><br/>`;
     }
     content +='</div>';
   }
@@ -1738,6 +1738,7 @@ function passesFilter(marker) {
     info.upgrade,
     info.description,
     info.quest,
+    info.note,
     //info.location, // maybe don't do location, too many matches
 
     ...tags].map(x=>x||'').join(' ').toLowerCase();
