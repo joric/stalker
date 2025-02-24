@@ -948,6 +948,14 @@ function renderItem(feature, extended=false) {
     }
   }
 
+  // add PDA description
+  if (o.proto && o.proto.startsWith('QuestItem_Note') ) {
+    let desc = lang[`sid_questItemprototypes_${o.name}_description`];
+    if (desc) {
+      info.note = desc;
+    }
+  }
+
 
   return info;
 }
@@ -1265,6 +1273,10 @@ function showTooltip(e) {
 
   if (info.quest) {
     content += `<hr/><div class="overflow-container small">${info.quest}</div>`;
+  }
+
+  if (info.note) {
+    content += `<hr/>${info.note}`;
   }
 
   tooltip.innerHTML = content;
