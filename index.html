@@ -1062,7 +1062,7 @@ function popupOnClick(e) {
       span.onclick = function(e) { copyToClipboard(  `${e.target.getAttribute('action')}`  )  };
     }
 
-    let colors = ['#eee', '#dde', '#ded', '#ede', '#eed'];
+    let colors = ['#eee', '#dde', '#ded', '#eed', '#ede'];
     if (color>0) {
       span.style.backgroundColor = colors[(color-1) % colors.length];
     }
