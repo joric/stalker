@@ -81,7 +81,7 @@
       "^Gun": {"icon": "chest", "category": "sid_misc_pda_reward_weapon", "group": "items" },
       "Armor": {"icon": "chest", "category": "sid_misc_pda_reward_armor", "group": "items" },
       "PDA|Note": {"icon": "follow", "category": "sid_questItemprototypes_BasePDA_name", "group": "items" },
-      "FArtifact": {"icon": "artifact", "category": "sid_misc_pda_map_playerTags_habar", "group": "misc" },
+      "TemplateArtifact": {"icon": "artifact", "category": "sid_misc_pda_map_playerTags_habar", "group": "misc" },
       "QuestItem_Key|Tamplate_Key": {"icon": "yen", "category": "sid_misc_pda_map_playerTags_habar", "group": "actors" },
       "QuestItem_Fuse": {"icon": "yen", "category": "sid_misc_pda_map_playerTags_habar", "group": "actors" }
     }
