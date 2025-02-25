@@ -1145,27 +1145,35 @@ function popupOnClick(e) {
 
   popup.querySelector('#popup-close').onclick = function() {  e.target._infoWindow.hide(); };
 
-  popup.querySelector('#popup-map-link').href = getMapURL(o.sid);
-  popup.querySelector('#popup-map-link').onclick = copyLink;
-  popup.querySelector('#popup-map-link').title = "Copy Map URL to Clipboard";
-  popup.querySelector('#popup-map-link').innerHTML = '<i class="fa fa-link"></i>';
-
-  popup.querySelector('#popup-wiki-link').href = getWikiURL(info.title);
-  popup.querySelector('#popup-wiki-link').onclick = null;
-  popup.querySelector('#popup-wiki-link').title = "Wiki";
-  popup.querySelector('#popup-wiki-link').innerHTML = '<i class="fa-brands fa-wikipedia-w"></i>';
+  let c = null;
 
   let t = feature.geometry.coordinates;
   let teleport = `XTeleportTo ${t[0]} ${t[1]} ${t[2]}`
+  c = popup.querySelector('#popup-marker-id-link')
+  c.href = '#' + teleport;
+  c.title = `Copy Coordinates (${teleport})`;
+  c.onclick = function(e){ copyToClipboard(e.target.href.split('#')[1].replaceAll('%20',' ')); return false; };
 
-  popup.querySelector('#popup-marker-id-link').href = '#' + teleport;
-  popup.querySelector('#popup-marker-id-link').onclick = function(e){ copyToClipboard(e.target.href.split('#')[1].replaceAll('%20',' ')); return false; };
+  c = popup.querySelector('#popup-form-id-link');
+  c.href = '#' + o.sid;
+  c.title = `Copy SID (${o.sid})`;
+  c.onclick = function(e){ copyToClipboard(e.target.href.split('#')[1]); return false; };
 
-  popup.querySelector('#popup-form-id-link').href = '#' + (o.sid || '00000010');
-  popup.querySelector('#popup-form-id-link').onclick = function(e){ copyToClipboard(e.target.href.split('#')[1]); return false; };
+  c = popup.querySelector('#popup-map-link');
+  c.href = getMapURL(o.sid);
+  c.title = `Copy Map URL (#${o.sid})`
+  c.onclick = copyLink;
+  c.innerHTML = '<i class="fa fa-link"></i>';
 
-  popup.querySelector('#popup-found').checked = settings.markedItems[o.sid]==true;
-  popup.querySelector('#popup-found').onclick = function() { toggleMarked(o.sid) };
+  c = popup.querySelector('#popup-wiki-link');
+  c.href = getWikiURL(info.title);
+  c.title = `Open Wiki ("${info.title}")`;
+  c.onclick = null;
+  c.innerHTML = '<i class="fa-brands fa-wikipedia-w"></i>';
+
+  c = popup.querySelector('#popup-found');
+  c.checked = settings.markedItems[o.sid]==true;
+  c.onclick = function() { toggleMarked(o.sid) };
   popup.querySelector('#popup-found-label').textContent = lang['sid_misc_pda_hint_HidePlayerLandmark'] || 'Found';
 
   let contentElement = popup.firstElementChild;
