@@ -1290,6 +1290,11 @@ function showTooltip(e) {
     content += `<hr/>${info.note}`;
   }
 
+  if (o.references) {
+    let signals = o.references.join('\n');
+    content += `<hr><div title="${signals}"><i class="fa-solid fa-bolt-lightning"></i> ${o.references.length}</div>`;
+  }
+
   tooltip.innerHTML = content;
 
   let c = marker.getContainerExtent();
