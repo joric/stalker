@@ -248,6 +248,10 @@ def export_packs(records):
     entries = {}
     for key, config in records.items():
         if key in ['comment','empty']: continue
+        sid = type(config) is dict and config.get('SID')
+        if not sid:
+            continue
+
         data = type(config) is dict and config.get('PackOfItemsSettings') or {}
 
         entry = []
@@ -262,18 +266,18 @@ def export_packs(records):
             group = defaultdict(dict)
 
             items = values.get('Items',{})
+
             for item in items.values():
                 name = item.get('ItemPrototypeSID')
                 weight = item.get('Weight')
-
-                if weight:
+                if weight is not None:
                     group['items'][name] = {'weight': weight}
 
             record['groups'].append(group)
 
             entry.append(record)
 
-        entries[key] = entry
+        entries[sid] = entry
 
     return entries
 
