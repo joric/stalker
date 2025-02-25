@@ -962,6 +962,7 @@ function renderItem(feature, extended=false) {
     }
   }
 
+  if (isLocked(o)) info.title = lang['sid_misc_hint_cantopen'];
 
   return info;
 }
@@ -1252,10 +1253,7 @@ function showTooltip(e) {
 
   let o = marker.feature.properties;
 
-
   let info = renderItem(marker.feature, true);
-
-  if (isLocked(o)) info.title = lang['sid_misc_hint_cantopen'];
 
   let content = `<b title="${o.name}">${info.title}</b>`;
 
