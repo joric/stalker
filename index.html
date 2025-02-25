@@ -1030,6 +1030,7 @@ function popupOnClick(e) {
   let info = renderItem(marker.feature, true);
 
   popup.querySelector('#popup-title').textContent = info.title;
+  popup.querySelector('#popup-title').title = o.name;
   popup.querySelector('#popup-subtitle').textContent = info.category;
   popup.querySelector('#popup-note').textContent = info.location;
 
