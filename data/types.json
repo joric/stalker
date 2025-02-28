@@ -24,7 +24,9 @@
 
       "EMarkerType::Generator": { "icon": "repair", "title": "Diesel Generator", "category": "sid_misc_pda_hint_Controls", "group": "actors" },
       "EMarkerType::Container": { "icon": "box", "title": "sid_effects_general_container_name", "category": "sid_misc_pda_map_playerTags_habar", "group": "misc" },
-      "EMarkerType::Trap": { "icon": "unlocked", "title": "Trap", "category": "sid_misc_pda_hint_Controls", "group": "misc" }
+      "EMarkerType::Trap": { "icon": "unlocked", "title": "Trap", "category": "sid_misc_pda_hint_Controls", "group": "misc" },
+
+      "EMarkerType::Photos":{ "icon": "message", "title": "sid_questItemprototypes_E12_MO01_PhotoIskra_name", "category": "sid_misc_pda_map_playerTags_habar", "group": "misc" }
     }
   },
 

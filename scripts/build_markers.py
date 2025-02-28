@@ -60,6 +60,8 @@ bp_classes = {
 
     'BP_OpeningContainer': 'EMarkerType::OpeningContainer',
     'BP_Turnstile':  'EMarkerType::Turnstile',
+
+    'BP_Photos':  'EMarkerType::Photos',
 }
 
 def parse_struct(reader, options={}):
@@ -529,7 +531,7 @@ def get_bp_markers(cells):
                     add_prop(prop, p, 'bUnbreakable', 'unbreakable')
                     add_prop(prop, p, 'bIsLocked', 'locked')
                     add_prop(prop, p, 'bBroken', 'broken')
-
+                    add_prop(prop, p, '#Image[4]', 'image_index') # BP_Photos
 
                     c = p.get('EndPoint',{}).get('Translation')
                     if c:
@@ -557,6 +559,12 @@ def get_bp_markers(cells):
                         ref = (ref or 'null').split('.').pop()
                         rcl = (rcl or 'null').split('/').pop()
                         add_key(prop, 'actors', ref, guid)
+
+                for e in p.get('OverrideMaterials',[]):
+                    if e:
+                        mat = e.get('ObjectPath')
+                        if mat:
+                            prop['material'] = mat.split('/').pop().split('.').pop(0)
 
                 for e in p.get('ObjectsNeededToInteract',[]):
                     sid = e.get('PrototypeSID',{}).get('Value')
