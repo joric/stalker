@@ -179,6 +179,11 @@ def get_coordinates(data):
     coord =  [pts[k] for k in('X','Y','Z')if k in pts]
     if coord: return coord
 
+    pts = data.get('TeleportLocationAndRotation',{})
+    coord =  [pts[k] for k in('X','Y','Z')if k in pts]
+    if coord: return coord
+
+
 def get_item_properties(data, remap):
     return {v: data[k] for k,v in remap.items() if k in data}
 
@@ -724,6 +729,10 @@ def export_markers(cache):
                     'Radioactivity': 'radioactivity',
                     'ContextualActionSID': 'name',
                     'MarkerSID': 'name',
+
+                    # experimental
+                    'NodeType': 'type',
+                    'TeleportType': 'name',
                 }
 
                 prop.update({v: data[k] for k,v in remap.items() if k in data})
@@ -757,6 +766,14 @@ def export_markers(cache):
                     else:
                         continue
                     #del prop['name']
+
+                # add connections as references to teleport points
+                if prop.get('type')=='EQuestNodeType::TeleportCharacter':
+                    k = 'references'
+                    prop[k] = [sid]
+                    for conn_sid in get_connections(data):
+                        prop[k].append(conn_sid)
+
 
                 cleanup(prop)
                 add_spawns(data, prop)

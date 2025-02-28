@@ -7,7 +7,7 @@
 
 
       "EMarkerType::Teleport": { "icon": "circle-locked", "title": "sid_misc_controlsSettings_movement_jump_MLI", "category": "sid_misc_pda_map_playerTags_anomaly", "group": "actors" },
-      "EMarkerType::TeleportTarget": { "icon": "circle-dot", "title": "sid_npc_name_tocka", "category": "sid_misc_pda_Map_MarkerLocation", "group": "actors" },
+      "EMarkerType::TeleportTarget": { "icon": "circle-dot", "title": "sid_npc_name_tocka", "category": "sid_misc_pda_map_playerTags_anomaly", "group": "actors" },
 
       "EMarkerType::Door": { "icon": "circle", "title": "sid_journal_stage_E11_MQ01_enter_the_room", "category": "sid_misc_pda_Map_MarkerLocation", "group": "actors" },
       "EMarkerType::DynamicObject": { "icon": "circle", "title": "sid_misc_hint_cantopen", "category": "sid_misc_pda_Map_MarkerLocation", "group": "actors" },
@@ -27,6 +27,9 @@
       "EMarkerType::Trap": { "icon": "unlocked", "title": "Trap", "category": "sid_misc_pda_hint_Controls", "group": "misc" }
     }
   },
+
+  "EQuestNodeType::TeleportCharacter": { "icon": "exclamation", "title": "sid_npc_name_tocka", "category": "sid_misc_pda_Map_MarkerLocation", "group": "misc" },
+
   "ESpawnType::Marker" : {
     "items": {
       "EMarkerType::Location": { "icon": "location", "category": "sid_misc_pda_Map_MarkerLocation", "group": "locations" },
@@ -86,6 +89,7 @@
       "QuestItem_Fuse": {"icon": "yen", "category": "sid_misc_pda_map_playerTags_habar", "group": "actors" }
     }
   },
+
   "ESpawnType::Anomaly": {"icon": "anomaly", "category": "sid_misc_pda_map_playerTags_anomaly", "group": "anomalies" },
   "ESpawnType::ElectroAnomaly": {"icon": "anomaly", "category": "sid_misc_pda_map_playerTags_anomaly", "group": "anomalies" },
   "ESpawnType::PsyAnomaly": {"icon": "anomaly", "category": "sid_misc_pda_map_playerTags_anomaly", "group": "anomalies" },
