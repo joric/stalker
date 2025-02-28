@@ -771,6 +771,42 @@ let wikiPrefix = 'https://stalker.fandom.com/';
 
 let copyLink = e=>{ copyToClipboard(e.target.href); return false; };
 
+
+// F43BD864B6C0B41E02_2064782316, MI_pos_photos_01_b_01, "image_index": 110, (2nd sheet), 12,
+function renderPhoto(o) {
+  if (!o.material || !o.image_index) {};
+
+  let lookup = {
+    'MI_pos_photos_01_a_01': 1,
+    'MI_pos_photos_01_a_02': 1,
+    'MI_pos_photos_01_b_01': 2,
+    'MI_pos_photos_01_b_02': 2,
+  };
+
+  let t = lookup[o.material];
+
+  if (!t) return {};
+
+  let i = o.image_index || 0;
+  let iw = ih = 4096;
+  let cw = 14;
+  let ch = 10;
+  let cx = ~~(i%cw);
+  let cy = ~~(i/cw);
+  let w = ~~(iw/cw);
+  let h = ~~(ih/ch);
+  let tx = Math.round(iw * cx / cw);
+  let ty = Math.round(ih * cy / ch);
+
+  let gi = (t-1) * cw * ch + i;
+  let title = lang[`sid_misc_QIO_Photo`] + ' ' + gi;
+
+  return {
+    title: title,
+    photo: `<hr/><div style="width:${w}px;height:${h}px;background-image: url(images/photos/T_pos_photos_0${t}_D.jpg);background-position: -${tx}px -${ty}px"></div>`,
+  }
+}
+
 function renderItem(feature, extended=false, verbose=false) {
   let o = feature.properties;
 
@@ -800,6 +836,8 @@ function renderItem(feature, extended=false, verbose=false) {
     description: description,
     prop: prop,
   };
+
+  info = {...info, ...renderPhoto(o) };
 
   if (!extended) return info; // region markers need title
 
@@ -1129,30 +1167,8 @@ function popupOnClick(e) {
     content += `<hr/>Keycode: ${o.keycode}`;
   }
 
-
-  if (o.material && o.image_index) {
-    // F43BD864B6C0B41E02_2064782316, MI_pos_photos_01_b_01, "image_index": 110, (2nd sheet), 12,7
-
-    let photos = {
-      'MI_pos_photos_01_a_01':'T_pos_photos_01_D',
-      'MI_pos_photos_01_a_02':'T_pos_photos_01_D',
-      'MI_pos_photos_01_b_01':'T_pos_photos_02_D',
-      'MI_pos_photos_01_b_02':'T_pos_photos_02_D',
-    }
-    let image = photos[o.material];
-    if (image) {
-      let i = o.image_index || 0;
-      let iw = ih = 4096;
-      let cw = 14;
-      let ch = 10;
-      let cx = ~~(i%cw);
-      let cy = ~~(i/cw);
-      let w = ~~(iw/cw);
-      let h = ~~(ih/ch);
-      let tx = Math.round(iw * cx / cw);
-      let ty = Math.round(ih * cy / ch);
-      content += `<hr/><div style="width:${w}px;height:${h}px;background-image: url(images/photos/${image}.jpg);background-position: -${tx}px -${ty}px"></div>`;
-    }
+  if (info.photo) {
+    content += info.photo;
   }
 
   if (content) {
@@ -1160,7 +1176,6 @@ function popupOnClick(e) {
     el.innerHTML = content;
     div.appendChild(el);
   }
-
 
   popup.querySelector('#popup-data').innerHTML = '<hr/><pre>'+JSON.stringify(o, null, 2) + '</pre>';
 
