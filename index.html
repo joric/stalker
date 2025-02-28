@@ -1845,7 +1845,7 @@ function filterItems() {
   searchControl.title = `${count} markers`;
 
 
-  if (target) {
+  if (target && !mapParam.markerName) {
     popupOnClick({target: target});
     target.openInfoWindow();
   }
