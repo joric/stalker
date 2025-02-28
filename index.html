@@ -543,7 +543,8 @@ function findLocation(id) {
 }
 
 function jumpToLocation(name) {
-  if (marker = findLocation(name)) {
+  let marker = findLocation(name);
+  if (marker) {
     map.setView({center: marker.getCoordinates(), zoom:8, pitch:0, bearing:0});
     marker.show();
     popupOnClick({target: marker});
@@ -1130,10 +1131,6 @@ function popupOnClick(e) {
 
 
   if (o.material && o.image_index) {
-
-    // F43BD864B6C0B71E02_1497446922 - MI_pos_photos_01_a_02, index: 119, pos: 7,8
-    // F43BD864B6C0D92102_1500776634 - MI_pos_photos_01_a_01, index: 71, pos: 1,5
-
     let photos = {
       'MI_pos_photos_01_a_01':'T_pos_photos_01_D',
       'MI_pos_photos_01_a_02':'T_pos_photos_01_D',
@@ -1153,7 +1150,6 @@ function popupOnClick(e) {
       content += `<hr/><div style="width:${w}px;height:${h}px;background-image: url(images/photos/${image}.jpg);background-position: -${x}px -${y}px"></div>`;
     }
   }
-
 
   if (content) {
     let el = document.createElement('div');
