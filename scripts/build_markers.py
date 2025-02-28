@@ -467,6 +467,7 @@ def get_bp_markers(cells):
     #properties = {}
     cached_coord = {}
     cached_prop = {}
+    cached_rot = {}
 
     for cell in cells:
         package_path = os.path.join(world_path,'_Generated_', cell)
@@ -578,6 +579,14 @@ def get_bp_markers(cells):
                         if loc := p.get('RelativeLocation'):
                             cached_coord[outer] = [float(loc[t]) for t in 'XYZ']
 
+                            # TODO we can't reliabliy determine photo orientation by rotation but leave for later
+                            if False: #prop.get('name')=='EMarkerType::Photos':
+                                if rot := p.get('RelativeRotation'):
+                                    axes = ['Pitch','Yaw','Roll']
+                                    cached_rot[outer] = [float(rot[t]) for t in axes]
+                                    #print(outer, cached_rot[outer])
+
+
     def addTarget(feature):
         prop = feature['properties']
         target = prop.get('target')
@@ -603,11 +612,17 @@ def get_bp_markers(cells):
 
         cleanup_prop(prop)
 
+        # geojson does not support rotation in the geometry section, add to props
+        if rot := cached_rot.get(name):
+            print(name, rot)
+            prop['rotation'] = rot
+
         feature = {
             'type': 'Feature',
             'geometry': {'type':'Point', 'coordinates': coord},
             'properties': prop
         }
+
 
         features.append(feature)
 
@@ -779,7 +794,7 @@ def export_markers(cache):
                 if prop.get('type')=='EQuestNodeType::TeleportCharacter':
                     k = 'references'
                     prop[k] = [sid]
-                    for conn_sid in get_connections(data):
+                    for conn_sid in sorted(get_connections(data)):
                         prop[k].append(conn_sid)
 
 
