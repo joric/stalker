@@ -18,6 +18,7 @@
 <link href="js/lib/font-awesome/css/all.min.css" rel="stylesheet">
 <link href="js/lib/maptalks-gl/maptalks.css" rel="stylesheet">
 <script type="text/javascript" src="js/lib/maptalks-gl/maptalks-gl.js"></script>
+<script type="text/javascript" src="js/lib/fuse/fuse.js"></script>
 
 </head>
 <body>
@@ -1762,6 +1763,9 @@ function passesFilter(marker) {
 
   let info = renderItem(marker.feature, true);
 
+  // little hack before fuse.js, use 2 for exact term (title match)
+  if (info.title && info.title.toLowerCase() == text) return 2;
+
   if (o.spawns) tags.push(...o.spawns);
   if (o.references) tags.push(...o.references);
   if (o.actors) tags.push(...o.actors);
@@ -1817,11 +1821,14 @@ function updatePopup() {
 
 function filterItems() {
   let count = 0;
+  let target = null;
 
   for (const layer of groupLayer.getLayers()) {
     //if (!layer.isVisible()) continue; // skip hidden layers altogether (for now)
     for (marker of layer._geoList) {
-      if (passesFilter(marker)){
+      let res = passesFilter(marker);
+      if (res){
+        if (res==2) target = marker;
         marker.show();
         let parent = marker.getLayer();
         if (parent && !parent.isVisible())
@@ -1836,6 +1843,12 @@ function filterItems() {
 
   searchControl = document.querySelector('.search-box input');
   searchControl.title = `${count} markers`;
+
+
+  if (target) {
+    popupOnClick({target: target});
+    target.openInfoWindow();
+  }
 
 }
 
