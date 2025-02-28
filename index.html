@@ -798,8 +798,8 @@ function renderPhoto(o) {
   let tx = Math.round(iw * cx / cw);
   let ty = Math.round(ih * cy / ch);
 
-  let gi = (t-1) * cw * ch + i;
-  let title = lang[`sid_misc_QIO_Photo`] + ' ' + gi;
+  let idx = (t-1) * cw * ch + i + 1;
+  let title = lang[`sid_misc_QIO_Photo`] + ' ' + idx;
 
   return {
     title: title,
