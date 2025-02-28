@@ -534,6 +534,9 @@ def get_bp_markers(cells):
                     add_prop(prop, p, 'bBroken', 'broken')
                     add_prop(prop, p, '#Image[4]', 'image_index') # BP_Photos
 
+                    if 'BP_Photos' in name and 'image_index' not in prop:
+                        prop['image_index'] = 0 # fix FModel issues with 0 keys
+
                     c = p.get('EndPoint',{}).get('Translation')
                     if c:
                         prop['target'] = [float(c[t]) for t in 'XYZ']
@@ -647,6 +650,8 @@ def cleanup_prop(prop):
     for k in ['items','references','actors']:
         if k in prop:
             value = prop[k]
+
+            if isinstance(value, (int, float)): continue
 
             if type(value) is dict:
                 prop[k] = list(filter(lambda x:not re.match(r'^BP.*(VentBlades|_lamp|_Decal|_VFX|_spotlight)|^VolumeForEffects',x), value.keys()))
