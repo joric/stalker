@@ -771,7 +771,7 @@ let wikiPrefix = 'https://stalker.fandom.com/';
 
 let copyLink = e=>{ copyToClipboard(e.target.href); return false; };
 
-function renderItem(feature, extended=false) {
+function renderItem(feature, extended=false, verbose=false) {
   let o = feature.properties;
 
   let prop = getIconProp(o);
@@ -779,7 +779,7 @@ function renderItem(feature, extended=false) {
   let [title, description] = humanReadable(o);
 
   let group = prop.group || 'misc';
-  let category = lang[prop.category] || lang[prop.title] || prop.category || group;
+  let category = lang[prop.category] || prop.category || lang[prop.title] || group;
   let location = '';
 
   if (o.lsid) {
@@ -1029,7 +1029,7 @@ function popupOnClick(e) {
 
   const popup = document.querySelector('#popup-template').content.cloneNode(true);
 
-  let info = renderItem(marker.feature, true);
+  let info = renderItem(marker.feature, true, true);
 
   popup.querySelector('#popup-title').textContent = info.title;
   popup.querySelector('#popup-title').title = o.name;
