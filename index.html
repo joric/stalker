@@ -514,7 +514,7 @@ function addMarkers(data) {
     addHandler(layer);
   }
 
-  filterItems();
+  let target = filterItems();
 
   let LayerSwitcher = new maptalks.control.LayerSwitcher({
     position  : 'bottom-left',
@@ -530,6 +530,12 @@ function addMarkers(data) {
     jumpToLocation(name);
   } else {
     updateView();
+
+    if (target) {
+      popupOnClick({target: target});
+      target.openInfoWindow();
+    }
+
   }
 }
 
@@ -1840,16 +1846,10 @@ function filterItems() {
     }
   }
 
-
   searchControl = document.querySelector('.search-box input');
   searchControl.title = `${count} markers`;
 
-
-  if (target && !mapParam.markerName) {
-    popupOnClick({target: target});
-    target.openInfoWindow();
-  }
-
+  return target;
 }
 
 function clearFilter() {
@@ -1917,7 +1917,11 @@ window.onload = function(event) {
         clearFilter();
         updateView();
       } else {
-        filterItems();
+        let target = filterItems();
+        if (target) {
+          popupOnClick({target: target});
+          target.openInfoWindow();
+        }
       }
 
       saveSettings();
