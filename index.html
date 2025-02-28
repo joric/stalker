@@ -1131,6 +1131,8 @@ function popupOnClick(e) {
 
 
   if (o.material && o.image_index) {
+    // F43BD864B6C0B41E02_2064782316, MI_pos_photos_01_b_01, "image_index": 110, (2nd sheet), 12,7
+
     let photos = {
       'MI_pos_photos_01_a_01':'T_pos_photos_01_D',
       'MI_pos_photos_01_a_02':'T_pos_photos_01_D',
@@ -1143,11 +1145,13 @@ function popupOnClick(e) {
       let iw = ih = 4096;
       let cw = 14;
       let ch = 10;
+      let cx = ~~(i%cw);
+      let cy = ~~(i/cw);
       let w = ~~(iw/cw);
       let h = ~~(ih/ch);
-      let x = Math.round(iw * Math.round(i%cw) / cw);
-      let y = Math.round(ih * Math.round(i/cw) / ch);
-      content += `<hr/><div style="width:${w}px;height:${h}px;background-image: url(images/photos/${image}.jpg);background-position: -${x}px -${y}px"></div>`;
+      let tx = Math.round(iw * cx / cw);
+      let ty = Math.round(ih * cy / ch);
+      content += `<hr/><div style="width:${w}px;height:${h}px;background-image: url(images/photos/${image}.jpg);background-position: -${tx}px -${ty}px"></div>`;
     }
   }
 
