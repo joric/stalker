@@ -1869,7 +1869,7 @@ function updateSearch(text, updateControl=true) {
   } else {
     let marker = filterItems();
     if (marker) {
-      map.setView({center: marker.getCoordinates()});
+      //map.setView({center: marker.getCoordinates()}); // optional, it gets into view anyway
       popupOnClick({target: marker});
       marker.openInfoWindow();
     }
