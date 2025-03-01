@@ -514,8 +514,6 @@ function addMarkers(data) {
     addHandler(layer);
   }
 
-  let target = filterItems();
-
   let LayerSwitcher = new maptalks.control.LayerSwitcher({
     position  : 'bottom-left',
     baseTitle : 'Base Layers',
@@ -523,12 +521,24 @@ function addMarkers(data) {
     containerClass : 'maptalks-layer-switcher',
   }).addTo(map);
 
+  let name = mapParam.markerName;
+  if (name) {
+    mapParam = {};
+    updateSearch(name);
+  } else {
+    if (settings.searchText) {
+      updateSearch(settings.searchText);
+    }
+  }
+
+  /*
   // marker link
   let name = mapParam.markerName;
   if (name) {
     mapParam = {};
     updateView();
     jumpToLocation(name);
+
   } else {
     updateView();
 
@@ -536,8 +546,8 @@ function addMarkers(data) {
       popupOnClick({target: target});
       target.openInfoWindow();
     }
-
   }
+  */
 }
 
 function findLocation(id) {
@@ -1629,7 +1639,6 @@ function updateView(e) {
       }
     }
   }
-
 }
 
 function isPointInsidePolygon(point, polyPoints) {
@@ -1771,7 +1780,8 @@ function passesFilter(marker) {
 
   let info = renderItem(marker.feature, true);
 
-  // little hack before fuse.js, use 2 for exact term (title match)
+  // little hack before fuse.js, use 2 for exact match
+  if (o.sid && o.sid.toLowerCase() == text) return 2;
   if (info.title && info.title.toLowerCase() == text) return 2;
 
   if (o.spawns) tags.push(...o.spawns);
@@ -1836,7 +1846,11 @@ function filterItems() {
     for (marker of layer._geoList) {
       let res = passesFilter(marker);
       if (res){
-        if (res==2) target = marker;
+
+        if (res==2) {
+          target = marker;
+        }
+
         marker.show();
         let parent = marker.getLayer();
         if (parent && !parent.isVisible())
@@ -1858,6 +1872,29 @@ function clearFilter() {
   searchControl.value = '';
   settings.searchText = '';
   filterItems();
+}
+
+function updateSearch(text, updateControl=true) {
+  if (updateControl) {
+    searchControl.value = text;
+  }
+
+  settings.searchText = text;
+
+  if (text=='') {
+
+    clearFilter();
+    updateView();
+
+  } else {
+    let target = filterItems();
+    if (target) {
+      popupOnClick({target: target});
+      target.openInfoWindow();
+    }
+  }
+
+  saveSettings();
 }
 
 
@@ -1913,21 +1950,7 @@ window.onload = function(event) {
       if (e.code=='Escape') {
         document.querySelector('#map').focus();
       }
-      settings.searchText = searchControl.value || '';
-
-      if (settings.searchText=='') {
-        clearFilter();
-        updateView();
-      } else {
-        let target = filterItems();
-        if (target) {
-          popupOnClick({target: target});
-          target.openInfoWindow();
-        }
-      }
-
-      saveSettings();
-
+      updateSearch(searchControl.value||'', false);
       return;
     }
 
