@@ -761,8 +761,8 @@ function renderPhoto(o) {
   let cy = ~~(i/cw);
   let w = ~~(iw/cw);
   let h = ~~(ih/ch);
-  let tx = Math.round(iw * cx / cw);
-  let ty = Math.round(ih * cy / ch);
+  let x = Math.round(iw * cx / cw);
+  let y = Math.round(ih * cy / ch);
 
   let idx = (t-1) * cw * ch + i + 1;
   let title = lang[`sid_misc_QIO_Photo`] + ' ' + idx;
@@ -778,7 +778,7 @@ function renderPhoto(o) {
 
   return {
     title: title,
-    photo: `<div style="${d}"><div style="top:50%;left:50%;position:relative;${r}width:${w}px;height:${h}px;background-image:url(images/photos/T_pos_photos_0${t}_D.jpg);background-position:-${tx}px -${ty}px"></div></div>`,
+    photo: `<div style="${d}"><div style="top:50%;left:50%;position:relative;${r}width:${w}px;height:${h}px;background-image:url(images/photos/T_pos_photos_0${t}_D.jpg);background-position:-${x}px -${y}px"></div></div>`,
   }
 }
 
