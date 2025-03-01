@@ -767,7 +767,7 @@ function renderPhoto(o) {
   let idx = (t-1) * cw * ch + i + 1;
   let title = lang[`sid_misc_QIO_Photo`] + ' ' + idx;
 
-  let rotated = [24,31,41,55,117,132,149,160,177,186,196,198,215,222,225,233,236,255].includes(idx);
+  let rotated = [24,31,41,55,117,132,149,160,163,177,186,196,198,215,222,225,233,236,255].includes(idx);
 
   let d = `width:${w}px;height:${h}px;`;
   let r = 'transform:translate(-50%,-50%);';
