@@ -778,9 +778,18 @@ function renderPhoto(o) {
   let idx = (t-1) * cw * ch + i + 1;
   let title = lang[`sid_misc_QIO_Photo`] + ' ' + idx;
 
+  let rotated = [24,31,55,117,132,149,177,186,198,215,222,225,233,236,255].includes(idx);
+
+  let d = `width:${w}px;height:${h}px;`;
+  let r = 'transform:translate(-50%,-50%);';
+  if (rotated) {
+    r = `transform:translate(-50%,-50%) rotate(-90deg);transform-origin:center;`;
+    d = `width:${h}px;height:${w}px;`;
+  }
+
   return {
     title: title,
-    photo: `<div style="width:${w}px;height:${h}px;background-image: url(images/photos/T_pos_photos_0${t}_D.jpg);background-position: -${tx}px -${ty}px"></div>`,
+    photo: `<div style="${d}"><div style="top:50%;left:50%;position:relative;${r}width:${w}px;height:${h}px;background-image:url(images/photos/T_pos_photos_0${t}_D.jpg);background-position:-${tx}px -${ty}px"></div></div>`,
   }
 }
 
