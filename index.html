@@ -42,6 +42,9 @@
     <span class="search-icon search-submit" title="Search">&#128269;&#xFE0E;</span>
     <span class="search-icon search-cancel" title="Cancel">&times;</span>
   </div>
+
+  <ul id="dropdown" style="display: none; position: absolute; border: 1px solid #ccc; padding: 0; list-style: none;"></ul>
+
 </div>
 
 <div id="map-tooltip" class="arrow-left"></div>
@@ -1857,6 +1860,50 @@ function clearFilter() {
 }
 
 function updateSearch(text, updateControl=true) {
+
+  let history = JSON.parse(localStorage.getItem("searchHistory") || "[]");
+
+  const input = document.querySelector(".search-box input");
+  const dropdown = document.querySelector("#dropdown");
+
+  function updateDropdown(query) {
+    dropdown.innerHTML = "";
+    if (!query) return dropdown.style.display = "none";
+
+    const results = [];//fuse.search(query).map(res => res.item).slice(0, 5);
+
+
+    results.forEach(item => {
+      let li = document.createElement("li");
+      li.textContent = item;
+      li.style.padding = "5px";
+      li.style.cursor = "pointer";
+      li.onclick = () => {
+        input.value = item;
+        dropdown.style.display = "none";
+      };
+      dropdown.appendChild(li);
+    });
+
+    dropdown.style.display = results.length ? "block" : "none";
+  }
+
+  input.addEventListener("input", () => updateDropdown(input.value));
+
+  input.addEventListener("change", () => {
+    if (!history.includes(input.value)) {
+      history.unshift(input.value);
+      localStorage.setItem("searchHistory", JSON.stringify(history.slice(0, 10)));
+    }
+  });
+
+  document.addEventListener("click", (e) => {
+    if (!dropdown.contains(e.target) && e.target !== input) {
+      dropdown.style.display = "none";
+    }
+  });
+
+
   if (updateControl) {
     searchControl.value = text;
   }
