@@ -678,31 +678,20 @@ function clearSelection() {
   }
 }
 
-function translate_item(name, verbose=false) {
-  name = name.replace('Antirad','AntiRad');
-  let title = lang[`sid_items_${name}_name`] || lang[`sid_questItemprototypes_${name}_name`];
+function translate_item(name, description=false) {
+  let postfix = description ? 'name': 'description';
+  name = (name||'').replace('Antirad','AntiRad');
+  let title = lang[`sid_items_${name}_${postfix}`] || lang[`sid_questItemprototypes_${name}_${postfix}`];
   if (!title) {
     let proto = markers.prototypes[name];
     if (proto) {
-      if (verbose) console.log(proto);
       let lsid = proto.lsid;
       if (lsid) {
-        title = lang[`sid_upgrades_${lsid}_name`] || lang[`sid_questItemprototypes_${lsid}_name`];
+        title = lang[`sid_upgrades_${lsid}_${postfix}`] || lang[`sid_questItemprototypes_${lsid}_${postfix}`];
       }
     }
   }
   return title || name;
-}
-
-function translate(fields, postfix) {
-  let prefixes = ['sid_locations_region_','sid_locations_', 'sid_items_','sid_stashes_','sid_questItemprototypes_','sid_items_FArtifact','sid_items_CArtifact','sid_items_AArtifact'];
-  for (field of fields) {
-    if (lang[field]) return lang[field];
-    for (prefix of prefixes) {
-      let res = lang[`${prefix}${field}${postfix}`];
-      if (res) return res;
-    }
-  }
 }
 
 function setClass(e, set, c) { set ? e.classList.add(c) : e.classList.remove(c);}
@@ -778,7 +767,7 @@ function renderPhoto(o) {
   let idx = (t-1) * cw * ch + i + 1;
   let title = lang[`sid_misc_QIO_Photo`] + ' ' + idx;
 
-  let rotated = [24,31,41,55,117,132,149,160,177,186,198,215,222,225,233,236,255].includes(idx);
+  let rotated = [24,31,41,55,117,132,149,160,177,186,196,198,215,222,225,233,236,255].includes(idx);
 
   let d = `width:${w}px;height:${h}px;`;
   let r = 'transform:translate(-50%,-50%);';
@@ -802,8 +791,8 @@ function renderItem(feature, extended=false, verbose=false) {
   let desc = lang[o.description];
 
   if (o.type=='ESpawnType::Item') {
-    title = title || lang[`sid_items_${o.name}_name`] || lang[`sid_questItemprototypes_${o.name}_name`] || title;
-    desc = desc || lang[`sid_items_${o.name}_description`] || lang[`sid_questItemprototypes_${o.name}_description`] || desc;
+    title = title || translate_item(o.name, false);
+    desc = desc || translate_item(o.name, true);
   }
 
   title = title || lang[o.title] || lang[prop.title] || prop.title || o.name;
