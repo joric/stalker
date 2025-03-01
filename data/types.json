@@ -53,7 +53,7 @@
   "ESpawnType::Trigger": { "icon": "exclamation", "category": "Trigger", "group": "helpers" },
   "ESpawnType::ContextualAction": { "icon": "exclamation", "category":"Contextual Action", "group": "helpers",
     "match": {
-      "_sit|_stand|_lie": { "icon": "fire", "category": "Contextual Action", "group": "helpers" }
+      "_sit|_stand|_lie|_sleep": { "icon": "fire", "category": "Contextual Action", "group": "helpers" }
     },
     "backup": {
       "Jerboa|PseudoDog|Bayun|Bloodsucker|Flesh|Blinddog|Tushkan|Boar|ZombieFoster|Rat|Snork|Zombie": { "icon": "danger", "category": "sid_npc_name_mutant", "group": "enemies" },
