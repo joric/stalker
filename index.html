@@ -705,33 +705,6 @@ function translate(fields, postfix) {
   }
 }
 
-function getTitleDesc(o) {
-  if (o.title || o.description) {
-    return [ lang[o.title], lang[o.description] || ''];
-  }
-
-  if (o.type=='ESpawnType::Item') {
-    return [
-      lang[`sid_items_${o.name}_name`] || lang[`sid_questItemprototypes_${o.name}_name`],
-      lang[`sid_items_${o.name}_desc`] || lang[`sid_questItemprototypes_${o.name}_desc`],
-    ];
-  }
-
-  return [o.title, o.desc];
-}
-
-function humanReadable(o) {
-
-  let [title, desc] = getTitleDesc(o);
-
-  if (!title || !desc) {
-    let prop = getIconProp(o);
-    return [ title || lang[o.title || prop.title] || prop.title || o.name,  desc || lang[o.description || prop.description]||''];
-  }
-
-  return [title, desc];
-}
-
 function setClass(e, set, c) { set ? e.classList.add(c) : e.classList.remove(c);}
 function toggleClass(e, c) { if (e.classList.contains(c)) { e.classList.remove(c); return false; } else { e.classList.add(c); return true; }}
 function toggleNav(e) { let input = document.querySelector('#search-input'); toggleClass(e.parentElement, 'closed') ? input.blur() : input.focus();}
@@ -816,10 +789,19 @@ function renderItem(feature, extended=false, verbose=false) {
 
   let prop = getIconProp(o);
 
-  let [title, description] = humanReadable(o);
+  let title = lang[o.title];
+  let desc = lang[o.description];
+
+  if (o.type=='ESpawnType::Item') {
+    title = title || lang[`sid_items_${o.name}_name`] || lang[`sid_questItemprototypes_${o.name}_name`] || title;
+    desc = desc || lang[`sid_items_${o.name}_description`] || lang[`sid_questItemprototypes_${o.name}_description`] || desc;
+  }
+
+  title = title || lang[o.title] || lang[prop.title] || prop.title || o.name;
+  desc = desc || lang[o.description] || lang [prop.description] || '';
 
   let group = prop.group || 'misc';
-  let category = lang[prop.category] || prop.category || lang[prop.title] || group;
+  let category = lang[prop.category] || prop.category || group;
   let location = '';
 
   if (o.lsid) {
@@ -835,9 +817,9 @@ function renderItem(feature, extended=false, verbose=false) {
   let info = {
     title: title || category || o.type,
     category: category,
-    location: location,
     group: group,
-    description: description,
+    location: location,
+    description: desc,
     prop: prop,
   };
 
@@ -1798,7 +1780,6 @@ function passesFilter(marker) {
 
     info.title,
     info.category,
-    info.group,
     info.description,
     info.upgrade,
     info.description,
