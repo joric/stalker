@@ -5,32 +5,30 @@
       "EMarkerType::PlayerStorage": { "icon": "storage", "title": "sid_misc_pda_Map_MarkerPlayerStorage", "category": "sid_stashes_Gen_Stash285_name", "group": "bases" },
       "EMarkerType::Scanner": { "icon": "scanner", "title": "sid_character_skaner_0", "category": "sid_misc_inv_player_grid_name", "group": "locations" },
 
-
       "EMarkerType::Teleport": { "icon": "circle-locked", "title": "sid_misc_controlsSettings_movement_jump_MLI", "category": "sid_misc_pda_map_playerTags_anomaly", "group": "actors" },
       "EMarkerType::TeleportTarget": { "icon": "circle-dot", "title": "sid_npc_name_tocka", "category": "sid_misc_pda_map_playerTags_anomaly", "group": "actors" },
 
-      "EMarkerType::Door": { "icon": "circle", "title": "sid_journal_stage_E11_MQ01_enter_the_room", "category": "sid_misc_pda_Map_MarkerLocation", "group": "actors" },
-      "EMarkerType::DynamicObject": { "icon": "circle", "title": "sid_misc_hint_cantopen", "category": "sid_misc_pda_Map_MarkerLocation", "group": "actors" },
-      "EMarkerType::CodeLock": { "icon": "lock", "title": "Keypad", "category": "sid_misc_pda_hint_Controls", "group": "actors" },
-      "EMarkerType::CardLock": { "icon": "lock", "title": "Сard Reader", "category": "sid_misc_pda_hint_Controls", "group": "actors" },
+      "EMarkerType::Door": { "icon": "unlocked", "title": "sid_journal_stage_E11_MQ01_enter_the_room", "category": "sid_misc_pda_Map_MarkerLocation", "group": "actors" },
+      "EMarkerType::DynamicObject": { "icon": "lock", "title": "sid_misc_hint_cantopen", "category": "sid_misc_pda_Map_MarkerLocation", "group": "actors" },
 
+      "EMarkerType::CodeLock": { "icon": "repair", "title": "Keypad", "category": "sid_misc_pda_hint_Controls", "group": "actors" },
+      "EMarkerType::CardLock": { "icon": "repair", "title": "Сard Reader", "category": "sid_misc_pda_hint_Controls", "group": "actors" },
       "EMarkerType::FusePanel": { "icon": "repair", "title": "Fuse Panel", "category": "sid_misc_pda_hint_Controls", "group": "actors" },
-
       "EMarkerType::Lever": { "icon": "repair", "title": "Lever", "category": "sid_misc_pda_hint_Controls", "group": "actors" },
-      "EMarkerType::PadLock": { "icon": "lock", "title": "sid_npc_name_zamok", "category": "sid_misc_pda_hint_Controls", "group": "actors" },
+      "EMarkerType::PadLock": { "icon": "repair", "title": "sid_npc_name_zamok", "category": "sid_misc_pda_hint_Controls", "group": "actors" },
       "EMarkerType::Button": { "icon": "repair", "title": "Button", "category": "sid_misc_pda_hint_Controls", "group": "actors" },
       "EMarkerType::Latch": { "icon": "repair", "title": "Latch", "category": "sid_misc_pda_hint_Controls", "group": "actors" },
       "EMarkerType::Valve": { "icon": "repair", "title": "Valve", "category": "sid_misc_pda_hint_Controls", "group": "actors" },
-
+      "EMarkerType::Trap": { "icon": "repair", "title": "Trap", "category": "sid_misc_pda_hint_Controls", "group": "misc" },
       "EMarkerType::Generator": { "icon": "repair", "title": "Diesel Generator", "category": "sid_misc_pda_hint_Controls", "group": "actors" },
+
       "EMarkerType::Container": { "icon": "box", "title": "sid_effects_general_container_name", "category": "sid_misc_pda_map_playerTags_habar", "group": "misc" },
-      "EMarkerType::Trap": { "icon": "unlocked", "title": "Trap", "category": "sid_misc_pda_hint_Controls", "group": "misc" },
 
       "EMarkerType::Photos":{ "icon": "message", "title": "sid_misc_QIO_Photo", "category": "sid_misc_modIO_LMB_props", "group": "misc" }
     }
   },
 
-  "EQuestNodeType::TeleportCharacter": { "icon": "exclamation", "title": "sid_npc_name_tocka", "category": "sid_misc_pda_Map_MarkerLocation", "group": "misc" },
+  "EQuestNodeType::TeleportCharacter": { "icon": "circle", "title": "sid_npc_name_tocka", "category": "sid_misc_pda_Map_MarkerLocation", "group": "misc" },
 
   "ESpawnType::Marker" : {
     "items": {
