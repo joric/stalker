@@ -527,6 +527,7 @@ function addMarkers(data) {
   let name = mapParam.markerName;
   if (name) {
     mapParam = {};
+    updateView();
     jumpToLocation(name);
   } else {
     updateView();
@@ -552,7 +553,8 @@ function findLocation(id) {
 function jumpToLocation(name) {
   let marker = findLocation(name);
   if (marker) {
-    map.setView({center: marker.getCoordinates(), zoom:8, pitch:0, bearing:0});
+    //map.setView({center: marker.getCoordinates(), zoom:8, pitch:0, bearing:0}); // don't change zoom maybe
+    map.setView({center: marker.getCoordinates()}); // don't change zoom maybe
     marker.show();
     popupOnClick({target: marker});
     marker.openInfoWindow();
