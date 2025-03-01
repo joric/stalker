@@ -353,6 +353,10 @@ function loadMap() {
     updateView();
   };
 
+  document.querySelector('.search-submit').onclick = e=> {
+    updateSearch(searchControl.value||'', false);
+  };
+
   map.on('mousedown', function(e) {
     document.getElementById('map').focus(); // needs tabindex on the map element
   });
