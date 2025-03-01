@@ -524,30 +524,10 @@ function addMarkers(data) {
   let name = mapParam.markerName;
   if (name) {
     mapParam = {};
-    updateSearch(name);
-  } else {
-    if (settings.searchText) {
-      updateSearch(settings.searchText);
-    }
+    settings.searchText = name;
   }
 
-  /*
-  // marker link
-  let name = mapParam.markerName;
-  if (name) {
-    mapParam = {};
-    updateView();
-    jumpToLocation(name);
-
-  } else {
-    updateView();
-
-    if (target) {
-      popupOnClick({target: target});
-      target.openInfoWindow();
-    }
-  }
-  */
+  updateSearch(settings.searchText);
 }
 
 function findLocation(id) {
@@ -1887,10 +1867,11 @@ function updateSearch(text, updateControl=true) {
     updateView();
 
   } else {
-    let target = filterItems();
-    if (target) {
-      popupOnClick({target: target});
-      target.openInfoWindow();
+    let marker = filterItems();
+    if (marker) {
+      map.setView({center: marker.getCoordinates()});
+      popupOnClick({target: marker});
+      marker.openInfoWindow();
     }
   }
 
