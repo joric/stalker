@@ -679,7 +679,7 @@ function clearSelection() {
 }
 
 function translate_item(name, description=false) {
-  let postfix = description ? 'name': 'description';
+  let postfix = description ? 'description': 'name';
   name = (name||'').replace('Antirad','AntiRad');
   let title = lang[`sid_items_${name}_${postfix}`] || lang[`sid_questItemprototypes_${name}_${postfix}`];
   if (!title) {
