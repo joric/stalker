@@ -455,11 +455,13 @@ def get_bp_cells(package_path):
                     package_path = os.path.join(world_path,'_Generated_', cell)
                     filename = os.path.normpath(os.path.join(cache_dir, package_path)) + '.json'
 
+                    #bp_counter[name] += 1
+
                     if not os.path.exists(filename):
                         #print('NOT CACHED', cell, 'need for', key)
                         continue
 
-    #print('found items', counter)
+    #print('found items', bp_counter)
     return out
 
 def get_bp_markers(cells):

@@ -774,8 +774,6 @@ let wikiPrefix = 'https://stalker.fandom.com/';
 
 let copyLink = e=>{ copyToClipboard(e.target.href); return false; };
 
-
-// F43BD864B6C0B41E02_2064782316, MI_pos_photos_01_b_01, "image_index": 110, (2nd sheet), 12,
 function renderPhoto(o) {
   if (!o.material) {};
 
@@ -806,7 +804,7 @@ function renderPhoto(o) {
 
   return {
     title: title,
-    photo: `<hr/><div style="width:${w}px;height:${h}px;background-image: url(images/photos/T_pos_photos_0${t}_D.jpg);background-position: -${tx}px -${ty}px"></div>`,
+    photo: `<div style="width:${w}px;height:${h}px;background-image: url(images/photos/T_pos_photos_0${t}_D.jpg);background-position: -${tx}px -${ty}px"></div>`,
   }
 }
 
@@ -1171,7 +1169,7 @@ function popupOnClick(e) {
   }
 
   if (info.photo) {
-    content += info.photo;
+    content += `<hr/>${info.photo}`;
   }
 
   if (content) {
