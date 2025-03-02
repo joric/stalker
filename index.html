@@ -351,7 +351,7 @@ function loadMap() {
   },500);
 
   document.querySelector('.search-cancel').onmousedown = (event) => {
-    event.preventDefault(); document.activeElement === searchControl && searchControl.focus();
+    //event.preventDefault(); document.activeElement === searchControl && searchControl.focus(); // messes up mobile
     clearFilter();
     saveSettings();
     updateView();
