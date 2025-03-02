@@ -141,6 +141,7 @@ let localData = JSON.parse(localStorage.getItem(localDataName))||{};
 let mapId = 's2hoc';
 
 let searchControl = null;
+let dropdownControl = null;
 
 let localImages = {};
 let firstRun = false;
@@ -198,6 +199,8 @@ function loadMap() {
   searchControl = document.querySelector('.search-box input');
 
   searchControl.value = settings.searchText || '';
+
+  dropdownControl = document.querySelector(".dropdown-container");
 
   //console.log('current zoom:', settings.zoom);
   let scrollWheelZoom = true; // maptalks uses fractional zoom by default
@@ -363,8 +366,9 @@ function loadMap() {
   };
 
 
-  map.on('mousedown', function(e) {
+  map.on('mousedown touchstart', function(e) {
     document.getElementById('map').focus(); // needs tabindex on the map element
+    dropdownControl.style.display = "none";
   });
 
   map.on('moving', hideTooltip);
@@ -1968,7 +1972,6 @@ window.onload = function(event) {
 
   const input = document.querySelector(".search-box input");
   const dropdown = document.querySelector("#dropdown");
-  const dropdownContainer = document.querySelector(".dropdown-container");
 
   function deleteFromHistory(text) {
     if (text && settings.history.includes(text)) {
@@ -1998,7 +2001,7 @@ window.onload = function(event) {
       span.textContent = item;
 
       li.onclick = () => {
-        dropdownContainer.style.display = "none";
+        dropdownControl.style.display = "none";
         input.value = item;
         settings.searchText = item;
         setTimeout(function(){updateSearch(settings.searchText)}, 250); 
@@ -2019,7 +2022,7 @@ window.onload = function(event) {
       dropdown.appendChild(li);
     });
 
-    dropdownContainer.style.display = results.length ? "block" : "none";
+    dropdownControl.style.display = results.length ? "block" : "none";
   }
 
   input.addEventListener("focus", () => updateDropdown(input.value));
@@ -2028,7 +2031,7 @@ window.onload = function(event) {
 
   document.addEventListener("click", (e) => {
     if (!dropdown.contains(e.target) && e.target !== input) {
-      dropdownContainer.style.display = "none";
+      dropdownControl.style.display = "none";
     }
   });
 
