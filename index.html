@@ -849,9 +849,9 @@ function renderItem(feature, extended=false, verbose=false) {
   }
 
   if (o.faction) {
-    let title = lang[`sid_misc_answer_faction_${o.faction}`];
-    if (title) {
-      info.category = title;
+    let faction = lang[`sid_misc_faction_${o.faction.toLowerCase()}`] || o.faction;
+    if (faction) {
+      info.category = info.category + ' / ' + faction;
     }
   }
 
