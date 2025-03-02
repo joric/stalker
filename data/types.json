@@ -20,8 +20,8 @@
       "EMarkerType::Latch": { "icon": "repair", "title": "sid_misc_hint_pressbutton", "category": "sid_misc_pda_hint_Controls", "group": "actors" },
       "EMarkerType::Valve": { "icon": "repair", "title": "sid_misc_hint_spin_valve", "category": "sid_misc_pda_hint_Controls", "group": "actors" },
 
-      "EMarkerType::Trap": { "icon": "repair", "title": "sid_misc_itemselector_burstmode_grenade", "category": "sid_misc_modIO_LMB_props", "group": "misc" },
-      "EMarkerType::Generator": { "icon": "repair", "title": "sid_locations_region_generators_name", "category": "sid_misc_modIO_LMB_props", "group": "actors" },
+      "EMarkerType::Trap": { "icon": "repair", "title": "sid_misc_TrapDefuse", "category": "sid_misc_pda_hint_Controls", "group": "misc" },
+      "EMarkerType::Generator": { "icon": "repair", "title": "sid_journal_stage_E07_MQ03_RunElectric", "category": "sid_misc_pda_hint_Controls", "group": "actors" },
 
       "EMarkerType::Container": { "icon": "box", "title": "sid_effects_general_container_name", "category": "sid_misc_pda_map_playerTags_habar", "group": "misc" },
 

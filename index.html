@@ -1978,8 +1978,10 @@ window.onload = function(event) {
   }
 
   function addToHistory(text) {
-    if (text && !settings.history.includes(text)) {
-      settings.history.unshift(text.slice(0,100));
+    let s = text.slice(0,100);
+    if (s && !settings.history.includes(s)) {
+      settings.history.unshift(s);
+      settings.history = settings.history.slice(0, 10);
       saveSettings();
       updateDropdown();
     }
