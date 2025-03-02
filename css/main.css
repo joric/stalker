@@ -999,6 +999,10 @@ input::selection {
   background: white;
   font-size: 17px;
   padding-right: 80px;
+
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .search-icon {
