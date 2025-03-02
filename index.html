@@ -1315,7 +1315,7 @@ function showTooltip(e) {
     content += `<hr/><div class="overflow-container small">${info.quest}</div>`;
   }
 
-  if (info.note) {
+  if (info.note && info.note != info.description) {
     content += `<hr/>${info.note}`;
   }
 
