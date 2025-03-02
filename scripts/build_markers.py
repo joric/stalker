@@ -566,11 +566,12 @@ def get_bp_markers(cells):
                         rcl = (rcl or 'null').split('/').pop()
                         add_key(prop, 'actors', ref, guid)
 
-                for e in p.get('OverrideMaterials',[]):
-                    if e:
-                        mat = e.get('ObjectPath')
-                        if mat:
-                            prop['material'] = mat.split('/').pop().split('.').pop(0)
+                if prop.get('name')=='EMarkerType::Photos': # only add material to photos
+                    for e in p.get('OverrideMaterials',[]):
+                        if e:
+                            mat = e.get('ObjectPath')
+                            if mat:
+                                prop['material'] = mat.split('/').pop().split('.').pop(0)
 
                 for e in p.get('ObjectsNeededToInteract',[]):
                     sid = e.get('PrototypeSID',{}).get('Value')
