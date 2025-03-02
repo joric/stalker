@@ -43,7 +43,7 @@
     <span class="search-icon search-cancel" title="Cancel">&times;</span>
   </div>
 
-  <ul id="dropdown" style="display: none; position: absolute; border: 1px solid #ccc; padding: 0; list-style: none; background-color: white; color: black;"></ul>
+  <ul id="dropdown"></ul>
 
 </div>
 
@@ -1846,7 +1846,7 @@ function updateSearch(text, updateControl=true) {
     searchControl.value = text;
   }
 
-  settings.searchText = text;
+  settings.searchText = text.slice(0,100);
 
   if (text=='') {
 
@@ -1964,42 +1964,52 @@ window.onload = function(event) {
 
   // --- search control ----------------------------
 
-  /*
-  let searchHistory = JSON.parse(localStorage.getItem("searchHistory") || "[]");
+  settings.history = settings.history || [];
 
   const input = document.querySelector(".search-box input");
   const dropdown = document.querySelector("#dropdown");
 
-  function updateDropdown(query) {
+  function deleteFromHistory(text) {
+    if (text && settings.history.includes(text)) {
+      settings.history = settings.history.filter(s => s !== text);
+      saveSettings();
+      updateDropdown();
+    }
+  }
 
-    //const results = [];//fuse.search(query).map(res => res.item).slice(0, 5);
-    const results = searchHistory;
+  function addToHistory(text) {
+    if (text && !settings.history.includes(text)) {
+      settings.history.unshift(text.slice(0,100));
+      saveSettings();
+      updateDropdown();
+    }
+  }
+
+  function updateDropdown(query) {
+    const results = settings.history;
 
     dropdown.innerHTML = "";
     results.forEach(item => {
       let li = document.createElement("li");
-
       let span = document.createElement("span");
-
       span.textContent = item;
-      span.style.padding = "5px";
-      span.style.cursor = "pointer";
       span.onclick = () => {
         input.value = item;
         dropdown.style.display = "none";
-        settings.searchText = input.value;
+        settings.searchText = item;
         setTimeout(function(){updateSearch(settings.searchText)}, 25);
       };
 
       li.appendChild(span);
 
       let cross = document.createElement("span");
-      cross.textContent='x';
+      cross.innerHTML='&times;';
+
       cross.onclick = function() {
+        deleteFromHistory(item);
       }
 
       li.appendChild(cross);
-
 
       dropdown.appendChild(li);
     });
@@ -2008,23 +2018,14 @@ window.onload = function(event) {
   }
 
   input.addEventListener("focus", () => updateDropdown(input.value));
-
   input.addEventListener("input", () => updateDropdown(input.value));
-
-  input.addEventListener("change", () => {
-
-    if (input.value && !searchHistory.includes(input.value)) {
-      searchHistory.unshift(input.value);
-      localStorage.setItem("searchHistory", JSON.stringify(searchHistory.slice(0, 10)));
-    }
-  });
+  input.addEventListener("change", () => addToHistory(input.value));
 
   document.addEventListener("click", (e) => {
     if (!dropdown.contains(e.target) && e.target !== input) {
       dropdown.style.display = "none";
     }
   });
-  */
 
   // -----------------------------------------------------
 
