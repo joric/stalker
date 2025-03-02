@@ -1993,7 +1993,8 @@ window.onload = function(event) {
       let li = document.createElement("li");
       let span = document.createElement("span");
       span.textContent = item;
-      span.onclick = () => {
+
+      li.onclick = () => {
         input.value = item;
         dropdown.style.display = "none";
         settings.searchText = item;
