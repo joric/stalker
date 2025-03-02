@@ -1148,7 +1148,7 @@ input::selection {
 .dropdown-container {
   display: none;
   width: 450px;
-  max-height: 270px;
+  max-height: 260px;
   margin-top: 16px;
   padding: 10px 0px 10px 0px;
   border-radius: 10px;
