@@ -1154,7 +1154,8 @@ input::selection {
 
 #dropdown li span:nth-of-type(2) {
   padding-right: 8px;
-  line-height: 17px;
+  margin-top: 4px;
+  line-height: 13px;
   font-size: 24px;
   color: grey;
 }
