@@ -802,7 +802,9 @@ function renderItem(feature, extended=false, verbose=false) {
     desc = desc || translate_item(o.name, true);
   }
 
-  title = title || lang[o.title] || lang[prop.title] || prop.title || o.name;
+  // sid_character_eger_0 is really sid_npc_name_eger_0
+
+  title = title || lang[o.title] || lang[o.title && o.title.replace('character','npc_name')] || lang[prop.title] || prop.title || o.name;
   desc = desc || lang[o.description] || lang [prop.description] || '';
 
   let group = prop.group || 'misc';
