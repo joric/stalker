@@ -43,7 +43,7 @@
     <span class="search-icon search-cancel" title="Cancel">&times;</span>
   </div>
 
-  <ul id="dropdown" style="display: none; position: absolute; border: 1px solid #ccc; padding: 0; list-style: none;"></ul>
+  <ul id="dropdown" style="display: none; position: absolute; border: 1px solid #ccc; padding: 0; list-style: none; background-color: white; color: black;"></ul>
 
 </div>
 
@@ -350,15 +350,18 @@ function loadMap() {
     }
   },500);
 
-  document.querySelector('.search-cancel').onclick = e=> {
+  document.querySelector('.search-cancel').onmousedown = (event) => {
+    event.preventDefault(); document.activeElement === searchControl && searchControl.focus();
     clearFilter();
     saveSettings();
     updateView();
   };
 
-  document.querySelector('.search-submit').onclick = e=> {
+  document.querySelector('.search-submit').onmousedown = (event) => {
+    event.preventDefault(); document.activeElement === searchControl && searchControl.focus();
     updateSearch(searchControl.value||'', false);
   };
+
 
   map.on('mousedown', function(e) {
     document.getElementById('map').focus(); // needs tabindex on the map element
@@ -1839,50 +1842,6 @@ function clearFilter() {
 }
 
 function updateSearch(text, updateControl=true) {
-
-  let history = JSON.parse(localStorage.getItem("searchHistory") || "[]");
-
-  const input = document.querySelector(".search-box input");
-  const dropdown = document.querySelector("#dropdown");
-
-  function updateDropdown(query) {
-    dropdown.innerHTML = "";
-    if (!query) return dropdown.style.display = "none";
-
-    const results = [];//fuse.search(query).map(res => res.item).slice(0, 5);
-
-
-    results.forEach(item => {
-      let li = document.createElement("li");
-      li.textContent = item;
-      li.style.padding = "5px";
-      li.style.cursor = "pointer";
-      li.onclick = () => {
-        input.value = item;
-        dropdown.style.display = "none";
-      };
-      dropdown.appendChild(li);
-    });
-
-    dropdown.style.display = results.length ? "block" : "none";
-  }
-
-  input.addEventListener("input", () => updateDropdown(input.value));
-
-  input.addEventListener("change", () => {
-    if (!history.includes(input.value)) {
-      history.unshift(input.value);
-      localStorage.setItem("searchHistory", JSON.stringify(history.slice(0, 10)));
-    }
-  });
-
-  document.addEventListener("click", (e) => {
-    if (!dropdown.contains(e.target) && e.target !== input) {
-      dropdown.style.display = "none";
-    }
-  });
-
-
   if (updateControl) {
     searchControl.value = text;
   }
@@ -2002,6 +1961,72 @@ window.onload = function(event) {
     saveSettings();
     location.reload();
   };
+
+  // --- search control ----------------------------
+
+  /*
+  let searchHistory = JSON.parse(localStorage.getItem("searchHistory") || "[]");
+
+  const input = document.querySelector(".search-box input");
+  const dropdown = document.querySelector("#dropdown");
+
+  function updateDropdown(query) {
+
+    //const results = [];//fuse.search(query).map(res => res.item).slice(0, 5);
+    const results = searchHistory;
+
+    dropdown.innerHTML = "";
+    results.forEach(item => {
+      let li = document.createElement("li");
+
+      let span = document.createElement("span");
+
+      span.textContent = item;
+      span.style.padding = "5px";
+      span.style.cursor = "pointer";
+      span.onclick = () => {
+        input.value = item;
+        dropdown.style.display = "none";
+        settings.searchText = input.value;
+        setTimeout(function(){updateSearch(settings.searchText)}, 25);
+      };
+
+      li.appendChild(span);
+
+      let cross = document.createElement("span");
+      cross.textContent='x';
+      cross.onclick = function() {
+      }
+
+      li.appendChild(cross);
+
+
+      dropdown.appendChild(li);
+    });
+
+    dropdown.style.display = results.length ? "block" : "none";
+  }
+
+  input.addEventListener("focus", () => updateDropdown(input.value));
+
+  input.addEventListener("input", () => updateDropdown(input.value));
+
+  input.addEventListener("change", () => {
+
+    if (input.value && !searchHistory.includes(input.value)) {
+      searchHistory.unshift(input.value);
+      localStorage.setItem("searchHistory", JSON.stringify(searchHistory.slice(0, 10)));
+    }
+  });
+
+  document.addEventListener("click", (e) => {
+    if (!dropdown.contains(e.target) && e.target !== input) {
+      dropdown.style.display = "none";
+    }
+  });
+  */
+
+  // -----------------------------------------------------
 
 
   fetch(`data/Localization/Localization_${cc.toUpperCase()}.json`).then(r=>r.json()).then(data=>{

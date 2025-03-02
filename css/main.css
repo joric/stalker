@@ -975,9 +975,6 @@ input::selection {
   display: flex;
   align-items: center;
   width: 240px;
-
-  //opacity: 0.85;
-
   transition: all 0.3s ease;
 }
 
