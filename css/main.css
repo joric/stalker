@@ -1061,19 +1061,25 @@ input::selection {
 }
 
 .scrollbar::-webkit-scrollbar {
-  width: 16px;
+  width: 6px;
 }
 
 .scrollbar::-webkit-scrollbar-thumb {
-  background: rgba(100, 100, 100, 0.2);
-  border-radius: 8px;
-  border: 4px solid transparent;
+  background: rgba(100, 100, 100, 0.8);
+  border-radius: 1px;
+
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
   background-clip: content-box;
 }
 
 .scrollbar::-webkit-scrollbar-track {
-  background: rgba(0, 0, 0, 0.0);
-  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 1px;
+
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+  background-clip: content-box;
 }
 
 /*
