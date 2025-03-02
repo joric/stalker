@@ -1148,17 +1148,19 @@ input::selection {
 .dropdown-container {
   display: none;
   width: 450px;
-  max-height: 342px;
-
+  max-height: 270px;
   margin-top: 16px;
-
   padding: 10px 0px 10px 0px;
-
   border-radius: 10px;
   background-color: white;
   color: black;
-
   overflow-y: auto;
+}
+
+@media (max-width: 460px) {
+  .dropdown-container {
+    width: 90vw;
+  }
 }
 
 #dropdown {
