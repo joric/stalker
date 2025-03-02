@@ -1159,6 +1159,10 @@ input::selection {
   color: grey;
 }
 
+#dropdown li span:nth-of-type(2):hover{
+  color: black;
+}
+
 #dropdown li:hover {
   background-color: #eee;
 }
