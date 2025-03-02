@@ -2005,7 +2005,8 @@ window.onload = function(event) {
       let cross = document.createElement("span");
       cross.innerHTML='&times;';
 
-      cross.onclick = function() {
+      cross.onmousedown = function(event) {
+        event.preventDefault(); document.activeElement === searchControl && searchControl.focus();
         deleteFromHistory(item);
       }
 
