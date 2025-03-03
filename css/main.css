@@ -1178,7 +1178,7 @@ input::selection {
   color: grey;
 }
 
-cross:hover{
+.cross:hover{
   color: black;
 }
 
