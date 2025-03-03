@@ -49,7 +49,7 @@
   "ESpawnType::DailyScheduleZone": { "icon": "exclamation", "category": "Daily Schedule Zone", "group": "helpers" },
   "ESpawnType::WeatherSelection": { "icon": "exclamation", "category": "Daily Schedule Zone", "group": "helpers" },
   "ESpawnType::MoveToPath": { "icon": "exclamation", "title": "Move To Path", "category": "Helpers", "group": "helpers" },
-  "ESpawnType::LairSpawner": { "icon": "exlamation", "category": "lair", "group": "enemies" },
+  "ESpawnType::LairSpawner": { "icon": "cave", "category": "lair", "group": "enemies" },
   "ESpawnType::ALifeGroup": { "icon": "question", "category": "Alife Group", "group": "misc" },
   "ESpawnType::Trigger": { "icon": "exclamation", "category": "Trigger", "group": "helpers" },
   "ESpawnType::ContextualAction": { "icon": "exclamation", "category":"Contextual Action", "group": "helpers",

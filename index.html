@@ -1813,6 +1813,7 @@ function updatePopup() {
 function filterItems() {
   let count = 0;
   let target = null;
+  let targets = 0;
 
   for (const layer of groupLayer.getLayers()) {
     //if (!layer.isVisible()) continue; // skip hidden layers altogether (for now)
@@ -1822,6 +1823,7 @@ function filterItems() {
 
         if (res==2) {
           target = marker;
+          targets += 1;
         }
 
         marker.show();
@@ -1838,7 +1840,7 @@ function filterItems() {
   searchControl = document.querySelector('.search-box input');
   searchControl.title = `${count} markers`;
 
-  return target;
+  return targets >1 ? null : target;
 }
 
 function clearFilter() {
