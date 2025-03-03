@@ -42,9 +42,9 @@
     <span class="search-icon search-submit" title="Search">&#128269;&#xFE0E;</span>
     <span class="search-icon search-cancel" title="Cancel">&times;</span>
   </div>
-
-  <div class="dropdown-container scrollbar"><ul id="dropdown"></ul></div>
-
+  <div class="dropdown-container scrollbar">
+    <ul class="dropdown"></ul>
+  </div>
 </div>
 
 <div id="map-tooltip" class="arrow-left"></div>
@@ -140,8 +140,8 @@ let localDataName = 'joricsStalkerMapsGL';
 let localData = JSON.parse(localStorage.getItem(localDataName))||{};
 let mapId = 's2hoc';
 
-let searchControl = null;
-let dropdownControl = null;
+let searchInput = null;
+let dropdownContainer = null;
 
 let localImages = {};
 let firstRun = false;
@@ -196,11 +196,11 @@ function loadMap() {
   settings.searchText = settings.searchText || '';
   settings.rank = settings.rank || 'Master';
 
-  searchControl = document.querySelector('.search-box input');
+  searchInput = document.querySelector('.search-box input');
 
-  searchControl.value = settings.searchText || '';
+  searchInput.value = settings.searchText || '';
 
-  dropdownControl = document.querySelector(".dropdown-container");
+  dropdownContainer = document.querySelector(".dropdown-container");
 
   //console.log('current zoom:', settings.zoom);
   let scrollWheelZoom = true; // maptalks uses fractional zoom by default
@@ -354,21 +354,20 @@ function loadMap() {
   },500);
 
   document.querySelector('.search-cancel').onmousedown = (event) => {
-    //event.preventDefault(); document.activeElement === searchControl && searchControl.focus(); // messes up mobile
+    //event.preventDefault(); document.activeElement === searchInput && searchInput.focus(); // messes up mobile
     clearFilter();
     saveSettings();
     updateView();
   };
 
   document.querySelector('.search-submit').onmousedown = (event) => {
-    event.preventDefault(); document.activeElement === searchControl && searchControl.focus();
-    updateSearch(searchControl.value||'', false);
+    event.preventDefault(); document.activeElement === searchInput && searchInput.focus();
+    updateSearch(searchInput.value||'', false);
   };
-
 
   map.on('mousedown touchstart', function(e) {
     document.getElementById('map').focus(); // needs tabindex on the map element
-    dropdownControl.style.display = "none";
+    dropdownContainer.style.display = "none";
   });
 
   map.on('moving', hideTooltip);
@@ -1837,21 +1836,21 @@ function filterItems() {
     }
   }
 
-  searchControl = document.querySelector('.search-box input');
-  searchControl.title = `${count} markers`;
+  searchInput = document.querySelector('.search-box input');
+  searchInput.title = `${count} markers`;
 
   return targets >1 ? null : target;
 }
 
 function clearFilter() {
-  searchControl.value = '';
+  searchInput.value = '';
   settings.searchText = '';
   filterItems();
 }
 
 function updateSearch(text, updateControl=true) {
   if (updateControl) {
-    searchControl.value = text;
+    searchInput.value = text;
   }
 
   settings.searchText = text.slice(0,100);
@@ -1926,7 +1925,7 @@ window.onload = function(event) {
       if (e.code=='Escape') {
         document.querySelector('#map').focus();
       }
-      updateSearch(searchControl.value||'', false);
+      updateSearch(searchInput.value||'', false);
       return;
     }
 
@@ -1935,7 +1934,7 @@ window.onload = function(event) {
     }
 
     if (e.code=='KeyF' && e.ctrlKey) {
-      searchControl.focus();
+      searchInput.focus();
       e.preventDefault();
       return;
     }
@@ -1975,7 +1974,7 @@ window.onload = function(event) {
   settings.history = settings.history || [];
 
   const input = document.querySelector(".search-box input");
-  const dropdown = document.querySelector("#dropdown");
+  const dropdown = document.querySelector(".dropdown");
 
   function deleteFromHistory(text) {
     if (text && settings.history.includes(text)) {
@@ -2005,7 +2004,7 @@ window.onload = function(event) {
       span.textContent = item;
 
       li.onclick = () => {
-        dropdownControl.style.display = "none";
+        dropdownContainer.style.display = "none";
         input.value = item;
         settings.searchText = item;
         setTimeout(function(){updateSearch(settings.searchText)}, 250); 
@@ -2014,10 +2013,11 @@ window.onload = function(event) {
       li.appendChild(span);
 
       let cross = document.createElement("span");
+      cross.className = 'cross';
       cross.innerHTML='&times;';
 
       cross.onmousedown = function(event) {
-        event.preventDefault(); document.activeElement === searchControl && searchControl.focus();
+        event.preventDefault(); document.activeElement === searchInput && searchInput.focus();
         deleteFromHistory(item);
       }
 
@@ -2026,7 +2026,7 @@ window.onload = function(event) {
       dropdown.appendChild(li);
     });
 
-    dropdownControl.style.display = results.length ? "block" : "none";
+    dropdownContainer.style.display = results.length ? "block" : "none";
   }
 
   input.addEventListener("focus", () => updateDropdown(input.value));
@@ -2035,9 +2035,27 @@ window.onload = function(event) {
 
   document.addEventListener("click", (e) => {
     if (!dropdown.contains(e.target) && e.target !== input) {
-      dropdownControl.style.display = "none";
+      dropdownContainer.style.display = "none";
     }
   });
+
+  const updateSearchBoxRadius = () => {
+    if (dropdownContainer.style.display == 'block') {
+      searchInput.style.borderBottomLeftRadius = "0";
+      searchInput.style.borderBottomRightRadius = "0";
+    } else {
+      searchInput.style.borderBottomLeftRadius = "";
+      searchInput.style.borderBottomRightRadius = "";
+    }
+  };
+
+  // Observe changes
+  const observer = new MutationObserver(updateSearchBoxRadius);
+  observer.observe(dropdownContainer, { attributes: true, attributeFilter: ["style"] });
+
+  // Initial check
+  updateSearchBoxRadius();
+
 
   // -----------------------------------------------------
 
