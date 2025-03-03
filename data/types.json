@@ -5,8 +5,8 @@
       "EMarkerType::PlayerStorage": { "icon": "storage", "title": "sid_misc_pda_Map_MarkerPlayerStorage", "category": "sid_stashes_Gen_Stash285_name", "group": "bases" },
       "EMarkerType::Scanner": { "icon": "scanner", "title": "sid_character_skaner_0", "category": "sid_misc_inv_player_grid_name", "group": "locations" },
 
-      "EMarkerType::Teleport": { "icon": "circle-dot", "title": "sid_misc_controlsSettings_movement_jump_MLI", "category": "sid_misc_pda_map_playerTags_anomaly", "group": "actors" },
-      "EMarkerType::TeleportTarget": { "icon": "circle", "title": "sid_npc_name_tocka", "category": "sid_misc_pda_map_playerTags_anomaly", "group": "actors" },
+      "EMarkerType::Teleport": { "icon": "circle-locked", "title": "sid_misc_controlsSettings_movement_jump_MLI", "category": "sid_misc_pda_map_playerTags_anomaly", "group": "actors" },
+      "EMarkerType::TeleportTarget": { "icon": "circle-dot", "title": "sid_npc_name_tocka", "category": "sid_misc_pda_map_playerTags_anomaly", "group": "actors" },
 
       "EMarkerType::Door": { "icon": "unlocked", "title": "sid_journal_stage_E11_MQ01_enter_the_room", "category": "sid_misc_pda_hint_Controls", "group": "actors" },
       "EMarkerType::DynamicObject": { "icon": "lock", "title": "sid_misc_hint_cantopen", "category": "sid_misc_pda_hint_Controls", "group": "actors" },
@@ -42,7 +42,7 @@
   "ESpawnType::ItemContainer": { "icon": "stash", "title": "sid_misc_pda_Map_MarkerCache", "category": "sid_misc_pda_map_playerTags_habar", "group": "stashes" },
   "ESpawnType::DeadBody": { "icon": "skull", "category": "sid_npc_name_mertvec", "group": "misc" },
   "ESpawnType::PackOfItems": { "icon": "box", "title": "sid_stashes_Gen_Stash197_name", "category": "sid_misc_pda_Map_MarkerPlayerLandmarkHabar", "group": "misc" },
-  "ESpawnType::Shelter": { "icon": "circle-locked", "category": "sid_misc_pda_Map_MarkerShellter", "group": "misc" },
+  "ESpawnType::Shelter": { "icon": "rest", "category": "sid_misc_pda_Map_MarkerShellter", "group": "misc" },
   "ESpawnType::Squad": { "icon": "soldier", "category": "Squads", "group": "misc" },
   "ESpawnType::Patrol": { "icon": "soldier", "category": "Patrols", "group": "misc" },
   "ESpawnType::SafeZone": { "icon": "exclamation", "category": "SafeZones", "group": "helpers" },
