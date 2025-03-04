@@ -20,6 +20,9 @@
 <script type="text/javascript" src="js/lib/maptalks-gl/maptalks-gl.js"></script>
 <script type="text/javascript" src="js/lib/fuse/fuse.js"></script>
 
+<link href="js/lib/search-control/search-control.css" rel="stylesheet">
+<script type="text/javascript" src="js/lib/search-control/search-control.js"></script>
+
 </head>
 <body>
 
@@ -33,19 +36,7 @@
   </select>
 </div>
 
-
 <div tabindex=0 id="map"></div>
-
-<div class="search-container">
-  <div class="search-box">
-    <input tabindex=1 type="text">
-    <span class="search-icon search-submit" title="Search">&#128269;&#xFE0E;</span>
-    <span class="search-icon search-cancel" title="Cancel">&times;</span>
-  </div>
-  <div class="dropdown-container scrollbar">
-    <ul class="dropdown"></ul>
-  </div>
-</div>
 
 <div id="map-tooltip" class="arrow-left"></div>
 
@@ -140,8 +131,7 @@ let localDataName = 'joricsStalkerMapsGL';
 let localData = JSON.parse(localStorage.getItem(localDataName))||{};
 let mapId = 's2hoc';
 
-let searchInput = null;
-let dropdownContainer = null;
+let searchControl = null;
 
 let localImages = {};
 let firstRun = false;
@@ -195,12 +185,6 @@ function loadMap() {
   settings.language = settings.language || 'en';
   settings.searchText = settings.searchText || '';
   settings.rank = settings.rank || 'Master';
-
-  searchInput = document.querySelector('.search-box input');
-
-  searchInput.value = settings.searchText || '';
-
-  dropdownContainer = document.querySelector(".dropdown-container");
 
   //console.log('current zoom:', settings.zoom);
   let scrollWheelZoom = true; // maptalks uses fractional zoom by default
@@ -353,21 +337,8 @@ function loadMap() {
     }
   },500);
 
-  document.querySelector('.search-cancel').onmousedown = (event) => {
-    //event.preventDefault(); document.activeElement === searchInput && searchInput.focus(); // messes up mobile
-    clearFilter();
-    saveSettings();
-    updateView();
-  };
-
-  document.querySelector('.search-submit').onmousedown = (event) => {
-    event.preventDefault(); document.activeElement === searchInput && searchInput.focus();
-    updateSearch(searchInput.value||'', false);
-  };
-
   map.on('mousedown touchstart', function(e) {
     document.getElementById('map').focus(); // needs tabindex on the map element
-    dropdownContainer.style.display = "none";
   });
 
   map.on('moving', hideTooltip);
@@ -1836,21 +1807,21 @@ function filterItems() {
     }
   }
 
-  searchInput = document.querySelector('.search-box input');
-  searchInput.title = `${count} markers`;
+  searchControl._input.title = `${count} markers`;
 
   return targets >1 ? null : target;
 }
 
 function clearFilter() {
-  searchInput.value = '';
+  searchControl._input.value = '';
   settings.searchText = '';
   filterItems();
 }
 
 function updateSearch(text, updateControl=true) {
+
   if (updateControl) {
-    searchInput.value = text;
+    searchControl._input.value = text;
   }
 
   settings.searchText = text.slice(0,100);
@@ -1921,20 +1892,12 @@ window.onload = function(event) {
 
   window.addEventListener("keydown",function (e) {
 
-    if (e.code == 'Escape' || e.code == 'Enter') {
-      if (e.code=='Escape') {
-        document.querySelector('#map').focus();
-      }
-      updateSearch(searchInput.value||'', false);
-      return;
-    }
-
     if (document.activeElement != document.querySelector('#map')) {
       return;
     }
 
     if (e.code=='KeyF' && e.ctrlKey) {
-      searchInput.focus();
+      searchControl._input.focus();
       e.preventDefault();
       return;
     }
@@ -1971,98 +1934,17 @@ window.onload = function(event) {
 
   // --- search control ----------------------------
 
-  settings.history = settings.history || [];
-
-  const input = document.querySelector(".search-box input");
-  const dropdown = document.querySelector(".dropdown");
-
-  function deleteFromHistory(text) {
-    if (text && settings.history.includes(text)) {
-      settings.history = settings.history.filter(s => s !== text);
-      saveSettings();
-      updateDropdown();
-    }
+  searchControl = new SearchControl();
+  searchControl._handleSubmit = function() {
+    updateSearch(searchControl._input.value);
   }
-
-  function addToHistory(text) {
-    let s = text.slice(0,100);
-    if (s && !settings.history.includes(s)) {
-      settings.history.unshift(s);
-      settings.history = settings.history.slice(0, 50);
-      saveSettings();
-      updateDropdown();
-    }
-  }
-
-  function updateDropdown(query) {
-    const results = settings.history;
-
-    dropdown.innerHTML = "";
-    results.forEach(item => {
-      let li = document.createElement("li");
-      let span = document.createElement("span");
-      span.textContent = item;
-
-      li.onclick = () => {
-        dropdownContainer.style.display = "none";
-        input.value = item;
-        settings.searchText = item;
-        setTimeout(function(){updateSearch(settings.searchText)}, 250); 
-      };
-
-      li.appendChild(span);
-
-      let cross = document.createElement("span");
-      cross.className = 'cross';
-      cross.innerHTML='&times;';
-
-      cross.onmousedown = function(event) {
-        event.preventDefault(); document.activeElement === searchInput && searchInput.focus();
-        deleteFromHistory(item);
-      }
-
-      li.appendChild(cross);
-
-      dropdown.appendChild(li);
-    });
-
-    dropdownContainer.style.display = results.length ? "block" : "none";
-  }
-
-  input.addEventListener("focus", () => updateDropdown(input.value));
-  input.addEventListener("input", () => updateDropdown(input.value));
-  input.addEventListener("change", () => addToHistory(input.value));
-
-  document.addEventListener("click", (e) => {
-    if (!dropdown.contains(e.target) && e.target !== input) {
-      dropdownContainer.style.display = "none";
-    }
-  });
-
-  const updateSearchBoxRadius = () => {
-    if (dropdownContainer.style.display == 'block') {
-      searchInput.style.borderBottomLeftRadius = "0";
-      searchInput.style.borderBottomRightRadius = "0";
-    } else {
-      searchInput.style.borderBottomLeftRadius = "";
-      searchInput.style.borderBottomRightRadius = "";
-    }
-  };
-
-  // Observe changes
-  const observer = new MutationObserver(updateSearchBoxRadius);
-  observer.observe(dropdownContainer, { attributes: true, attributeFilter: ["style"] });
-
-  // Initial check
-  updateSearchBoxRadius();
-
 
   // -----------------------------------------------------
 
 
   fetch(`data/Localization/Localization_${cc.toUpperCase()}.json`).then(r=>r.json()).then(data=>{
     lang = data;
-    document.querySelector('.search-box input').setAttribute('placeholder', lang['sid_misc_hint_loot'] +'...');
+    searchControl._input.setAttribute('placeholder', lang['sid_misc_hint_loot'] +'...');
 
     let promises = [
       'data/types.json',

@@ -1,0 +1,17 @@
+<meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+
+<link rel="stylesheet" href="search-control.css" />
+<script src="search-control.js"></script>
+
+<script>
+
+window.onload = function(event) {
+  let searchControl = new SearchControl();
+
+  searchControl._handleSubmit = function() {
+    console.log('here', searchControl._input.value);
+  }
+
+}
+
+</script>
