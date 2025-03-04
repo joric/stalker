@@ -64,10 +64,8 @@ class SearchControl {
         this._items = this._items.filter(s => s !== text);
         this._updateDropdown();
         this._input.focus();
-      }
-
-      if (event.target.classList.contains('search-item-text')) {
-        let item = event.target.parentElement;
+      } else {
+        let item = event.target;
         let text = item.firstChild.textContent;
         this._input.value = text;
         this._handleSubmit();
