@@ -72,7 +72,7 @@
   border: 0;
   cursor: pointer;
   text-align: center;
-  color: rgba(0, 0, 0, 0.33);
+  color: rgba(0, 0, 0, 0.5);
 }
 
 .search-button:hover {
@@ -88,6 +88,7 @@
 }
 
 .search-input:placeholder-shown ~ .search-clear, .search-input:placeholder-shown ~ .search-submit {
+  color: rgba(0, 0, 0, 0.25);
   pointer-events: none;
 }
 
