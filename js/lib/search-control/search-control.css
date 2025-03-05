@@ -4,7 +4,7 @@
   color: black;
   background: white;
 
-  width: 240px;
+  width: 220px;
   border-radius: 24px;
   z-index: 9999;
   position: absolute;
@@ -17,7 +17,7 @@
 }
 
 .search-container:focus-within {
-  width: 480px;
+  width: 376px;
 }
 
 .search-container:focus-within:has(.search-list:not(:empty)) {
