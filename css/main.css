@@ -1045,12 +1045,10 @@ input::selection {
 
 .scrollbar::-webkit-scrollbar-thumb {
   background: rgba(100, 100, 100, 0.8);
-  border-radius: 1px;
-
-  background-clip: content-box;
+  border-radius: 4px;
 }
 
 .scrollbar::-webkit-scrollbar-track {
   background: rgba(0, 0, 0, 0.1);
-  border-radius: 1px;
+  border-radius: 4px;
 }
