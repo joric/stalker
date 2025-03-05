@@ -48,8 +48,9 @@
   transition: all 0.3s ease;
   background: transparent;
 
-  padding: 12px 2px;
+  padding: 12px 0px;
   margin: 0;
+  margin-bottom: -2px;
   margin-left: 16px;
 }
 
