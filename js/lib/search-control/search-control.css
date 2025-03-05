@@ -48,7 +48,7 @@
   transition: all 0.3s ease;
   background: transparent;
 
-  padding: 12px 4px;
+  padding: 12px 2px;
   margin: 0;
   margin-left: 16px;
 }
@@ -84,7 +84,7 @@
 }
 
 .search-submit {
-  font-size: 24px;
+  font-size: 22px;
   margin-top: 6px;
   margin-right: 8px;
 }
@@ -123,6 +123,8 @@
 
 .search-list li {
   padding: 10px;
+  padding-left: 14px;
+  padding-right: 14px;
   display: flex;
   cursor: pointer;
   overflow: hidden;
@@ -135,7 +137,6 @@
 
 .search-item-text {
   font-size: inherit;
-  padding-left: 8px;
   width: 100%;
   overflow-x: hidden;
   white-space: nowrap;
