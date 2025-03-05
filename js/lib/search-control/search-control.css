@@ -87,6 +87,10 @@
   font-size: 22px;
 }
 
+.search-input:placeholder-shown ~ .search-clear, .search-input:placeholder-shown ~ .search-submit {
+  pointer-events: none;
+}
+
 .search-list-container {
   border-radius: inherit;
   max-height: 0px;
