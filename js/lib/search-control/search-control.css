@@ -1,9 +1,7 @@
 .search-container {
   font-family:sans-serif;
-  font-size: 17px;
   color: black;
   background: white;
-
   width: 220px;
   border-radius: 24px;
   z-index: 9999;
@@ -40,7 +38,7 @@
 
 .search-input {
   width: 100%;
-  font-size: 17px;
+  font-size: 15px;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -90,13 +88,6 @@
   margin-right: 8px;
 }
 
-.search-delete {
-  width: 20px;
-  height: 20px;
-  font-size: 24px;
-  line-height: 20px;
-}
-
 .search-list-container {
   border-radius: inherit;
   max-height: 0px;
@@ -106,34 +97,51 @@
   border-top: 1px solid rgba(0,0,0,0);
   transition: all 0.3s ease;
   outline: none;
-  scrollbar-color: rgba(0,0,0,0.3) transparent; // clip to radius
+  scrollbar-color: rgba(0,0,0,0.3) transparent; /* clip to radius */
 }
 
 .search-container:focus-within:has(.search-list:not(:empty)) .search-list-container {
-  max-height: 282px;
+  max-height: 281px;  /* 40*7 + 1px top border */
   overflow: auto;
   border-top: 1px solid rgba(0,0,0,0.1);
   transition: all 0.3s ease;
 }
 
 .search-list {
-  padding: 0;// 0 12px 0;
+  padding: 0;
   margin: 0px;
   list-style-type: none;
 }
 
 .search-list li {
+  font-size: 15px;
   padding: 10px;
-  padding-left: 14px;
+  padding-left: 18px;
   padding-right: 15px;
   display: flex;
   cursor: pointer;
   overflow: hidden;
-  font-size: 17px;
+  height: 40px;
 }
 
 .search-list li:hover {
   background-color: #eee;
+}
+
+.search-delete {
+  width: 20px;
+  height: 20px;
+  font-size: 24px;
+  line-height: 20px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .search-delete {
+    display: none;
+  }
+  li:hover .search-delete {
+    display: inline;
+  }
 }
 
 .search-item-text {
