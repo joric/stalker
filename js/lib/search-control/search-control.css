@@ -40,7 +40,7 @@
 
 .search-input {
   width: 100%;
-  font-size: 15px;
+  font-size: 17px;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -114,7 +114,7 @@
 }
 
 .search-list li {
-  font-size: 15px;
+  font-size: 17px;
   line-height: 40px;
   padding: 0px;
   padding-left: 18px;
