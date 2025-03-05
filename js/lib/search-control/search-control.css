@@ -35,6 +35,7 @@
 
 .search-input-container {
   display: flex;
+  padding-right: 2px;
 }
 
 .search-input {
@@ -48,7 +49,7 @@
   transition: all 0.3s ease;
   background: transparent;
 
-  padding: 12px 0px;
+  padding: 12px 2px;
   margin: 0;
   margin-left: 16px;
 }
@@ -124,7 +125,7 @@
 .search-list li {
   padding: 10px;
   padding-left: 14px;
-  padding-right: 14px;
+  padding-right: 15px;
   display: flex;
   cursor: pointer;
   overflow: hidden;
