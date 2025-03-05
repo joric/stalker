@@ -1,6 +1,7 @@
 class SearchControl {
 
   _historyEntryName = 'searchHistory';
+  _maxHistorySize = 50;
 
   _handleSubmit = () => {
   }
@@ -25,7 +26,7 @@ class SearchControl {
     let items = this._items;
     if (!value || items.includes(value)) return false;
     this._items.unshift(value);
-    this._items = this._items.slice(0, 10);
+    this._items = this._items.slice(0, this._maxHistorySize);
     this._updateDropdown();
     this._handleSubmit();
     return false;
