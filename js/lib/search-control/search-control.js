@@ -2,6 +2,7 @@ class SearchControl {
 
   _historyEntryName = 'searchHistory';
   _maxHistorySize = 50;
+  _masStringLength = 100;
 
   _handleSubmit = () => {
   }
@@ -22,7 +23,7 @@ class SearchControl {
     if (event) event.preventDefault();
     let value = this._input.value;
     if (!value) return false;
-    value = value.trim().slice(0,100);
+    value = value.trim().slice(0, this._maxStringLength);
     let items = this._items;
     if (!value || items.includes(value)) return false;
     this._items.unshift(value);
