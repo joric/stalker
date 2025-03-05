@@ -101,7 +101,7 @@
 }
 
 .search-container:focus-within:has(.search-list:not(:empty)) .search-list-container {
-  max-height: 281px;  /* 40*7 + 1px top border */
+  max-height: 287px;  /* 40*7 + 1 + 6 */
   overflow: auto;
   border-top: 1px solid rgba(0,0,0,0.1);
   transition: all 0.3s ease;
@@ -111,6 +111,7 @@
   padding: 0;
   margin: 0px;
   list-style-type: none;
+  padding-bottom: 6px;
 }
 
 .search-list li {
