@@ -134,7 +134,7 @@
 }
 
 .search-item-text {
-  font-size: 15px;
+  font-size: inherit;
   padding-left: 8px;
   width: 100%;
   overflow-x: hidden;
