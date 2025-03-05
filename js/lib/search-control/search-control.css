@@ -1,5 +1,5 @@
 .search-container {
-  font-family:sans-serif;
+  font-family: 'Tahoma', 'Verdana', 'Arial', sans-serif;
   color: black;
   background: white;
   width: 220px;
@@ -63,7 +63,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-
   font-family: 'Arial', sans-serif;
   padding: 8px;
   margin: 0;
