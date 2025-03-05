@@ -33,7 +33,9 @@
 
 .search-input-container {
   display: flex;
-  padding-right: 2px;
+  padding: 0px;
+  padding-right: 8px;
+  padding-bottom: 1px;
 }
 
 .search-input {
@@ -58,17 +60,19 @@
 }
 
 .search-button {
-  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-family: 'Arial', sans-serif;
+  padding: 6px;
   margin: 0;
-  width: 32px;
-  height: 32px;
   font-size: 32px;
-  line-height: 32px;
+  line-height: 1px;
   background: transparent;
   border: 0;
   cursor: pointer;
   text-align: center;
-
   color: rgba(0, 0, 0, 0.33);
 }
 
@@ -78,14 +82,10 @@
 
 .search-clear {
   font-size: 30px;
-  margin-top: 6px;
-  margin-right: 10px;
 }
 
 .search-submit {
   font-size: 22px;
-  margin-top: 6px;
-  margin-right: 8px;
 }
 
 .search-list-container {
@@ -116,13 +116,14 @@
 
 .search-list li {
   font-size: 15px;
-  padding: 10px;
+  line-height: 40px;
+  padding: 0px;
   padding-left: 18px;
-  padding-right: 15px;
+  padding-right: 6px;
+  height: 40px;
   display: flex;
   cursor: pointer;
   overflow: hidden;
-  height: 40px;
 }
 
 .search-list li:hover {
@@ -130,10 +131,9 @@
 }
 
 .search-delete {
-  width: 20px;
-  height: 20px;
   font-size: 24px;
-  line-height: 20px;
+  height: 40px;
+  width: 40px;
 }
 
 @media (hover: hover) and (pointer: fine) {
