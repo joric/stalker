@@ -104,7 +104,7 @@
 }
 
 .search-container:focus-within:has(.search-list:not(:empty)) .search-list-container {
-  max-height: 285px;  /* 40*7 + 1 + 4 */
+  max-height: 289px;  /* 40*7 + 1px border + search-list:padding-bottom */
   overflow: auto;
   border-top: 1px solid rgba(0,0,0,0.1);
   transition: all 0.3s ease;
@@ -114,7 +114,7 @@
   padding: 0;
   margin: 0px;
   list-style-type: none;
-  padding-bottom: 4px;
+  padding-bottom: 8px;
 }
 
 .search-list li {
@@ -130,7 +130,7 @@
 }
 
 .search-list li:hover {
-  background-color: #eee;
+  background-color: #ddd;
 }
 
 .search-delete {
