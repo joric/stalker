@@ -1077,7 +1077,7 @@ function popupOnClick(e) {
 
   if (o.spawns) {
     let container = document.createElement('div');
-    container.classList.add('scrollbar','tag-container');
+    container.classList.add('tag-container');
 
     let groups = {}
 
@@ -1096,7 +1096,7 @@ function popupOnClick(e) {
 
   if (o.references) { // add signals
     let container = document.createElement('div');
-    container.classList.add('scrollbar','tag-container');
+    container.classList.add('tag-container');
     for (const name of o.references) {
       container.appendChild(createTag(5, name, name, name, `XStartQuestNodeBySID ${name}`));
     }
@@ -1107,7 +1107,7 @@ function popupOnClick(e) {
 
   if (o.items) { // add items
     let container = document.createElement('div');
-    container.classList.add('scrollbar','tag-container');
+    container.classList.add('tag-container');
     for (const name of o.items) {
       let title = translate_item(name);
       container.appendChild(createTag(0, name, title, name, name));
