@@ -20,6 +20,7 @@
 
 .search-container:focus-within:has(.search-list:not(:empty)) {
   border-radius: 12px;
+  padding-bottom: 6px;
 }
 
 @media (max-width: 460px) {
@@ -93,19 +94,20 @@
 }
 
 .search-list-container {
-  border-radius: inherit;
   max-height: 0px;
   overflow: hidden;
-  border-top-left-radius: 0;
-  border-top-right-radius: 0;
   border-top: 1px solid rgba(0,0,0,0);
   transition: all 0.3s ease;
-  outline: none;
-  scrollbar-color: rgba(0,0,0,0.3) transparent; /* clip to radius */
+}
+
+.search-list-wrapper {
+  background-color: red;
+  padding: 6px;
+  margin: 6px;
 }
 
 .search-container:focus-within:has(.search-list:not(:empty)) .search-list-container {
-  max-height: 288px;  /* 40*7 + 1px border + search-list:padding */
+  max-height: 283px;  /* 40*7=280 + top padding */
   overflow: auto;
   margin-top: 2px;
   border-top: 1px solid rgba(0,0,0,0.1);
@@ -117,7 +119,6 @@
   margin: 0px;
   list-style-type: none;
   padding-top: 3px;
-  padding-bottom: 4px;
 }
 
 .search-list li {
