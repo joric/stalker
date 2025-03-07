@@ -107,7 +107,7 @@
 }
 
 .search-container:focus-within:has(.search-list:not(:empty)) .search-list-container {
-  max-height: 283px;  /* 40*7=280 + top padding */
+  max-height: 281px;  /* 40*7=280 + 1px border + top padding */
   overflow: auto;
   margin-top: 2px;
   border-top: 1px solid rgba(0,0,0,0.1);
@@ -118,7 +118,6 @@
   padding: 0;
   margin: 0px;
   list-style-type: none;
-  padding-top: 3px;
 }
 
 .search-list li {
