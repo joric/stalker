@@ -930,7 +930,7 @@ function renderItem(feature, extended=false, verbose=false) {
 
   function get_icon(name) {
     if (markers.prototypes[name] && markers.prototypes[name].icon) {
-      return markers.prototypes[name].icon;
+      return `images/Inventory/${markers.prototypes[name].icon}.png`;
     }
   }
 
@@ -1062,7 +1062,7 @@ function popupOnClick(e) {
   if (info.icon) {
     let hr = document.createElement('hr');
     let content = document.createElement('div');
-    content.innerHTML = `<img src="images/Inventory/${info.icon}.png" style="max-width: 320px;">`;
+    content.innerHTML = `<img src="${info.icon}" style="max-width: 320px;">`;
     div.appendChild(hr);
     div.appendChild(content);
   }
