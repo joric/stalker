@@ -1045,7 +1045,7 @@ input::selection {
 }
 
 .tag-item:hover {
-  border: 1px solid grey;
+  /*border: 1px solid grey;*/
 }
 
 .tag-title {
