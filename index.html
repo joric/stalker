@@ -1091,7 +1091,7 @@ function popupOnClick(e) {
     span.setAttribute('tabindex', 0);
 
     span.textContent = title;
-    span.title = tooltip;
+    //span.title = tooltip;
     span.className = 'tag-title';
 
     if (action.startsWith('http')) {
@@ -1100,7 +1100,7 @@ function popupOnClick(e) {
     }
 
     span.setAttribute('action', action || name);
-    span.onclick = function(e) { copyToClipboard(  `${e.target.getAttribute('name')}`  ); return false;  };
+    span.onclick = function(e) { copyToClipboard(  `${e.target.getAttribute('name')}`  ); console.log(tooltip); return false;  };
 
     let colors = ['#eee', '#dde', '#ded', '#eed', '#ede'];
     if (color>0) {
@@ -1129,7 +1129,7 @@ function popupOnClick(e) {
 
           img.setAttribute('src', icon);
           img.style.left = e.clientX + 'px';
-          img.style.top = e.clientY + 50 + 'px';
+          img.style.top = e.clientY + 25 + 'px';
 
           document.body.appendChild(img);
 
