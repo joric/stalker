@@ -1083,7 +1083,7 @@ function popupOnClick(e) {
     span.setAttribute('tabindex', 0);
 
     span.textContent = title;
-    span.title = `${title} (${name})`;
+    span.title = tooltip ? tooltip : `${title} (${name})`;
     span.className = 'tag-title';
 
     if (action.startsWith('http')) {
@@ -1167,7 +1167,7 @@ function popupOnClick(e) {
       let name = data.name;
       let title = translate_item(name);
 
-      let tooltip = title;//[title, name, settings.rank, data.generator, JSON.stringify(data.props), data.category].filter(e=>e).join(' ');
+      let tooltip = [title, name, JSON.stringify(data.props)].filter(e=>e).join(' ');
 
       container.appendChild(createTag(color+1, name, title, tooltip, getWikiURL(title)));
     }
