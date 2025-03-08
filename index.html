@@ -955,12 +955,6 @@ function renderItem(feature, extended=false, verbose=false) {
           let items_str = items.join(', ');
           info.upgrade = `<b>${title}</b><div class="small padded">${items_str}</div>`;
 
-          // 100% of the time it's just an usb drive, so maybe not
-          let icon = get_icon(name);
-          if (icon) {
-            //info.icon = icon;
-          }
-
         }
         if (desc) {
           info.upgrade = (info.upgrade||'') + `${desc}`;
@@ -978,12 +972,6 @@ function renderItem(feature, extended=false, verbose=false) {
   }
 
   if (isLocked(o)) info.title = lang['sid_misc_hint_cantopen'];
-
-  // let's try adding an image
-  let icon = get_icon(o.name) || get_icon(o.proto) || get_icon(o.lsid);
-  if (icon) {
-    info.icon = icon;
-  }
 
   return info;
 }
@@ -1073,7 +1061,7 @@ function popupOnClick(e) {
   let imagePopupTimer = null;
 
 
-  function createTag(color, name, title, tooltip, action) {
+  function createTag(color, name, title, tooltip, action, o) {
 
     let div = document.createElement('div');
     div.className = 'tag-item';
@@ -1092,7 +1080,7 @@ function popupOnClick(e) {
     }
 
     span.setAttribute('action', action || name);
-    span.onclick = function(e) { copyToClipboard(  `${e.target.getAttribute('name')}`  ); return false;  };
+    span.onclick = function(e) { copyToClipboard(  `${e.target.getAttribute('action')}`  ); return false;  };
 
     let colors = ['#eee', '#dde', '#ded', '#eed', '#ede'];
     if (color>0) {
@@ -1101,15 +1089,14 @@ function popupOnClick(e) {
 
     div.append(span);
 
-    span.setAttribute('name', name);
-
+    let icon = (o && (get_icon(o.name) || get_icon(o.proto) || get_icon(o.lsid))) || get_icon(name);
+    if (icon) {
+      span.setAttribute('icon', icon);
+    }
 
     div.onmouseover = function(e) {
 
-      let name = e.target.getAttribute('name');
-
-      imagePopupTimer = setTimeout(function(name) {
-        let icon = get_icon(name); 
+      imagePopupTimer = setTimeout(function(icon) {
         if (icon) {
 
           let img = document.querySelector('.image-popup');
@@ -1128,14 +1115,11 @@ function popupOnClick(e) {
           img.style.display = 'block';
 
         }
-      }, 500, name);
+      }, 500, e.target.getAttribute('icon') );
     }
 
     div.onmouseout = function(e) {
-
       clearTimeout(imagePopupTimer);
-
-      let name = e.target.getAttribute('name');
       let img = document.querySelector('.image-popup');
       if (img) {
         img.style.display = 'none';
@@ -1150,7 +1134,7 @@ function popupOnClick(e) {
     container.classList.add('tag-container');
     let name = o.name;
     let title = translate_item(o.name);
-    container.appendChild(createTag(2, name, title, title, name));
+    container.appendChild(createTag(2, name, title, title, name, o));
     div.appendChild(document.createElement('hr'));
     div.appendChild(container);
   }
@@ -1180,7 +1164,7 @@ function popupOnClick(e) {
     let container = document.createElement('div');
     container.classList.add('tag-container');
     for (const name of o.references) {
-      container.appendChild(createTag(5, name, name, name, `XStartQuestNodeBySID ${name}`));
+      container.appendChild(createTag(5, name, name, '', `XStartQuestNodeBySID ${name}`));
     }
     div.appendChild(document.createElement('hr'));
     div.appendChild(container);
