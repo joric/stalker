@@ -1083,7 +1083,7 @@ function popupOnClick(e) {
     span.setAttribute('tabindex', 0);
 
     span.textContent = title;
-    span.title = tooltip;
+    span.title = `${title} (${name})`;
     span.className = 'tag-title';
 
     if (action.startsWith('http')) {
@@ -1121,7 +1121,7 @@ function popupOnClick(e) {
 
           img.setAttribute('src', icon);
           img.style.left = e.clientX + 'px';
-          img.style.top = e.clientY + 35 + 'px';
+          img.style.top = e.clientY + 45 + 'px';
 
           document.body.appendChild(img);
 
