@@ -1032,29 +1032,37 @@ input::selection {
 }
 
 .tag-item {
+  background-color: #eee;
+  border-radius: 16px;
+
   margin: 1px;
   padding: 1px;
   padding-left: 7px;
   padding-right: 7px;
-  background-color: #eee;
-  border-radius: 16px;
+
+
   cursor: pointer;
   max-width: 320px;
   transition: all 0.3s ease;
-  max-height: 
 }
 
 .tag-title {
-  padding: 0px;
-  margin: 0px;
-  width: 100%;
-  height: 100%;
+
+  margin: 0;
+  padding: 0;
+
+  vertical-align: middle;
+
+
   font-size: 90%;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  white-space: nowrap;
   color: black;
   text-decoration: none;
+
+  display: inline-block;
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .tag-title:hover { text-decoration: none; }
