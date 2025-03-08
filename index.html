@@ -1074,16 +1074,16 @@ function popupOnClick(e) {
     span.title = tooltip ? tooltip : `${title} (${name})`;
     span.className = 'tag-title';
 
-    span.setAttribute('copy', name);
+    span.setAttribute('name', name);
 
     if (action.startsWith('http')) {
       span.href = action;
       span.target = '_blank';
     } else {
-      span.setAttribute('copy', action);
+      span.setAttribute('name', action);
     }
 
-    span.onclick = function(e) { copyToClipboard(  `${e.target.getAttribute('copy')}`  ); return false;  };
+    span.onclick = function(e) { copyToClipboard(  `${e.target.getAttribute('name')}`  ); return false;  };
 
     let colors = ['#eee', '#dde', '#ded', '#eed', '#ede'];
     if (color>0) {
