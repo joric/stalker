@@ -928,6 +928,11 @@ function renderItem(feature, extended=false, verbose=false) {
     info.groups = items;
   }
 
+  function get_icon(name) {
+    if (markers.prototypes[name] && markers.prototypes[name].icon) {
+      return markers.prototypes[name].icon;
+    }
+  }
 
   // add upgrade thingy, if any
   if (info.groups) {
@@ -948,6 +953,13 @@ function renderItem(feature, extended=false, verbose=false) {
           }
           let items_str = items.join(', ');
           info.upgrade = `<b>${title}</b><div class="small padded">${items_str}</div>`;
+
+          // 100% of the time it's just an usb drive, so maybe not
+          let icon = get_icon(name);
+          if (icon) {
+            //info.icon = icon;
+          }
+
         }
         if (desc) {
           info.upgrade = (info.upgrade||'') + `${desc}`;
@@ -965,6 +977,12 @@ function renderItem(feature, extended=false, verbose=false) {
   }
 
   if (isLocked(o)) info.title = lang['sid_misc_hint_cantopen'];
+
+  // let's try adding an image
+  let icon = get_icon(o.name) || get_icon(o.proto) || get_icon(o.lsid);
+  if (icon) {
+    info.icon = icon;
+  }
 
   return info;
 }
@@ -1041,6 +1059,14 @@ function popupOnClick(e) {
   div.replaceChildren();
   div.classList.remove('collapsed');
 
+  if (info.icon) {
+    let hr = document.createElement('hr');
+    let content = document.createElement('div');
+    content.innerHTML = `<img src="images/Inventory/${info.icon}.png" style="max-width: 320px;">`;
+    div.appendChild(hr);
+    div.appendChild(content);
+  }
+
   if (info.description) {
     let hr = document.createElement('hr');
     let content = document.createElement('div');
@@ -1059,6 +1085,11 @@ function popupOnClick(e) {
     span.className = 'tag-item';
 
     if (action.startsWith('http')) {
+
+      // still copy name on click and href on wheel/ctrl+click
+      span.setAttribute('action', name);
+      span.onclick = function(e) { copyToClipboard(  `${e.target.getAttribute('action')}`  ); return false;  };
+
       span.href = action;
       span.target = '_blank';
     } else {

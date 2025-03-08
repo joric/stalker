@@ -196,10 +196,12 @@ def load_proto(records, remap):
         sid = data.get('SID')
         if sid:
             entries[sid] = {}
+
             if 'refkey' in data:
                 ref = data['refkey']
                 if ref in records:
                     entries[sid].update(get_item_properties(records[ref], remap))
+
             entries[sid].update(get_item_properties(data, remap))
 
             if weapons:= data.get('FittingWeaponsSIDs'):
@@ -208,6 +210,12 @@ def load_proto(records, remap):
             if proto:=entries[sid].get('proto'):
                 if proto=='[0]' or ('Empty' in proto) or ('empty' in proto):
                     del entries[sid]['proto']
+
+            if icon := entries[sid].get('icon'):
+                if 'EffectNone_Texture' in icon or 'Effects/' in icon:
+                    del entries[sid]['icon']
+                else:
+                    entries[sid]['icon'] = icon.split("'").pop(1).replace("/Game/GameLite/FPS_Game/UIRemaster/UITextures/Inventory/","").split('.').pop(0)
 
     return entries
 
@@ -666,24 +674,38 @@ def export_markers(cache):
     features = []
     protos = {}
     gen = {}
+    proto_remap = {
+        'MarkerRadius':'radius', 'MarkType': 'name', 'Title':'title', 'Description':'description',
+        'NPCPrototypeSID': 'npc', 'Faction': 'faction',
+        'NameTextKey': 'title', 'Rank': 'rank', 'NPCMarker': 'subtype',
+        'LocalizationSID': 'lsid',
+        'refkey': 'proto',
+        'Icon': 'icon',
+        'Weight':'weight',
+        'Cost':'cost',
+        'Caliber':'caliber',
+        'AmmoType':'ammo_type',
+        'AmmoPackCount':'ammo_pack_count',
+    }
+
+    def merge_dicts(a, b):
+        for k, v in b.items():
+            if k in a:
+                if isinstance(a[k], dict) and isinstance(v, dict):
+                    a[k] = merge_dicts(a[k], v)
+                elif isinstance(a[k], list) and isinstance(v, list):
+                    a[k].extend(x for x in v if x not in a[k])
+                else:
+                    a[k] = v
+            else:
+                a[k] = v
+        return a
 
     # 1-st pass, collect references
     for package_path, package in cache.items():
 
         if package_path.endswith('Prototypes.cfg') and ('PackOfItems' not in package_path):
-            protos.update(load_proto(package, {
-                'MarkerRadius':'radius', 'MarkType': 'name', 'Title':'title', 'Description':'description',
-                'NPCPrototypeSID': 'npc', 'Faction': 'faction',
-                'NameTextKey': 'title', 'Rank': 'rank', 'NPCMarker': 'subtype',
-                'LocalizationSID': 'lsid',
-                'refkey': 'proto',
-
-                'Weight':'weight',
-                'Cost':'cost',
-                'Caliber':'caliber',
-                'AmmoType':'ammo_type',
-                'AmmoPackCount':'ammo_pack_count',
-            }))
+            protos = merge_dicts(protos,load_proto(package, proto_remap))
 
         if 'PackOfItemsGroupPrototypes.cfg' in package_path:
             gen.update(export_packs(package))
@@ -782,6 +804,9 @@ def export_markers(cache):
 
                 # update proto
                 prop |= protos.get(name,{})
+
+                if icon := prop.get('icon'):
+                    del prop['icon']
 
                 # set npc props
                 if npc := prop.get('npc'):
