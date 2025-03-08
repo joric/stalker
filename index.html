@@ -759,6 +759,13 @@ function renderPhoto(o) {
   }
 }
 
+function get_icon(name) {
+  name = (name||'').replace('Antirad','AntiRad');
+  if (markers.prototypes[name] && markers.prototypes[name].icon) {
+    return `images/Inventory/${markers.prototypes[name].icon}.png`;
+  }
+}
+
 function renderItem(feature, extended=false, verbose=false) {
   let o = feature.properties;
 
@@ -928,12 +935,6 @@ function renderItem(feature, extended=false, verbose=false) {
     info.groups = items;
   }
 
-  function get_icon(name) {
-    if (markers.prototypes[name] && markers.prototypes[name].icon) {
-      return `images/Inventory/${markers.prototypes[name].icon}.png`;
-    }
-  }
-
   // add upgrade thingy, if any
   if (info.groups) {
 
@@ -1078,31 +1079,67 @@ function popupOnClick(e) {
   let rank = 'Master';
 
   function createTag(color, name, title, tooltip, action) {
+
+    let div = document.createElement('div');
+    div.className = 'tag-item';
+
     let span = document.createElement('a');
+
+    span.setAttribute('tabindex', 0);
 
     span.textContent = title;
     span.title = tooltip;
-    span.className = 'tag-item';
+    span.className = 'tag-title';
 
     if (action.startsWith('http')) {
-
-      // still copy name on click and href on wheel/ctrl+click
-      span.setAttribute('action', name);
-      span.onclick = function(e) { copyToClipboard(  `${e.target.getAttribute('action')}`  ); return false;  };
-
       span.href = action;
       span.target = '_blank';
-    } else {
-      span.setAttribute('action', action);
-      span.onclick = function(e) { copyToClipboard(  `${e.target.getAttribute('action')}`  )  };
     }
+
+    span.setAttribute('action', action || name);
+    span.onclick = function(e) { copyToClipboard(  `${e.target.getAttribute('name')}`  ); return false;  };
 
     let colors = ['#eee', '#dde', '#ded', '#eed', '#ede'];
     if (color>0) {
-      span.style.backgroundColor = colors[(color-1) % colors.length];
+      div.style.backgroundColor = colors[(color-1) % colors.length];
     }
 
-    return span;
+    div.append(span);
+
+    span.setAttribute('name', name);
+
+    div.onmouseover = function(e) {
+      let name = e.target.getAttribute('name');
+      let icon = get_icon(name); 
+      if (icon) {
+
+        let img = document.querySelector('.image-popup');
+
+        if (!img) {
+          img = document.createElement('img');
+          img.className = 'image-popup';
+        }
+
+        img.setAttribute('src', icon);
+        img.style.left = e.clientX + 'px';
+        img.style.top = e.clientY + 50 + 'px';
+
+        document.body.appendChild(img);
+
+        img.style.display = 'block';
+
+      }
+    }
+
+    div.onmouseout = function(e) {
+      let name = e.target.getAttribute('name');
+      let img = document.querySelector('.image-popup');
+      if (img) {
+        img.style.display = 'none';
+      }
+    }
+
+    return div;
   }
 
 
@@ -1117,7 +1154,7 @@ function popupOnClick(e) {
       let color = Object.keys(groups).length;
       let name = data.name;
       let title = translate_item(name);
-      let tooltip = [title, name, settings.rank, data.generator, JSON.stringify(data.props), data.category].filter(e=>e).join('\n');
+      let tooltip = [title, name, settings.rank, data.generator, JSON.stringify(data.props), data.category].filter(e=>e).join(' ');
       container.appendChild(createTag(color+1, name, title, tooltip, getWikiURL(title)));
     }
 
