@@ -1078,6 +1078,9 @@ function popupOnClick(e) {
 
   let rank = 'Master';
 
+  let imagePopupTimer = null;
+
+
   function createTag(color, name, title, tooltip, action) {
 
     let div = document.createElement('div');
@@ -1108,30 +1111,38 @@ function popupOnClick(e) {
 
     span.setAttribute('name', name);
 
+
     div.onmouseover = function(e) {
+
       let name = e.target.getAttribute('name');
-      let icon = get_icon(name); 
-      if (icon) {
 
-        let img = document.querySelector('.image-popup');
+      imagePopupTimer = setTimeout(function(name) {
+        let icon = get_icon(name); 
+        if (icon) {
 
-        if (!img) {
-          img = document.createElement('img');
-          img.className = 'image-popup';
+          let img = document.querySelector('.image-popup');
+
+          if (!img) {
+            img = document.createElement('img');
+            img.className = 'image-popup';
+          }
+
+          img.setAttribute('src', icon);
+          img.style.left = e.clientX + 'px';
+          img.style.top = e.clientY + 50 + 'px';
+
+          document.body.appendChild(img);
+
+          img.style.display = 'block';
+
         }
-
-        img.setAttribute('src', icon);
-        img.style.left = e.clientX + 'px';
-        img.style.top = e.clientY + 50 + 'px';
-
-        document.body.appendChild(img);
-
-        img.style.display = 'block';
-
-      }
+      }, 500, name);
     }
 
     div.onmouseout = function(e) {
+
+      clearTimeout(imagePopupTimer);
+
       let name = e.target.getAttribute('name');
       let img = document.querySelector('.image-popup');
       if (img) {
