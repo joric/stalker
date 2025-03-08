@@ -1035,15 +1035,17 @@ input::selection {
   background-color: #eee;
   border-radius: 16px;
 
-  margin: 1px;
-  padding: 1px;
   padding-left: 7px;
   padding-right: 7px;
 
-
   cursor: pointer;
   max-width: 320px;
-  transition: all 0.3s ease;
+
+  border: 1px solid white;
+}
+
+.tag-item:hover {
+  border: 1px solid grey;
 }
 
 .tag-title {
