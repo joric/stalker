@@ -1096,7 +1096,9 @@ function popupOnClick(e) {
 
     div.onmouseover = function(e) {
 
-      imagePopupTimer = setTimeout(function(icon) {
+      imagePopupTimer = setTimeout(function(e) {
+
+        let icon = e.target.getAttribute('icon');
         if (icon) {
 
           let img = document.querySelector('.image-popup');
@@ -1107,15 +1109,20 @@ function popupOnClick(e) {
           }
 
           img.setAttribute('src', icon);
-          img.style.left = e.clientX + 'px';
-          img.style.top = e.clientY + 50 + 'px';
+
+          const rect = e.target.getBoundingClientRect();
+          const centerX = rect.left + rect.width / 2;
+          const centerY = rect.top + rect.height / 2;
+
+          img.style.left = centerX + 'px';
+          img.style.top = centerY - 20 + 'px';
 
           document.body.appendChild(img);
 
           img.style.display = 'block';
 
         }
-      }, 500, e.target.getAttribute('icon') );
+      }, 500, e );
     }
 
     div.onmouseout = function(e) {
