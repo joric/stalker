@@ -1017,6 +1017,28 @@ function getMarkerSize(marker) {
   return symbol.markerWidth || 32;
 }
 
+function reformat(text, width=40) {
+    if (width <= 0) {
+        throw new Error("Width must be greater than 0");
+    }
+    let result = '';
+    let currentLineLength = 0;
+    const words = text.split(/\s+/);
+    for (const word of words) {
+        if (currentLineLength + word.length > width) {
+            result += '\n';
+            currentLineLength = 0;
+        }
+        if (currentLineLength > 0) {
+            result += ' ';
+            currentLineLength++;
+        }
+        result += word;
+        currentLineLength += word.length;
+    }
+    return result;
+}
+
 function setMarkerSize(marker, size) {
   return; // do not do it yet
   let symbol = marker.getSymbol();
@@ -1144,7 +1166,8 @@ function popupOnClick(e) {
     container.classList.add('tag-container');
     let name = o.name;
     let title = translate_item(o.name);
-    container.appendChild(createTag(2, name, title, `${title} (${name})`, name, o));
+    let desc = translate_item(o.name, true);
+    container.appendChild(createTag(2, name, title, `${title} (${name})\n${reformat(desc)}`, name, o));
     div.appendChild(document.createElement('hr'));
     div.appendChild(container);
   }
@@ -1160,7 +1183,8 @@ function popupOnClick(e) {
       let color = Object.keys(groups).length;
       let name = data.name;
       let title = translate_item(name);
-      container.appendChild(createTag(color+1, name, title, `${title} (${name})\n${data.generator}\n${JSON.stringify(data.props)}`, getWikiURL(title)));
+      let desc = translate_item(name, true);
+      container.appendChild(createTag(color+1, name, title, `${title} (${name})\n${data.generator}\n${JSON.stringify(data.props)}\n${reformat(desc)}`, getWikiURL(title)));
     }
 
     div.appendChild(document.createElement('hr'));
@@ -1183,7 +1207,8 @@ function popupOnClick(e) {
     container.classList.add('tag-container');
     for (const name of o.items) {
       let title = translate_item(name);
-      container.appendChild(createTag(0, name, title, `${title} (${name})`, name));
+      let desc = translate_item(name, true);
+      container.appendChild(createTag(0, name, title, `${title} (${name})\n${reformat(desc)}`, name));
     }
     div.appendChild(document.createElement('hr'));
     div.appendChild(container);
