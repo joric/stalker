@@ -1160,10 +1160,7 @@ function popupOnClick(e) {
       let color = Object.keys(groups).length;
       let name = data.name;
       let title = translate_item(name);
-
-      let tooltip = [title, name, JSON.stringify(data.props)].filter(e=>e).join(' ');
-
-      container.appendChild(createTag(color+1, name, title, tooltip, getWikiURL(title)));
+      container.appendChild(createTag(color+1, name, title, `${title} (${name}) ${JSON.stringify(data.props)}`, getWikiURL(title)));
     }
 
     div.appendChild(document.createElement('hr'));
