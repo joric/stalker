@@ -1071,7 +1071,7 @@ function popupOnClick(e) {
     span.setAttribute('tabindex', 0);
 
     span.textContent = title;
-    span.title = tooltip ? tooltip : `${title} (${name})`;
+    span.title = tooltip || action;
     span.className = 'tag-title';
 
     span.setAttribute('name', name);
