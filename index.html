@@ -896,11 +896,10 @@ function renderItem(feature, extended=false, verbose=false) {
             items.push(...getGeneratorItems(name, rank, diff));
           } else {
 
-            // let's add all items
             // add one random item for now
-            //if (count==random_choice) {
+            if (count==random_choice) {
               items.push({name: name, generator: gen_name, category: group.category, props: props });
-            //}
+            }
             count ++;
           }
         }
