@@ -1183,7 +1183,7 @@ function popupOnClick(e) {
     container.classList.add('tag-container');
     for (const name of o.items) {
       let title = translate_item(name);
-      container.appendChild(createTag(0, name, title, name, name));
+      container.appendChild(createTag(0, name, title, `${title} (${name})`, name));
     }
     div.appendChild(document.createElement('hr'));
     div.appendChild(container);
