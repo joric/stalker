@@ -1160,7 +1160,7 @@ function popupOnClick(e) {
       let color = Object.keys(groups).length;
       let name = data.name;
       let title = translate_item(name);
-      container.appendChild(createTag(color+1, name, title, `${title} (${name})\n${data.generator}: ${JSON.stringify(data.props)}`, getWikiURL(title)));
+      container.appendChild(createTag(color+1, name, title, `${title} (${name})\n${data.generator}\n${JSON.stringify(data.props)}`, getWikiURL(title)));
     }
 
     div.appendChild(document.createElement('hr'));
