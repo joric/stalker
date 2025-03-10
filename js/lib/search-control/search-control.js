@@ -75,6 +75,11 @@ class SearchControl {
 
     };
 
+    this._input.addEventListener("change", event => {
+      if (this._input.value=='') this._handleSubmit();
+    });
+
+
     this._input.addEventListener("focus", event => {
       this._input.select();
     });
