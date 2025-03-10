@@ -734,11 +734,17 @@ def export_markers(cache):
 
                 # add markers/conditions/trigger
                 for marker in (data.get('Markers')or{}).values():
+
+
                     for condition in (marker.get('Conditions')or{}).values():
                         for entry in condition.values():
                             guid = entry.get('Trigger')
                             if guid:
                                 cached_guids[guid][sid] = package
+
+                    if guid := marker.get('MarkerTargetQuestGuid'):
+                        cached_guids[guid][sid] = package
+
 
                     if '_SetJournal_' in sid:
                         if guid := marker.get('MarkerTargetQuestGuid'):
@@ -844,7 +850,8 @@ def export_markers(cache):
                     quest, stage = cached_quests[sid].split(':')
                     prop['quest'] = quest
                     prop['stage'] = stage
-                    prop['subtype'] = 'MainQuest'
+                    if 'subtype' not in prop:
+                        prop['subtype'] = 'MainQuest'
 
                 cleanup(prop)
                 add_spawns(data, prop)
