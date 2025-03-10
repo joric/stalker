@@ -850,7 +850,7 @@ def export_markers(cache):
                     quest, stage = cached_quests[sid].split(':')
                     prop['quest'] = quest
                     prop['stage'] = stage
-                    if 'subtype' not in prop:
+                    if 'subtype' not in prop and prop.get('proto','')=='QuestNPCBase':
                         prop['subtype'] = 'MainQuest'
 
                 cleanup(prop)
