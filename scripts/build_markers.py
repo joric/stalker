@@ -647,6 +647,7 @@ def get_bp_markers(cells):
 
 cached_guids = defaultdict(dict)
 cached_items = defaultdict(dict)
+cached_quests = {}
 
 def get_connections(data):
     out = set()
@@ -739,6 +740,13 @@ def export_markers(cache):
                             if guid:
                                 cached_guids[guid][sid] = package
 
+                    if '_SetJournal_' in sid:
+                        if guid := marker.get('MarkerTargetQuestGuid'):
+                            quest = data.get('JournalQuestSID')
+                            stage = data.get('JournalQuestStageSID')
+                            if quest and stage:
+                                cached_quests[guid] = str(quest) + ':' + str(stage)
+
     # 2-nd pass, collect coordinates
     for package_path, package in cache.items():
         comment = package.get('comment')
@@ -811,8 +819,10 @@ def export_markers(cache):
                 # set npc props
                 if npc := prop.get('npc'):
                     prop |= protos.get(npc,{})
-                    if 'subtype' not in prop and any('QuestGiver' in s for s in prop.get('references',{})):
-                        prop['subtype'] = 'QuestGiver';
+                    if 'subtype' not in prop:
+                        if giver := next((s for s in prop.get('references',{})if '_SetQuestGiver_' in s),None):
+                            prop['subtype'] = 'QuestGiver'
+                            prop['quest'] = giver.split('_').pop(0)
 
                 # set title for hubs
                 if prop.get('type')=='ESpawnType::Hub':
@@ -830,6 +840,11 @@ def export_markers(cache):
                     for conn_sid in sorted(get_connections(data)):
                         prop[k].append(conn_sid)
 
+                if sid in cached_quests:
+                    quest, stage = cached_quests[sid].split(':')
+                    prop['quest'] = quest
+                    prop['stage'] = stage
+                    prop['subtype'] = 'MainQuest'
 
                 cleanup(prop)
                 add_spawns(data, prop)

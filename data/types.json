@@ -67,6 +67,7 @@
       "Medic": { "icon": "medic", "title": "sid_misc_pda_Map_MarkerMedic", "category": "sid_misc_pda_Map_MarkerMedic", "group": "bases" },
       "Guider": { "icon": "guide", "title": "sid_misc_pda_Map_MarkerGuide", "category": "sid_misc_pda_Map_MarkerGuide", "group": "bases" },
       "QuestGiver": { "icon": "quest-giver", "title": "NPC", "category": "sid_misc_answer_sidequest", "group": "actors" },
+      "MainQuest": { "icon": "quest", "title": "NPC", "category": "sid_misc_answer_sidequest", "group": "actors" },
       "QuestNPCBase": { "icon": "soldier", "title": "NPC", "category": "NPC", "group": "misc" },
       "HumanBase": { "icon": "soldier", "title": "NPC", "category": "NPC", "group": "misc" }
     },

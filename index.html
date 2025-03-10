@@ -819,15 +819,17 @@ function renderItem(feature, extended=false, verbose=false) {
   let currentRegion = getRegionName({x: c[0], y:c[1], z:c[2]}, regionsData);
   info.location = lang[`sid_locations_region_${currentRegion}_name`];
 
-  if (o.references) {
-    for (const name of o.references) {
-      if (name.includes('SetQuestGiver')) {
-        const quest = name.split('_SetQuestGiver')[0].replace('_P','');
-        let title = lang[`sid_journal_${quest}_Name`];
-        if (title) {
-          info.quest = title;
-        }
-      }
+  if (o.quest) {
+    let title = lang[`sid_journal_${o.quest}_Name`];
+    if (title) {
+      info.quest = title;
+    }
+  }
+
+  if (o.stage) {
+    let title = lang[`sid_journal_stage_${o.stage}`];
+    if (title) {
+      info.stage = title;
     }
   }
 
@@ -1076,6 +1078,19 @@ function popupOnClick(e) {
     content.textContent = info.description;
     div.appendChild(hr);
     div.appendChild(content);
+  }
+
+  if (info.quest) {
+    let hr = document.createElement('hr');
+    let html = document.createElement('div');
+    let content = '';
+    content += `<b>${info.quest}</b>`;
+    if (info.stage) {
+      content += `<br>${info.stage}`;
+    }
+    html.innerHTML = content;
+    div.appendChild(hr);
+    div.appendChild(html);
   }
 
   let rank = 'Master';
@@ -1386,7 +1401,11 @@ function showTooltip(e) {
   }
 
   if (info.quest) {
-    content += `<hr/><div class="overflow-container small">${info.quest}</div>`;
+    content += `<hr/>`
+    content += `<b>${info.quest}</b>`;
+    if (info.stage) {
+      content += `<br>${info.stage}`;
+    }
   }
 
   if (info.note) {
@@ -1851,7 +1870,7 @@ function passesFilter(marker) {
     tags.push(title);
   }
 
-  let s = [o.title, o.name, o.type, o.description, o.sid, o.clue, o.cell, o.proto, o.material,
+  let s = [o.title, o.name, o.type, o.description, o.sid, o.clue, o.cell, o.proto, o.material, o.quest, o.stage,
 
     info.title,
     info.category,
@@ -1859,7 +1878,9 @@ function passesFilter(marker) {
     info.upgrade,
     info.description,
     info.quest,
+    info.stage,
     info.note,
+
     //info.location, // maybe don't do location, too many matches
 
     ...tags].map(x=>x||'').join(' ').toLowerCase();

@@ -39,7 +39,7 @@ tints = {
     'Follow': colors['jade'],
     'Habar': colors['jade'],
     'Radiation': colors['jade'],
-    'Quest': colors['cyan'],
+    'Quest': colors['orange'],
     'QuestGiver': colors['cyan'],
     'Camp': colors['orange'],
 

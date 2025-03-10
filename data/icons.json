@@ -16,6 +16,7 @@
   "follow": { "image": "Texture_Follow_NotActive_General_Shadow.png", "fa": "virus", "bg": "saddlebrown"},
   "region": { "image": "T_NotActive_Region_Shadow.png", "fa": "flag", "bg": "darkslategrey"},
   "quest-giver": { "image": "Texture_QuestGiver_NotActive_General_Shadow.png", "fa": "flag", "bg": "darkslategrey"},
+  "quest": { "image": "Texture_Quest_NotActive_General_Shadow.png", "fa": "flag", "bg": "orange"},
 
   "claws": { "image": "CompassMarker_0_0.png", "fa": "teeth-open", "bg": "red"},
   "skull": { "image": "CompassMarker_0_1.png", "fa": "skull", "bg": "brown"},
