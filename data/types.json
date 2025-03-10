@@ -54,7 +54,7 @@
   "ESpawnType::Trigger": { "icon": "exclamation", "category": "Trigger", "group": "helpers" },
   "ESpawnType::ContextualAction": { "icon": "exclamation", "category":"Contextual Action", "group": "helpers",
     "match": {
-      "_bonfire": { "icon": "fire", "category": "Contextual Action", "group": "helpers" },
+      "_bonfire": { "icon": "fire", "category": "Contextual Action", "group": "actions" },
       "_pee|_sit|_stand|_lie|_sleep": { "icon": "exclamation", "category": "Contextual Action", "group": "helpers" }
     }
   },
