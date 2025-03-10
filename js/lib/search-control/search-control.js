@@ -75,7 +75,11 @@ class SearchControl {
 
     };
 
-    this._input.addEventListener("keydown", (event) => {
+    this._input.addEventListener("focus", event => {
+      this._input.select();
+    });
+
+    this._input.addEventListener("keydown", event => {
       if (event.key === "Escape") {
         this._clear();
       }
