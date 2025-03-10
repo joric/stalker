@@ -21,6 +21,7 @@ class SearchControl {
 
   _submit = event => {
     if (event) event.preventDefault();
+    this._handleSubmit();
     let value = this._input.value;
     if (!value) return false;
     value = value.trim().slice(0, this._maxStringLength);
@@ -29,7 +30,6 @@ class SearchControl {
     this._items.unshift(value);
     this._items = this._items.slice(0, this._maxHistorySize);
     this._updateDropdown();
-    this._handleSubmit();
     return false;
   }
 
