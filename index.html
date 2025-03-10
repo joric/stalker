@@ -1084,9 +1084,9 @@ function popupOnClick(e) {
     let hr = document.createElement('hr');
     let html = document.createElement('div');
     let content = '';
-    content += `<i class="fa-solid fa-triangle-exclamation"></i> <b>${info.quest}</b>`;
+    content += `<i class="fa-solid fa-triangle-exclamation"></i> <b title="${o.quest}">${info.quest}</b>`;
     if (info.stage) {
-      content += `<br>${info.stage}`;
+      content += `<br><span title="${o.stage}">${info.stage}</span>`;
     }
     html.innerHTML = content;
     div.appendChild(hr);
