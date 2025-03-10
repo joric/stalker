@@ -54,7 +54,8 @@
   "ESpawnType::Trigger": { "icon": "exclamation", "category": "Trigger", "group": "helpers" },
   "ESpawnType::ContextualAction": { "icon": "exclamation", "category":"Contextual Action", "group": "helpers",
     "match": {
-      "_pee|_sit|_stand|_lie|_sleep": { "icon": "fire", "category": "Contextual Action", "group": "helpers" }
+      "_bonfire": { "icon": "fire", "category": "Contextual Action", "group": "helpers" },
+      "_pee|_sit|_stand|_lie|_sleep": { "icon": "exclamation", "category": "Contextual Action", "group": "helpers" }
     }
   },
   "ESpawnType::OnlineModifierZone" : {"icon": "exclamation", "category":"Modifiers", "group": "misc" },
