@@ -81,6 +81,10 @@ def parse_struct(reader, options={}):
         value, options = parse_options(value) # remove {bskipref} etc.
         if not value or value == "empty" or value == "Empty" or value == "None":
             return None
+        if value=="false":
+            return False
+        if value=="true":
+            return True
         if re.match(r'^-?\d*\.?\d*f?$', value):
             return float(value[:-1] if value[-1]=='f' else value) if '.' in value or 'f' in value else int(value)
         return value

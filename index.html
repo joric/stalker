@@ -1084,7 +1084,7 @@ function popupOnClick(e) {
     let hr = document.createElement('hr');
     let html = document.createElement('div');
     let content = '';
-    content += `<i class="fa-solid fa-triangle-exclamation"></i> <b title="${o.quest}">${info.quest}</b>`;
+    content += `<a href="${getWikiURL(info.quest)}" target=_blank><i class="fa-solid fa-triangle-exclamation"></i> <b title="${o.quest}">${info.quest}</b></a>`;
     if (info.stage) {
       content += `<br><span title="${o.stage}">${info.stage}</span>`;
     }
@@ -1383,6 +1383,14 @@ function showTooltip(e) {
     content += `<hr/>${info.description}`;
   }
 
+  if (info.quest) {
+    content += `<hr/>`
+    content += `<a href="${getWikiURL(info.quest)}" target=_blank><i class="fa-solid fa-triangle-exclamation"></i> <b title="${o.quest}">${info.quest}</b></a>`;
+    if (info.stage) {
+      content += `<br>${info.stage}`;
+    }
+  }
+
   if (o.keycode) {
     content += `<hr/>${o.keycode}`;
   }
@@ -1398,14 +1406,6 @@ function showTooltip(e) {
 
   if (info.upgrade) {
     content += `<hr/>${info.upgrade}`;
-  }
-
-  if (info.quest) {
-    content += `<hr/>`
-    content += `<i class="fa-solid fa-triangle-exclamation"></i> <b>${info.quest}</b>`;
-    if (info.stage) {
-      content += `<br>${info.stage}`;
-    }
   }
 
   if (info.note) {
