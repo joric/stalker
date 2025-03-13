@@ -1470,7 +1470,7 @@ function getIconProp(o) {
   if (section && section.items) {
     for (field of [o.subtype, o.name, o.proto]) {
       let t = section.items[field];
-      if (t) return t;
+      if (t) return {...section, ...t};
     }
   }
 

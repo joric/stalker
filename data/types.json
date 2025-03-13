@@ -39,7 +39,14 @@
     }
   },
   "ESpawnType::Hub": { "icon": "camp", "category": "sid_misc_LEGACY_pda_Map_MarkerFriendlyAreaDefault", "group": "hubs" },
-  "ESpawnType::ItemContainer": { "icon": "stash", "title": "sid_misc_pda_Map_MarkerCache", "category": "sid_misc_pda_map_playerTags_habar", "group": "stashes" },
+  "ESpawnType::ItemContainer": { "icon": "stash", "title": "sid_misc_pda_Map_MarkerCache", "category": "sid_misc_pda_map_playerTags_habar", "group": "stashes",
+    "items": {
+      "Bag": { "title": "sid_questItemprototypes_QuestItem_Notepad_Officer_name" },
+      "BigSafe": { "title": "sid_stashes_GDN_11_StashInSafe_name"},
+      "SmallSafe": { "title": "sid_stashes_GDN_11_StashInSafe_name"},
+      "Backpack": { "title": "sid_tutorialnotes_tutorial_note_backpack_v2_head"}
+    }
+  },
   "ESpawnType::DeadBody": { "icon": "skull", "category": "sid_npc_name_mertvec", "group": "misc" },
   "ESpawnType::PackOfItems": { "icon": "box", "title": "sid_stashes_Gen_Stash197_name", "category": "sid_misc_pda_Map_MarkerPlayerLandmarkHabar", "group": "misc" },
   "ESpawnType::Shelter": { "icon": "rest", "category": "sid_misc_pda_Map_MarkerShellter", "group": "misc" },
