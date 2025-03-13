@@ -789,13 +789,13 @@ function renderItem(feature, extended=false, verbose=false) {
   let location = '';
 
   if (o.lsid) {
-    title = lang[`sid_questItemprototypes_${o.lsid}_name`];
-    description = lang[`sid_questItemprototypes_${o.lsid}_description`];
+    title = lang[`sid_questItemprototypes_${o.lsid}_name`] || title;
+    desc = lang[`sid_questItemprototypes_${o.lsid}_description`] || desc;
   }
 
   if (o.clue) {
-    title = lang[`sid_stashes_${o.clue}_name`];
-    description = lang[`sid_stashes_${o.clue}_description`];
+    title = lang[`sid_stashes_${o.clue}_name`] || title;
+    desc = lang[`sid_stashes_${o.clue}_description`] || desc;
   }
 
   let info = {
@@ -1470,7 +1470,9 @@ function getIconProp(o) {
   if (section && section.items) {
     for (field of [o.subtype, o.name, o.proto]) {
       let t = section.items[field];
-      if (t) return {...section, ...t};
+      if (t) {
+        return {...section, ...t};
+      }
     }
   }
 
