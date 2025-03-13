@@ -40,7 +40,7 @@
   },
   "ESpawnType::Hub": { "icon": "camp", "category": "sid_misc_LEGACY_pda_Map_MarkerFriendlyAreaDefault", "group": "hubs" },
   "ESpawnType::ItemContainer": { "icon": "stash", "title": "sid_misc_pda_Map_MarkerCache", "category": "sid_misc_pda_map_playerTags_habar", "group": "stashes",
-    "items": {
+    "-items": {
       "BlueBox" : { "title": "sid_misc_pda_Map_MarkerPlayerStorage" },
       "Bag": { "title": "sid_questItemprototypes_QuestItem_Notepad_Officer_name" },
       "BigSafe": { "title": "sid_stashes_GDN_11_StashInSafe_name"},
