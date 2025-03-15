@@ -20,18 +20,23 @@ class SearchControl {
   }
 
   _submit = event => {
-    if (event) event.preventDefault();
-    this._handleSubmit();
-    let value = this._input.value;
-    if (!value) return false;
-    value = value.trim().slice(0, this._maxStringLength);
-    let items = this._items;
-    if (!value || items.includes(value)) return false;
-    this._items.unshift(value);
-    this._items = this._items.slice(0, this._maxHistorySize);
-    this._updateDropdown();
-    return false;
-  }
+      if (event) event.preventDefault();
+      this._handleSubmit();
+    
+      let value = this._input.value.trim().slice(0, this._maxStringLength);
+      if (!value) return false;
+
+      let index = this._items.indexOf(value);
+      if (index !== -1) {
+        this._items.splice(index, 1);
+      }
+
+      this._items.unshift(value);
+      this._items = this._items.slice(0, this._maxHistorySize);
+      this._updateDropdown();
+
+      return false;
+  };
 
   constructor(layer, options) {
 
@@ -70,7 +75,7 @@ class SearchControl {
         let item = event.target;
         let text = item.firstChild.textContent;
         this._input.value = text;
-        this._handleSubmit();
+        this._submit();
       }
 
     };
