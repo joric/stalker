@@ -779,8 +779,9 @@ function renderItem(feature, extended=false, verbose=false) {
     desc = desc || translate_item(o.name, true);
   }
 
-  if (o.type=='ESpawnType::ArtifactSpawner') {
-    let name = 'AArtifact' + (o.name||'').replace('ArtifactSpawner','')
+  if (o.type=='ESpawnType::ArtifactSpawner' && o.name!='UniversalArtifactSpawner') {
+    let prefix = (o.name.includes('Quest') ? 'C' : 'A' ) + 'Artifact';
+    let name = prefix + o.name.replace('ArtifactSpawner','').replace('Quest','')
     title = translate_item(name);
     o.items = [name];
   }
