@@ -1425,6 +1425,17 @@ function showTooltip(e) {
     content += `<hr><div title="${signals}"><i class="fa-solid fa-code-commit"></i> ${o.references.length}</div>`;
   }
 
+  if (o.type == 'ESpawnType::PackOfItems' && o.spawns) {
+    content += '<hr>';
+
+    for (const data of (info.groups||{})) {
+      let name = data.name;
+      let title = translate_item(name);
+      content += title + '<br/>';
+    }
+  }
+
+
   tooltip.innerHTML = content;
 
   let c = marker.getContainerExtent();
