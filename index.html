@@ -779,6 +779,12 @@ function renderItem(feature, extended=false, verbose=false) {
     desc = desc || translate_item(o.name, true);
   }
 
+  if (o.type=='ESpawnType::ArtifactSpawner') {
+    let name = 'AArtifact' + (o.name||'').replace('ArtifactSpawner','')
+    title = translate_item(name);
+    o.items = [name];
+  }
+
   // sid_character_eger_0 is really sid_npc_name_eger_0
 
   title = title || lang[o.title] || lang[o.title && o.title.replace('character','npc_name')] || lang[prop.title] || prop.title || o.name;
@@ -995,6 +1001,7 @@ function getSpawnContent(o, name) {
       return markers[section][key];
     }
   }
+
 
   return data;
 
@@ -1399,7 +1406,7 @@ function showTooltip(e) {
     content += `<hr/><div class="overflow-container">`;
     for (const name of o.items) {
       let title = translate_item(name);
-      content += `<span title="${name}">[${title}]</span><br/>`;
+      content += `<span title="${name}">${title}</span><br/>`;
     }
     content +='</div>';
   }
