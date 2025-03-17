@@ -914,7 +914,7 @@ input::selection {
   display:none;
   position:absolute;
 
-  border-radius: 8px;
+  border-radius: 6px;
   padding: 0.75em;
   max-width: 320px;
 
