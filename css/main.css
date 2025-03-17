@@ -909,13 +909,12 @@ input::selection {
 #map-tooltip {
   background-color: white;
   color: black;
-  opacity: 0.95;
 
   display:none;
   position:absolute;
 
   border-radius: 6px;
-  padding: 0.75em;
+  padding: 12px;
   max-width: 320px;
 
   box-shadow: 0 3px 14px rgba(0,0,0,0.4);
