@@ -1095,7 +1095,7 @@ input::selection {
 #save-controls {
   z-index: 1;
   position: absolute;
-  right: 256px;
+  right: 252px;
   top: 18px;
 }
 
