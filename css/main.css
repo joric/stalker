@@ -1092,4 +1092,11 @@ input::selection {
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
+#save-controls {
+  z-index: 1;
+  position: absolute;
+  right: 80px;
+  top: 48px;
+}
+
 
