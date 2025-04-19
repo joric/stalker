@@ -1227,7 +1227,8 @@ function popupOnClick(e) {
     let container = document.createElement('div');
     container.classList.add('tag-container');
     for (const name of o.references) {
-      container.appendChild(createTag(5, name, name, name, `XStartQuestNodeBySID ${name}`));
+      //container.appendChild(createTag(5, name, name, name, `XStartQuestNodeBySID ${name}`));
+      container.appendChild(createTag(5, name, name, name, `${name}`));
     }
     div.appendChild(document.createElement('hr'));
     div.appendChild(container);
