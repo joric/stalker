@@ -39,9 +39,9 @@
 <div id="save-controls">
   <div class="button-group">
     <input id="file" type='file' hidden/>
-    <button onclick="loadLocalData()" class="btn-link">Load</button>
-    <button onclick="saveLocalData()" class="btn-link">Save</button>
-    <button onclick="resetLocalData()" class="btn-link">Reset</button>
+    <button onclick="loadLocalData()" class="btn-link" id="load">Load</button>
+    <button onclick="saveLocalData()" class="btn-link" id="save">Save</button>
+    <button onclick="resetLocalData()" class="btn-link" id="reset">Reset</button>
   </div>
 </div>
 
@@ -2096,6 +2096,10 @@ window.onload = function(event) {
     lang = data;
     searchControl._input.setAttribute('placeholder', lang['sid_misc_hint_loot'] +'...');
 
+    document.getElementById('load').textContent = lang['sid_misc_pausemenu_load'];
+    document.getElementById('save').textContent = lang['sid_misc_pausemenu_save'];
+    document.getElementById('reset').textContent = lang['sid_misc_settingsGeneral_resetDefault'];
+
     let promises = [
       'data/types.json',
       'data/icons.json',
@@ -2115,7 +2119,7 @@ window.onload = function(event) {
 
 
 function resetLocalData() {
-  if (confirm('Are you sure you want to reset settings?')) {
+  if (confirm(lang['sid_misc_settingsGeneral_questionResetSettings'] || 'Are you sure you want to reset settings?')) {
     localStorage.removeItem(localDataName);
     location.reload();
   }
