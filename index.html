@@ -2073,7 +2073,7 @@ window.onload = function(event) {
   };
 
   let cc = settings.language || 'en';
-  let cc_list = ['ua','en','ru'];
+  let cc_list = ['ua','en','fr','ru'];
   let langSelect = document.querySelector('#language-selector select');
   langSelect.innerHTML = cc_list.map(x=>`<option${cc==x?' selected':''}>${x}</option>`).join('');
   langSelect.onchange = e=> {
