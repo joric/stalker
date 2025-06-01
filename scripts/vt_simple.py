@@ -15,12 +15,6 @@ assets = [
         'tile_size': 128,
         'tile_border': 4,
     },
-    {
-        'path': 'MyProject/Content/stalker2_map_joric_8k_mod2.uasset',
-        'size': [8192, 8192],
-        'tile_size': 128,
-        'tile_border': 4,
-    },
 ]
 
 asset = assets[0]
