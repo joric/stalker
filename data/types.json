@@ -25,7 +25,9 @@
 
       "EMarkerType::Container": { "icon": "box", "title": "sid_effects_general_container_name", "category": "sid_misc_pda_map_playerTags_habar", "group": "misc" },
 
-      "EMarkerType::Photos":{ "icon": "message", "title": "sid_misc_QIO_Photo", "category": "sid_misc_modIO_LMB_props", "group": "misc" }
+      "EMarkerType::Photos":{ "icon": "message", "title": "sid_misc_QIO_Photo", "category": "sid_misc_modIO_LMB_props", "group": "misc" },
+
+      "EMarkerType::Note":{ "icon": "follow", "category": "sid_misc_pda_hint_PlayerMarkers", "group": "notes" }
     }
   },
 

@@ -39,6 +39,7 @@
 <div id="save-controls">
   <div class="button-group">
     <input id="file" type='file' hidden/>
+    <button onclick="addNoteClick()" class="btn-link" id="add-note">Add Note</button>
     <button onclick="loadLocalData()" class="btn-link" id="load">Load</button>
     <button onclick="saveLocalData()" class="btn-link" id="save">Save</button>
     <button onclick="resetLocalData()" class="btn-link" id="reset">Reset</button>
@@ -89,6 +90,7 @@ let textSize = 18;
 let labelGroups = ['regions'];//, 'locations'];
 
 let zoomGroups = {
+  'notes':[-99,99],
   'polygons':[-99,4], 'regions':[0,2],
   'hubs': [2,99], 'bases': [2,99],
   'circles':[2,6], 'locations': [2,99],
@@ -482,8 +484,11 @@ function addMarkers(data) {
     collection[m.group].push(m.marker);
   }
 
-  let weights = {'regions': 1100, 'hubs': 1000, 'bases': 900, 'locations': 750, 'stashes': 500, 'items': 250, 'anomalies': -900, 'misc': -1000 };
+  let weights = {'notes': 1200, 'regions': 1100, 'hubs': 1000, 'bases': 900, 'locations': 750, 'stashes': 500, 'items': 250, 'anomalies': -900, 'misc': -1000 };
+
   let groups = Object.keys(collection);
+
+  if (groups.indexOf('notes')==-1) groups.push('notes');
 
   groups = groups.sort( (a,b)=> (weights[b]||0)-(weights[a]||0) || cmpAlphaNum(a,b))
 
@@ -786,6 +791,10 @@ function renderItem(feature, extended=false, verbose=false) {
   if (o.type=='ESpawnType::Item') {
     title = title || translate_item(o.name, false);
     desc = desc || translate_item(o.name, true);
+  }
+
+  if (o.type=='ESpawnType::CustomMarker' && o.name=='EMarkerType::Note') {
+    title = o.title;
   }
 
   if (o.type=='ESpawnType::ArtifactSpawner' && o.name!='UniversalArtifactSpawner') {
@@ -1309,6 +1318,35 @@ function popupOnClick(e) {
   c.onclick = null;
   c.innerHTML = '<i class="fa-brands fa-wikipedia-w"></i>';
 
+
+  let editable = o.sid && o.sid.startsWith('FF');
+  if (editable) {
+
+    popup.querySelector('#popup-map-link').href = '#';
+    popup.querySelector('#popup-map-link').title = 'Edit';
+    popup.querySelector('#popup-map-link').innerHTML = '<i class="fa-solid fa-pen-to-square"></i>';
+    popup.querySelector('#popup-map-link').onclick = function(e) {
+      e.preventDefault();
+      let title = prompt(lang['sid_misc_pda_hint_CreatePlayerLandmark']||'Edit marker:', o.title);
+      if (title) {
+        updateMarker(o.sid, title);
+      }
+      return false;
+    }
+    popup.querySelector('#popup-wiki-link').href = '#';
+    popup.querySelector('#popup-wiki-link').title = 'Delete';
+    popup.querySelector('#popup-wiki-link').innerHTML = '<i class="fa-solid fa-trash"></i>';
+    popup.querySelector('#popup-wiki-link').onclick = function(e) {
+      e.preventDefault();
+      if (confirm(lang['sid_misc_pda_hint_DeleteSelectedLandmark']||'Are you sure you want to delete this marker?')) {
+        deleteMarker(o.sid);
+      }
+      return false;
+    }
+
+  }
+
+
   c = popup.querySelector('#popup-found');
   c.checked = settings.markedItems[o.sid]==true;
   c.onclick = function() { toggleMarked(o.sid) };
@@ -1624,7 +1662,10 @@ function addMarker(feature) {
   let c = feature.geometry.coordinates;
   c = scaleCoordinateArray(c);
 
-  var marker = new maptalks.Marker(c, {symbol: symbol});
+  var marker = new maptalks.Marker(c, {
+    symbol: symbol,
+    draggable: o.sid && o.sid.startsWith('FF'),
+  });
 
   marker.feature = feature;
 
@@ -1669,7 +1710,7 @@ function addMarker(feature) {
   }).addTo(marker);
 */
   marker.setInfoWindow({autoCloseOn: 'click'})
-  //.on('dragend', onDragEnd)
+  .on('dragend', onDragEnd)
   .on('click', popupOnClick)
   .on('contextmenu', e=> {
     //if (mouseMoved) return;
@@ -2099,6 +2140,7 @@ window.onload = function(event) {
     document.getElementById('load').textContent = lang['sid_misc_pausemenu_load'];
     document.getElementById('save').textContent = lang['sid_misc_pausemenu_save'];
     document.getElementById('reset').textContent = lang['sid_misc_settingsGeneral_resetDefault'];
+    document.getElementById('add-note').textContent = lang['sid_misc_pda_hint_CreatePlayerLandmark'];
 
     let promises = [
       'data/types.json',
@@ -2109,6 +2151,10 @@ window.onload = function(event) {
 
     Promise.all(promises).then(data => {
       [types, icons, regions, markers] = data;
+
+      localData.customMarkers = localData.customMarkers || {features:[]};
+      markers.features = [...markers.features, ...localData.customMarkers.features];
+
       loadMarkers(markers);
     });
 
@@ -2174,6 +2220,109 @@ function saveLocalData() {
         a.click();
         a.remove();
     }
+  }
+}
+
+function onDragEnd(e) {
+  updateMarker(e.target.feature.properties.sid);
+}
+
+function updateMarker(sid, title) {
+  let group = 'notes';
+  let markerLayer = groupLayer.getLayer(capitalize(group));
+
+  for (marker of markerLayer._geoList) {
+    let o = marker.feature.properties;
+
+    if (sid != o.sid) continue;
+
+    if (title) {
+      o.title = title.substring(0,100);
+    }
+
+    let loc = marker.getCoordinates();
+
+    for (f of localData.customMarkers.features) {
+      if (sid == f.properties.sid) {
+        f.geometry.coordinates = [loc.x, loc.y, 0];
+        f.properties.title = o.title;
+        break;
+      }
+    }
+
+    popupOnClick({target: marker});
+    marker.openInfoWindow();
+
+    saveSettings();
+  }
+}
+
+function deleteMarker(sid) {
+  let group = 'notes';
+  let markerLayer = groupLayer.getLayer(capitalize(group));
+
+  for (marker of markerLayer._geoList) {
+    let o = marker.feature.properties;
+    if (sid != o.sid) continue;
+    marker.remove();
+    localData.customMarkers.features = localData.customMarkers.features.filter(item=>sid != item.properties.sid)
+    saveSettings();
+  }
+}
+
+function addNote(e, title) {
+  let group = 'notes';
+  let markerLayer = groupLayer.getLayer(capitalize(group));
+
+  let last_id = 0xff000000;
+
+  localData.customMarkers = localData.customMarkers || {features:[]};
+
+  for (const feature of localData.customMarkers.features) {
+    last_id = Math.max(last_id, parseInt(feature.properties.sid||last_id,16));
+  }
+
+  let sid = (last_id+1).toString(16).toUpperCase();
+
+  let loc = map.getCenter();
+
+  let feature = {
+    "type": "Feature",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [loc.x, loc.y, 0],
+    },
+    "properties": {
+      "sid": sid,
+      "type": "ESpawnType::CustomMarker",
+      "name": "EMarkerType::Note",
+      "title": title.substring(0,100),
+      "group": "notes",
+    }
+  };
+
+  markers.features.push(feature);
+
+  let m = addMarker(feature);
+  let marker = m.marker;
+
+  marker.addTo(markerLayer);
+
+  popupOnClick({target: marker});
+
+  markersData.push(m); // for toggling and search
+
+  marker.openInfoWindow();
+
+  localData.customMarkers.features.push(feature); // for local data
+}
+
+function addNoteClick() {
+  // sid_misc_pda_hint_DeleteSelectedLandmark
+  let title = prompt(lang['sid_misc_pda_hint_CreatePlayerLandmark']||'Add marker:', lang['sid_misc_pda_hint_SetFollowMarkerHint']||'Note');
+  if (title) {
+    addNote(e, title);
+    saveSettings();
   }
 }
 
