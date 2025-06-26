@@ -25,7 +25,7 @@
 
       "EMarkerType::Container": { "icon": "box", "title": "sid_effects_general_container_name", "category": "sid_misc_pda_map_playerTags_habar", "group": "misc" },
 
-      "EMarkerType::Photos":{ "icon": "message", "title": "sid_misc_QIO_Photo", "category": "sid_misc_modIO_LMB_props", "group": "misc" },
+      "EMarkerType::Photos":{ "icon": "question", "title": "sid_misc_QIO_Photo", "category": "sid_misc_modIO_LMB_props", "group": "misc" },
 
       "EMarkerType::Note":{ "icon": "follow", "category": "sid_misc_pda_hint_PlayerMarkers", "group": "notes" }
     }
@@ -92,7 +92,7 @@
       "TemplateAmmo": {"icon": "chest", "category": "sid_misc_pda_reward_ammo_grenades", "group": "items" },
       "^Gun": {"icon": "chest", "category": "sid_misc_pda_reward_weapon", "group": "items" },
       "Armor": {"icon": "chest", "category": "sid_misc_pda_reward_armor", "group": "items" },
-      "PDA|Note": {"icon": "follow", "category": "sid_questItemprototypes_BasePDA_name", "group": "items" },
+      "PDA|Note": {"icon": "message", "category": "sid_questItemprototypes_BasePDA_name", "group": "items" },
       "TemplateArtifact": {"icon": "artifact", "category": "sid_misc_pda_reward_artifacts", "group": "misc" },
       "QuestItem_Key|Tamplate_Key": {"icon": "yen", "category": "sid_misc_pda_map_playerTags_habar", "group": "actors" },
       "QuestItem_Fuse": {"icon": "yen", "category": "sid_misc_pda_map_playerTags_habar", "group": "actors" }
