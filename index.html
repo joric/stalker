@@ -1327,7 +1327,7 @@ function popupOnClick(e) {
     popup.querySelector('#popup-map-link').innerHTML = '<i class="fa-solid fa-pen-to-square"></i>';
     popup.querySelector('#popup-map-link').onclick = function(e) {
       e.preventDefault();
-      let title = prompt(lang['sid_misc_pda_hint_CreatePlayerLandmark']||'Edit marker:', o.title);
+      let title = prompt(lang['sid_misc_rename_hint']||'Edit marker:', o.title);
       if (title) {
         updateMarker(o.sid, title);
       }
