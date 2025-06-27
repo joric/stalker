@@ -8,20 +8,20 @@
       "EMarkerType::Teleport": { "icon": "circle-dot", "title": "sid_misc_controlsSettings_movement_jump_MLI", "category": "sid_misc_pda_map_playerTags_anomaly", "group": "actors" },
       "EMarkerType::TeleportTarget": { "icon": "circle-locked", "title": "sid_npc_name_tocka", "category": "sid_misc_pda_map_playerTags_anomaly", "group": "actors" },
 
-      "EMarkerType::Door": { "icon": "unlocked", "title": "sid_journal_stage_E11_MQ01_enter_the_room", "category": "sid_misc_pda_hint_Controls", "group": "actors" },
+      "EMarkerType::Door": { "icon": "circle", "title": "sid_journal_stage_E11_MQ01_enter_the_room", "category": "sid_misc_pda_hint_Controls", "group": "actors" },
       "EMarkerType::DynamicObject": { "icon": "lock", "title": "sid_misc_hint_cantopen", "category": "sid_misc_pda_hint_Controls", "group": "actors" },
 
-      "EMarkerType::CodeLock": { "icon": "repair", "title": "sid_misc_hint_entercode", "category": "sid_misc_pda_hint_Controls", "group": "actors" },
-      "EMarkerType::CardLock": { "icon": "repair", "title": "sid_misc_hint_door_open", "category": "sid_misc_pda_hint_Controls", "group": "actors" },
-      "EMarkerType::FusePanel": { "icon": "repair", "title": "sid_misc_QIO_Fuse_Install", "category": "sid_misc_pda_hint_Controls", "group": "actors" },
-      "EMarkerType::PadLock": { "icon": "repair", "title": "sid_npc_name_zamok", "category": "sid_misc_pda_hint_Controls", "group": "actors" },
-      "EMarkerType::Lever": { "icon": "repair", "title": "sid_misc_misc_turnOn", "category": "sid_misc_pda_hint_Controls", "group": "actors" },
-      "EMarkerType::Button": { "icon": "repair", "title": "sid_misc_hint_pressbutton", "category": "sid_misc_pda_hint_Controls", "group": "actors" },
-      "EMarkerType::Latch": { "icon": "repair", "title": "sid_misc_hint_pressbutton", "category": "sid_misc_pda_hint_Controls", "group": "actors" },
-      "EMarkerType::Valve": { "icon": "repair", "title": "sid_misc_hint_spin_valve", "category": "sid_misc_pda_hint_Controls", "group": "actors" },
+      "EMarkerType::CodeLock": { "icon": "circle-dot", "title": "sid_misc_hint_entercode", "category": "sid_misc_pda_hint_Controls", "group": "actors" },
+      "EMarkerType::CardLock": { "icon": "circle-dot", "title": "sid_misc_hint_door_open", "category": "sid_misc_pda_hint_Controls", "group": "actors" },
+      "EMarkerType::FusePanel": { "icon": "circle-dot", "title": "sid_misc_QIO_Fuse_Install", "category": "sid_misc_pda_hint_Controls", "group": "actors" },
+      "EMarkerType::PadLock": { "icon": "circle-dot", "title": "sid_npc_name_zamok", "category": "sid_misc_pda_hint_Controls", "group": "actors" },
+      "EMarkerType::Lever": { "icon": "circle-dot", "title": "sid_misc_misc_turnOn", "category": "sid_misc_pda_hint_Controls", "group": "actors" },
+      "EMarkerType::Button": { "icon": "circle-dot", "title": "sid_misc_hint_pressbutton", "category": "sid_misc_pda_hint_Controls", "group": "actors" },
+      "EMarkerType::Latch": { "icon": "circle-dot", "title": "sid_misc_hint_pressbutton", "category": "sid_misc_pda_hint_Controls", "group": "actors" },
+      "EMarkerType::Valve": { "icon": "circle-dot", "title": "sid_misc_hint_spin_valve", "category": "sid_misc_pda_hint_Controls", "group": "actors" },
 
-      "EMarkerType::Trap": { "icon": "repair", "title": "sid_misc_TrapDefuse", "category": "sid_misc_pda_hint_Controls", "group": "misc" },
-      "EMarkerType::Generator": { "icon": "repair", "title": "sid_journal_stage_E07_MQ03_RunElectric", "category": "sid_misc_pda_hint_Controls", "group": "actors" },
+      "EMarkerType::Trap": { "icon": "unlocked", "title": "sid_misc_TrapDefuse", "category": "sid_misc_pda_hint_Controls", "group": "misc" },
+      "EMarkerType::Generator": { "icon": "circle-dot", "title": "sid_journal_stage_E07_MQ03_RunElectric", "category": "sid_misc_pda_hint_Controls", "group": "actors" },
 
       "EMarkerType::Container": { "icon": "box", "title": "sid_effects_general_container_name", "category": "sid_misc_pda_map_playerTags_habar", "group": "misc" },
 
@@ -31,7 +31,7 @@
     }
   },
 
-  "EQuestNodeType::TeleportCharacter": { "icon": "circle", "title": "sid_npc_name_tocka", "category": "sid_misc_pda_Map_MarkerLocation", "group": "misc" },
+  "EQuestNodeType::TeleportCharacter": { "icon": "circle-locked", "title": "sid_npc_name_tocka", "category": "sid_misc_pda_Map_MarkerLocation", "group": "misc" },
 
   "ESpawnType::Marker" : {
     "items": {
@@ -83,15 +83,15 @@
       "HumanBase": { "icon": "soldier", "title": "NPC", "category": "NPC", "group": "misc" }
     },
     "match": {
-      "^(Bloodsucker|Chimera|Controller|PseudoDog|Deer|Pseudogiant|Burer|Poltergeist|Bayun|Flesh|Blinddog|Tushkan|Boar|ZombieFoster|Rat|Snork)": { "icon": "danger", "category": "sid_npc_name_mutant", "group": "enemies" }
+      "^(Bloodsucker|Chimera|Controller|PseudoDog|Deer|Pseudogiant|Burer|Poltergeist|Bayun|Flesh|Blinddog|Tushkan|Boar|ZombieFoster|Rat|Snork)": { "icon": "claws", "category": "sid_npc_name_mutant", "group": "enemies" }
     }
   },
   "ESpawnType::Item": { "category": "sid_misc_pda_reward_random",
     "match": {
       "TemplateConsumable": {"icon": "bag", "category": "sid_misc_pda_reward_food_drink", "group": "misc" },
-      "TemplateAmmo": {"icon": "chest", "category": "sid_misc_pda_reward_ammo_grenades", "group": "items" },
-      "^Gun": {"icon": "chest", "category": "sid_misc_pda_reward_weapon", "group": "items" },
-      "Armor": {"icon": "chest", "category": "sid_misc_pda_reward_armor", "group": "items" },
+      "TemplateAmmo": {"icon": "repair", "category": "sid_misc_pda_reward_ammo_grenades", "group": "items" },
+      "^Gun": {"icon": "repair", "category": "sid_misc_pda_reward_weapon", "group": "items" },
+      "Armor": {"icon": "repair", "category": "sid_misc_pda_reward_armor", "group": "items" },
       "PDA|Note": {"icon": "message", "category": "sid_questItemprototypes_BasePDA_name", "group": "items" },
       "TemplateArtifact": {"icon": "artifact", "category": "sid_misc_pda_reward_artifacts", "group": "misc" },
       "QuestItem_Key|Tamplate_Key": {"icon": "yen", "category": "sid_misc_pda_map_playerTags_habar", "group": "actors" },
@@ -99,12 +99,12 @@
     }
   },
 
-  "ESpawnType::Anomaly": {"icon": "anomaly", "category": "sid_misc_pda_map_playerTags_anomaly", "group": "anomalies" },
-  "ESpawnType::ElectroAnomaly": {"icon": "anomaly", "category": "sid_misc_pda_map_playerTags_anomaly", "group": "anomalies" },
-  "ESpawnType::PsyAnomaly": {"icon": "anomaly", "category": "sid_misc_pda_map_playerTags_anomaly", "group": "anomalies" },
-  "ESpawnType::PillowAnomaly": {"icon": "anomaly", "category": "sid_misc_pda_map_playerTags_anomaly", "group": "anomalies" },
-  "ESpawnType::SoapBubbleAnomaly": {"icon": "anomaly", "category": "sid_misc_pda_map_playerTags_anomaly", "group": "anomalies" },
-  "ESpawnType::AnomalySpawner": {"icon": "anomaly", "category": "sid_misc_pda_map_playerTags_anomaly", "group": "anomalies" },
+  "ESpawnType::Anomaly": {"icon": "artifact", "category": "sid_misc_pda_map_playerTags_anomaly", "group": "anomalies" },
+  "ESpawnType::ElectroAnomaly": {"icon": "artifact", "category": "sid_misc_pda_map_playerTags_anomaly", "group": "anomalies" },
+  "ESpawnType::PsyAnomaly": {"icon": "artifact", "category": "sid_misc_pda_map_playerTags_anomaly", "group": "anomalies" },
+  "ESpawnType::PillowAnomaly": {"icon": "artifact", "category": "sid_misc_pda_map_playerTags_anomaly", "group": "anomalies" },
+  "ESpawnType::SoapBubbleAnomaly": {"icon": "artifact", "category": "sid_misc_pda_map_playerTags_anomaly", "group": "anomalies" },
+  "ESpawnType::AnomalySpawner": {"icon": "artifact", "category": "sid_misc_pda_map_playerTags_anomaly", "group": "anomalies" },
   "ESpawnType::Radiation": {"icon": "radiation", "title": "sid_misc_pda_map_playerTags_radiation", "category": "sid_misc_pda_reward_random", "group": "misc" },
   "ESpawnType::ArtifactSpawner": {"icon": "artifact", "category": "sid_misc_pda_reward_artifacts", "group": "misc" }
 }
