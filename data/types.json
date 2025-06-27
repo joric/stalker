@@ -27,7 +27,11 @@
 
       "EMarkerType::Photos":{ "icon": "question", "title": "sid_misc_QIO_Photo", "category": "sid_misc_modIO_LMB_props", "group": "misc" },
 
-      "EMarkerType::Note":{ "icon": "follow", "category": "sid_misc_pda_hint_PlayerMarkers", "group": "notes" }
+      "EMarkerType::Note":{ "icon": "follow", "category": "sid_misc_pda_hint_PlayerMarkers", "group": "notes" },
+      "EMarkerType::Danger":{ "icon": "danger", "category": "sid_misc_pda_hint_PlayerMarkers", "group": "notes" },
+      "EMarkerType::Radiation":{ "icon": "radiation-marker", "category": "sid_misc_pda_hint_PlayerMarkers", "group": "notes" },
+      "EMarkerType::Anomaly":{ "icon": "anomaly", "category": "sid_misc_pda_hint_PlayerMarkers", "group": "notes" },
+      "EMarkerType::Chest":{ "icon": "chest", "category": "sid_misc_pda_hint_PlayerMarkers", "group": "notes" }
     }
   },
 

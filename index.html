@@ -147,6 +147,8 @@ let searchControl = null;
 let localImages = {};
 let firstRun = false;
 
+let customNotes = ['EMarkerType::Note','EMarkerType::Danger','EMarkerType::Radiation','EMarkerType::Anomaly','EMarkerType::Chest'];
+
 const capitalize = s => s[0].toUpperCase()+s.slice(1);
 const cmpAlphaNum = (a,b) => a[0].localeCompare(b[0], 'en', { numeric: true });
 
@@ -793,7 +795,7 @@ function renderItem(feature, extended=false, verbose=false) {
     desc = desc || translate_item(o.name, true);
   }
 
-  if (o.type=='ESpawnType::CustomMarker' && o.name=='EMarkerType::Note') {
+  if (o.type=='ESpawnType::CustomMarker' && customNotes.includes(o.name)) {
     title = o.title;
   }
 
@@ -1322,6 +1324,16 @@ function popupOnClick(e) {
   let editable = o.sid && o.sid.startsWith('FF');
   if (editable) {
 
+    popup.querySelector('#popup-form-id-link').href = '#';
+    popup.querySelector('#popup-form-id-link').title = 'Change Type';
+    popup.querySelector('#popup-form-id-link').innerHTML = '<i class="fa-solid fa-rotate"></i>';
+    popup.querySelector('#popup-form-id-link').onclick = function(e) {
+      e.preventDefault();
+      let name = customNotes[ (customNotes.indexOf(o.name) + 1) % customNotes.length ];
+      updateMarker(o.sid, o.title, name);
+      return false;
+    }
+
     popup.querySelector('#popup-map-link').href = '#';
     popup.querySelector('#popup-map-link').title = 'Edit';
     popup.querySelector('#popup-map-link').innerHTML = '<i class="fa-solid fa-pen-to-square"></i>';
@@ -1333,6 +1345,7 @@ function popupOnClick(e) {
       }
       return false;
     }
+
     popup.querySelector('#popup-wiki-link').href = '#';
     popup.querySelector('#popup-wiki-link').title = 'Delete';
     popup.querySelector('#popup-wiki-link').innerHTML = '<i class="fa-solid fa-trash"></i>';
@@ -1573,16 +1586,8 @@ function hideTooltipExt(e) {
 
 dedup = {};
 
-function addMarker(feature) {
-  let o = feature.properties;
-
-  if (o.area && !o.area.includes('WorldMap_WP')) return null;
-  if (o.name=='Hub') return null; // 1 marker (special case)
-
-  let info = renderItem(feature);
-
+function getSymbol(o, info) {
   let prop = info.prop;
-
   let icon = prop.icon || 'question';
   let group = prop.group || 'misc';
 
@@ -1654,14 +1659,26 @@ function addMarker(feature) {
     ]
   }
 
+  return symbol;
+}
+
+function addMarker(feature) {
+  let o = feature.properties;
+
+  if (o.area && !o.area.includes('WorldMap_WP')) return null;
+  if (o.name=='Hub') return null; // 1 marker (special case)
+
   //c = {x: c[0], y:c[1], z:c[2] };
   //c = scaleAltitude(c);
 
   let c = feature.geometry.coordinates;
   c = scaleCoordinateArray(c);
 
+  let info = renderItem(feature);
+  let group = info.group;
+
   var marker = new maptalks.Marker(c, {
-    symbol: symbol,
+    symbol: getSymbol(o, info),
     draggable: o.sid && o.sid.startsWith('FF'),
   });
 
@@ -2225,7 +2242,7 @@ function onDragEnd(e) {
   updateMarker(e.target.feature.properties.sid);
 }
 
-function updateMarker(sid, title) {
+function updateMarker(sid, title, name) {
   let group = 'notes';
   let markerLayer = groupLayer.getLayer(capitalize(group));
 
@@ -2238,12 +2255,19 @@ function updateMarker(sid, title) {
       o.title = title.substring(0,100);
     }
 
+    if (name) {
+      o.name = name;
+      let symbol = getSymbol(marker.feature.properties, renderItem(marker.feature));
+      marker.updateSymbol(symbol);
+    }
+
     let loc = marker.getCoordinates();
 
     for (f of localData.customMarkers.features) {
       if (sid == f.properties.sid) {
         f.geometry.coordinates = [loc.x, loc.y, 0];
         f.properties.title = o.title;
+        f.properties.name = o.name;
         break;
       }
     }
@@ -2293,7 +2317,7 @@ function addNote(e, title) {
     "properties": {
       "sid": sid,
       "type": "ESpawnType::CustomMarker",
-      "name": "EMarkerType::Note",
+      "name": customNotes[0],
       "title": title.substring(0,100),
       "group": "notes",
     }
