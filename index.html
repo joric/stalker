@@ -816,8 +816,8 @@ function renderItem(feature, extended=false, verbose=false) {
   let location = '';
 
   if (o.lsid) {
-    title = lang[`sid_questItemprototypes_${o.lsid}_name`] || title;
-    desc = lang[`sid_questItemprototypes_${o.lsid}_description`] || desc;
+    title = lang[`sid_items_${o.lsid}_name`] || lang[`sid_questItemprototypes_${o.lsid}_name`] || title;
+    desc = lang[`sid_items_${o.lsid}_description`] || lang[`sid_questItemprototypes_${o.lsid}_description`] || desc;
   }
 
   if (o.clue) {
