@@ -1081,8 +1081,8 @@ input::selection {
 #save-controls {
   z-index: 1;
   position: absolute;
-  right: 78px;
-  top: 12px;
+  right: 235px;
+  top: 16px;
 }
 
 #rank-controls {
@@ -1091,11 +1091,30 @@ input::selection {
   display: flex;
   gap: 8px;
   right: 78px;
-  top: 40px;
+  top: 16px;
+}
+
+@media (max-width: 1220px) {
+
+  #save-controls {
+    z-index: 1;
+    position: absolute;
+    right: 78px;
+    top: 12px;
+  }
+
+  #rank-controls {
+    z-index: 1;
+    position: absolute;
+    display: flex;
+    gap: 8px;
+    right: 78px;
+    top: 40px;
+  }
+
 }
 
 @media (max-width: 760px) {
-
   .search-container {
     /*top: 24px;*/
   }
@@ -1117,6 +1136,5 @@ input::selection {
     left: 50%;
     transform: translateX(-50%);
   }
-
 }
 
