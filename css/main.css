@@ -1081,8 +1081,8 @@ input::selection {
 #save-controls {
   z-index: 1;
   position: absolute;
-  right: 64px;
-  top: 16px;
+  right: 78px;
+  top: 12px;
 }
 
 #rank-controls {
@@ -1090,7 +1090,7 @@ input::selection {
   position: absolute;
   display: flex;
   gap: 8px;
-  right: 64px;
+  right: 78px;
   top: 40px;
 }
 
