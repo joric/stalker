@@ -1082,7 +1082,7 @@ input::selection {
   z-index: 1;
   position: absolute;
   right: 235px;
-  top: 14px;
+  top: 16px;
 }
 
 #rank-controls {
@@ -1091,10 +1091,10 @@ input::selection {
   display: flex;
   gap: 8px;
   right: 78px;
-  top: 12px;
+  top: 14px;
 }
 
-@media (max-width: 1220px) {
+@media (max-width: 950px) {
 
   #save-controls {
     z-index: 1;
