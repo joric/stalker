@@ -1078,6 +1078,10 @@ input::selection {
   padding-top: 2px;
 }
 
+.search-container {
+  /*top: 24px;*/
+}
+
 #save-controls {
   z-index: 1;
   position: absolute;
@@ -1115,18 +1119,16 @@ input::selection {
 }
 
 @media (max-width: 760px) {
-  .search-container {
-    /*top: 24px;*/
-  }
-
   #save-controls {
     top: auto;
-    left: auto;
-    right: auto;
+    left: 0;
+    right: 0;
     bottom: 42px;
     padding-left: 64px;
     padding-right: 64px;
     width: 100%;
+    display: flex;
+    justify-content: center;
   }
 
   #rank-controls {
