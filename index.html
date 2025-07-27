@@ -237,36 +237,36 @@ function loadMap() {
 
     baseLayer: new maptalks.GroupTileLayer('Base TileLayer', [
 
-      new maptalks.TileLayer('PDA', {
+      new maptalks.TileLayer('T_WorldMap_UDIM', {
         maxAvailableZoom: 7,
         urlTemplate: `${tileset_base}/tiles/{z}/{x}/{y}.jpg`,
         repeatWorld: false,
         tileSize: 512,
-        visible: settings.baseLayer == 'PDA',
+        visible: settings.baseLayer == 'T_WorldMap_UDIM' || settings.baseLayer == 'PDA',
       }),
 
-      new maptalks.TileLayer('World Base', {
+      new maptalks.TileLayer('T_GLOBAL_MAP_LEGEND', {
+        maxAvailableZoom: 4,
+        urlTemplate: `${tileset_base}/extras/wl/{z}/{x}/{y}.png`,
+        repeatWorld: false,
+        tileSize: 512,
+        visible: settings.baseLayer == 'T_GLOBAL_MAP_LEGEND',
+      }),
+
+      new maptalks.TileLayer('T_GLOBAL_MAP_BASE', {
         maxAvailableZoom: 5,
         urlTemplate: `${tileset_base}/extras/wb/{z}/{x}/{y}.jpg`,
         repeatWorld: false,
         tileSize: 512,
-        visible: settings.baseLayer == 'World Base',
+        visible: settings.baseLayer == 'T_GLOBAL_MAP_BASE',
       }),
 
-      new maptalks.TileLayer('World Legend', {
-        maxAvailableZoom: 4,
-        urlTemplate: `${tileset_base}/extras/wl/{z}/{x}/{y}.jpg`,
-        repeatWorld: false,
-        tileSize: 512,
-        visible: settings.baseLayer == 'World Legend',
-      }),
-
-      new maptalks.TileLayer('LDScheme', {
+      new maptalks.TileLayer('T_WorldMap_LDScheme', {
         maxAvailableZoom: 3,
         urlTemplate: `${tileset_base}/extras/ld/{z}/{x}/{y}.png`,
         repeatWorld: false,
         tileSize: 512,
-        visible: settings.baseLayer == 'LDScheme',
+        visible: settings.baseLayer == 'T_WorldMap_LDScheme',
       }),
 
     ]),
@@ -340,7 +340,7 @@ function loadMap() {
   let extent = new maptalks.Extent(left-gap, top-gap, right+gap, bottom+gap);
   map.setMaxExtent(extent);
 
-  new maptalks.TileLayer('Stalker1', {
+  new maptalks.TileLayer('Stalker 1 Overlay', {
     maxAvailableZoom: 3,
     urlTemplate: `${tileset_base}/extras/s1/{z}/{x}/{y}.png`,
     repeatWorld: false,
