@@ -245,12 +245,20 @@ function loadMap() {
         visible: settings.baseLayer == 'PDA',
       }),
 
-      new maptalks.TileLayer('GlobalMap', {
+      new maptalks.TileLayer('World Base', {
         maxAvailableZoom: 5,
         urlTemplate: `${tileset_base}/extras/wb/{z}/{x}/{y}.jpg`,
         repeatWorld: false,
         tileSize: 512,
-        visible: settings.baseLayer == 'GlobalMap',
+        visible: settings.baseLayer == 'World Base',
+      }),
+
+      new maptalks.TileLayer('World Legend', {
+        maxAvailableZoom: 4,
+        urlTemplate: `${tileset_base}/extras/wl/{z}/{x}/{y}.jpg`,
+        repeatWorld: false,
+        tileSize: 512,
+        visible: settings.baseLayer == 'World Legend',
       }),
 
       new maptalks.TileLayer('LDScheme', {
