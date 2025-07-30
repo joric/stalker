@@ -92,7 +92,7 @@
   },
   "ESpawnType::Item": { "category": "sid_misc_pda_reward_random",
     "match": {
-      "TemplateConsumable": {"icon": "bag", "category": "sid_misc_pda_reward_food_drink", "group": "misc" },
+      "(TemplateConsumable|Energetic)": {"icon": "bag", "category": "sid_misc_pda_reward_food_drink", "group": "misc" },
       "TemplateAmmo": {"icon": "repair", "category": "sid_misc_pda_reward_ammo_grenades", "group": "items" },
       "^Gun": {"icon": "repair", "category": "sid_misc_pda_reward_weapon", "group": "items" },
       "Armor": {"icon": "repair", "category": "sid_misc_pda_reward_armor", "group": "items" },
