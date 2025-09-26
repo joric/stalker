@@ -99,7 +99,8 @@
       "PDA|Note": {"icon": "message", "category": "sid_questItemprototypes_BasePDA_name", "group": "items" },
       "TemplateArtifact": {"icon": "artifact", "category": "sid_misc_pda_reward_artifacts", "group": "misc" },
       "QuestItem_Key|Tamplate_Key": {"icon": "yen", "category": "sid_misc_pda_map_playerTags_habar", "group": "actors" },
-      "QuestItem_Fuse": {"icon": "yen", "category": "sid_misc_pda_map_playerTags_habar", "group": "actors" }
+      "QuestItem_Fuse": {"icon": "yen", "category": "sid_misc_pda_map_playerTags_habar", "group": "actors" },
+      "(Helmet|Mask|Goggles)": {"icon": "repair", "category": "sid_misc_pda_reward_armor", "group": "items" }
     }
   },
 
@@ -108,6 +109,7 @@
   "ESpawnType::PsyAnomaly": {"icon": "artifact", "category": "sid_misc_pda_map_playerTags_anomaly", "group": "anomalies" },
   "ESpawnType::PillowAnomaly": {"icon": "artifact", "category": "sid_misc_pda_map_playerTags_anomaly", "group": "anomalies" },
   "ESpawnType::SoapBubbleAnomaly": {"icon": "artifact", "category": "sid_misc_pda_map_playerTags_anomaly", "group": "anomalies" },
+  "ESpawnType::LightningBallAnomaly": {"icon": "artifact", "category": "sid_misc_pda_map_playerTags_anomaly", "group": "anomalies" },
   "ESpawnType::AnomalySpawner": {"icon": "artifact", "category": "sid_misc_pda_map_playerTags_anomaly", "group": "anomalies" },
   "ESpawnType::Radiation": {"icon": "radiation", "title": "sid_misc_pda_map_playerTags_radiation", "category": "sid_misc_pda_reward_random", "group": "misc" },
   "ESpawnType::ArtifactSpawner": {"icon": "artifact", "category": "sid_misc_pda_reward_artifacts", "group": "misc" }
