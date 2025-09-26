@@ -1379,7 +1379,14 @@ function popupOnClick(e) {
 
   let contentElement = popup.firstElementChild;
 
-  e.target._infoWindow.setOptions({custom: true, dy: 16});
+  let symbol = e.target.getSymbol()
+  let markerDy = 0;
+
+  if (symbol && symbol.markerHeight) {
+    markerDy = Math.round(symbol.markerHeight/2) - 8;
+  }
+
+  e.target._infoWindow._setOptions({custom: true, dy: markerDy});
   e.target._infoWindow.setContent(contentElement);
 
   contentElement.addEventListener('contextmenu', function(e) { e.stopPropagation()}, true); // enable default context menu
@@ -1622,22 +1629,22 @@ function getSymbol(o, info) {
   let found = settings.markedItems[o.sid];
   let opacity = found ? foundOpacity : 1;
 
+  let markerDx = 0;
+  let markerDy = 0;//-Math.round(size/2);
+  let textDx = iconSize * 0.55;
+  let textDy = 0;
+
   let symbol = {
     markerFile   : image,
     markerWidth  : size,
     markerHeight : size,
-    markerDx     : 0,
-    markerDy     : 0,
+    markerDx     : markerDx,
+    markerDy     : markerDy,
     markerOpacity: opacity,
     markerVerticalAlignment: 'middle',
   };
 
   let title  = info.title;
-
-  let markerDx = 0;
-  let markerDy = 0;
-  let textDx = iconSize * 0.55;
-  let textDy = 0;
 
   if (group=='regions') {
     textDx = 16;
