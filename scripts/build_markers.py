@@ -15,6 +15,9 @@ cache_file = 'cache.json'
 markers_file = '../data/markers.json'
 world_path = 'Stalker2/Content/_Stalker_2/maps/_Stalker2_WorldMap/WorldMap_WP'
 
+from UnrealFileProxy import *
+unrealFileProxy = None
+
 bp_classes = {
     'BP_Bed_OnBed_C':'EMarkerType::Bed',
     'BP_PlayerStash_C':'EMarkerType::PlayerStorage',
@@ -449,12 +452,14 @@ def get_filename(package_path):
     return os.path.normpath(os.path.join(cache_dir,package_path))+'.json'
 
 bp_counter = Counter()
-bp_missing_files = []
+bp_missing_files = set()
 
 def get_bp_cells(package_path):
     out = []
+
     filename = get_filename(package_path)
     data = json.load(open(filename, 'r', encoding='utf-8-sig'))
+
     for o in data:
         p = o.get('Properties',{})
         r = p.get('SubObjectsToCellRemapping',{})
@@ -463,18 +468,51 @@ def get_bp_cells(package_path):
             for name in bp_classes:
                 if name in key:
                     out.append(cell)
+                    bp_counter[name] += 1
 
                     package_path = os.path.join(world_path,'_Generated_', cell)
                     filename = os.path.normpath(os.path.join(cache_dir, package_path)) + '.json'
-
-                    #bp_counter[name] += 1
-
                     if not os.path.exists(filename):
                         #print('NOT CACHED', cell, 'need for', key)
+                        bp_missing_files.add(filename)
                         continue
 
     #print('found items', bp_counter)
+
+    print('missing files', len(bp_missing_files))
+
     return out
+
+def checkFileProxy(filename):
+    global unrealFileProxy
+
+    if not os.path.exists(filename):
+        if not unrealFileProxy:
+            print('Resource not found, loading packs...')
+
+            unrealFileProxy = UnrealFileProxy(
+                 'E:/Games/S.T.A.L.K.E.R. 2.Heart.of.Chornobyl.Ultimate.Editon-InsaneRamZes/Stalker2/Content/Paks',
+                 '0x33A604DF49A07FFD4A4C919962161F5C35A134D37EFA98DB37A34F6450D7D386',
+                 'D:/Shared/Tools/Hacking/Games/UE/FModel/Stalker2.Mappings.usmap',
+             )
+
+        unrealFileProxy.save_json('Stalker2/Content/_Stalker_2/maps/_Stalker2_WorldMap/WorldMap_WP/_Generated_/' + cell +'.umap', filename)
+        bp_missing_files.discard(filename)
+        print(len(bp_missing_files),'files left', filename)
+
+
+def readCellFile(cell):
+    package_path = os.path.join(world_path,'_Generated_', cell)
+    filename = os.path.normpath(os.path.join(cache_dir, package_path)) + '.json'
+
+    #checkFileProxy(filename) # cannot use that just yet, pyUE4Parse doesn't export item properties
+
+    if not os.path.exists(filename):
+        return {}
+
+    return json.load(open(filename, 'r', encoding='utf-8-sig'))
+
+    return {}
 
 def get_bp_markers(cells):
     features = []
@@ -484,14 +522,8 @@ def get_bp_markers(cells):
     cached_rot = {}
 
     for cell in cells:
-        package_path = os.path.join(world_path,'_Generated_', cell)
-        filename = os.path.normpath(os.path.join(cache_dir, package_path)) + '.json'
 
-        if not os.path.exists(filename):
-            bp_missing_files.append(filename)
-            continue
-
-        data = json.load(open(filename, 'r', encoding='utf-8-sig'))
+        data = readCellFile(cell)
 
         def add_prop(prop, p, name, k):
             value = p.get(name)
