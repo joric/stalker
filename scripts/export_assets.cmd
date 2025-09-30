@@ -12,7 +12,7 @@ set options=--mix-output --key %key% --mappings %mappings% %paks% UE5_1
 
 set out=C:\Temp\Exports
 
-if not exist "%out%\Stalker2\Content\_Stalker_2\maps\_Stalker2_WorldMap\WorldMap_WP.json1" (
+if not exist "%out%\Stalker2\Content\_Stalker_2\maps\_Stalker2_WorldMap\WorldMap_WP.json" (
 	%exe% %options% %~dp0\assetlist.txt %out%
 )
 
