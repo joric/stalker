@@ -3,12 +3,12 @@
 # textures don't seem to work without a patch, see https://github.com/CrystalFerrai/Ue4Export/issues/3
 # also it seems that PF_BC7 format is not supported
 
-[Text]
-Stalker2/Content/_Stalker_2/maps/_Stalker2_WorldMap/WorldMap_WP.umap
-
 [Texture]
 Stalker2/Content/GameLite/FPS_Game/UI/UIIcons/Markers/*
 Stalker2/Content/GameLite/FPS_Game/UIRemaster/UITextures/Inventory/*
+
+[Text]
+Stalker2/Content/_Stalker_2/maps/_Stalker2_WorldMap/WorldMap_WP.umap
 
 [Raw]
 #Stalker2/Content/GameLite/GameData/*
