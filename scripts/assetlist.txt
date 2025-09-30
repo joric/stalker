@@ -7,8 +7,7 @@ Stalker2/Content/GameLite/FPS_Game/UI/UIIcons/Markers/*
 Stalker2/Content/GameLite/FPS_Game/UIRemaster/UITextures/Inventory/*
 
 [Raw]
-Stalker2/Content/GameLite/GameData/*/*.cfg
-Stalker2/Content/GameLite/DLCGameData/*/*.cfg
+Stalker2/Content/GameLite/*GameData*/*.cfg
 
 [Text]
 Stalker2/Content/_Stalker_2/maps/_Stalker2_WorldMap/WorldMap_WP.umap
