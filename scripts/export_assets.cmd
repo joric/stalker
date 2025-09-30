@@ -4,7 +4,6 @@ rem download Ue4Export here: https://github.com/CrystalFerrai/Ue4Export
 rem assetlist.txt must have [Text] as a first line (ini header) to export files as json
 
 set exe=D:\Shared\Tools\Hacking\Games\UE\Ue4Export\Ue4Export.exe
-rem set exe=C:\Temp\github\Ue4Export\Ue4Export\bin\Release\net8.0\win-x64\publish\Ue4Export.exe
 
 set gamePath=E:\Games\S.T.A.L.K.E.R. 2.Heart.of.Chornobyl.Ultimate.Editon-InsaneRamZes\
 set mappings="%gamePath%\Stalker2.usmap"
