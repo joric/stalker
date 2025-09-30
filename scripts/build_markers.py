@@ -927,12 +927,6 @@ def export_markers(cache, export_assetlist=False):
 if __name__ == '__main__':
     tm = time.time()
     data = load_cache()
-
-    #export_markers(data, export_assetlist=True)
-
     export_markers(data)
-
-    if bp_missing_files: print(len(bp_missing_files), 'cell files missing')
-    #print('bp_counter', bp_counter)
     print(f'finished in {time.time()-tm:f} seconds')
 
