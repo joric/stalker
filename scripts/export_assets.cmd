@@ -16,7 +16,7 @@ if not exist "%out%\Stalker2\Content\_Stalker_2\maps\_Stalker2_WorldMap\WorldMap
 	%exe% %options% %~dp0\assetlist.txt %out%
 )
 
-if not exist "%out%\Stalker2\Content\_Stalker_2\maps\_Stalker2_WorldMap\WorldMap_WP\_Generated_" (
+if exist %~dp0\missing_files.txt (
 	%exe% %options% %~dp0\missing_files.txt %out%
 )
 
