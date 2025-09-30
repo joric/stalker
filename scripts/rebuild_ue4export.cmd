@@ -1,13 +1,16 @@
-cd /d C:\Temp\github\Ue4Export
+@echo off
+
+set repo=C:\Temp\github\Ue4Export
+set dest=D:\Shared\Tools\Hacking\Games\UE\Ue4Export
+
+cd /d %repo%
 
 dotnet publish -p:DebugType=None -r win-x64 -c Release --self-contained false || exit
 
-copy /Y C:\Temp\github\Ue4Export\Ue4Export\bin\Release\net8.0\win-x64\publish\*.* D:\Shared\Tools\Hacking\Games\UE\Ue4Export\
-copy /Y C:\Temp\github\Ue4Export\CUE4Parse\CUE4Parse-Conversion\Resources\*.dll D:\Shared\Tools\Hacking\Games\UE\Ue4Export\
+copy /Y %repo%\Ue4Export\bin\Release\net8.0\win-x64\publish\*.* %dest%
+copy /Y %repo%\CUE4Parse\CUE4Parse-Conversion\Resources\*.dll %dest%
 
-rem set exe=C:\Temp\github\Ue4Export\Ue4Export\bin\Release\net8.0\win-x64\publish\Ue4Export.exe
-
-set exe=D:\Shared\Tools\Hacking\Games\UE\Ue4Export\Ue4Export.exe
+set exe=%dest%\Ue4Export.exe
 
 cd /d %~dp0
 
