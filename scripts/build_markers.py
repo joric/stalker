@@ -469,17 +469,24 @@ def get_bp_cells(package_path):
                 if name in key:
                     out.append(cell)
                     bp_counter[name] += 1
-
                     package_path = os.path.join(world_path,'_Generated_', cell)
                     filename = os.path.normpath(os.path.join(cache_dir, package_path)) + '.json'
                     if not os.path.exists(filename):
                         #print('NOT CACHED', cell, 'need for', key)
-                        bp_missing_files.add(filename)
+                        umap = os.path.join(world_path,'_Generated_', cell).replace('\\','/') + '.umap'
+                        bp_missing_files.add(umap)
                         continue
 
     #print('found items', bp_counter)
 
-    print('missing files', len(bp_missing_files))
+    if bp_missing_files:
+        fname = 'missing_files.txt'
+        print(f'ERROR! Missing files detected, saving to {fname} (you must extract missing files to {cache_dir} with Ue4Export)')
+        f = open(fname,'w')
+        print("[Text]", file=f)
+        for name in bp_missing_files:
+            print(name, file=f)
+        exit(0)
 
     return out
 
@@ -707,7 +714,7 @@ def cleanup_prop(prop):
             if not prop[k]:
                 del prop[k]
 
-def export_markers(cache):
+def export_markers(cache, export_assetlist=False):
     features = []
     protos = {}
     gen = {}
@@ -920,7 +927,11 @@ def export_markers(cache):
 if __name__ == '__main__':
     tm = time.time()
     data = load_cache()
+
+    #export_markers(data, export_assetlist=True)
+
     export_markers(data)
+
     if bp_missing_files: print(len(bp_missing_files), 'cell files missing')
     #print('bp_counter', bp_counter)
     print(f'finished in {time.time()-tm:f} seconds')

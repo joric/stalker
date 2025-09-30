@@ -1,0 +1,14 @@
+# config file for https://github.com/CrystalFerrai/Ue4Export
+# game data is packed to bin since 1.6, use https://www.nexusmods.com/stalker2heartofchornobyl/mods/1653
+# textures don't seem to work, see https://github.com/CrystalFerrai/Ue4Export/issues/2
+
+[Text]
+Stalker2/Content/_Stalker_2/maps/_Stalker2_WorldMap/WorldMap_WP.umap
+
+[Texture]
+Stalker2/Content/GameLite/FPS_Game/UIRemaster/UITextures/LB-bg-1.uasset
+
+[Raw]
+#Stalker2/Content/GameLite/GameData/*
+#Stalker2/Content/GameLite/DLCGameData/*
+
