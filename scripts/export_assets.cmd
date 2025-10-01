@@ -10,7 +10,7 @@ set gamePath=E:\Games\S.T.A.L.K.E.R. 2.Heart.of.Chornobyl.Ultimate.Editon-Insane
 set mappings="%gamePath%\Stalker2.usmap"
 set paks="%gamePath%\Stalker2\Content\Paks"
 set key=0x33A604DF49A07FFD4A4C919962161F5C35A134D37EFA98DB37A34F6450D7D386
-set options=--mix-output --key %key% --mappings %mappings% %paks% UE5_1
+set options=--skip-existing --mix-output --key %key% --mappings %mappings% %paks% UE5_1
 
 set out=C:\Temp\Exports
 
