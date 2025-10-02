@@ -2,12 +2,12 @@
 # game data is packed to bin since 1.6, use https://www.nexusmods.com/stalker2heartofchornobyl/mods/1653
 # textures don't seem to work without a patch, see https://github.com/CrystalFerrai/Ue4Export/issues/3
 
+[Text]
+Stalker2/Content/_Stalker_2/maps/_Stalker2_WorldMap/WorldMap_WP.umap
+
 [Texture]
 Stalker2/Content/GameLite/FPS_Game/UI/UIIcons/Markers/*
 Stalker2/Content/GameLite/FPS_Game/UIRemaster/UITextures/Inventory/*
 
 [Raw]
 Stalker2/Content/GameLite/*GameData*/*.cfg
-
-[Text]
-Stalker2/Content/_Stalker_2/maps/_Stalker2_WorldMap/WorldMap_WP.umap

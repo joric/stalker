@@ -481,7 +481,7 @@ def get_bp_cells(package_path):
 
     if bp_missing_files:
         fname = 'missing_files.txt'
-        print(f'ERROR! Missing files detected, saving to {fname} (you must extract missing files to {cache_dir} with Ue4Export)')
+        print(f'ERROR! Missing files detected, saving to {fname}...')
         f = open(fname,'w')
         print("[Text]", file=f)
         for name in bp_missing_files:
