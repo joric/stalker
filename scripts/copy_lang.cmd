@@ -2,7 +2,7 @@
 
 set path=D:\Shared\Tools\Hacking\Games\UE\S2HOCMM;%path%
 
-set gamePath="E:\Games\S.T.A.L.K.E.R. 2.Heart.of.Chornobyl.Ultimate.Editon-InsaneRamZes"
+set gamePath="E:\Games\S.T.A.L.K.E.R. 2.Heart.of.Chornobyl.Ultimate.Editon"
 set mergeLocalizationFrom=".\JSONs"
 set saveModTo=".\ModOutput\Pak\localization_P.utoc"
 set localizationDBFolder=".\LocalizationDB"

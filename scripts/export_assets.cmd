@@ -5,7 +5,7 @@ rem download CUE4Parse.CLI here: https://github.com/joric/CUE4Parse.CLI
 set exe=cue4parse
 
 set out=C:\Temp\Exports
-set root=E:\Games\S.T.A.L.K.E.R. 2.Heart.of.Chornobyl.Ultimate.Editon-InsaneRamZes
+set root=E:\Games\S.T.A.L.K.E.R. 2.Heart.of.Chornobyl.Ultimate.Editon
 set mappings=%root%\Stalker2.usmap
 
 set options=-i "%root%" -m "%mappings%" -g GAME_Stalker2 -o %out% -y
