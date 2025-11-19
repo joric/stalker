@@ -517,9 +517,11 @@ def readCellFile(cell):
     if not os.path.exists(filename):
         return {}
 
-    return json.load(open(filename, 'r', encoding='utf-8-sig'))
-
-    return {}
+    try:
+        return json.load(open(filename, 'r', encoding='utf-8-sig'))
+    except Exception as e:
+        print(f"Could not read {filename}, Error: {type(e).__name__} - {e}")
+        return {}
 
 def get_bp_markers(cells):
     features = []
