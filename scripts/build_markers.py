@@ -587,7 +587,7 @@ def get_bp_markers(cells):
                     add_prop(prop, p, 'bUnbreakable', 'unbreakable')
                     add_prop(prop, p, 'bIsLocked', 'locked')
                     add_prop(prop, p, 'bBroken', 'broken')
-                    add_prop(prop, p, '#Image[4]', 'image_index') # BP_Photos
+                    add_prop(prop, p, '#Image', 'image_index') # BP_Photos, was "#Image[4] in 1.6"
 
                     if 'BP_Photos' in name and 'image_index' not in prop:
                         prop['image_index'] = 0 # fix FModel issues with 0 keys
