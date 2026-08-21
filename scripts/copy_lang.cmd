@@ -1,5 +1,17 @@
 @echo off
 
+rem stalker 2.0 update just uses individual locres
+
+mkdir ..\data\Localization
+
+copy C:\Temp\Exports\Stalker2\Content\Localization\Game\en\Game.json ..\data\Localization\Localization_EN.json
+copy C:\Temp\Exports\Stalker2\Content\Localization\Game\fr\Game.json ..\data\Localization\Localization_FR.json
+copy C:\Temp\Exports\Stalker2\Content\Localization\Game\ru\Game.json ..\data\Localization\Localization_RU.json
+copy C:\Temp\Exports\Stalker2\Content\Localization\Game\uk\Game.json ..\data\Localization\Localization_UA.json
+
+
+exit
+
 set path=D:\Shared\Tools\Hacking\Games\UE\S2HOCMM;%path%
 
 set gamePath="E:\Games\S.T.A.L.K.E.R. 2.Heart.of.Chornobyl.Ultimate.Editon"

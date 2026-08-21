@@ -15,7 +15,7 @@ cache_file = 'cache.json'
 markers_file = '../data/markers.json'
 world_path = 'Stalker2/Content/_Stalker_2/maps/_Stalker2_WorldMap/WorldMap_WP'
 
-from UnrealFileProxy import *
+#from UnrealFileProxy import *
 unrealFileProxy = None
 
 bp_classes = {
@@ -599,12 +599,16 @@ def get_bp_markers(cells):
         # collect outer properties, i.e. all entries that list current class name as "outer"
         for o in data:
             outer = o.get('Outer')
+            if type(outer) is dict:
+                name = outer.get('ObjectName')
+                if name:
+                    outer = name.split("'")[1].split(':').pop().split('.').pop()
+
             if outer in cached_prop:
                 prop = cached_prop[outer]
                 name = o.get('Name')
                 bp_type = o['Type']
                 p = o.get('Properties',{})
-
                 add_prop(prop, p, 'CorrectCode', 'keycode') # BP_Cardlock property
 
                 guid = get_guid(prop, p, add_references=True)

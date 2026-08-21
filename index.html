@@ -238,6 +238,14 @@ function loadMap() {
 
     baseLayer: new maptalks.GroupTileLayer('Base TileLayer', [
 
+      new maptalks.TileLayer('T_DLCWorldMap_UDIM', {
+        maxAvailableZoom: 5,
+        urlTemplate: `${tileset_base}/extras/dlc/{z}/{y}/{x}.webp`,
+        repeatWorld: false,
+        tileSize: 512,
+        visible: settings.baseLayer == 'T_DLCWorldMap_UDIM',
+      }),
+
       new maptalks.TileLayer('T_WorldMap_UDIM', {
         maxAvailableZoom: 7,
         urlTemplate: `${tileset_base}/tiles/{z}/{x}/{y}.jpg`,
@@ -1429,9 +1437,6 @@ function isNPC(o) {
 
 // Function to show the tooltip
 function showTooltip(e) {
-
-  //if (e.target.feature.properties.description.includes('Region')) return;
-
   var tooltip = document.getElementById('map-tooltip');
 
   clearTimeout(tooltipHideTimer);
@@ -1454,6 +1459,8 @@ function showTooltip(e) {
   tooltip.style.display = 'block';
 
   let marker = e.target;
+
+  if (marker.feature.properties.name=='EMarkerType::RegionMarker') return; // do not show tooltip on regions
 
   let o = marker.feature.properties;
 
@@ -2168,7 +2175,7 @@ window.onload = function(event) {
 
 
   fetch(`data/Localization/Localization_${cc.toUpperCase()}.json`).then(r=>r.json()).then(data=>{
-    lang = data;
+    lang = data['ST_S2BaseGameLocalization'];
     searchControl._input.setAttribute('placeholder', lang['sid_misc_hint_loot'] +'...');
 
     document.getElementById('load').textContent = lang['sid_misc_pausemenu_load'];
