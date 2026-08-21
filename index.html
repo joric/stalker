@@ -1437,6 +1437,9 @@ function isNPC(o) {
 
 // Function to show the tooltip
 function showTooltip(e) {
+
+  if (e.target.feature.properties.name=='EMarkerType::RegionMarker') return; // do not show tooltip on regions
+
   var tooltip = document.getElementById('map-tooltip');
 
   clearTimeout(tooltipHideTimer);
@@ -1459,8 +1462,6 @@ function showTooltip(e) {
   tooltip.style.display = 'block';
 
   let marker = e.target;
-
-  if (marker.feature.properties.name=='EMarkerType::RegionMarker') return; // do not show tooltip on regions
 
   let o = marker.feature.properties;
 
