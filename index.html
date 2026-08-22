@@ -198,7 +198,7 @@ function loadMap() {
 
   settings = localData[mapId];
 
-  settings.baseLayer = settings.baseLayer || 'PDA';
+  settings.baseLayer = settings.baseLayer || 'default';
   settings.language = settings.language || 'en';
   settings.searchText = settings.searchText || '';
   settings.rank = settings.rank || 'Master';
@@ -243,7 +243,7 @@ function loadMap() {
         urlTemplate: `${tileset_base}/extras/dlc/{z}/{y}/{x}.webp`,
         repeatWorld: false,
         tileSize: 512,
-        visible: settings.baseLayer == 'T_DLCWorldMap_UDIM',
+        visible: settings.baseLayer == 'T_DLCWorldMap_UDIM' || settings.baseLayer == 'default',
       }),
 
       new maptalks.TileLayer('T_WorldMap_UDIM', {
@@ -251,7 +251,7 @@ function loadMap() {
         urlTemplate: `${tileset_base}/tiles/{z}/{x}/{y}.jpg`,
         repeatWorld: false,
         tileSize: 512,
-        visible: settings.baseLayer == 'T_WorldMap_UDIM' || settings.baseLayer == 'PDA',
+        visible: settings.baseLayer == 'T_WorldMap_UDIM',
       }),
 
       new maptalks.TileLayer('T_GLOBAL_MAP_LEGEND', {
