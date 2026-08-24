@@ -10,5 +10,7 @@ Stalker2/Content/GameLite/FPS_Game/UIRemaster/UITextures/Inventory/*
 [Raw]
 Stalker2/Content/GameLite/*GameData*/*.cfg
 
+Stalker2/Content/GameLite/*GameData*/*.bin
+
 [text]
 Stalker2/Content/Localization/*/*.locres
