@@ -222,7 +222,7 @@ def load_proto(records, remap):
                 if 'EffectNone_Texture' in icon or 'Effects/' in icon:
                     del entries[sid]['icon']
                 else:
-                    entries[sid]['icon'] = icon.split("'").pop(1).replace("/Game/GameLite/FPS_Game/UIRemaster/UITextures/Inventory/","").split('.').pop(0)
+                    entries[sid]['icon'] = icon.split("'").pop(1).split('.').pop(0)
 
     return entries
 
