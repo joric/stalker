@@ -1253,6 +1253,7 @@ function popupOnClick(e) {
     container.classList.add('tag-container');
 
     let groups = {}
+    let count = 0;
 
     for (const data of (info.groups||{})) {
       groups[data.generator] = true;
@@ -1261,10 +1262,13 @@ function popupOnClick(e) {
       let title = translate_item(name);
       let desc = translate_item(name, true);
       container.appendChild(createTag(color+1, name, title, `${title} (${name})\n${reformat(desc)}\n---\n${data.generator}\n${JSON.stringify(data.props)}`, getWikiURL(title)));
+      count += 1;
     }
 
-    div.appendChild(document.createElement('hr'));
-    div.appendChild(container);
+    if (count) {
+      div.appendChild(document.createElement('hr'));
+      div.appendChild(container);
+    }
   }
 
   let scriptedItems = [];
