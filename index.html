@@ -1263,10 +1263,11 @@ function popupOnClick(e) {
       container.appendChild(createTag(5, name, name, `XStartQuestNodeBySID ${name}`, `XStartQuestNodeBySID ${name}`));
       //container.appendChild(createTag(5, name, name, name, `${name}`));
 
-      //add items by signal names like `XStartQuestNodeBySID DLC00_Deluxe_ItemAdd_HeavyAnomaly_SIRCA_Armor`
+      //add items by signal names like `XStartQuestNodeBySID DLC00_Deluxe_ItemAdd_HeavyAnomaly_SIRCA_Armor` that is SSP-100M Armor
       if (name.includes('_ItemAdd_')) {
         let itemName = name.split('_ItemAdd_').pop();
-        scriptedItems.push(itemName);
+        let key = `sid_items_${itemName}_name`;
+        if (lang[key]) scriptedItems.push(itemName);
       }
 
     }
@@ -1980,7 +1981,7 @@ function passesFilter(marker) {
       if (name.includes('_ItemAdd_')) {
         let itemName = name.split('_ItemAdd_').pop();
         let itemTitle = translate_item(itemName);
-        tags.push(itemTitle);
+        if (itemTitle != itemName) tags.push(itemTitle);
       }
     }
   }
