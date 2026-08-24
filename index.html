@@ -1707,6 +1707,7 @@ function addMarker(feature) {
   var marker = new maptalks.Marker(c, {
     symbol: getSymbol(o, info),
     draggable: o.sid && o.sid.startsWith('FF'),
+    cursor: 'pointer'
   });
 
   marker.feature = feature;
