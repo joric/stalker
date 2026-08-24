@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-cfgbin_to_cfg.py
+bin2cfg.py
 
 A Python port of sdwvit/S2CfgToJSON's binary ".cfg.bin" reader
 (binCfgParser.mjs) plus the text serializer (Struct.toString() in
@@ -9,8 +9,8 @@ back into the human-readable ".cfg" text format on its own, without
 Node.js.
 
 Usage:
-    python3 cfgbin_to_cfg.py input.cfg.bin [output.cfg]
-    python3 cfgbin_to_cfg.py some_directory [-o output_directory]
+    python3 bin2cfg.py input.cfg.bin [output.cfg]
+    python3 bin2cfg.py some_directory [-o output_directory]
 
 If output path is omitted for a single file, it defaults to replacing
 ".bin" suffix (input.cfg.bin -> input.cfg), or appending ".cfg" if
