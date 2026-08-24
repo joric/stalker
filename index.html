@@ -698,7 +698,6 @@ function getScriptedItems(scriptName) {
     let name = scriptName.split('_ItemAdd_').pop();
     name = name.replace(/_\d+$/,'');
     for (key of [`sid_items_${name}_name`, `sid_questItemprototypes_${name}_name`]) {
-      console.log(key, lang[key]);
       if (lang[key]) return [name];
     }
   }
