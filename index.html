@@ -695,11 +695,12 @@ function clearSelection() {
 //needs extracting actual items from scripts, but this will do for now
 function getScriptedItems(scriptName) {
   if (scriptName.includes('_ItemAdd_')) {
-    let itemName = scriptName.split('_ItemAdd_').pop();
-    itemName = itemName.replace('DLC00_Deluxe','')
-    itemName = itemName.replace('DLC00_PreOrder','')
-    let key = `sid_items_${itemName}_name`;
-    if (lang[key]) return [itemName];
+    let name = scriptName.split('_ItemAdd_').pop();
+    name = name.replace(/_\d+$/,'');
+    for (key of [`sid_items_${name}_name`, `sid_questItemprototypes_${name}_name`]) {
+      console.log(key, lang[key]);
+      if (lang[key]) return [name];
+    }
   }
   return [];
 }
@@ -1275,7 +1276,7 @@ function popupOnClick(e) {
     for (const name of o.references) {
       container.appendChild(createTag(5, name, name, `XStartQuestNodeBySID ${name}`, `XStartQuestNodeBySID ${name}`));
       //container.appendChild(createTag(5, name, name, name, `${name}`));
-      scriptedItems = [...scriptedItems, ...getScriptedItems(name)];
+      scriptedItems = [...new Set([...scriptedItems, ...getScriptedItems(name)])];
     }
     div.appendChild(document.createElement('hr'));
     div.appendChild(container);
