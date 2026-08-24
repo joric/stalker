@@ -2047,8 +2047,10 @@ function filterItems() {
   for (const layer of groupLayer.getLayers()) {
     //if (!layer.isVisible()) continue; // skip hidden layers altogether (for now)
     for (marker of layer._geoList) {
-      let res = layer._id!='Circles' && passesFilter(marker); // circles layer may have duplicate markers, breaks return result
+      let res = passesFilter(marker); // circles layer may have duplicate markers, breaks return result
       if (res){
+
+        if (layer._id=='Circles') continue;
 
         if (res==2) {
           target = marker;
