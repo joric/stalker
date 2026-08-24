@@ -148,7 +148,7 @@ def load_files():
     for folder in folders:
         g = list(glob.glob(os.path.join(cache_dir, f'{folder}/**/*.cfg'),recursive=True))
         total += len(g)
-        print('found', total, '.cfg files in', folder)
+        print('found', len(g), '.cfg files in', folder, 'total', total)
         for filename in g:
             if any(filename in s for s in exclude): continue
 
