@@ -1254,29 +1254,38 @@ function popupOnClick(e) {
     div.appendChild(container);
   }
 
+  let scriptedItems = [];
+
   if (o.references) { // add signals
     let container = document.createElement('div');
     container.classList.add('tag-container');
     for (const name of o.references) {
       container.appendChild(createTag(5, name, name, `XStartQuestNodeBySID ${name}`, `XStartQuestNodeBySID ${name}`));
       //container.appendChild(createTag(5, name, name, name, `${name}`));
+
+      //add items by signal names like `XStartQuestNodeBySID DLC00_Deluxe_ItemAdd_HeavyAnomaly_SIRCA_Armor`
+      if (name.includes('_ItemAdd_')) {
+        let itemName = name.split('_ItemAdd_').pop();
+        scriptedItems.push(itemName);
+      }
+
     }
     div.appendChild(document.createElement('hr'));
     div.appendChild(container);
   }
 
+  let items = [...(o.items||[]), ...scriptedItems];
 
-  if (o.items) { // add items
+  if (items && items.length) { // add items
     let container = document.createElement('div');
     container.classList.add('tag-container');
-    for (const name of o.items) {
+    for (const name of items) {
       let title = translate_item(name);
       let desc = translate_item(name, true);
       container.appendChild(createTag(0, name, title, `${title} (${name})\n${reformat(desc)}`, name));
     }
     div.appendChild(document.createElement('hr'));
     div.appendChild(container);
-
   }
 
 
@@ -1964,6 +1973,17 @@ function passesFilter(marker) {
   if (o.references) tags.push(...o.references);
   if (o.actors) tags.push(...o.actors);
   if (o.items) tags.push(...o.items);
+
+  // add scripted items
+  if (o.references) {
+    for (const name of o.references) {
+      if (name.includes('_ItemAdd_')) {
+        let itemName = name.split('_ItemAdd_').pop();
+        let itemTitle = translate_item(itemName);
+        tags.push(itemTitle);
+      }
+    }
+  }
 
   if (o.keycode) tags.push('keycode');
   if (o.items) tags.push('items');
