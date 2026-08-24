@@ -4,7 +4,7 @@ bin2cfg.py by joric, https://github.com/joric/stalker/wiki
 
 Converts Stalker 2 ".bin" configs back into the human-readable ".cfg" text format.
 
-* Based on JSON Converter by @sdwvit https://github.com/sdwvit/S2CfgToJSON
+* Based on JSON Converter by sdwvit: https://github.com/sdwvit/S2CfgToJSON
 * Binary reader PR by thexii: https://github.com/sdwvit/S2CfgToJSON/pull/1
 
 Usage:
