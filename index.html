@@ -691,6 +691,19 @@ function clearSelection() {
   }
 }
 
+//add items by signal names like `XStartQuestNodeBySID DLC00_Deluxe_ItemAdd_HeavyAnomaly_SIRCA_Armor` is SSP-100M Armor
+//needs extracting actual items from scripts, but this will do for now
+function getScriptedItems(scriptName) {
+  if (scriptName.includes('_ItemAdd_')) {
+    let itemName = scriptName.split('_ItemAdd_').pop();
+    itemName = itemName.replace('DLC00_Deluxe','')
+    itemName = itemName.replace('DLC00_PreOrder','')
+    let key = `sid_items_${itemName}_name`;
+    if (lang[key]) return [itemName];
+  }
+  return [];
+}
+
 function translate_item(name, description=false) {
   let postfix = description ? 'description': 'name';
   name = (name||'').replace('Antirad','AntiRad');
@@ -1262,14 +1275,7 @@ function popupOnClick(e) {
     for (const name of o.references) {
       container.appendChild(createTag(5, name, name, `XStartQuestNodeBySID ${name}`, `XStartQuestNodeBySID ${name}`));
       //container.appendChild(createTag(5, name, name, name, `${name}`));
-
-      //add items by signal names like `XStartQuestNodeBySID DLC00_Deluxe_ItemAdd_HeavyAnomaly_SIRCA_Armor` that is SSP-100M Armor
-      if (name.includes('_ItemAdd_')) {
-        let itemName = name.split('_ItemAdd_').pop();
-        let key = `sid_items_${itemName}_name`;
-        if (lang[key]) scriptedItems.push(itemName);
-      }
-
+      scriptedItems = [...scriptedItems, ...getScriptedItems(name)];
     }
     div.appendChild(document.createElement('hr'));
     div.appendChild(container);
@@ -1978,10 +1984,8 @@ function passesFilter(marker) {
   // add scripted items
   if (o.references) {
     for (const name of o.references) {
-      if (name.includes('_ItemAdd_')) {
-        let itemName = name.split('_ItemAdd_').pop();
-        let itemTitle = translate_item(itemName);
-        if (itemTitle != itemName) tags.push(itemTitle);
+      for (itemName of getScriptedItems(name)) {
+        tags.push(translate_item(itemName));
       }
     }
   }
