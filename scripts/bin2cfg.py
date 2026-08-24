@@ -1,12 +1,11 @@
 #!/usr/bin/env python3
 """
-bin2cfg.py
+bin2cfg.py by joric, https://github.com/joric/stalker/wiki
 
 A Python port of sdwvit/S2CfgToJSON's binary ".cfg.bin" reader
 (binCfgParser.mjs) plus the text serializer (Struct.toString() in
 Struct.mts), so it can convert Stalker 2 ".cfg.bin" binary configs
-back into the human-readable ".cfg" text format on its own, without
-Node.js.
+back into the human-readable ".cfg" text format.
 
 Usage:
     python3 bin2cfg.py input.cfg.bin [output.cfg]
