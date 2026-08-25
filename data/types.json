@@ -92,12 +92,12 @@
   },
   "ESpawnType::Item": { "category": "sid_misc_pda_reward_random",
     "match": {
-      "(TemplateConsumable|Energetic)": {"icon": "bag", "category": "sid_misc_pda_reward_food_drink", "group": "misc" },
+      "(TemplateConsumable|Energetic)": {"icon": "box", "category": "sid_misc_pda_reward_food_drink", "group": "misc" },
       "TemplateAmmo": {"icon": "repair", "category": "sid_misc_pda_reward_ammo_grenades", "group": "items" },
       "^Gun": {"icon": "repair", "category": "sid_misc_pda_reward_weapon", "group": "items" },
       "Armor": {"icon": "repair", "category": "sid_misc_pda_reward_armor", "group": "items" },
       "PDA|Note": {"icon": "message", "category": "sid_questItemprototypes_BasePDA_name", "group": "items" },
-      "TemplateArtifact": {"icon": "artifact", "category": "sid_misc_pda_reward_artifacts", "group": "misc" },
+      "TemplateArtifact": {"icon": "bag", "category": "sid_misc_pda_reward_artifacts", "group": "misc" },
       "QuestItem_Key|Tamplate_Key": {"icon": "yen", "category": "sid_misc_pda_map_playerTags_habar", "group": "actors" },
       "QuestItem_Fuse": {"icon": "yen", "category": "sid_misc_pda_map_playerTags_habar", "group": "actors" },
       "(Helmet|Mask|Goggles)": {"icon": "repair", "category": "sid_misc_pda_reward_armor", "group": "items" }
@@ -112,5 +112,5 @@
   "ESpawnType::LightningBallAnomaly": {"icon": "artifact", "category": "sid_misc_pda_map_playerTags_anomaly", "group": "anomalies" },
   "ESpawnType::AnomalySpawner": {"icon": "artifact", "category": "sid_misc_pda_map_playerTags_anomaly", "group": "anomalies" },
   "ESpawnType::Radiation": {"icon": "radiation", "title": "sid_misc_pda_map_playerTags_radiation", "category": "sid_misc_pda_reward_random", "group": "misc" },
-  "ESpawnType::ArtifactSpawner": {"icon": "artifact", "category": "sid_misc_pda_reward_artifacts", "group": "misc" }
+  "ESpawnType::ArtifactSpawner": {"icon": "bag", "category": "sid_misc_pda_reward_artifacts", "group": "misc" }
 }
