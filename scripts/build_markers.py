@@ -222,7 +222,9 @@ def load_proto(records, remap):
                 if 'EffectNone_Texture' in icon or 'Effects/' in icon:
                     del entries[sid]['icon']
                 else:
-                    entries[sid]['icon'] = icon.split("'").pop(1).split('.').pop(0)
+                    iconpath = icon.split("'").pop(1).split('.').pop(0)
+                    if iconpath:
+                        entries[sid]['icon'] = iconpath
 
     return entries
 
