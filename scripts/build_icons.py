@@ -1,39 +1,36 @@
 import json
-import re
-import os
+from pathlib import Path
 import shutil
 
-export_dir = 'C:/Temp/Exports'
+EXPORT_DIR = Path('C:/Temp/Exports')
+DATA_FILE = Path('../data/markers.json')
+MISSING_FILE = Path('missing_icons.txt')
 
-data = json.load(open('../data/markers.json'))
+data = json.loads(DATA_FILE.read_text(encoding='utf-8'))
 
-icons = set()
-
-for o in data.get('prototypes',[]).values():
-    icon = o.get('icon')
-    if not icon or '/Game' not in icon: continue
-    icons.add(icon)
-
+icons = {
+    o['icon']
+    for o in data.get('prototypes', {}).values()
+    if o.get('icon', '').startswith('/Game')
+}
 
 missing_files = set()
 
-for icon in icons:
-    path = re.sub(r'^/Game', '', icon )
-    asset = 'Stalker2/Content' + path
-    src = export_dir + '/' + asset + '.png'
-    if not os.path.exists(src):
-        print('missing', src)
-        missing_files.add(asset + '.asset')
-    else:
-        dest = '../images/icons/Game' + path + '.png'
+for icon in sorted(icons):
+    rel_path = icon.removeprefix('/Game')
+    asset = f'Stalker2/Content{rel_path}'
+    src = EXPORT_DIR / f'{asset}.png'
 
-        os.makedirs(os.path.dirname(dest), exist_ok=True)
-        shutil.copy2(src, dest)
-        print(f"Copied: {src} -> {dest}")
+    if not src.exists():
+        print('missing', src)
+        missing_files.add(f'{asset}.asset')
+        continue
+
+    dest = Path(f'../images/icons/Game{rel_path}.png')
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copy2(src, dest)
+    print(f'Copied: {src} -> {dest}')
 
 if missing_files:
-    fname = 'missing_icons.txt'
-    print(f'{len(missing_files)} missing files detected, saving to {fname}...')
-    f = open(fname,'w')
-    for name in missing_files:
-        print(name, file=f)
+    print(f'{len(missing_files)} missing files detected, saving to {MISSING_FILE}...')
+    MISSING_FILE.write_text('\n'.join(sorted(missing_files)) + '\n', encoding='utf-8')
