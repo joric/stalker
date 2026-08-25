@@ -1285,7 +1285,7 @@ function popupOnClick(e) {
     div.appendChild(container);
   }
 
-  let items = [...(o.items||[]), ...scriptedItems];
+  let items = [...new Set([...(o.items||[]), ...scriptedItems])];
 
   if (items && items.length) { // add items
     let container = document.createElement('div');
