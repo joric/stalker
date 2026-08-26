@@ -19,6 +19,11 @@ If the input path is a directory, every "*.cfg.bin" file found in it
 (recursively) is converted. By default each converted ".cfg" file is
 written right next to its source ".cfg.bin" file. Pass -o/--output-dir
 to instead mirror the directory tree under a separate output root.
+
+Updates:
+
+* 2027-08-26: Preserved original numeric literals, fixed float infinity
+
 """
 
 from __future__ import annotations
@@ -82,12 +87,16 @@ class Refs:
 class Node:
     """Python stand-in for a `Struct` instance (an ordered bag of fields)."""
 
-    __slots__ = ("__internal__", "_data")
+    __slots__ = ("__internal__", "_data", "_raw_literals")
 
     def __init__(self, raw_name: str = ""):
         self.__internal__ = Refs()
         self.__internal__.rawName = raw_name.strip()
         self._data: dict = {}
+        # Mirrors the JS port's hidden, non-enumerable RAW_LITERALS slot:
+        # remembers the exact source text for numeric fields so re-rendering
+        # doesn't normalize e.g. "35.0" -> "35" or "3.20" -> "3.2".
+        self._raw_literals: dict = {}
 
     # dict-like helpers -----------------------------------------------
     def __setitem__(self, key, value):
@@ -107,6 +116,14 @@ class Node:
 
     def keys_count(self) -> int:
         return len(self._data)
+
+    def remember_raw_literal(self, key: Union[str, int], raw: str) -> None:
+        value = self._data.get(str(key))
+        # Only worth keeping when rendering the number would not reproduce
+        # the original text (e.g. plain "3.2" round-trips fine on its own).
+        if not isinstance(value, float) or js_number_to_string(value) == raw:
+            return
+        self._raw_literals[str(key)] = raw
 
     # serialization -----------------------------------------------------
     def to_string(self) -> str:
@@ -134,10 +151,8 @@ class Node:
                 rendered_value = REMOVE_NODE
             elif isinstance(value, Node):
                 rendered_value = value.to_string()
-            elif isinstance(value, bool):
-                rendered_value = "true" if value else "false"
             else:
-                rendered_value = js_number_to_string(value) if isinstance(value, float) else value
+                rendered_value = render_literal(self, key, value)
 
             line = f"{key_or_index}{equals_or_colon}{space_or_no_space}{rendered_value}"
             rendered_lines.append(pad(line))
@@ -147,12 +162,32 @@ class Node:
         return text
 
 
+def render_literal(parent: "Node", key: str, value):
+    """Port of Struct.mts's renderLiteral(): prefer the original source text
+    for a numeric field when it still holds the value that was parsed from
+    it (a reassigned field renders its new value instead)."""
+    if isinstance(value, bool):
+        return "true" if value else "false"
+    if isinstance(value, float):
+        raw = parent._raw_literals.get(str(key))
+        if raw is not None and parse_value(raw) == value:
+            return raw
+        return js_number_to_string(value)
+    return value
+
+
 def pad(text: str) -> str:
     return TAB + re.sub(r"\n+", f"\n{TAB}", text)
 
 
 def js_number_to_string(value: float) -> str:
     """Mimic JS's `${number}` template interpolation for floats."""
+    if value != value:  # NaN
+        return "NaN"
+    if value == float("inf"):
+        return "Infinity"
+    if value == float("-inf"):
+        return "-Infinity"
     if value == int(value) and abs(value) < 1e21:
         return str(int(value))
     # JS uses the shortest round-trippable representation; Python's repr()
@@ -238,9 +273,11 @@ def parse_value(value: str) -> Union[str, float, bool]:
     return value
 
 
-def assign_field(parent: Node, raw_key: str, value, index: int) -> None:
+def assign_field(parent: Node, raw_key: str, value, index: int, raw: Optional[str] = None) -> None:
     key = parse_key(raw_key, parent, index)
     parent[key] = value
+    if raw is not None:
+        parent.remember_raw_literal(key, raw)
 
 
 def is_empty_nested_struct(node: Node) -> bool:
@@ -407,7 +444,7 @@ def read_binary_struct(reader: BinaryCursor, string_pool: List[str]) -> Node:
             )
         elif n_values in (3, 4):
             raw_value = get_binary_string(field_block.values[2], string_pool).strip()
-            assign_field(node, field_name, parse_value(raw_value), current_field)
+            assign_field(node, field_name, parse_value(raw_value), current_field, raw=raw_value)
 
     return node
 
