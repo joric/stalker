@@ -10,7 +10,7 @@ copy C:\Temp\Exports\Stalker2\Content\Localization\Game\ru\Game.json ..\data\Loc
 copy C:\Temp\Exports\Stalker2\Content\Localization\Game\uk\Game.json ..\data\Localization\Localization_UA.json
 
 
-exit
+goto exit
 
 set path=D:\Shared\Tools\Hacking\Games\UE\S2HOCMM;%path%
 
@@ -41,3 +41,5 @@ exit 0
 echo Error occured, stopping
 pause
 exit 1
+
+:exit
