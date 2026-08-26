@@ -5,6 +5,7 @@ Stalker2/Content/_Stalker_2/maps/_Stalker2_WorldMap/WorldMap_WP.umap
 
 [Texture]
 Stalker2/Content/GameLite/FPS_Game/UI/UIIcons/Markers/*
+Stalker2/Content/GameLite/FPS_Game/UIRemaster/UITextures/WorldMap/RegionMarker/*
 Stalker2/Content/GameLite/FPS_Game/UIRemaster/UITextures/Inventory/*
 Stalker2/Content/_DLC1/UI/UITextures/Inventory/*
 

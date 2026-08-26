@@ -21,7 +21,7 @@ for icon in sorted(icons):
 
     if not Path(src).exists():
         print(f'missing {src}')
-        missing.add(f'{asset}.asset')
+        missing.add(f'{asset}.uasset')
         continue
 
     dst = f'../images/icons/Game{path}.png'
