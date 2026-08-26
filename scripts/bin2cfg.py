@@ -22,7 +22,7 @@ to instead mirror the directory tree under a separate output root.
 
 Updates:
 
-* 2027-08-26: Preserved original numeric literals, fixed float infinity
+* 2026-08-26: Preserved original numeric literals, fixed float infinity
 
 """
 
