@@ -9,7 +9,7 @@ markers = json.loads(Path('../data/markers.json').read_text(encoding='utf-8'))
 icons = set()
 for proto in markers.get('prototypes', {}).values():
     icon = proto.get('icon', '')
-    if icon.startswith('/Game'):
+    if icon.startswith('/Game') and not icon.endswith('statisticbig'):
         icons.add(icon)
 
 missing = set()
