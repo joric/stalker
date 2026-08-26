@@ -22,13 +22,14 @@ to instead mirror the directory tree under a separate output root.
 
 Updates:
 
-* 2026-08-26: Preserved original numeric literals, fixed float infinity
+* 2026-08-26: Preserved numeric literals, fixed float infinity, added progress
 
 """
 
 from __future__ import annotations
 
 import re
+import shutil
 import struct
 import sys
 from pathlib import Path
@@ -475,13 +476,16 @@ def read_binary_cfg(data: bytes) -> List[Node]:
 # --------------------------------------------------------------------------
 
 
-def convert(input_path: Path, output_path: Path) -> None:
+def convert(input_path: Path, output_path: Path, *, verbose: bool = True) -> Tuple[int, int]:
+    """Converts one .cfg.bin file to text. Returns (num_roots, output_char_count)."""
     data = input_path.read_bytes()
     roots = read_binary_cfg(data)
     text = "\n".join(root.to_string() for root in roots)
     output_path.write_text(text, encoding="utf-8")
-    print(f"Parsed {len(roots)} root struct(s).")
-    print(f"Wrote {output_path} ({len(text)} chars).")
+    if verbose:
+        print(f"Parsed {len(roots)} root struct(s).")
+        print(f"Wrote {output_path} ({len(text)} chars).")
+    return len(roots), len(text)
 
 
 def default_output_path(input_path: Path) -> Path:
@@ -497,32 +501,68 @@ def find_bin_files(root: Path) -> List[Path]:
     return sorted(p for p in root.rglob("*.cfg.bin") if p.is_file())
 
 
+def _format_size(num_bytes: int) -> str:
+    size = float(num_bytes)
+    for unit in ("B", "KB", "MB", "GB"):
+        if size < 1024 or unit == "GB":
+            return f"{size:.0f}{unit}" if unit == "B" else f"{size:.1f}{unit}"
+        size /= 1024
+    return f"{size:.1f}GB"
+
+
+def _progress_line(done: int, total: int, failed: int, size_bytes: int, current: str) -> str:
+    width = len(str(total))
+    pct = (done / total * 100) if total else 100.0
+    prefix = f"[{done:>{width}}/{total}] {pct:5.1f}%  failed:{failed}  {_format_size(size_bytes):>7}  "
+    term_width = shutil.get_terminal_size((100, 20)).columns
+    room = max(term_width - len(prefix) - 1, 10)
+    if len(current) > room:
+        current = "…" + current[-(room - 1):]
+    return prefix + current
+
+
 def convert_directory(input_dir: Path, output_dir: Optional[Path]) -> int:
     bin_files = find_bin_files(input_dir)
-    if not bin_files:
+    total = len(bin_files)
+    if total == 0:
         print(f"No *.cfg.bin files found under {input_dir}")
         return 0
 
-    print(f"Found {len(bin_files)} *.cfg.bin file(s) under {input_dir}")
-    failures = 0
-    for bin_path in bin_files:
+    print(f"Found {total} *.cfg.bin file(s) under {input_dir}")
+    term_width = shutil.get_terminal_size((100, 20)).columns
+    ok = 0
+    failed = 0
+    is_tty = sys.stdout.isatty()
+
+    for i, bin_path in enumerate(bin_files, start=1):
+        rel = bin_path.relative_to(input_dir)
         if output_dir is None:
-            # Put the converted .cfg right next to its .cfg.bin source.
             out_path = default_output_path(bin_path)
         else:
-            rel = bin_path.relative_to(input_dir)
             out_path = output_dir / default_output_path(rel)
             out_path.parent.mkdir(parents=True, exist_ok=True)
 
-        try:
-            convert(bin_path, out_path)
-        except Exception as exc:  # keep going on a per-file parse error
-            failures += 1
-            print(f"  FAILED: {bin_path} ({exc})", file=sys.stderr)
+        size_bytes = bin_path.stat().st_size
+        line = _progress_line(i, total, failed, size_bytes, str(rel))
+        if is_tty:
+            sys.stdout.write("\r" + line.ljust(term_width))
+            sys.stdout.flush()
+        else:
+            print(line)
 
-    ok = len(bin_files) - failures
-    print(f"Done. {ok} converted, {failures} failed.")
-    return 1 if failures else 0
+        try:
+            convert(bin_path, out_path, verbose=False)
+            ok += 1
+        except Exception as exc:  # keep going on a per-file parse error
+            failed += 1
+            if is_tty:
+                sys.stdout.write("\r" + " " * term_width + "\r")
+            print(f"FAILED: {bin_path} ({exc})", file=sys.stderr)
+
+    if is_tty:
+        sys.stdout.write("\r" + " " * term_width + "\r")
+    print(f"Done. {ok} converted, {failed} failed, {total} total.")
+    return 1 if failed else 0
 
 
 def main(argv: List[str]) -> int:

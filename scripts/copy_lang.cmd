@@ -2,7 +2,7 @@
 
 rem stalker 2.0 update just uses individual locres
 
-mkdir ..\data\Localization
+mkdir ..\data\Localization 2>nul
 
 copy C:\Temp\Exports\Stalker2\Content\Localization\Game\en\Game.json ..\data\Localization\Localization_EN.json
 copy C:\Temp\Exports\Stalker2\Content\Localization\Game\fr\Game.json ..\data\Localization\Localization_FR.json
