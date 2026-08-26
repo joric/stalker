@@ -483,7 +483,7 @@ def get_bp_cells(package_path):
 
     if bp_missing_files:
         fname = 'missing_files.txt'
-        print(f'ERROR! Missing files detected, saving to {fname}...')
+        print(f'Missing files detected, saving to {fname}...')
         f = open(fname,'w')
         print("[Text]", file=f)
         for name in bp_missing_files:
