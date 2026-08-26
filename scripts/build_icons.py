@@ -27,7 +27,7 @@ for icon in sorted(icons):
     dst = f'../images/icons/Game{path}.png'
     Path(dst).parent.mkdir(parents=True, exist_ok=True)
     shutil.copy2(src, dst)
-    print(f'copied {src} -> {dst}')
+    print(f'copied {src}')
 
 if missing:
     print(f'{len(missing)} icons missing, writing list to {missing_file}')
