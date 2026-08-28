@@ -812,7 +812,23 @@ def export_markers(cache, export_assetlist=False):
                 coord = get_coordinates(data)
 
                 # skip markers without coordinates
-                if not coord or coord==[0,0,0]: continue
+                if not coord or coord==[0,0,0]:
+
+                    # let's try adding journal notes here
+                    if type(data) is not dict: continue
+                    nodetype = data.get('NodeType')
+                    stage = data.get('JournalQuestStageSID')
+                    markers = data.get('Markers',[])
+                    if nodetype=='EQuestNodeType::SetJournal' and stage and markers:
+                        for marker in markers.values():
+                            loc = marker.get('MarkerLocation')
+                            if loc:
+                                coord =  [loc[k] for k in('X','Y','Z')if k in loc]
+                                mprop = {'type': nodetype, 'sid': sid, 'name': stage, 'title': f'sid_journal_stage_{stage}', 'references': [sid]}
+                                feature = {'type':'Feature','geometry': {'type':'Point', 'coordinates': coord }, 'properties': mprop}
+                                features.append(feature)
+                                break # only add 1 marker
+                    continue
 
                 prop = {'sid': sid}
 

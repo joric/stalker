@@ -1978,7 +1978,7 @@ function passesFilter(marker) {
 
   // little hack before fuse.js, use 2 for exact match
   if (o.sid && o.sid.toLowerCase() == text) return 2;
-  if (info.title && info.title.toLowerCase() == text) return 2;
+  if (info.title && String(info.title).toLowerCase() == text) return 2;
 
   if (o.spawns) tags.push(...o.spawns);
   if (o.references) tags.push(...o.references);
