@@ -2,6 +2,7 @@
 
 [Text]
 Stalker2/Content/_Stalker_2/maps/_Stalker2_WorldMap/WorldMap_WP.umap
+Stalker2/Plugins/GameFeatures/S2_DLC1/Content/CB/_Stalker_2/maps/_Stalker2_WorldMap/WorldMap_WP/_Generated_/MainGrid_*.umap
 
 [Texture]
 Stalker2/Content/GameLite/FPS_Game/UI/UIIcons/Markers/*

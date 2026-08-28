@@ -15,6 +15,8 @@ cache_file = 'cache.json'
 markers_file = '../data/markers.json'
 world_path = 'Stalker2/Content/_Stalker_2/maps/_Stalker2_WorldMap/WorldMap_WP'
 
+dlc_world_path = 'Stalker2/Plugins/GameFeatures/S2_DLC1/Content/CB/_Stalker_2/maps/_Stalker2_WorldMap/WorldMap_WP'
+
 #from UnrealFileProxy import *
 unrealFileProxy = None
 
@@ -494,6 +496,12 @@ def get_bp_cells(package_path):
             print(name, file=f)
         exit(0)
 
+    # scan alternative paths
+    folder = os.path.normpath(os.path.join(cache_dir, dlc_world_path, '_Generated_'))
+    for filename in os.listdir(folder):
+        cell = os.path.splitext(filename)[0]
+        out.append(cell)
+
     return out
 
 def checkFileProxy(filename):
@@ -518,7 +526,9 @@ def readCellFile(cell):
     package_path = os.path.join(world_path,'_Generated_', cell)
     filename = os.path.normpath(os.path.join(cache_dir, package_path)) + '.json'
 
-    #checkFileProxy(filename) # cannot use that just yet, pyUE4Parse doesn't export item properties
+    if not os.path.exists(filename):
+        filename = os.path.normpath(os.path.join(cache_dir, dlc_world_path, '_Generated_', cell + '.json'))
+        #print('trying dlc cell', filename, os.path.exists(filename))
 
     if not os.path.exists(filename):
         return {}
