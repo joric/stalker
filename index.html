@@ -490,7 +490,7 @@ function addCircles(markers) {
 
 function addMarkers(data) {
   console.timeEnd('markers');
-  console.log('Total markers:', data.length);
+  console.log('Parsed markers:', data.length);
 
   markersData = data;
 
@@ -2240,6 +2240,8 @@ window.onload = function(event) {
 
     Promise.all(promises).then(data => {
       [types, icons, regions, markers] = data;
+
+      console.log('Total markers:', markers.features.length)
 
       localData.customMarkers = localData.customMarkers || {features:[]};
       markers.features = [...markers.features, ...localData.customMarkers.features];
