@@ -65,6 +65,10 @@ bp_classes = {
     'BP_Turnstile':  'EMarkerType::Turnstile',
 
     'BP_Photos':  'EMarkerType::Photos',
+
+    'BP_Interactable_Note_C': 'EMarkerType::InteractableNote',
+    'BP_Interactable_PDA_C': 'EMarkerType::InteractablePDA',
+    'BP_Interactable_USB_C': 'EMarkerType::InteractableUSB',
 }
 
 def parse_struct(reader, options={}):
@@ -553,6 +557,16 @@ def get_bp_markers(cells):
                             prop[k] = {}
                         prop[k].update(cached_guids[guid])
 
+                        for ref in prop[k]:
+                            if ref in cached_notes:
+                                k = 'items'
+                                if k not in prop:
+                                    prop[k] = {}
+                                prop[k].update(cached_notes[ref])
+                                for name, quest in cached_notes[ref].items():
+                                    prop['quest'] = quest
+
+
                     if guid in cached_items:
                         k = 'items'
                         if k not in prop:
@@ -651,7 +665,6 @@ def get_bp_markers(cells):
                                     cached_rot[outer] = [float(rot[t]) for t in axes]
                                     #print(outer, cached_rot[outer])
 
-
     def addTarget(feature):
         prop = feature['properties']
         target = prop.get('target')
@@ -699,6 +712,7 @@ def get_bp_markers(cells):
 cached_guids = defaultdict(dict)
 cached_items = defaultdict(dict)
 cached_quests = {}
+cached_notes = defaultdict(dict)
 
 def get_connections(data):
     out = set()
@@ -771,15 +785,24 @@ def export_markers(cache, export_assetlist=False):
         for sid, data in package.items():
             if type(data) is dict:
 
+                # collect notes from connections
+                for conn_sid in get_connections(data):
+                    note_sid = data.get('NotePrototypeSID')
+                    if note_sid:
+                        cached_notes[conn_sid][note_sid] = data.get('QuestSID')
+                        #print(conn_sid, '->', note_sid)
+
                 for guid_prop in data:
-                    if not guid_prop.endswith('Guid'): continue
+                    if not guid_prop.endswith('Guid'): continue # explore 'TargetQuestGuid' and 'SignalReceiverGuid' fields only
                     guid = data.get(guid_prop)
-                    if guid:
+                    if guid and type(guid) is str:
                         cached_guids[guid][sid] = package
 
                         # add items, e.g. E03_MQ04_Key from Garbage_L_Factory_Camp_SendSignal_Basement_Entrance
                         for conn_sid in get_connections(data):
-                            item_sid = (package.get(conn_sid)or{}).get('ItemPrototypeSID')
+                            conn = package.get(conn_sid)or{}
+
+                            item_sid = conn.get('ItemPrototypeSID')
                             if item_sid:
                                 cached_items[guid][item_sid] = package
 

@@ -704,10 +704,25 @@ function getScriptedItems(scriptName) {
   return [];
 }
 
+function cleanupBody(input) {
+  let cleaned = input.replace(/\$[A-Za-z0-9_]+/g, '');
+  cleaned = cleaned.replace(/<[^>]*>/g, '');
+  cleaned = cleaned.replace(/\s+/g, ' ').trim();
+  return cleaned;
+}
+
 function translate_item(name, description=false) {
   let postfix = description ? 'description': 'name';
   name = (name||'').replace('Antirad','AntiRad');
-  let title = lang[`sid_items_${name}_${postfix}`] || lang[`sid_questItemprototypes_${name}_${postfix}`];
+  let title = lang[`sid_items_${name}_${postfix}`] || lang[`sid_questItemprototypes_${name}_${postfix}`] || lang[`sid_notes_${name}_${postfix}`];
+
+  if (description && !title) {
+    title = lang[`sid_notes_${name}_body`];
+    if (title) {
+      title = cleanupBody(title);
+    }
+  }
+
   if (!title) {
     let proto = markers.prototypes[name];
     if (proto) {
@@ -904,7 +919,7 @@ function renderItem(feature, extended=false, verbose=false) {
   if (o.items) {
     let items = [];
     for (const name of o.items) {
-      items.push(translate_item(name));
+      items.push({name: translate_item(name), desc: translate_item(name, true)});
     }
     info.items = items;
   }
@@ -2002,8 +2017,9 @@ function passesFilter(marker) {
     if (p) tags.push(p);
   }
 
-  for (name of (info.items||[])) {
-    tags.push(name);
+  for (item of (info.items||[])) {
+    tags.push(item.name);
+    tags.push(item.desc);
   }
 
   // spawn items (all titles and names)

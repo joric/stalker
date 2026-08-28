@@ -27,6 +27,10 @@
 
       "EMarkerType::Photos":{ "icon": "question", "title": "sid_misc_QIO_Photo", "category": "sid_misc_modIO_LMB_props", "group": "misc" },
 
+      "EMarkerType::InteractableNote": {"icon": "message", "category": "sid_misc_modIO_LMB_props", "title": "sid_questItemprototypes_BasePDA_name", "group": "items" },
+      "EMarkerType::InteractablePDA": {"icon": "message", "category": "sid_misc_modIO_LMB_props", "title": "sid_questItemprototypes_BasePDA_name", "group": "items" },
+      "EMarkerType::InteractableUSB": {"icon": "message", "category": "sid_misc_modIO_LMB_props", "title": "sid_questItemprototypes_QuestItem_USB_Stalker_Big_name", "group": "items" },
+
       "EMarkerType::Note":{ "icon": "follow", "category": "sid_misc_pda_hint_PlayerMarkers", "group": "notes" },
       "EMarkerType::Danger":{ "icon": "danger", "category": "sid_misc_pda_hint_PlayerMarkers", "group": "notes" },
       "EMarkerType::Radiation":{ "icon": "radiation-marker", "category": "sid_misc_pda_hint_PlayerMarkers", "group": "notes" },
