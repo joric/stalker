@@ -37,7 +37,7 @@
 
   "EQuestNodeType::TeleportCharacter": { "icon": "circle-locked", "title": "sid_npc_name_tocka", "category": "sid_misc_pda_Map_MarkerLocation", "group": "misc" },
 
-  "EQuestNodeType::SetJournal":  { "icon": "circle-locked", "title": "sid_npc_name_tocka", "category": "sid_misc_pda_TopPanel_Journal", "group": "misc" },
+  "EQuestNodeType::SetJournal":  { "icon": "quest", "title": "sid_misc_pda_TopPanel_Journal", "category": "sid_misc_answer_sidequest", "group": "actors" },
 
   "ESpawnType::Marker" : {
     "items": {
