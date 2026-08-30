@@ -568,6 +568,7 @@ function jumpToLocation(name, changeZoom=false) {
       map.setView({center: marker.getCoordinates(), zoom:8, pitch:0, bearing:0});
     }
     map.setView({center: marker.getCoordinates()}); // don't change zoom maybe
+    marker._layer.show();
     marker.show();
     popupOnClick({target: marker});
     marker.openInfoWindow();
@@ -2295,7 +2296,7 @@ window.onload = function(event) {
     searchCallback: query => fuse.search(query, {limit: 25}),
     searchRenderItem: searchRenderItem,
     searchOnSelect: fuseResult => {
-      jumpToLocation(fuseResult.item.sid, true);
+      jumpToLocation(fuseResult.item.sid);
       console.log(fuseResult.item);
     },
   });
