@@ -92,6 +92,7 @@ let defaultPitch = 45;
 let autoAltitude = true;
 let textSize = 18;
 let labelGroups = ['regions'];//, 'locations'];
+let fuse = null;
 
 let zoomGroups = {
   'notes':[-99,99],
@@ -560,10 +561,12 @@ function findLocation(id) {
   }
 }
 
-function jumpToLocation(name) {
+function jumpToLocation(name, changeZoom=false) {
   let marker = findLocation(name);
   if (marker) {
-    //map.setView({center: marker.getCoordinates(), zoom:8, pitch:0, bearing:0}); // don't change zoom maybe
+    if (changeZoom) {
+      map.setView({center: marker.getCoordinates(), zoom:8, pitch:0, bearing:0});
+    }
     map.setView({center: marker.getCoordinates()}); // don't change zoom maybe
     marker.show();
     popupOnClick({target: marker});
@@ -1917,6 +1920,8 @@ function addRegions(geojson) {
 
   regionsData = polygons;
 
+  fuse = getFuse();
+
   map.on('click', polygonClick);
 
   // Add mousemove listener to the map
@@ -1979,22 +1984,69 @@ function saveSettings() {
   localStorage.setItem(localDataName, JSON.stringify(localData));
 }
 
-function passesFilter(marker) {
-  // will be replaced with fuzzy search
-  let text = settings.searchText && settings.searchText.toLowerCase() || '';
+function getFuse(threshold = 0.25) {
+  let data = [];
 
-  if (!text) return true;
+  for (feature of markers.features) {
+    let o = feature.properties;
 
-  let terms = text.split(' ');
-  let o = marker.feature.properties;
+    if ([
+      'ESpawnType::ContextualAction',
+      'ESpawnType::AnomalySpawner',
+      'ESpawnType::Anomaly',
+      'EQuestNodeType::TeleportCharacter',
+      'ESpawnType::Trigger',
+    ].includes(o.type)) continue;
+
+    let info = renderItem(feature, true, true);
+
+    let s = o.keycode||'';//getSearchText(o, info);
+
+    //data.push({...o, info: info, custom_title: info.title, custom_type: info.type, custom_description: info.description, custom_text: s});
+
+    data.push({...o, info:info});
+  }
+
+  let options = {
+    keys: [
+      { name: 'info.title', weight: 0.8 },
+      { name: 'info.type', weight: 0.5 },
+      { name: 'info.location', weight: 0.4 },
+      { name: 'keycode', weight: 0.2 },
+      { name: 'sid', weight: 0.2 },
+      { name: 'name', weight: 0.2 },
+      { name: 'type', weight: 0.2 },
+      { name: 'subtype', weight: 0.2 },
+      { name: 'stage', weight: 0.2 },
+      { name: 'items', weight: 0.2 },
+    ],
+
+    threshold: threshold,
+    ignoreLocation: true,
+    includeScore: true,
+    useExtendedSearch: true, // search by words
+    findAllMatches: false, // stop on perfect match
+  }
+
+  return new Fuse(data, options);
+}
+
+function searchRenderItem(o) {
+  //return `<span class="search-item-text">${o.item.custom_title}<span class="search-item-comment-666" style="align: right">${o.item.info.category}</span></span>`;
+  return `<span class="search-item-row"><span class="search-item-left" title="${o.item.info.title} (${o.item.info.category})">${o.item.info.title} (${o.item.info.category})</span><span class="search-item-right">${o.item.info.location||''}</span></span>`;
+}
+
+function fuzzySearch(s, limit=25, threshold=0.25) {
+  let result = fuse.search(s, { limit: limit });
+
+  const cmpAlphaNum2 = (a,b) => a.localeCompare(b, 'en', { numeric: true });
+  result.sort( (a,b)=> a.score - b.score || cmpAlphaNum2(a.item.name||'', b.item.name||'') ) ;
+
+  return result;
+}
+
+function getSearchText(o, info) {
   let tags = [];
-
-  let info = renderItem(marker.feature, true);
-
-  // little hack before fuse.js, use 2 for exact match
-  if (o.sid && o.sid.toLowerCase() == text) return 2;
-  if (info.title && String(info.title).toLowerCase() == text) return 2;
-
   if (o.spawns) tags.push(...o.spawns);
   if (o.references) tags.push(...o.references);
   if (o.actors) tags.push(...o.actors);
@@ -2044,6 +2096,25 @@ function passesFilter(marker) {
     //info.location, // maybe don't do location, too many matches
 
     ...tags].map(x=>x||'').join(' ').toLowerCase();
+
+  return s;
+}
+
+function passesFilter(marker) {
+  // will be replaced with fuzzy search
+  let text = settings.searchText && settings.searchText.toLowerCase() || '';
+
+  if (!text) return true;
+
+  let terms = text.split(' ');
+  let o = marker.feature.properties;
+  let info = renderItem(marker.feature, true);
+
+  // little hack before fuse.js, use 2 for exact match
+  if (o.sid && o.sid.toLowerCase() == text) return 2;
+  if (info.title && String(info.title).toLowerCase() == text) return 2;
+
+  let s = getSearchText(o, info);
 
   return !(text!='' && !terms.every(term=>s.includes(term)));
 }
@@ -2214,7 +2285,18 @@ window.onload = function(event) {
 
   // --- search control ----------------------------
 
-  searchControl = new SearchControl();
+  let layer = null;
+
+  searchControl = new SearchControl(layer, {
+    searchCallback: query => fuse.search(query, {limit: 25}),
+    searchRenderItem: searchRenderItem,
+    searchOnSelect: fuseResult => {
+      jumpToLocation(fuseResult.item.sid, true);
+      console.log(fuseResult.item);
+    },
+  });
+
+
   searchControl._handleSubmit = function() {
     updateSearch(searchControl._input.value);
   }

@@ -158,3 +158,17 @@
   white-space: nowrap;
   text-overflow: ellipsis;
 }
+
+.search-item-comment {
+  float: right;
+  overflow: hidden;
+}
+
+.search-item-selected {
+  background-color: #ddd;
+}
+
+.search-item-row { display:flex; width:100%; gap:8px; padding-right: 8px;  }
+.search-item-left { font-size: 16px; flex:1; min-width:0; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; }
+.search-item-right { flex:0 0 auto; }
+

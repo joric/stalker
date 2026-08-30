@@ -1,52 +1,98 @@
 class SearchControl {
-
   _historyEntryName = 'searchHistory';
   _maxHistorySize = 50;
   _masStringLength = 100;
-
+  _searchRequestId = 0;
+  _searchDebounceMs = 5;
+  _searchTimer = null;
+  _selectedIndex = -1;
+  _mode = 'history';
+  _currentItems = [];
   _handleSubmit = () => {
   }
-
   _clear = event => {
     if (event) event.preventDefault();
+    clearTimeout(this._searchTimer);
     this._input.value = '';
     this._handleSubmit();
+    this._updateDropdown();
   }
-
-  _updateDropdown = () => {
-    let html = this._items.map(text => `<li tabindex=0><span class="search-item-text">${text}</span><button class="search-button search-delete">&times;</button></li>`).join('');
+  _historyRenderItem = text => `<span class="search-item-text">${text}</span>`;
+  _renderList = (items, { deletable, renderItem }) => {
+    let html = items.map((item, i) => `<li tabindex=0 data-index="${i}">${renderItem(item)}${deletable ? '<button class="search-button search-delete">&times;</button>' : ''}</li>`).join('');
     document.querySelector('.search-list').innerHTML = html;
+    this._selectedIndex = -1;
+    this._currentItems = items;
+  }
+  _updateDropdown = () => {
+    this._mode = 'history';
+    this._renderList(this._items, { deletable: true, renderItem: this._historyRenderItem });
     localStorage.setItem(this._historyEntryName, JSON.stringify(this._items));
   }
-
+  _runSearch = async value => {
+    let requestId = ++this._searchRequestId;
+    let results = await this._searchCallback(value);
+    if (requestId !== this._searchRequestId) return;
+    this._mode = 'search';
+    this._renderList(results, { deletable: false, renderItem: this._searchRenderItem });
+  }
+  _handleInput = () => {
+    clearTimeout(this._searchTimer);
+    let value = this._input.value.trim();
+    if (!value || !this._searchCallback) {
+      this._updateDropdown();
+      return;
+    }
+    this._searchTimer = setTimeout(() => this._runSearch(value), this._searchDebounceMs);
+  }
+  _activateItem = li => {
+    if (!li) return;
+    let index = Number(li.dataset.index);
+    if (this._mode === 'search') {
+      let item = this._currentItems[index];
+      if (this._searchOnSelect) this._searchOnSelect(item);
+      return;
+    }
+    let text = this._currentItems[index];
+    this._input.value = text;
+    this._submit();
+  }
+  _moveSelection = delta => {
+    let items = document.querySelectorAll('.search-list li');
+    if (!items.length) return;
+    let index = this._selectedIndex + delta;
+    index = Math.max(0, Math.min(items.length - 1, index));
+    this._selectedIndex = index;
+    items.forEach((li, i) => li.classList.toggle('search-item-selected', i === index));
+    items[index].scrollIntoView({ block: 'nearest' });
+  }
   _submit = event => {
       if (event) event.preventDefault();
       this._handleSubmit();
     
       let value = this._input.value.trim().slice(0, this._maxStringLength);
       if (!value) return false;
-
       let index = this._items.indexOf(value);
       if (index !== -1) {
         this._items.splice(index, 1);
       }
-
       this._items.unshift(value);
       this._items = this._items.slice(0, this._maxHistorySize);
       this._updateDropdown();
-
       return false;
   };
-
   constructor(layer, options) {
-
     let autofocus = false;
-
+    this._searchCallback = options && options.searchCallback;
+    this._historyGetText = (options && options.historyGetText) || (text => text);
+    this._searchGetText = (options && options.searchGetText) || (o => o.item.name);
+    this._searchOnSelect = options && options.searchOnSelect;
+    this._searchRenderItem = (options && options.searchRenderItem) || (o => `<span class="search-item-text">${this._searchGetText(o)}</span>`);
     const innerHTML = `
       <form class="search-form">
       <div class="search-container">
         <div class="search-input-container">
-          <input type="text" class="search-input" tabindex=1 placeholder="Search..."${autofocus ? 'autofocus':''}>
+          <input type="text" class="search-input" tabindex=1 autocomplete="off" placeholder="Search..."${autofocus ? 'autofocus':''}>
           <button type="submit" class="search-button search-submit" tabindex=-1 title="Search">&#128269;&#xFE0E;</button>
           <button type="button" class="search-button search-clear" tabindex=0 title="Cancel">&times;</button>
         </div>
@@ -54,49 +100,46 @@ class SearchControl {
       </div>
       </form>
     `;
-
     document.body.insertAdjacentHTML('beforeend', innerHTML);
-
     this._input = document.querySelector('.search-input');
     this._items = JSON.parse(localStorage.getItem(this._historyEntryName) || "[]");
-
     document.querySelector('.search-clear').onclick = this._clear;
     document.querySelector('.search-form').onsubmit = this._submit;
-
     document.querySelector('.search-list').onclick = event => {
-
       if (event.target.classList.contains('search-delete')) {
-        let item = event.target.parentElement;
-        let text = item.firstChild.textContent;
+        let li = event.target.parentElement;
+        let index = Number(li.dataset.index);
+        let text = this._currentItems[index];
         this._items = this._items.filter(s => s !== text);
         this._updateDropdown();
         this._input.focus();
       } else {
-        let item = event.target;
-        let text = item.firstChild.textContent;
-        this._input.value = text;
-        this._submit();
+        this._activateItem(event.target.closest('li'));
       }
-
     };
-
     this._input.addEventListener("change", event => {
       if (this._input.value=='') this._handleSubmit();
     });
-
-
+    this._input.addEventListener("input", this._handleInput);
     this._input.addEventListener("focus", event => {
       this._input.select();
     });
-
     this._input.addEventListener("keydown", event => {
       if (event.key === "Escape") {
         this._clear();
+      } else if (event.key === "ArrowDown") {
+        event.preventDefault();
+        this._moveSelection(1);
+      } else if (event.key === "ArrowUp") {
+        event.preventDefault();
+        this._moveSelection(-1);
+      } else if (event.key === "Enter" && this._selectedIndex !== -1) {
+        event.preventDefault();
+        let items = document.querySelectorAll('.search-list li');
+        this._activateItem(items[this._selectedIndex]);
       }
     });
-
     this._updateDropdown();
-
     // clicking on clear/search changes focus and starts animation - can we mitigate that in css?
     let handleFocus = event => {
       if (document.activeElement !== this._input) {
@@ -104,9 +147,7 @@ class SearchControl {
       }
       this._clear();
     };
-
     document.querySelector('.search-clear').onmousedown = handleFocus;
     document.querySelector('.search-clear').ontouchstart = handleFocus;
-
   }
 }
