@@ -908,6 +908,7 @@ function renderItem(feature, extended=false, verbose=false) {
     let title = lang[`sid_journal_stage_${o.stage}`];
     if (title) {
       info.stage = title;
+      if (o.type=='EQuestNodeType::SetJournal') info.title = title;
     }
   }
 
