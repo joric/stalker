@@ -901,7 +901,7 @@ function renderItem(feature, extended=false, verbose=false) {
     let title = lang[`sid_journal_${o.quest}_Name`];
     if (title) {
       info.quest = title;
-      info.category = info.category + ' / ' + title;
+      if (o.type=='EQuestNodeType::SetJournal') info.category = info.category + ' / ' + title;
     }
   }
 
