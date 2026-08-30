@@ -1,9 +1,9 @@
 class SearchControl {
   _historyEntryName = 'searchHistory';
   _maxHistorySize = 50;
-  _masStringLength = 100;
+  _maxStringLength = 100;
   _searchRequestId = 0;
-  _searchDebounceMs = 5;
+  _searchDebounceMs = 100;
   _searchTimer = null;
   _selectedIndex = -1;
   _mode = 'history';
