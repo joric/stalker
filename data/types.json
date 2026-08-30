@@ -82,6 +82,8 @@
   "ESpawnType::OnlineModifierZone" : {"icon": "exclamation", "category":"Modifiers", "group": "misc" },
   "ESpawnType::Obj": {
     "items": {
+      "Mavka": { "icon": "soldier", "category": "NPC", "group": "actors" },
+      "DLC01_Zulus": { "icon": "soldier", "category": "NPC", "group": "actors" },
       "Faust": { "icon": "guide", "category": "NPC", "group": "locations" },
       "Trader": { "icon": "trader", "title":"sid_misc_pda_Map_MarkerTrader", "category": "sid_misc_pda_Map_MarkerTrader", "group": "bases" },
       "Technician": { "icon": "technician", "title": "sid_misc_pda_Map_MarkerTechnician", "category": "sid_misc_pda_Map_MarkerTechnician", "group": "bases" },
