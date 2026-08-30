@@ -172,3 +172,8 @@
 .search-item-left { font-size: 16px; flex:1; min-width:0; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; }
 .search-item-right { flex:0 0 auto; }
 
+.search-list li:focus,
+.search-list li:focus-visible {
+  outline: none;
+}
+

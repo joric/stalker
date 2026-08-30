@@ -3,7 +3,7 @@ class SearchControl {
   _maxHistorySize = 50;
   _maxStringLength = 100;
   _searchRequestId = 0;
-  _searchDebounceMs = 100;
+  _searchDebounceMs = 300;
   _searchTimer = null;
   _selectedIndex = -1;
   _mode = 'history';
@@ -16,13 +16,15 @@ class SearchControl {
     this._input.value = '';
     this._handleSubmit();
     this._updateDropdown();
+    this._input.focus();
   }
   _historyRenderItem = text => `<span class="search-item-text">${text}</span>`;
   _renderList = (items, { deletable, renderItem }) => {
-    let html = items.map((item, i) => `<li tabindex=0 data-index="${i}">${renderItem(item)}${deletable ? '<button class="search-button search-delete">&times;</button>' : ''}</li>`).join('');
+    let html = items.map((item, i) => `<li tabindex=-1 id="search-item-${i}" data-index="${i}">${renderItem(item)}${deletable ? '<button class="search-button search-delete">&times;</button>' : ''}</li>`).join('');
     document.querySelector('.search-list').innerHTML = html;
     this._selectedIndex = -1;
     this._currentItems = items;
+    this._input.removeAttribute('aria-activedescendant');
   }
   _updateDropdown = () => {
     this._mode = 'history';
@@ -57,14 +59,37 @@ class SearchControl {
     this._input.value = text;
     this._submit();
   }
+  _focusInput = () => {
+    requestAnimationFrame(() => {
+      this._input.focus();
+      this._input.select();
+    });
+  }
+  _setSelected = index => {
+    let items = document.querySelectorAll('.search-list li');
+    items.forEach((li, i) => li.classList.toggle('search-item-selected', i === index));
+    this._selectedIndex = index;
+    if (index === -1) {
+      this._input.removeAttribute('aria-activedescendant');
+      this._focusInput();
+    } else {
+      items[index].scrollIntoView({ block: 'nearest' });
+      this._input.setAttribute('aria-activedescendant', items[index].id);
+      if (this._mode === 'search' && this._searchOnSelect) {
+        this._searchOnSelect(this._currentItems[index]);
+      }
+    }
+  }
   _moveSelection = delta => {
     let items = document.querySelectorAll('.search-list li');
     if (!items.length) return;
     let index = this._selectedIndex + delta;
-    index = Math.max(0, Math.min(items.length - 1, index));
-    this._selectedIndex = index;
-    items.forEach((li, i) => li.classList.toggle('search-item-selected', i === index));
-    items[index].scrollIntoView({ block: 'nearest' });
+    if (index < 0) {
+      this._setSelected(-1);
+      return;
+    }
+    index = Math.min(items.length - 1, index);
+    this._setSelected(index);
   }
   _submit = event => {
       if (event) event.preventDefault();
@@ -85,26 +110,30 @@ class SearchControl {
     let autofocus = false;
     this._searchCallback = options && options.searchCallback;
     this._historyGetText = (options && options.historyGetText) || (text => text);
-    this._searchGetText = (options && options.searchGetText) || (o => o.item.name);
+    this._searchGetText = (options && options.searchGetText) || (o => o.item.custom_title);
     this._searchOnSelect = options && options.searchOnSelect;
     this._searchRenderItem = (options && options.searchRenderItem) || (o => `<span class="search-item-text">${this._searchGetText(o)}</span>`);
     const innerHTML = `
       <form class="search-form">
       <div class="search-container">
         <div class="search-input-container">
-          <input type="text" class="search-input" tabindex=1 autocomplete="off" placeholder="Search..."${autofocus ? 'autofocus':''}>
+          <input type="text" class="search-input" tabindex=1 autocomplete="off" role="combobox" aria-expanded="true" aria-autocomplete="list" placeholder="Search..."${autofocus ? 'autofocus':''}>
           <button type="submit" class="search-button search-submit" tabindex=-1 title="Search">&#128269;&#xFE0E;</button>
           <button type="button" class="search-button search-clear" tabindex=0 title="Cancel">&times;</button>
         </div>
-        <div class="search-list-container"><ul class="search-list"></ul></div>
+        <div class="search-list-container"><ul class="search-list" role="listbox"></ul></div>
       </div>
       </form>
     `;
     document.body.insertAdjacentHTML('beforeend', innerHTML);
     this._input = document.querySelector('.search-input');
+    this._container = document.querySelector('.search-container');
     this._items = JSON.parse(localStorage.getItem(this._historyEntryName) || "[]");
     document.querySelector('.search-clear').onclick = this._clear;
     document.querySelector('.search-form').onsubmit = this._submit;
+    document.querySelector('.search-list').addEventListener('mousedown', event => {
+      event.preventDefault();
+    });
     document.querySelector('.search-list').onclick = event => {
       if (event.target.classList.contains('search-delete')) {
         let li = event.target.parentElement;
@@ -132,7 +161,11 @@ class SearchControl {
         this._moveSelection(1);
       } else if (event.key === "ArrowUp") {
         event.preventDefault();
-        this._moveSelection(-1);
+        if (this._selectedIndex === -1) {
+          this._focusInput();
+        } else {
+          this._moveSelection(-1);
+        }
       } else if (event.key === "Enter" && this._selectedIndex !== -1) {
         event.preventDefault();
         let items = document.querySelectorAll('.search-list li');
