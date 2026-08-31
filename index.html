@@ -2063,7 +2063,7 @@ function searchRenderItem(o) {
   return `<span class="search-item-row"><span class="search-item-left" title="${o.item.info.title} (${o.item.info.category})">${o.item.info.title} (${o.item.info.category})</span><span class="search-item-right">${o.item.info.location||''}</span></span>`;
 }
 
-function fuzzySearch(s, limit=25) {
+async function fuzzySearch(s, limit=25) {
   let result = fuse.search(s, { limit: limit });
 
   //const cmpAlphaNum2 = (a,b) => a.localeCompare(b, 'en', { numeric: true });
