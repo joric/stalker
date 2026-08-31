@@ -994,9 +994,10 @@ function renderItem(feature, extended=false, verbose=false) {
           } else {
 
             // add one random item for now
-            if (count==random_choice) {
+            //if (count==random_choice) {
               items.push({name: name, generator: gen_name, category: group.category, props: props });
-            }
+            //}
+
             count ++;
           }
         }
@@ -1297,12 +1298,42 @@ function popupOnClick(e) {
     let groups = {}
     let count = 0;
 
+    let weights = {};
+
+    const total = new Set((info.groups || []).map(data => data.generator)).size;
+    for (const data of (info.groups||{})) {
+      if (data.props.weight) {
+        weights[data.generator] = weights[data.generator]||0;
+        weights[data.generator] += data.props.weight;
+      }
+    }
+
     for (const data of (info.groups||{})) {
       groups[data.generator] = true;
       let color = Object.keys(groups).length;
       let name = data.name;
       let title = translate_item(name);
       let desc = translate_item(name, true);
+
+      // add randomizer properties to title
+      if (data.props) {
+        let from = data.props.min||1
+        let to = data.props.max||1;
+
+        let range = (from && to) ? `(${from}..${to})`:'';
+        if (from==to) range = from!=1 ? `(${from})` : '';
+
+        let chance = data.props.chance && data.props.chance!=1 && data.props.chance;
+        if (chance) chance = `${Math.round(chance*100)}%`;
+
+        //let weight = data.props.weight && data.props.weight<total ? `${Math.round(data.props.weight*100/total)}%`: '';
+
+        let weight = data.props.weight ? `${Math.round(data.props.weight*100/weights[data.generator])}%`: '';
+        //let weight = data.props.weight ? `{${data.props.weight}/${weights[data.generator]}}`: '';
+
+        title = [weight, chance, range, title].filter(x=>x).join(' ');
+      }
+
       container.appendChild(createTag(color+1, name, title, `${title} (${name})\n${reformat(desc)}\n---\n${data.generator}\n${JSON.stringify(data.props)}`, getWikiURL(title)));
       count += 1;
     }
