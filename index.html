@@ -157,6 +157,8 @@ let customNotes = ['EMarkerType::Note','EMarkerType::Danger','EMarkerType::Radia
 const capitalize = s => s[0].toUpperCase()+s.slice(1);
 const cmpAlphaNum = (a,b) => a[0].localeCompare(b[0], 'en', { numeric: true });
 
+let selectedMarker = null;
+
 function scaleCoordinate(c) {
   return scaleZ < 1.0 ? {x: c.x, y:c.y, z:c.z*scaleZ} : c;
 }
@@ -562,8 +564,10 @@ function findLocation(id) {
 }
 
 function jumpToLocation(name, changeZoom=false) {
+  selectedMarker = null;
   let marker = findLocation(name);
   if (marker) {
+    selectedMarker = marker;
     if (changeZoom) {
       map.setView({center: marker.getCoordinates(), zoom:8, pitch:0, bearing:0});
     }
@@ -1438,6 +1442,8 @@ function popupOnClick(e) {
   e.target._infoWindow._setOptions({custom: true, dy: markerDy});
   e.target._infoWindow.setContent(contentElement);
 
+  e.target._infoWindow.on('hide',function() { selectedMarker = null; });
+
   contentElement.addEventListener('contextmenu', function(e) { e.stopPropagation()}, true); // enable default context menu
 }
 
@@ -1852,10 +1858,13 @@ function updateView(e) {
       if (zoom>=minZoom+0.5 && zoom < maxZoom+0.5) {
         layer.show();
       } else {
-        layer.hide();
+
+        if (!selectedMarker || selectedMarker._layer!=layer)
+          layer.hide();
       }
     }
   }
+
 }
 
 function isPointInsidePolygon(point, polyPoints) {
@@ -2186,7 +2195,7 @@ function updateSearch(text, updateControl=true) {
   settings.searchText = text.slice(0,100);
 
   if (text=='') {
-
+    selectedMarker = null;
     clearFilter();
     updateView();
 
