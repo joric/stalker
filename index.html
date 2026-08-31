@@ -711,7 +711,7 @@ function getScriptedItems(scriptName) {
   if (scriptName.includes('_ItemAdd_')) {
     let name = scriptName.split('_ItemAdd_').pop();
     name = name.replace(/_\d+$/,'');
-    for (key of [`sid_items_${name}_name`, `sid_questItemprototypes_${name}_name`]) {
+    for (const key of [`sid_items_${name}_name`, `sid_questItemprototypes_${name}_name`]) {
       if (lang[key]) return [name];
     }
   }
@@ -937,6 +937,9 @@ function renderItem(feature, extended=false, verbose=false) {
     let items = [];
     for (const name of o.items) {
       items.push({name: translate_item(name), desc: translate_item(name, true)});
+
+      if (o.name=='EMarkerType::InteractablePDA') info.title = translate_item(name);
+
     }
     info.items = items;
   }
@@ -2082,7 +2085,7 @@ function getSearchText(o, info) {
   // add scripted items
   if (o.references) {
     for (const name of o.references) {
-      for (itemName of getScriptedItems(name)) {
+      for (const itemName of getScriptedItems(name)) {
         tags.push(translate_item(itemName));
       }
     }
@@ -2092,11 +2095,11 @@ function getSearchText(o, info) {
   if (o.items) tags.push('items');
   if (o.clue) tags.push('clue');
 
-  for (p of [o.lock, o.enable, o.keycode, o.uaid]) {
+  for (const p of [o.lock, o.enable, o.keycode, o.uaid]) {
     if (p) tags.push(p);
   }
 
-  for (item of (info.items||[])) {
+  for (const item of (info.items||[])) {
     tags.push(item.name);
     tags.push(item.desc);
   }
