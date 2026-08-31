@@ -1031,6 +1031,12 @@ function renderItem(feature, extended=false, verbose=false) {
     }
 
     info.groups = items;
+
+
+    if (items.length==1) {
+      info.title = translate_item(items[0].name);
+    }
+
   }
 
   // add upgrade thingy, if any
