@@ -92,7 +92,8 @@
       "QuestGiver": { "icon": "quest-giver", "title": "NPC", "category": "sid_misc_answer_sidequest", "group": "actors" },
       "MainQuest": { "icon": "quest", "title": "NPC", "category": "sid_misc_answer_sidequest", "group": "actors" },
       "QuestNPCBase": { "icon": "soldier", "title": "NPC", "category": "NPC", "group": "misc" },
-      "HumanBase": { "icon": "soldier", "title": "NPC", "category": "NPC", "group": "misc" }
+      "HumanBase": { "icon": "soldier", "title": "NPC", "category": "NPC", "group": "misc" },
+      "Bloodsucker": { "icon": "claws", "title": "sid_misc_statisticspack_pda_statictics_mutant_bloodsucker", "category": "sid_npc_name_mutant", "group": "enemies" }
     },
     "match": {
       "^(Bloodsucker|Chimera|Controller|PseudoDog|Deer|Pseudogiant|Burer|Poltergeist|Bayun|Flesh|Blinddog|Tushkan|Boar|ZombieFoster|Rat|Snork)": { "icon": "claws", "category": "sid_npc_name_mutant", "group": "enemies" }
