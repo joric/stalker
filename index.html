@@ -938,7 +938,7 @@ function renderItem(feature, extended=false, verbose=false) {
     for (const name of o.items) {
       items.push({name: translate_item(name), desc: translate_item(name, true)});
 
-      if (o.name=='EMarkerType::InteractablePDA') info.title = translate_item(name);
+      if (o.name=='EMarkerType::InteractablePDA' || o.name=='EMarkerType::InteractableNote' || o.name=='EMarkerType::InteractableUSB') info.title = translate_item(name);
 
     }
     info.items = items;
@@ -2023,15 +2023,12 @@ function getFuse(threshold = 0.25) {
 
     //data.push({...o, info: info, custom_title: info.title, custom_type: info.type, custom_description: info.description, custom_text: s});
     //data.push({...o, info:info, custom_text: getSearchText(o, info) });
-    data.push({...o, info:info, custom_text: [info.title, info.category, info.location].join(' ') });
+    data.push({...o, info:info, custom_text: [info.title, info.category, info.location||'Unknown'].join(' ') });
   }
 
   let options = {
     keys: [
       { name: 'custom_text', weight: 0.8 },
-      { name: 'info.title', weight: 0.7 },
-      { name: 'info.category', weight: 0.6 },
-      { name: 'info.location', weight: 0.5 },
       { name: 'info.type', weight: 0.4 },
       { name: 'info.stage', weight: 0.3 },
       { name: 'info.quest', weight: 0.25 },
@@ -2063,14 +2060,14 @@ function getFuse(threshold = 0.25) {
 
 function searchRenderItem(o) {
   //return `<span class="search-item-text">${o.item.custom_title}<span class="search-item-comment-666" style="align: right">${o.item.info.category}</span></span>`;
-  return `<span class="search-item-row"><span class="search-item-left" title="${o.item.info.title} (${o.item.info.category})">${o.item.info.title} (${o.item.info.category})</span><span class="search-item-right">${o.item.info.location||''}</span></span>`;
+  return `<span class="search-item-row"><span class="search-item-left" title="${o.item.info.title} (${o.item.info.category}) [${o.score}]">${o.item.info.title} (${o.item.info.category})</span><span class="search-item-right">${o.item.info.location||''}</span></span>`;
 }
 
-async function fuzzySearch(s, limit=25) {
-  let result = fuse.search(s, { limit: limit });
+async function fuzzySearch(s, limit=256) {
+  let result = await fuse.search(s, { limit: limit });
 
-  //const cmpAlphaNum2 = (a,b) => a.localeCompare(b, 'en', { numeric: true });
-  //result.sort( (a,b)=> a.score - b.score || cmpAlphaNum2(a.item.info.title||'', b.item.info.title||'') ) ;
+  const cmpAlphaNum2 = (a,b) => a.localeCompare(b, 'en', { numeric: true });
+  result.sort( (a,b)=> a.score - b.score || cmpAlphaNum2(a.item.info.title||'', b.item.info.title||'') ) ;
 
   return result;
 }
@@ -2343,7 +2340,7 @@ window.onload = function(event) {
     searchRenderItem: searchRenderItem,
     searchOnSelect: fuseResult => {
       jumpToLocation(fuseResult.item.sid);
-      console.log('search result:', fuseResult.item);
+      //console.log('search result:', fuseResult.item);
     },
   });
 
