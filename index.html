@@ -22,7 +22,6 @@
 <link href="js/lib/maptalks-gl/maptalks-gl.css" rel="stylesheet">
 <script type="text/javascript" src="js/lib/maptalks-gl/maptalks-gl.js"></script>
 
-<script type="text/javascript" src="js/lib/fuse/fuse.js"></script>
 <script type="text/javascript" src="js/lib/search-control/search-control.js"></script>
 
 </head>
@@ -81,7 +80,10 @@
 
 <div id="alert" class="closed">Copied To Clipboard</div>
 
-<script>
+<script type="module">
+
+import { FuseWorker } from './js/lib/fuse/fuse-worker.mjs'
+
 let maxZoom = 21;
 let enableAltitude = true;
 let heightFactor = 1.0;
@@ -93,6 +95,8 @@ let autoAltitude = false;
 let textSize = 18;
 let labelGroups = ['regions'];//, 'locations'];
 let fuse = null;
+let dedup = {};
+let settings = {};
 
 let zoomGroups = {
   'notes':[-99,99],
@@ -140,6 +144,7 @@ let items_lookup = {};
 let mapParam = {};
 let markersData = null;
 let regionsData = null;
+let currentRegion = null;
 
 let tileset_base = location.protocol === 'file:' ? '../stalker2_tileset' : 'https://joric.github.io/stalker2_tileset';
 
@@ -210,7 +215,8 @@ function loadMap() {
   let scrollWheelZoom = true; // maptalks uses fractional zoom by default
   //let scrollWheelZoom = false;
 
-  let w = h = 812900;
+  let w = 812900;
+  let h = w;
   let center = [w/2, h/2];
   let [left,top,right,bottom] = [0, 0, w, h];
   let tileSize = 512;
@@ -409,7 +415,7 @@ function addLine(marker, target, c) {
 function addLines(markers) {
   let geometry = [];
 
-  for (m of markers) {
+  for (const m of markers) {
 
     let marker = m.marker;
     let o = marker.feature.properties;
@@ -433,7 +439,7 @@ function addLines(markers) {
     if (enableItemLines) {
       let group = items_lookup[o.name];
       if (group && o.name != 'Vodka') {
-        for (target of group) {
+        for (const target of group) {
           // the big issue here is that target may be invisible, needs fixing lines vs zoom levels
           // limit line length here
 
@@ -465,7 +471,7 @@ function addCircles(markers) {
     'lineOpacity': 0.85,
   };
 
-  for (m of markers) {
+  for (const m of markers) {
     let o = m.marker.feature.properties;
     if (o.radius) {
 
@@ -504,7 +510,7 @@ function addMarkers(data) {
   // join markers by group name
   let collection = {};
 
-  for (m of data) {
+  for (const m of data) {
     if (!collection[m.group]) collection[m.group] = [];
     collection[m.group].push(m.marker);
   }
@@ -524,7 +530,7 @@ function addMarkers(data) {
     let geometries = collection[group];
     let visible = settings.activeItems[group] == true;
 
-    layer = new maptalks.PointLayer(layerName, geometries, {
+    let layer = new maptalks.PointLayer(layerName, geometries, {
       enableAltitude: enableAltitude,
       sortByDistanceToCamera: true,
       forceRenderOnMoving: true,
@@ -554,7 +560,7 @@ function addMarkers(data) {
 }
 
 function findLocation(id) {
-  for (m of markersData) {
+  for (const m of markersData) {
     let marker = m.marker;
     let o = marker.feature.properties;
     if (id == o.sid) {
@@ -803,7 +809,8 @@ function renderPhoto(o) {
   if (!t) return {};
 
   let i = o.image_index || 0;
-  let iw = ih = 4096;
+  let iw = 4096;
+  let ih = iw;
   let cw = 14;
   let ch = 10;
   let cx = ~~(i%cw);
@@ -899,7 +906,7 @@ function renderItem(feature, extended=false, verbose=false) {
   let c = feature.geometry.coordinates;
   //let teleport = `${c[0]} ${c[1]} ${c[2]}`;
   //let location = `XTeleportTo ${teleport}`
-  let currentRegion = getRegionName({x: c[0], y:c[1], z:c[2]}, regionsData);
+  currentRegion = getRegionName({x: c[0], y:c[1], z:c[2]}, regionsData);
   info.location = lang[`sid_locations_region_${currentRegion}_name`];
 
   if (o.quest) {
@@ -1003,18 +1010,19 @@ function renderItem(feature, extended=false, verbose=false) {
     let items = [];
 
     // ranked spawns are structured the way we only have one matching rank
-    for (name of o.spawns) {
+    for (let name of o.spawns) {
+      let rank = null;
       if (name.includes(':')) {
-        [rank, name] = name.split(':');
+        const [rank, rname] = name.split(':');
         if (rank_score[current_rank]>=rank_score[rank]) matching_rank = rank;
       }
     }
 
-    for (name of o.spawns) {
+    for (let name of o.spawns) {
       let rank = null;
       if (name.includes(':')) {
         [rank, name] = name.split(':');
-        if (rank!= matching_rank) continue;
+        if (rank != matching_rank) continue;
       }
       items.push(...getGeneratorItems(name, rank || current_rank, diff));
     }
@@ -1035,7 +1043,7 @@ function renderItem(feature, extended=false, verbose=false) {
 
         if (title) {
           let items = [];
-          for (item of (proto.compatible||{})) {
+          for (const item of (proto.compatible||{})) {
             let s = lang[`sid_items_${item}_name`];
             if (s) items.push(s);
           }
@@ -1620,7 +1628,7 @@ function getIconProp(o) {
   prop = {...prop, ...section};
 
   if (section && section.items) {
-    for (field of [o.subtype, o.name, o.proto]) {
+    for (const field of [o.subtype, o.name, o.proto]) {
       let t = section.items[field];
       if (t) {
         return {...section, ...t};
@@ -1658,8 +1666,6 @@ function hideTooltipExt(e) {
   tooltipHideTimer = setTimeout(hideTooltip, tooltipHideDelay);
 }
 
-dedup = {};
-
 function getSymbol(o, info) {
   let prop = info.prop;
   let icon = prop.icon || 'question';
@@ -1673,7 +1679,7 @@ function getSymbol(o, info) {
   
   if (icon=='question' && isNPC(o)) icon='soldier';
 
-  image = 'images/sprites/' + ((icons[icon] && icons[icon].image) || 'CompassMarker_2_3.png');
+  let image = 'images/sprites/' + ((icons[icon] && icons[icon].image) || 'CompassMarker_2_3.png');
 
   let size = iconSize;
 
@@ -1999,7 +2005,7 @@ function saveSettings() {
 function getFuse(threshold = 0.25) {
   let data = [];
 
-  for (feature of markers.features) {
+  for (const feature of markers.features) {
     let o = feature.properties;
 
     if ([
@@ -2043,9 +2049,13 @@ function getFuse(threshold = 0.25) {
     includeScore: true,
     useExtendedSearch: true, // search by words
     findAllMatches: false, // stop on perfect match
+
+    numWorkers: (navigator.hardwareConcurrency || 4) * 2 // 2x oversubscribing
   }
 
-  return new Fuse(data, options);
+  //return new Fuse(data, options);
+
+  return new FuseWorker(data, options);
 }
 
 function searchRenderItem(o) {
@@ -2155,7 +2165,7 @@ function filterItems() {
 
   for (const layer of groupLayer.getLayers()) {
     //if (!layer.isVisible()) continue; // skip hidden layers altogether (for now)
-    for (marker of layer._geoList) {
+    for (const marker of layer._geoList) {
       let res = passesFilter(marker); // circles layer may have duplicate markers, breaks return result
       if (res){
 

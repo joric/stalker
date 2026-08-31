@@ -3,7 +3,7 @@ class SearchControl {
   _maxHistorySize = 50;
   _maxStringLength = 100;
   _searchRequestId = 0;
-  _searchDebounceMs = 300;
+  _searchDebounceMs = 50;
   _searchTimer = null;
   _selectedIndex = -1;
   _mode = 'history';
