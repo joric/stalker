@@ -1996,7 +1996,7 @@ function saveSettings() {
   localStorage.setItem(localDataName, JSON.stringify(localData));
 }
 
-function getFuse(threshold = 0.1) {
+function getFuse(threshold = 0.25) {
   let data = [];
 
   for (feature of markers.features) {
@@ -2025,10 +2025,11 @@ function getFuse(threshold = 0.1) {
       { name: 'info.location', weight: 0.5 },
       { name: 'info.type', weight: 0.4 },
       { name: 'info.stage', weight: 0.3 },
-      { name: 'info.quest', weight: 0.2 },
+      { name: 'info.quest', weight: 0.25 },
+      { name: 'sid', weight: 0.25 },
+      { name: 'uaid', weight: 0.25 },
       { name: 'title', weight: 0.2 },
       { name: 'keycode', weight: 0.2 },
-      { name: 'sid', weight: 0.2 },
       { name: 'name', weight: 0.2 },
       { name: 'type', weight: 0.2 },
       { name: 'subtype', weight: 0.2 },
