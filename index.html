@@ -20,7 +20,7 @@
 <link href="js/lib/font-awesome/css/all.min.css" rel="stylesheet">
 
 <link href="js/lib/maptalks-gl/maptalks-gl.css" rel="stylesheet">
-<script type="text/javascript" src="js/lib/maptalks-gl/maptalks-gl.min.js"></script>
+<script type="text/javascript" src="js/lib/maptalks-gl/maptalks-gl.js"></script>
 
 <script type="text/javascript" src="js/lib/fuse/fuse.js"></script>
 <script type="text/javascript" src="js/lib/search-control/search-control.js"></script>
@@ -83,13 +83,13 @@
 
 <script>
 let maxZoom = 21;
-let enableAltitude = false;
+let enableAltitude = true;
 let heightFactor = 1.0;
 let iconSize = 48;
 let startPitch = 0;
 let startZoom = 2;
 let defaultPitch = 45;
-let autoAltitude = true;
+let autoAltitude = false;
 let textSize = 18;
 let labelGroups = ['regions'];//, 'locations'];
 let fuse = null;
@@ -2211,6 +2211,31 @@ function updateSearch(text, updateControl=true) {
   saveSettings();
 }
 
+function customAnimateTo(map, targetView, duration = 200) {
+    const startView = { pitch: map.getPitch() };
+    const startTime = performance.now();
+    function animate(currentTime) {
+        const elapsed = currentTime - startTime;
+        const progress = Math.min(1, elapsed / duration);
+        const pitch = startView.pitch + (targetView.pitch - startView.pitch) * progress;
+        map.setView({pitch: pitch});
+        if (progress < 1) {
+            requestAnimationFrame(animate);
+        }
+    }
+    requestAnimationFrame(animate);
+}
+
+function compassOnClick(e) {
+  if (map.getBearing()!=0) {
+    map.animateTo({ bearing: 0 });
+  } else {
+      let newPitch = map.getPitch()!=0 ? 0 : defaultPitch;
+      //map.animateTo({pitch: newPitch });
+      //animateto fails here for some reason if clicked from compass (maptalks-gl@0.124.4 issue)
+      customAnimateTo(map, { pitch: newPitch });
+  }
+}
 
 function applyTint(src, r,g,b, callback) {
   const canvas = document.createElement('canvas');
@@ -2255,8 +2280,7 @@ window.onload = function(event) {
 
   loadMap();
 
-  let compassControl = new maptalks.control.Compass({position  : 'bottom-right'}).addTo(map)
-    ._compass.onclick = (e)=>map.getBearing()==0 && map.animateTo({ pitch: map.getPitch()==0 ? defaultPitch : 0 })
+  let compassControl = new maptalks.control.Compass({position  : 'bottom-right'}).addTo(map)._compass.onclick = compassOnClick;
 
   window.addEventListener("keydown",function (e) {
 
@@ -2271,11 +2295,7 @@ window.onload = function(event) {
     }
 
     if (e.code=='KeyR' && !e.ctrlKey) {
-      if (map.getBearing()!=0) {
-        map.animateTo({ bearing: 0 });
-      } else {
-        map.animateTo({ pitch: map.getPitch()==0 ? defaultPitch : 0 });
-      }
+      compassOnClick();
     }
 
   });
