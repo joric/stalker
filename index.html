@@ -2005,16 +2005,17 @@ function getFuse(threshold = 0.1) {
 
     //data.push({...o, info: info, custom_title: info.title, custom_type: info.type, custom_description: info.description, custom_text: s});
     //data.push({...o, info:info, custom_text: getSearchText(o, info) });
-    data.push({...o, info:info, custom_text: [info.title, info.location].join(' ') });
+    data.push({...o, info:info, custom_text: [info.title, info.category, info.location].join(' ') });
   }
 
   let options = {
     keys: [
-      { name: 'custom_text', weight: 0.7 },
-      { name: 'info.title', weight: 0.6 },
+      { name: 'custom_text', weight: 0.8 },
+      { name: 'info.title', weight: 0.7 },
+      { name: 'info.category', weight: 0.6 },
       { name: 'info.location', weight: 0.5 },
-      { name: 'info.type', weight: 0.3 },
-      { name: 'info.stage', weight: 0.2 },
+      { name: 'info.type', weight: 0.4 },
+      { name: 'info.stage', weight: 0.3 },
       { name: 'info.quest', weight: 0.2 },
       { name: 'title', weight: 0.2 },
       { name: 'keycode', weight: 0.2 },
