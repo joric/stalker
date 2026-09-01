@@ -1350,7 +1350,7 @@ function popupOnClick(e) {
 
         //let weight = data.props.weight && data.props.weight<total ? `${Math.round(data.props.weight*100/total)}%`: '';
 
-        let weight = data.props.weight ? `${Math.round(data.props.weight*100/weights[data.generator])}%`: '';
+        let weight = data.props.weight && data.props.weight != weights[data.generator] ? `${Math.round(data.props.weight*100/weights[data.generator])}%`: '';
         //let weight = data.props.weight ? `{${data.props.weight}/${weights[data.generator]}}`: '';
 
         title = [weight, chance, title, range].filter(x=>x).join(' ');
