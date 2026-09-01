@@ -1252,11 +1252,7 @@ function popupOnClick(e) {
       span.setAttribute('name', action);
     }
 
-    const getProto = (name) => markers.prototypes[name]?.proto ? getProto(markers.prototypes[name].proto) : name;
-
-    let quantity = (getProto(name) == 'TemplateAmmo') ? 100 : 1;
-
-    span.onclick = function(e) { copyToClipboard(  `XCreateItemInInventoryByID ${e.target.getAttribute('name')} 0 ${quantity} 1`  ); return false;  };
+    span.onclick = function(e) { copyToClipboard(e.target.getAttribute('name')); return false;  };
 
     let colors = ['#eee', '#dde', '#ded', '#eed', '#ede'];
     if (color>0) {
@@ -1312,13 +1308,19 @@ function popupOnClick(e) {
     return div;
   }
 
+  function getItemAction(name) {
+    const getProto = (name) => markers.prototypes[name]?.proto ? getProto(markers.prototypes[name].proto) : name;
+    let quantity = (getProto(name) == 'TemplateAmmo') ? 100 : 1;
+    return `XCreateItemInInventoryByID ${name} 0 ${quantity} 1`;
+  }
+
   if (o.type=='ESpawnType::Item' && o.name) {
     let container = document.createElement('div');
     container.classList.add('tag-container');
     let name = o.name;
     let title = translate_item(o.name);
     let desc = translate_item(o.name, true);
-    container.appendChild(createTag(2, name, title, `${title} (${name})\n${reformat(desc)}`, name, o));
+    container.appendChild(createTag(2, name, title, `${title} (${name})\n${reformat(desc)}`, getItemAction(name), o));
     div.appendChild(document.createElement('hr'));
     div.appendChild(container);
   }
@@ -1367,7 +1369,7 @@ function popupOnClick(e) {
         title = [weight, chance, title, range].filter(x=>x).join(' ');
       }
 
-      container.appendChild(createTag(color+1, name, title, `${title} (${name})\n${reformat(desc)}\n---\n${data.generator}\n${JSON.stringify(data.props)}`, getWikiURL(title)));
+      container.appendChild(createTag(color+1, name, title, `${title} (${name})\n${reformat(desc)}\n---\n${data.generator}\n${JSON.stringify(data.props)}`, getItemAction(name)));
       count += 1;
     }
 
