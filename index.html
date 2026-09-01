@@ -575,9 +575,11 @@ function jumpToLocation(name, changeZoom=false) {
   if (marker) {
     selectedMarker = marker;
     if (changeZoom) {
-      map.setView({center: marker.getCoordinates(), zoom:8, pitch:0, bearing:0});
+      map.setView({center: marker.getCoordinates(), zoom:5, pitch:0, bearing:0.0001});
+      //map.animateTo({center: marker.getCoordinates(), zoom:5, pitch: 0, bearing: 0.0001});
+    } else {
+      map.setView({center: marker.getCoordinates()});
     }
-    map.setView({center: marker.getCoordinates()}); // don't change zoom maybe
     marker._layer.show();
     marker.show();
     popupOnClick({target: marker});
@@ -2407,7 +2409,7 @@ window.onload = function(event) {
     searchCallback: query => fuzzySearch(query),
     searchRenderItem: searchRenderItem,
     searchOnSelect: fuseResult => {
-      jumpToLocation(fuseResult.item.sid);
+      jumpToLocation(fuseResult.item.sid, true);
       //console.log('search result:', fuseResult.item);
     },
   });
