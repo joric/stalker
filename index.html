@@ -953,8 +953,15 @@ function renderItem(feature, extended=false, verbose=false) {
 
   let rank_score = { 'Newbie': 1, 'Experienced': 2, 'Veteran': 3, 'Master': 4 };
 
-  function getGeneratorItems(gen_name, rank, diff) {
+  function getGeneratorItems(gen_name, rank, diff, visited={}) {
     let items = [];
+
+    if (visited[gen_name]) {
+      console.log('already visited', gen_name);
+      return [];
+    }
+
+    visited[gen_name] = true;
 
     if (!markers.generators[gen_name]) {
       gen_name = markers.prototypes[gen_name] && markers.prototypes[gen_name].proto;
@@ -962,18 +969,28 @@ function renderItem(feature, extended=false, verbose=false) {
 
     let generators = markers.generators[gen_name]||[];
 
-    //console.log(gen_name, generators);
-
     // pre-filter ranks
     let best_rank = null;
     for (const generator of generators) {
       if (generator.rank && rank_score[current_rank] >= rank_score[generator.rank.split('::').pop()]) best_rank = generator.rank;
     }
 
+    let categories = {};
+
     for (const generator of generators) {
+
       if (generator.rank && best_rank && generator.rank!=best_rank) continue;
 
       for (const group of (generator.groups || [])) {
+
+        // filters out repeating consumables category. NB! maybe need to stack them
+        if (group.category) {
+          if (categories[group.category]) {
+            //console.log('already added', group.category);
+            continue;
+          }
+          categories[group.category] = true;
+        }
 
         // calculate count of items in pack
         let total = 0;
@@ -990,7 +1007,7 @@ function renderItem(feature, extended=false, verbose=false) {
         for (const [name, props] of Object.entries(group.items||{})) {
 
           if (group.category=='SubItemGenerator') {
-            items.push(...getGeneratorItems(name, rank, diff));
+            items.push(...getGeneratorItems(name, rank, diff, visited));
           } else {
 
             // add one random item for now
