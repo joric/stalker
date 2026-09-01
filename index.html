@@ -1169,8 +1169,6 @@ function popupOnClick(e) {
 
   let info = renderItem(marker.feature, true, true);
 
-  console.log('---', info);
-
   popup.querySelector('#popup-title').textContent = info.title;
   popup.querySelector('#popup-title').title = o.name;
   popup.querySelector('#popup-subtitle').textContent = info.category;
@@ -1312,7 +1310,8 @@ function popupOnClick(e) {
       }
     }
 
-    for (const data of (info.groups||{})) {
+     // iterate backwards, later generators are more important usually
+    for (const data of (info.groups || []).slice().reverse()) {
       groups[data.generator] = true;
       let color = Object.keys(groups).length;
       let name = data.name;
@@ -2046,7 +2045,11 @@ function saveSettings() {
   localStorage.setItem(localDataName, JSON.stringify(localData));
 }
 
-function getFuse(threshold = 0.25) {
+function pp(s) { // preprocess, remove stop-words
+  return s.replace('-','');
+}
+
+function getFuse(threshold = 0.2) {
   let data = [];
 
   for (const feature of markers.features) {
@@ -2068,10 +2071,10 @@ function getFuse(threshold = 0.25) {
     let tags = [];
     for (const rec of (info.groups||[])) {
       tags.push(rec.name);
-      tags.push(translate_item(rec.name));
+      tags.push(pp(translate_item(rec.name)));
     }
 
-    data.push({...o, info:info, custom_text: [info.title, info.category, info.location||'Unknown'].join(' '), custom_tags:tags.join(' ') });
+    data.push({...o, info:info, custom_text: [pp(info.title), info.category, info.location||'Unknown'].join(' '), custom_tags:tags.join(' ') });
   }
 
   let options = {
@@ -2090,7 +2093,6 @@ function getFuse(threshold = 0.25) {
       { name: 'subtype', weight: 0.2 },
       { name: 'stage', weight: 0.2 },
       { name: 'items', weight: 0.2 },
-
     ],
 
     threshold: threshold,
@@ -2113,7 +2115,7 @@ function searchRenderItem(o) {
 }
 
 async function fuzzySearch(s, limit=256) {
-  let result = await fuse.search(s, { limit: limit });
+  let result = await fuse.search(pp(s), { limit: limit });
 
   const cmpAlphaNum2 = (a,b) => a.localeCompare(b, 'en', { numeric: true });
   result.sort( (a,b)=> a.score - b.score || cmpAlphaNum2(a.item.info.title||'', b.item.info.title||'') ) ;
