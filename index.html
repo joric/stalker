@@ -1022,7 +1022,6 @@ function renderItem(feature, extended=false, verbose=false) {
             count ++;
           }
         }
-
       }
     }
 
@@ -1253,7 +1252,7 @@ function popupOnClick(e) {
       span.setAttribute('name', action);
     }
 
-    span.onclick = function(e) { copyToClipboard(  `${e.target.getAttribute('name')}`  ); return false;  };
+    span.onclick = function(e) { copyToClipboard(  `XCreateItemInInventoryByID ${e.target.getAttribute('name')} 0 1 1`  ); return false;  };
 
     let colors = ['#eee', '#dde', '#ded', '#eed', '#ede'];
     if (color>0) {
