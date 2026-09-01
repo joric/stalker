@@ -1351,7 +1351,7 @@ function popupOnClick(e) {
         let weight = data.props.weight ? `${Math.round(data.props.weight*100/weights[data.generator])}%`: '';
         //let weight = data.props.weight ? `{${data.props.weight}/${weights[data.generator]}}`: '';
 
-        title = [weight, chance, range, title].filter(x=>x).join(' ');
+        title = [weight, chance, title, range].filter(x=>x).join(' ');
       }
 
       container.appendChild(createTag(color+1, name, title, `${title} (${name})\n${reformat(desc)}\n---\n${data.generator}\n${JSON.stringify(data.props)}`, getWikiURL(title)));
