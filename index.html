@@ -1011,7 +1011,7 @@ function renderItem(feature, extended=false, verbose=false) {
   }
 
   if (o.spawns) {
-    let items = [];
+    let groups = [];
 
     // ranked spawns are structured the way we only have one matching rank
     for (let name of o.spawns) {
@@ -1028,17 +1028,19 @@ function renderItem(feature, extended=false, verbose=false) {
         [rank, name] = name.split(':');
         if (rank != matching_rank) continue;
       }
-      items.push(...getGeneratorItems(name, rank || current_rank, diff));
+
+      let items = getGeneratorItems(name, rank || current_rank, diff);
+      groups.push(...items);
     }
 
-    info.groups = items;
+    info.groups = groups;
 
-
-    if (items.length==1) {
-      info.title = translate_item(items[0].name);
+    if (groups.length==1) {
+      info.title = translate_item(groups[0].name);
     }
 
   }
+
 
   // add upgrade thingy, if any
   if (info.groups) {
@@ -1166,6 +1168,8 @@ function popupOnClick(e) {
   const popup = document.querySelector('#popup-template').content.cloneNode(true);
 
   let info = renderItem(marker.feature, true, true);
+
+  console.log('---', info);
 
   popup.querySelector('#popup-title').textContent = info.title;
   popup.querySelector('#popup-title').title = o.name;
@@ -2060,12 +2064,20 @@ function getFuse(threshold = 0.25) {
 
     //data.push({...o, info: info, custom_title: info.title, custom_type: info.type, custom_description: info.description, custom_text: s});
     //data.push({...o, info:info, custom_text: getSearchText(o, info) });
-    data.push({...o, info:info, custom_text: [info.title, info.category, info.location||'Unknown'].join(' ') });
+
+    let tags = [];
+    for (const rec of (info.groups||[])) {
+      tags.push(rec.name);
+      tags.push(translate_item(rec.name));
+    }
+
+    data.push({...o, info:info, custom_text: [info.title, info.category, info.location||'Unknown'].join(' '), custom_tags:tags.join(' ') });
   }
 
   let options = {
     keys: [
       { name: 'custom_text', weight: 0.8 },
+      { name: 'custom_tags', weight: 0.5 },
       { name: 'info.type', weight: 0.4 },
       { name: 'info.stage', weight: 0.3 },
       { name: 'info.quest', weight: 0.25 },
