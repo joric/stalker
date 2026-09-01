@@ -939,9 +939,7 @@ function renderItem(feature, extended=false, verbose=false) {
     let items = [];
     for (const name of o.items) {
       items.push({name: translate_item(name), desc: translate_item(name, true)});
-
       if (o.name=='EMarkerType::InteractablePDA' || o.name=='EMarkerType::InteractableNote' || o.name=='EMarkerType::InteractableUSB') info.title = translate_item(name);
-
     }
     info.items = items;
   }
@@ -1094,6 +1092,13 @@ function renderItem(feature, extended=false, verbose=false) {
     let note = lang[`sid_questItemprototypes_${o.name}_description`];
     if (note && note != desc) {
       info.note = note;
+    }
+  }
+
+  if (o.items) {
+    let items = [];
+    for (const name of o.items) {
+      if (o.name=='EMarkerType::InteractablePDA' || o.name=='EMarkerType::InteractableNote' || o.name=='EMarkerType::InteractableUSB') info.note = translate_item(name, true);
     }
   }
 
