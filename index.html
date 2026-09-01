@@ -1340,7 +1340,7 @@ function popupOnClick(e) {
         let from = data.props.min||1
         let to = data.props.max||1;
 
-        let range = (from && to) ? `(${from}-${to})`:'';
+        let range = (from && to) ? `(${from}..${to})`:'';
         if (from==to) range = from!=1 ? `(${from})` : '';
 
         let chance = data.props.chance && data.props.chance!=1 && data.props.chance;
