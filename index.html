@@ -939,7 +939,7 @@ function renderItem(feature, extended=false, verbose=false) {
 
   for (const ref of (o.references||[])) {
     const name = getScriptedItem(ref);
-    itemSet.add(name);
+    if (name) itemSet.add(name);
   }
 
   for (const name of itemSet) {
