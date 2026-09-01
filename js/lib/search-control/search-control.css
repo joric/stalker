@@ -168,6 +168,17 @@
   background-color: #ddd;
 }
 
+.search-item-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.search-item-icon img {
+  width: 24px;
+  height: 24px;
+}
+
 .search-item-row { display:flex; width:100%; gap:8px; padding-right: 8px;  }
 .search-item-left { font-size: 16px; flex:1; min-width:0; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; }
 .search-item-right { flex:0 0 auto; }

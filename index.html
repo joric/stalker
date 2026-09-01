@@ -2126,7 +2126,10 @@ function getFuse(threshold = 0.2) {
 }
 
 function searchRenderItem(o) {
-  //return `<span class="search-item-text">${o.item.custom_title}<span class="search-item-comment-666" style="align: right">${o.item.info.category}</span></span>`;
+  //let icon = o.item.info.prop.icon;
+  //let image = 'images/sprites/' + ((icons[icon] && icons[icon].image) || 'CompassMarker_2_3.png');
+  //return `<span class="search-item-row"><span class="search-item-icon"><img src="${image}"/></span><span class="search-item-left" title="${o.item.info.title} (${o.item.info.category}) [${o.score}]">${o.item.info.title} (${o.item.info.category})</span><span class="search-item-right">${o.item.info.location||''}</span></span>`;
+  //return `<span class="search-item-row"><span class="search-item-icon"><img src="${image}"/></span><span class="search-item-left" title="${o.item.info.title} (${o.item.info.category}) [${o.score}]">${o.item.info.title}</span><span class="search-item-right">${o.item.info.location||''}</span></span>`;
   return `<span class="search-item-row"><span class="search-item-left" title="${o.item.info.title} (${o.item.info.category}) [${o.score}]">${o.item.info.title} (${o.item.info.category})</span><span class="search-item-right">${o.item.info.location||''}</span></span>`;
 }
 
