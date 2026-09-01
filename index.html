@@ -1246,7 +1246,7 @@ function popupOnClick(e) {
 
     span.setAttribute('name', name);
 
-    if (action.startsWith('http')) {
+    if (action && action.startsWith('http')) {
       span.href = action;
       span.target = '_blank';
     } else {
