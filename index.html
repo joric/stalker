@@ -709,22 +709,19 @@ function clearSelection() {
 
 //add items by signal names like `XStartQuestNodeBySID DLC00_Deluxe_ItemAdd_HeavyAnomaly_SIRCA_Armor` is SSP-100M Armor
 //needs extracting actual items from scripts, but this will do for now
-function getScriptedItems(scriptName) {
+function getScriptedItem(scriptName) {
   if (scriptName.includes('_ItemAdd_')) {
     let name = scriptName.split('_ItemAdd_').pop();
     name = name.replace(/_\d+$/,'');
     for (const key of [`sid_items_${name}_name`, `sid_questItemprototypes_${name}_name`]) {
-      if (lang[key]) return [name];
+      if (lang[key]) return name;
     }
   }
-  return [];
 }
 
 function cleanupBody(input) {
-  let cleaned = input.replace(/\$[A-Za-z0-9_]+/g, '');
-  cleaned = cleaned.replace(/<[^>]*>/g, '');
-  cleaned = cleaned.replace(/\s+/g, ' ').trim();
-  return cleaned;
+  let cleaned = input.replace(/\$[A-Za-z0-9_]+/g, ''); //cuts vars like $J0L0
+  return cleaned.trim();
 }
 
 function translate_item(name, description=false) {
@@ -934,14 +931,21 @@ function renderItem(feature, extended=false, verbose=false) {
     }
   }
 
-  // add items
-  if (o.items) {
-    let items = [];
-    for (const name of o.items) {
-      items.push({name: translate_item(name), desc: translate_item(name, true)});
-      if (o.name=='EMarkerType::InteractablePDA' || o.name=='EMarkerType::InteractableNote' || o.name=='EMarkerType::InteractableUSB') info.title = translate_item(name);
-    }
-    info.items = items;
+  let itemSet = new Set(o.items||[]);
+
+  for (const name of (o.attachments||'').split(',').filter(name => name.trim())) {
+    itemSet.add(name);
+  }
+
+  for (const ref of (o.references||[])) {
+    const name = getScriptedItem(ref);
+    itemSet.add(name);
+  }
+
+  for (const name of itemSet) {
+    info.items = info.items || [];
+    info.items.push({name: name, title: translate_item(name), desc: translate_item(name, true)});
+    if (o.name=='EMarkerType::InteractablePDA' || o.name=='EMarkerType::InteractableNote' || o.name=='EMarkerType::InteractableUSB') info.title = translate_item(name);
   }
 
   // we need to group rank-prefixed spawns by rank
@@ -1012,7 +1016,7 @@ function renderItem(feature, extended=false, verbose=false) {
 
             // add one random item for now
             //if (count==random_choice) {
-              items.push({name: name, generator: gen_name, category: group.category, props: props });
+              items.push({name: name, title: translate_item(name), generator: gen_name, category: group.category, props: props });
             //}
 
             count ++;
@@ -1096,7 +1100,6 @@ function renderItem(feature, extended=false, verbose=false) {
   }
 
   if (o.items) {
-    let items = [];
     for (const name of o.items) {
       if (o.name=='EMarkerType::InteractablePDA' || o.name=='EMarkerType::InteractableNote' || o.name=='EMarkerType::InteractableUSB') info.note = translate_item(name, true);
     }
@@ -1371,34 +1374,25 @@ function popupOnClick(e) {
     }
   }
 
-  let scriptedItems = [];
+  if (info.items && info.items.length) { // add items
+    let container = document.createElement('div');
+    container.classList.add('tag-container');
+    for (const r of info.items) {
+      container.appendChild(createTag(0, r.name, r.title, `${r.title} (${r.name})\n${reformat(r.desc)}`, r.name));
+    }
+    div.appendChild(document.createElement('hr'));
+    div.appendChild(container);
+  }
 
-  if (o.references) { // add signals
+  if (o.references) {
     let container = document.createElement('div');
     container.classList.add('tag-container');
     for (const name of o.references) {
       container.appendChild(createTag(5, name, name, `XStartQuestNodeBySID ${name}`, `XStartQuestNodeBySID ${name}`));
-      //container.appendChild(createTag(5, name, name, name, `${name}`));
-      scriptedItems = [...new Set([...scriptedItems, ...getScriptedItems(name)])];
     }
     div.appendChild(document.createElement('hr'));
     div.appendChild(container);
   }
-
-  let items = [...new Set([...(o.items||[]), ...scriptedItems])];
-
-  if (items && items.length) { // add items
-    let container = document.createElement('div');
-    container.classList.add('tag-container');
-    for (const name of items) {
-      let title = translate_item(name);
-      let desc = translate_item(name, true);
-      container.appendChild(createTag(0, name, title, `${title} (${name})\n${reformat(desc)}`, name));
-    }
-    div.appendChild(document.createElement('hr'));
-    div.appendChild(container);
-  }
-
 
   let content =  '';
 
@@ -1407,6 +1401,10 @@ function popupOnClick(e) {
     content += `<hr/>${info.upgrade}`;
   }
   */
+
+  if (info.note) {
+    content += `<hr/>${info.note}`;
+  }
 
   if (o.keycode) {
     content += `<hr/>${o.keycode}`;
@@ -1611,11 +1609,10 @@ function showTooltip(e) {
     content += `<hr/>${o.keycode}`;
   }
 
-  if (o.items) {
+  if (info.items) {
     content += `<hr/><div class="overflow-container">`;
-    for (const name of o.items) {
-      let title = translate_item(name);
-      content += `<span title="${name}">${title}</span><br/>`;
+    for (const r of info.items) {
+      content += `<span title="${r.name}">${r.title}</span><br/>`;
     }
     content +='</div>';
   }
@@ -2089,14 +2086,9 @@ function getFuse(threshold = 0.2) {
 
     let info = renderItem(feature, true, true);
 
-    //data.push({...o, info: info, custom_title: info.title, custom_type: info.type, custom_description: info.description, custom_text: s});
-    //data.push({...o, info:info, custom_text: getSearchText(o, info) });
+    const tags = [...(info.groups||[]), ...(info.items||[])].map(rec => rec.title).map(pp);
 
-    let tags = [];
-    for (const rec of (info.groups||[])) {
-      tags.push(rec.name);
-      tags.push(pp(translate_item(rec.name)));
-    }
+    //console.log('tags:', tags);
 
     data.push({...o, info:info, custom_text: [pp(info.title), info.category, info.location||'Unknown'].join(' '), custom_tags:tags.join(' ') });
   }
@@ -2157,9 +2149,8 @@ function getSearchText(o, info) {
   // add scripted items
   if (o.references) {
     for (const name of o.references) {
-      for (const itemName of getScriptedItems(name)) {
-        tags.push(translate_item(itemName));
-      }
+      const itemName = getScriptedItem(name);
+      if (itemName) tags.push(translate_item(itemName));
     }
   }
 

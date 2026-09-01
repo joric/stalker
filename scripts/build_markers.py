@@ -901,6 +901,10 @@ def export_markers(cache, export_assetlist=False):
                     # experimental
                     'NodeType': 'type',
                     'TeleportType': 'name',
+
+                    'AttachmentSID': 'attachments',
+                    'UpgradeSID': 'upgrades',
+                    'Durability': 'durability',
                 }
 
                 prop.update({v: data[k] for k,v in remap.items() if k in data})
