@@ -1252,7 +1252,9 @@ function popupOnClick(e) {
       span.setAttribute('name', action);
     }
 
-    let quantity = (markers.prototypes[name]?.proto == 'TemplateAmmo') ? 100 : 1;
+    const getProto = (name) => markers.prototypes[name]?.proto ? getProto(markers.prototypes[name].proto) : name;
+
+    let quantity = (getProto(name) == 'TemplateAmmo') ? 100 : 1;
 
     span.onclick = function(e) { copyToClipboard(  `XCreateItemInInventoryByID ${e.target.getAttribute('name')} 0 ${quantity} 1`  ); return false;  };
 
