@@ -725,9 +725,14 @@ function cleanupBody(input) {
   return cleaned.trim();
 }
 
+function normalize_name(name) {
+  return (name||'').replace('Antirad','AntiRad');
+}
+
 function translate_item(name, description=false) {
   let postfix = description ? 'description': 'name';
-  name = (name||'').replace('Antirad','AntiRad');
+
+  name = normalize_name(name);
 
   let title = lang[`sid_items_${name}_${postfix}`] || lang[`sid_questItemprototypes_${name}_${postfix}`] || lang[`sid_notes_${name}_${postfix}`];
 
@@ -1023,7 +1028,7 @@ function renderItem(feature, extended=false, verbose=false) {
           if (group.category=='SubItemGenerator') {
             items.push(...getGeneratorItems(name, rank, diff, visited));
           } else {
-            items.push({name: name, generator: {name: generatorName, ...props} });
+            items.push({name: normalize_name(name), generator: {name: generatorName, ...props} });
           }
         }
       }
