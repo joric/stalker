@@ -961,9 +961,12 @@ function renderItem(feature, extended=false, verbose=false) {
     items[name] = {};
   }
 
+  /*
+  // need special mark as they are not reusable
   for (const name of (o.upgrades||'').split(',').filter(name => name.trim())) {
     items[name] = {};
   }
+  */
 
   for (const ref of (o.references||[])) {
     const name = getScriptedItem(ref);
