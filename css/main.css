@@ -1002,7 +1002,7 @@ input::selection {
 .tag-container {
   display: flex;
   flex-wrap: wrap;
-  max-height: 104px;
+  max-height: 144px;
   overflow-x: hidden;
   overflow-y: auto;
   transition: all 0.3s ease;
