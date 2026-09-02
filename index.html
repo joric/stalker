@@ -1348,6 +1348,7 @@ function popupOnClick(e) {
         title = `${Math.round(r.probability*100)}% ${title}`;
       }
 
+      /*
       let g = r.generator||{};
       if (g.min && g.max) {
         if (g.min != g.max) {
@@ -1355,7 +1356,7 @@ function popupOnClick(e) {
         } else if (g.min!=1) {
           title =`${title} (${g.min})`;
         }
-      }
+      } */
 
       let tooltip = `${r.title} (${r.name})\n---\n${reformat(r.desc)}`;
 
