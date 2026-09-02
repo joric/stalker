@@ -1350,12 +1350,16 @@ function popupOnClick(e) {
 
       let g = r.generator||{};
       if (g.min && g.max) {
-        title = `${title} (${g.min}..${g.max})`;
+        if (g.min != g.max) {
+          title =`${title} (${g.min}..${g.max})`;
+        } else if (g.min!=1) {
+          title =`${title} (${g.min})`;
+        }
       }
 
-      let tooltip = `${r.title} (${r.name})\n---\n${reformat(r.desc)}\n---\n${JSON.stringify(r.generator)}`;
-      //let tooltip = `${r.title} (${r.name})\n---\n${reformat(r.desc)}`;
-      //let tooltip = JSON.stringify(r);
+      let tooltip = `${r.title} (${r.name})\n---\n${reformat(r.desc)}`;
+
+      if (r.generator) tooltip += `\n---\n${JSON.stringify(r.generator)}`;
 
       // there are 5 colors, in ascending brightness
       let color = Math.round((r.probability||1)*5);
