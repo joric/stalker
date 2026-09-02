@@ -1540,7 +1540,7 @@ function popupOnClick(e) {
   e.target._infoWindow._setOptions({custom: true, dy: markerDy});
   e.target._infoWindow.setContent(contentElement);
 
-  e.target._infoWindow.on('hide',function() { selectedMarker = null; });
+  e.target._infoWindow.on('hide',function() { if (selectedMarker==e.target) selectedMarker = null; });
 
   contentElement.addEventListener('contextmenu', function(e) { e.stopPropagation()}, true); // enable default context menu
 }
