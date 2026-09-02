@@ -62,7 +62,7 @@
   },
 
   "ESpawnType::DeadBody": { "icon": "skull", "category": "sid_npc_name_mertvec", "group": "misc" },
-  "ESpawnType::PackOfItems": { "icon": "box", "title": "sid_stashes_Gen_Stash197_name", "category": "sid_misc_pda_Map_MarkerPlayerLandmarkHabar", "group": "misc" },
+  "ESpawnType::PackOfItems": { "icon": "box", "title": "sid_stashes_Gen_Stash197_name", "category": "sid_misc_pda_Map_MarkerPlayerLandmarkHabar", "group": "items" },
   "ESpawnType::Shelter": { "icon": "rest", "category": "sid_misc_pda_Map_MarkerShellter", "group": "misc" },
   "ESpawnType::Squad": { "icon": "soldier", "category": "Squads", "group": "misc" },
   "ESpawnType::Patrol": { "icon": "soldier", "category": "Patrols", "group": "misc" },
@@ -101,7 +101,7 @@
   },
   "ESpawnType::Item": { "category": "sid_misc_pda_reward_random",
     "match": {
-      "(TemplateConsumable|Energetic)": {"icon": "box", "category": "sid_misc_pda_reward_food_drink", "group": "misc" },
+      "(TemplateConsumable|Energetic)": {"icon": "box", "category": "sid_misc_pda_reward_food_drink", "group": "items" },
       "TemplateAmmo": {"icon": "repair", "category": "sid_misc_pda_reward_ammo_grenades", "group": "items" },
       "^Gun": {"icon": "repair", "category": "sid_misc_pda_reward_weapon", "group": "items" },
       "Armor": {"icon": "repair", "category": "sid_misc_pda_reward_armor", "group": "items" },

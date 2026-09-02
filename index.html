@@ -2444,7 +2444,7 @@ window.onload = function(event) {
     searchCallback: query => fuzzySearch(query),
     searchRenderItem: searchRenderItem,
     searchOnSelect: fuseResult => {
-      jumpToLocation(fuseResult.item.sid, true);
+      jumpToLocation(fuseResult.item.sid, false);
       //console.log('search result:', fuseResult.item);
     },
   });
