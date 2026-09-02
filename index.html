@@ -574,8 +574,9 @@ function jumpToLocation(name, changeZoom=false) {
   let marker = findLocation(name);
   if (marker) {
     selectedMarker = marker;
+    let currentZoom = map.getZoom();
     if (changeZoom) {
-      map.setView({center: marker.getCoordinates(), zoom:5, pitch:0, bearing:0.0001});
+      map.setView({center: marker.getCoordinates(), zoom: Math.max(currentZoom, 5), pitch:0, bearing:0.0001});
       //map.animateTo({center: marker.getCoordinates(), zoom:5, pitch: 0, bearing: 0.0001});
     } else {
       map.setView({center: marker.getCoordinates()});
@@ -727,6 +728,7 @@ function cleanupBody(input) {
 function translate_item(name, description=false) {
   let postfix = description ? 'description': 'name';
   name = (name||'').replace('Antirad','AntiRad');
+
   let title = lang[`sid_items_${name}_${postfix}`] || lang[`sid_questItemprototypes_${name}_${postfix}`] || lang[`sid_notes_${name}_${postfix}`];
 
   if (description && !title) {
@@ -734,6 +736,10 @@ function translate_item(name, description=false) {
     if (title) {
       title = cleanupBody(title);
     }
+  }
+
+  if (!title) {
+    title = lang[`sid_upgrades_${name}_${postfix}`];
   }
 
   if (!title) {
@@ -931,47 +937,61 @@ function renderItem(feature, extended=false, verbose=false) {
     }
   }
 
-  let itemSet = new Set(o.items||[]);
+  let interactable = [
+    'EMarkerType::InteractablePDA',
+    'EMarkerType::InteractableNote',
+    'EMarkerType::InteractableUSB',
+  ].includes(o.name);
+
+  let items = {};
+
+  // collect items
+  if (o.items) {
+    for (const name of o.items) {
+      items[name] = {};
+      if (interactable) info.note = translate_item(name, true);
+    }
+  }
+
+  if (o.type=='ESpawnType::Item' && o.name) {
+    items[o.name] = {};
+  }
 
   for (const name of (o.attachments||'').split(',').filter(name => name.trim())) {
-    itemSet.add(name);
+    items[name] = {};
+  }
+
+  for (const name of (o.upgrades||'').split(',').filter(name => name.trim())) {
+    items[name] = {};
   }
 
   for (const ref of (o.references||[])) {
     const name = getScriptedItem(ref);
-    if (name) itemSet.add(name);
-  }
-
-  for (const name of itemSet) {
-    info.items = info.items || [];
-    info.items.push({name: name, title: translate_item(name), desc: translate_item(name, true)});
-    if (o.name=='EMarkerType::InteractablePDA' || o.name=='EMarkerType::InteractableNote' || o.name=='EMarkerType::InteractableUSB') info.title = translate_item(name);
+    if (name) items[name] = {};
   }
 
   // we need to group rank-prefixed spawns by rank
   // e.g. 3612452147E4E0C44DED9B84F755461F has two Newbie entries
-
   let current_rank = settings.rank;
   let diff = 'Normal';
   let matching_rank = null;
-
   let rank_score = { 'Newbie': 1, 'Experienced': 2, 'Veteran': 3, 'Master': 4 };
 
-  function getGeneratorItems(gen_name, rank, diff, visited={}) {
+  function getGeneratorItems(generatorName, rank, diff, visited={}) {
     let items = [];
 
-    if (visited[gen_name]) {
-      console.log('already visited', gen_name);
+    if (visited[generatorName]) {
+      console.log('already visited', generatorName);
       return [];
     }
 
-    visited[gen_name] = true;
+    visited[generatorName] = true;
 
-    if (!markers.generators[gen_name]) {
-      gen_name = markers.prototypes[gen_name] && markers.prototypes[gen_name].proto;
+    if (!markers.generators[generatorName]) {
+      generatorName = markers.prototypes[generatorName] && markers.prototypes[generatorName].proto;
     }
 
-    let generators = markers.generators[gen_name]||[];
+    let generators = markers.generators[generatorName]||[];
 
     // pre-filter ranks
     let best_rank = null;
@@ -980,113 +1000,81 @@ function renderItem(feature, extended=false, verbose=false) {
     }
 
     let categories = {};
+    let index = 0;
 
     for (const generator of generators) {
-
       if (generator.rank && best_rank && generator.rank!=best_rank) continue;
+
+      if (generator.groups) index++;
 
       for (const group of (generator.groups || [])) {
 
-        // filters out repeating consumables category. NB! maybe need to stack them
         if (group.category) {
           if (categories[group.category]) {
-            //console.log('already added', group.category);
-            continue;
+            continue; // filters out repeating consumables category. NB! maybe need to stack them
           }
           categories[group.category] = true;
         }
 
-        // calculate count of items in pack
-        let total = 0;
         for (const [name, props] of Object.entries(group.items||{})) {
-          if (group.category!='SubItemGenerator') {
-            total ++;
-          }
-        }
-
-        let random_choice = ~~(Math.random()*total);
-
-        let count = 0;
-
-        for (const [name, props] of Object.entries(group.items||{})) {
-
           if (group.category=='SubItemGenerator') {
             items.push(...getGeneratorItems(name, rank, diff, visited));
           } else {
-
-            // add one random item for now
-            //if (count==random_choice) {
-              items.push({name: name, title: translate_item(name), generator: gen_name, category: group.category, props: props });
-            //}
-
-            count ++;
+            items.push({name: name, generator: {name: generatorName, ...props} });
           }
         }
       }
+
     }
-
-    //console.log(items);
-
     return items;
   }
 
   if (o.spawns) {
-    let groups = [];
 
-    // ranked spawns are structured the way we only have one matching rank
-    for (let name of o.spawns) {
+    let count = 0;
+    let last_name = null;
+
+    // there's only one matching rank, update it first
+    for (let generatorName of o.spawns) {
       let rank = null;
-      if (name.includes(':')) {
-        const [rank, rname] = name.split(':');
+      if (generatorName.includes(':')) {
+        [rank, generatorName] = generatorName.split(':');
         if (rank_score[current_rank]>=rank_score[rank]) matching_rank = rank;
       }
     }
 
-    for (let name of o.spawns) {
+    // now get generator items
+    for (let generatorName of o.spawns) {
       let rank = null;
-      if (name.includes(':')) {
-        [rank, name] = name.split(':');
+      if (generatorName.includes(':')) {
+        [rank, generatorName] = generatorName.split(':');
         if (rank != matching_rank) continue;
       }
 
-      let items = getGeneratorItems(name, rank || current_rank, diff);
-      groups.push(...items);
-    }
+      let generatedItems = getGeneratorItems(generatorName, rank || current_rank, diff);
 
-    info.groups = groups;
-
-    if (groups.length==1) {
-      info.title = translate_item(groups[0].name);
-    }
-
-  }
-
-
-  // add upgrade thingy, if any
-  if (info.groups) {
-
-    for (prop of info.groups) {
-      let name = prop.name;
-      let proto = markers.prototypes[name];
-      if (proto) {
-        let lsid = proto.lsid;
-        let title = lang[`sid_upgrades_${lsid}_name`];
-        let desc = lang[`sid_upgrades_${lsid}_description`];
-
-        if (title) {
-          let items = [];
-          for (const item of (proto.compatible||{})) {
-            let s = lang[`sid_items_${item}_name`];
-            if (s) items.push(s);
-          }
-          let items_str = items.join(', ');
-          info.upgrade = `<b>${title}</b><div class="small padded">${items_str}</div>`;
-
-        }
-        if (desc) {
-          info.upgrade = (info.upgrade||'') + `${desc}`;
+      // find total weight grouped by generator name
+      let totalWeight = 0;
+      for (const r of generatedItems) {
+        if (r.generator.weight) {
+          totalWeight += parseFloat(r.generator.weight);
         }
       }
+
+      // group duplicates by item name, fill the output, and add probability
+      for (const r of generatedItems) {
+        let k = 1;
+        let g = r.generator || {};
+        if (g.chance) k = parseFloat(g.chance);
+        if (totalWeight && g.weight) k = parseFloat(g.weight)/totalWeight;
+        items[r.name] = { ...r, probability: k };
+        count ++;
+        last_name = r.name;
+      }
+    }
+
+    if (count==1) {
+      info.title = translate_item(last_name);
     }
   }
 
@@ -1098,9 +1086,35 @@ function renderItem(feature, extended=false, verbose=false) {
     }
   }
 
-  if (o.items) {
-    for (const name of o.items) {
-      if (o.name=='EMarkerType::InteractablePDA' || o.name=='EMarkerType::InteractableNote' || o.name=='EMarkerType::InteractableUSB') info.note = translate_item(name, true);
+  // finally add and translate collected items
+  for (const name in items) {
+    info.items = info.items || [];
+    info.items.push({name: name, title: translate_item(name), desc: translate_item(name, true), ...items[name]});
+    if (interactable) info.title = translate_item(name);
+  }
+
+  // add upgrade thingy, if any
+  for (const r of info.items||[]) {
+    let name = r.name;
+    let proto = markers.prototypes[name];
+    if (proto) {
+      let lsid = proto.lsid;
+      let title = lang[`sid_upgrades_${lsid}_name`];
+      let desc = lang[`sid_upgrades_${lsid}_description`];
+
+      if (title) {
+        let items = [];
+        for (const item of (proto.compatible||{})) {
+          let s = lang[`sid_items_${item}_name`];
+          if (s) items.push(s);
+        }
+        let items_str = items.join(', ');
+        info.upgrade = `<b>${title}</b><div class="small padded">${items_str}</div>`;
+
+      }
+      if (desc) {
+        info.upgrade = (info.upgrade||'') + `${desc}`;
+      }
     }
   }
 
@@ -1127,7 +1141,6 @@ function getSpawnContent(o, name) {
     }
   }
 
-
   return data;
 
 }
@@ -1151,7 +1164,7 @@ function getMarkerSize(marker) {
   return symbol.markerWidth || 32;
 }
 
-function reformat(text, width=40) {
+function reformat(text, width=60) {
     if (width <= 0) {
         throw new Error("Width must be greater than 0");
     }
@@ -1254,7 +1267,14 @@ function popupOnClick(e) {
 
     span.onclick = function(e) { copyToClipboard(e.target.getAttribute('name')); return false;  };
 
-    let colors = ['#eee', '#dde', '#ded', '#eed', '#ede'];
+    let colors = [
+      '#eee', //grey
+      '#eed', //yellow
+      '#ded', //green
+      '#ede', //pink
+      '#dde', //blue
+    ];
+
     if (color>0) {
       div.style.backgroundColor = colors[(color-1) % colors.length];
     }
@@ -1314,77 +1334,36 @@ function popupOnClick(e) {
     return `XCreateItemInInventoryByID ${name} 0 ${quantity} 1`;
   }
 
-  if (o.type=='ESpawnType::Item' && o.name) {
-    let container = document.createElement('div');
-    container.classList.add('tag-container');
-    let name = o.name;
-    let title = translate_item(o.name);
-    let desc = translate_item(o.name, true);
-    container.appendChild(createTag(2, name, title, `${title} (${name})\n${reformat(desc)}`, getItemAction(name), o));
-    div.appendChild(document.createElement('hr'));
-    div.appendChild(container);
-  }
-
-  if (o.spawns) {
-    let container = document.createElement('div');
-    container.classList.add('tag-container');
-
-    let groups = {}
-    let count = 0;
-
-    let weights = {};
-
-    const total = new Set((info.groups || []).map(data => data.generator)).size;
-    for (const data of (info.groups||{})) {
-      if (data.props.weight) {
-        weights[data.generator] = weights[data.generator]||0;
-        weights[data.generator] += data.props.weight;
-      }
-    }
-
-     // iterate backwards, later generators are more important usually
-    for (const data of (info.groups || []).slice().reverse()) {
-      groups[data.generator] = true;
-      let color = Object.keys(groups).length;
-      let name = data.name;
-      let title = translate_item(name);
-      let desc = translate_item(name, true);
-
-      // add randomizer properties to title
-      if (data.props) {
-        let from = data.props.min||1
-        let to = data.props.max||1;
-
-        let range = (from && to) ? `(${from}..${to})`:'';
-        if (from==to) range = from!=1 ? `(${from})` : '';
-
-        let chance = data.props.chance && data.props.chance!=1 && data.props.chance;
-        if (chance) chance = `${Math.round(chance*100)}%`;
-
-        //let weight = data.props.weight && data.props.weight<total ? `${Math.round(data.props.weight*100/total)}%`: '';
-
-        let weight = data.props.weight && data.props.weight != weights[data.generator] ? `${Math.round(data.props.weight*100/weights[data.generator])}%`: '';
-        //let weight = data.props.weight ? `{${data.props.weight}/${weights[data.generator]}}`: '';
-
-        title = [weight, chance, title, range].filter(x=>x).join(' ');
-      }
-
-      container.appendChild(createTag(color+1, name, title, `${title} (${name})\n${reformat(desc)}\n---\n${data.generator}\n${JSON.stringify(data.props)}`, getItemAction(name)));
-      count += 1;
-    }
-
-    if (count) {
-      div.appendChild(document.createElement('hr'));
-      div.appendChild(container);
-    }
-  }
-
   if (info.items && info.items.length) { // add items
     let container = document.createElement('div');
     container.classList.add('tag-container');
-    for (const r of info.items) {
-      container.appendChild(createTag(0, r.name, r.title, `${r.title} (${r.name})\n${reformat(r.desc)}`, r.name));
+
+    //pre-sort items by probability
+    const sorted = [...info.items].sort((a, b) => ((b.probability ?? 1) - (a.probability ?? 1)));
+
+    for (const r of sorted) {
+      let title = r.title;
+
+      if (r.probability < 1 ) {
+        title = `${Math.round(r.probability*100)}% ${title}`;
+      }
+
+      let g = r.generator||{};
+      if (g.min && g.max) {
+        title = `${title} (${g.min}..${g.max})`;
+      }
+
+      let tooltip = `${r.title} (${r.name})\n---\n${reformat(r.desc)}\n---\n${JSON.stringify(r.generator)}`;
+      //let tooltip = `${r.title} (${r.name})\n---\n${reformat(r.desc)}`;
+      //let tooltip = JSON.stringify(r);
+
+      // there are 5 colors, in ascending brightness
+      let color = Math.round((r.probability||1)*5);
+
+      container.appendChild(createTag(color, r.name, title, tooltip, getItemAction(r.name)));
+
     }
+
     div.appendChild(document.createElement('hr'));
     div.appendChild(container);
   }
@@ -1393,7 +1372,7 @@ function popupOnClick(e) {
     let container = document.createElement('div');
     container.classList.add('tag-container');
     for (const name of o.references) {
-      container.appendChild(createTag(5, name, name, `XStartQuestNodeBySID ${name}`, `XStartQuestNodeBySID ${name}`));
+      container.appendChild(createTag(4, name, name, name, `XStartQuestNodeBySID ${name}`));
     }
     div.appendChild(document.createElement('hr'));
     div.appendChild(container);
@@ -1614,12 +1593,19 @@ function showTooltip(e) {
     content += `<hr/>${o.keycode}`;
   }
 
+  /* too tall
   if (info.items) {
     content += `<hr/><div class="overflow-container">`;
     for (const r of info.items) {
       content += `<span title="${r.name}">${r.title}</span><br/>`;
     }
     content +='</div>';
+  }
+  */
+
+  if (info.items) {
+    let items = info.items.map(r=>r.title).join('\n')
+    content += `<hr><div title="${items}"><i class="fa-solid fa-screwdriver-wrench"></i> ${info.items.length}</div>`;
   }
 
   if (info.upgrade) {
@@ -1635,15 +1621,17 @@ function showTooltip(e) {
     content += `<hr><div title="${signals}"><i class="fa-solid fa-code-commit"></i> ${o.references.length}</div>`;
   }
 
+  /*
   if (o.type == 'ESpawnType::PackOfItems' && o.spawns) {
     content += '<hr>';
 
-    for (const data of (info.groups||{})) {
+    for (const data of (info.items||{})) {
       let name = data.name;
       let title = translate_item(name);
       content += title + '<br/>';
     }
   }
+  */
 
 
   tooltip.innerHTML = content;
@@ -2223,7 +2211,7 @@ function passesFilter(marker) {
 
 function updatePopup() {
   for (const layer of groupLayer.getLayers()) {
-    for (marker of layer._geoList) {
+    for (const marker of layer._geoList) {
       if (marker.getInfoWindow() && marker.getInfoWindow().isVisible()) {
         popupOnClick({target: marker});
         marker.openInfoWindow();
