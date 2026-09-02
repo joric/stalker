@@ -1553,7 +1553,7 @@ function toggleMarked(id) {
     settings.markedItems[id] = true;
   }
 
-  for (m of markersData) {
+  for (const m of markersData) {
     let marker = m.marker;
     let o = marker.feature.properties;
     if (id == o.sid) {
