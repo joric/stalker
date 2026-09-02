@@ -733,10 +733,15 @@ function clearSelection() {
 //needs extracting actual items from scripts, but this will do for now
 function getScriptedItem(scriptName) {
   if (scriptName.includes('_ItemAdd_')) {
-    let name = scriptName.split('_ItemAdd_').pop();
-    name = name.replace(/_\d+$/,'');
-    for (const key of [`sid_items_${name}_name`, `sid_questItemprototypes_${name}_name`]) {
-      if (lang[key]) return name;
+    let base = scriptName.split('_ItemAdd_').pop();
+    // try full names and names without postfix also
+    for (name of [base, base.replace(/_\d+$/,'')]) {
+      for (const key of [
+        `sid_items_${name}_name`,
+        `sid_items_DLC01_${name}_name`,
+        `sid_questItemprototypes_${name}_name`]) {
+        if (lang[key]) return name;
+      }
     }
   }
 }
@@ -767,7 +772,19 @@ function translate_item(name, description=false) {
 
   name = normalize_name(name);
 
-  let title = lang[`sid_items_${name}_${postfix}`] || lang[`sid_questItemprototypes_${name}_${postfix}`] || lang[`sid_notes_${name}_${postfix}`];
+  let title = null;
+
+  for (const id of [
+    `sid_items_${name}_${postfix}`,
+    `sid_items_DLC01_${name}_${postfix}`,
+    `sid_questItemprototypes_${name}_${postfix}`,
+    `sid_notes_${name}_${postfix}`
+  ]) {
+    if (lang[id]) {
+      title = lang[id];
+      break;
+    }
+  }
 
   if (description && !title) {
     title = lang[`sid_notes_${name}_body`];
@@ -2172,6 +2189,7 @@ function getFuse(threshold = 0.2) {
       { name: 'keycode', weight: 0.2 },
       { name: 'name', weight: 0.2 },
       { name: 'type', weight: 0.2 },
+      { name: 'clue', weight: 0.2 },
       { name: 'subtype', weight: 0.2 },
       { name: 'stage', weight: 0.2 },
       { name: 'items', weight: 0.2 },
