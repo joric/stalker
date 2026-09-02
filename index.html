@@ -589,6 +589,7 @@ function jumpToLocation(name, changeZoom=false) {
     marker.show();
     popupOnClick({target: marker});
     marker.openInfoWindow();
+    selectedMarker = marker;
   }
 }
 
@@ -1215,6 +1216,8 @@ function popupOnClick(e) {
   hideTooltipExt(e);
 
   let marker = e.target;
+
+  selectedMarker = marker;
 
   let feature = marker.feature;
   let o = marker.feature.properties;
