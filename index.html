@@ -575,12 +575,16 @@ function jumpToLocation(name, changeZoom=false) {
   if (marker) {
     selectedMarker = marker;
     let currentZoom = map.getZoom();
+
+    let minZoom = zoomGroups[marker._layer._id]?.[0] || 5;
+
     if (changeZoom) {
-      map.setView({center: marker.getCoordinates(), zoom: Math.max(currentZoom, 5), pitch:0, bearing:0.0001});
+      map.setView({center: marker.getCoordinates(), zoom: Math.max(currentZoom, minZoom), pitch:0, bearing:0.0001});
       //map.animateTo({center: marker.getCoordinates(), zoom:5, pitch: 0, bearing: 0.0001});
     } else {
       map.setView({center: marker.getCoordinates()});
     }
+
     marker._layer.show();
     marker.show();
     popupOnClick({target: marker});
@@ -1947,6 +1951,8 @@ function updateView(e) {
   if (settings.searchText!='') {
     return;
   }
+
+  //console.log(selectedMarker, selectedMarker?._layer);
 
   for(const [layerName, zoomLevel] of Object.entries(zoomGroups)) {
     let layer = groupLayer.getLayer(capitalize(layerName));
