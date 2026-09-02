@@ -140,6 +140,7 @@ let regions = {};
 
 let actors_lookup = {};
 let items_lookup = {};
+const visitedPairs = new Set();
 
 let mapParam = {};
 let markersData = null;
@@ -437,16 +438,31 @@ function addLines(markers) {
     }
 
     if (enableItemLines) {
-      let group = items_lookup[o.name];
-      if (group && o.name != 'Vodka') {
-        for (const target of group) {
-          // the big issue here is that target may be invisible, needs fixing lines vs zoom levels
-          // limit line length here
+      // iterate over items for connections
+      let items = collectAllItems(o);
+      if (items) {
+        for(const name of items) {
+          let group = items_lookup[name];
+          if (!group || o.name=='Vodka' ) continue;
+          for (const target of group) {
+            // the big issue here is that target may be invisible, needs fixing lines vs zoom levels
+            // limit line length here
 
-          let a = marker.getCoordinates();
-          let b = target.getCoordinates();
-          let dist = Math.sqrt(Math.pow(a.x-b.x,2)+Math.pow(a.y-b.y,2)+Math.pow(a.z-b.z,2));
-          if (dist < 50000) geometry.push( addLine(marker, target) );
+            let a = marker.getCoordinates();
+            let b = target.getCoordinates();
+
+            if (a==b) continue;
+
+            const keyA = `${a.x},${a.y},${a.z}`;
+            const keyB = `${b.x},${b.y},${b.z}`;
+            const key = [keyA, keyB].sort().join('|');
+
+            if (visitedPairs.has(key)) continue;
+            visitedPairs.add(key);
+
+            let dist = Math.sqrt(Math.pow(a.x-b.x,2)+Math.pow(a.y-b.y,2)+Math.pow(a.z-b.z,2));
+            if (dist < 50000) geometry.push( addLine(marker, target) );
+          }
         }
       }
     }
@@ -723,6 +739,18 @@ function getScriptedItem(scriptName) {
       if (lang[key]) return name;
     }
   }
+}
+
+// collect all items including scripted items
+function collectAllItems(o) {
+  let items = [...o.items||[]];
+  if (o.references) {
+    for (const ref of o.references) {
+      const name = getScriptedItem(ref);
+      if (name) items.push(name);
+    }
+  }
+  return items;
 }
 
 function cleanupBody(input) {
@@ -1918,8 +1946,10 @@ function addMarker(feature) {
     }
   }
 
-  if (o.items) {
-    for(const name of o.items) {
+  // add connections/links (use scripted items also)
+  let items = collectAllItems(o);
+  if (items) {
+    for(const name of items) {
       if (!items_lookup[name]) items_lookup[name] = [];
       items_lookup[name].push(marker);
     }
