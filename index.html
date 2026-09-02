@@ -1089,7 +1089,10 @@ function renderItem(feature, extended=false, verbose=false) {
   // finally add and translate collected items
   for (const name in items) {
     info.items = info.items || [];
-    info.items.push({name: name, title: translate_item(name), desc: translate_item(name, true), ...items[name]});
+    let cost = parseFloat(markers.prototypes[name]?.cost||0);
+    let r = {name: name, title: translate_item(name), desc: translate_item(name, true), ...items[name], cost: cost};
+    info.items.push(r);
+    //if (name=='GunD12_MagIncreased') console.log(r);
     if (interactable) info.title = translate_item(name);
   }
 
@@ -1338,8 +1341,28 @@ function popupOnClick(e) {
     let container = document.createElement('div');
     container.classList.add('tag-container');
 
-    //pre-sort items by probability
-    const sorted = [...info.items].sort((a, b) => ((b.probability ?? 1) - (a.probability ?? 1)));
+    // presort items by probability
+
+    const sortConfig = [
+      { field: 'probability', direction: 'desc', default: 1 },
+      { field: 'cost', direction: 'desc', default: 0 },
+    ];
+
+    const sortByPriority = (items, config) => {
+      return [...items].sort((a, b) => {
+        for (const { field, direction, default: defaultValue } of config) {
+          const valA = a[field] ?? defaultValue;
+          const valB = b[field] ?? defaultValue;
+      
+          if (valA !== valB) {
+            return direction === 'desc' ? valB - valA : valA - valB;
+          }
+        }
+        return 0;
+      });
+    };
+
+    const sorted = sortByPriority(info.items, sortConfig);
 
     for (const r of sorted) {
       let title = r.title;
