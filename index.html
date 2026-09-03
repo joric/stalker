@@ -1711,8 +1711,7 @@ function showTooltip(e) {
     footer.push(`<div title="${signals}"><i class="fa-solid fa-code-commit"></i> ${o.references.length}</div>`);
   }
 
-
-  if (footer) {
+  if (footer.length) {
     content += '<hr><div style="display: flex;">' + footer.join('&nbsp; &nbsp;') + '</div>';
   }
 
