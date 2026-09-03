@@ -1689,11 +1689,6 @@ function showTooltip(e) {
   }
   */
 
-  if (info.items) {
-    let items = info.items.map(r=>r.title).join('\n')
-    content += `<hr><div title="${items}"><i class="fa-solid fa-screwdriver-wrench"></i> ${info.items.length}</div>`;
-  }
-
   if (info.upgrade) {
     content += `<hr/>${info.upgrade}`;
   }
@@ -1702,10 +1697,26 @@ function showTooltip(e) {
     content += `<hr/>${info.note}`;
   }
 
+  // footer icons, number of items and references
+
+  let footer = [];
+
+  if (info.items) {
+    let items = info.items.map(r=>r.title).join('\n')
+    footer.push(`<div title="${items}"><i class="fa-solid fa-screwdriver-wrench"></i> ${info.items.length}</div>`);
+  }
+
   if (o.references) {
     let signals = o.references.join('\n');
-    content += `<hr><div title="${signals}"><i class="fa-solid fa-code-commit"></i> ${o.references.length}</div>`;
+    footer.push(`<div title="${signals}"><i class="fa-solid fa-code-commit"></i> ${o.references.length}</div>`);
   }
+
+
+  if (footer) {
+    content += '<hr><div style="display: flex;">' + footer.join('&nbsp; &nbsp;') + '</div>';
+  }
+
+
 
   /*
   if (o.type == 'ESpawnType::PackOfItems' && o.spawns) {
