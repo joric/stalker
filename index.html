@@ -2261,6 +2261,7 @@ function getSearchText(o, info) {
 
   for (const item of (info.items||[])) {
     tags.push(item.name);
+    tags.push(item.title);
     tags.push(item.desc);
   }
 
