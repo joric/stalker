@@ -215,12 +215,24 @@ function loadMap() {
   //console.log('current zoom:', settings.zoom);
   let scrollWheelZoom = true; // maptalks uses fractional zoom by default
   //let scrollWheelZoom = false;
+  let tileSize = 512;
 
   let w = 812900;
   let h = w;
   let center = [w/2, h/2];
   let [left,top,right,bottom] = [0, 0, w, h];
-  let tileSize = 512;
+
+  let xscale = 1.0;
+  let yscale = 1.0;
+
+  if (settings.baseLayer=='diegetic') {
+    xscale = 1/0.975;
+    yscale = 1/1.08;
+    let dx = -11500;
+    let dy = 73000;
+    [left,top,right,bottom] = [dx, dy, w+dx, h+dy];
+  }
+
 
   if (!settings.center) {
     [settings.zoom, settings.pitch, settings.bearing, settings.center] = [startZoom, startPitch, 0, center];
@@ -302,6 +314,8 @@ function loadMap() {
         repeatWorld: false,
         tileSize: 512,
         visible: settings.baseLayer == 'diegetic',
+
+        tileSystem: [1*xscale, -1*yscale, left, top],
       }),
 
     ]),
