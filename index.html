@@ -288,6 +288,22 @@ function loadMap() {
         visible: settings.baseLayer == 'T_WorldMap_LDScheme',
       }),
 
+      new maptalks.TileLayer('topographic', {
+        maxAvailableZoom: 6,
+        urlTemplate: `${tileset_base}/extras/topographic/{z}/{y}/{x}.webp`,
+        repeatWorld: false,
+        tileSize: 512,
+        visible: settings.baseLayer == 'topographic',
+      }),
+
+      new maptalks.TileLayer('diegetic', {
+        maxAvailableZoom: 1,
+        urlTemplate: `${tileset_base}/extras/diegetic/{z}/{y}/{x}.webp`,
+        repeatWorld: false,
+        tileSize: 512,
+        visible: settings.baseLayer == 'diegetic',
+      }),
+
     ]),
 
     zoomControl: {
