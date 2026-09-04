@@ -413,7 +413,7 @@ function loadMap() {
 
   map.on('setbaselayer', e=> {
     let layers = map.getBaseLayer().getLayers();
-    for (layer of layers) {
+    for (const layer of layers) {
       if (layer.isVisible()) {
         settings.baseLayer = layer.getId();
       }
