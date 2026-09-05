@@ -1359,8 +1359,8 @@ function popupOnClick(e) {
       '#eee', //grey
       '#eed', //yellow
       '#ded', //green
-      '#ede', //pink
       '#dde', //blue
+      '#ede', //pink
     ];
 
     if (color>0) {
@@ -1470,8 +1470,8 @@ function popupOnClick(e) {
 
       if (r.generator) tooltip += `\n---\n${JSON.stringify(r.generator)}`;
 
-      // there are 5 colors, in ascending brightness
-      let color = Math.round((r.probability||1)*5);
+      // there are 4 colors in ascending brightness, color 5 (pink) is reserved
+      let color = Math.round((r.probability||1)*4);
 
       container.appendChild(createTag(color, r.name, title, tooltip, getItemAction(r.name)));
 
@@ -1485,7 +1485,7 @@ function popupOnClick(e) {
     let container = document.createElement('div');
     container.classList.add('tag-container');
     for (const name of o.references) {
-      container.appendChild(createTag(4, name, name, name, `XStartQuestNodeBySID ${name}`));
+      container.appendChild(createTag(5, name, name, name, `XStartQuestNodeBySID ${name}`));
     }
     div.appendChild(document.createElement('hr'));
     div.appendChild(container);
