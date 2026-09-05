@@ -930,6 +930,7 @@ function renderPhoto(o) {
 
 function get_icon(name) {
   name = (name||'').replace('Antirad','AntiRad');
+  name = name.replace('NVG_NPC_Gen','NVG_Gen'); // fixes bread icon in 2.0
   if (markers.prototypes[name] && markers.prototypes[name].icon) {
     return `images/icons${markers.prototypes[name].icon}.png`;
   }
@@ -1063,7 +1064,7 @@ function renderItem(feature, extended=false, verbose=false) {
   let current_rank = settings.rank;
   let diff = 'Normal';
   let matching_rank = null;
-  let rank_score = { 'Newbie': 1, 'Experienced': 2, 'Veteran': 3, 'Master': 4 };
+  let rank_score = {'Newbie': 1, 'Experienced': 2, 'Veteran': 3, 'Master': 4};
 
   function getGeneratorItems(generatorName, rank, diff, visited={}) {
     let items = [];
@@ -1081,24 +1082,47 @@ function renderItem(feature, extended=false, verbose=false) {
         if (rank_score[rank] >= rank_score[r] && (!best_rank || rank_score[r] > rank_score[best_rank])) best_rank = r;
       }
     }
-    for (const generator of generators) {
+    for (let gi = 0; gi < generators.length; gi++) {
+      const generator = generators[gi];
       if (generator.rank) {
         const ranks = generator.rank.split(',').map(x => x.trim().split('::').pop());
         if (!ranks.includes(best_rank)) continue;
       }
-      for (const group of (generator.groups || [])) {
-        for (const [name, props] of Object.entries(group.items || {})) {
+      for (let groupIndex = 0; groupIndex < (generator.groups || []).length; groupIndex++) {
+        const group = generator.groups[groupIndex];
+        const groupId = `${generatorName}:${gi}:${groupIndex}`;
+        const groupItems = Object.entries(group.items || {});
+        let totalWeight = 0;
+        for (const [, props] of groupItems) {
+          if (props.weight != null) totalWeight += parseFloat(props.weight);
+        }
+        for (const [name, props] of groupItems) {
           if (group.category === 'SubItemGenerator') {
+            let parentProbability = 1;
+            if (props.chance != null) {
+              parentProbability = parseFloat(props.chance);
+            } else if (props.weight != null && totalWeight > 0) {
+              parentProbability = parseFloat(props.weight) / totalWeight;
+            }
             const subItems = getGeneratorItems(name, rank, diff, {...visited});
-            const parentProps = {...props};
             for (const item of subItems) {
-              item.generator = {...item.generator, parent: generatorName, parent_props: parentProps};
+              item.generator = {
+                ...item.generator,
+                parent: generatorName,
+                parent_props: {...props},
+                parent_probability: (item.generator.parent_probability ?? 1) * parentProbability
+              };
               items.push(item);
             }
           } else {
             items.push({
               name: normalize_name(name),
-              generator: {name: generatorName, category: group.category, ...props}
+              generator: {
+                name: generatorName,
+                category: group.category,
+                groupId,
+                ...props
+              }
             });
           }
         }
@@ -1133,24 +1157,27 @@ function renderItem(feature, extended=false, verbose=false) {
       let groups = {};
       for (const r of generatedItems) {
         const g = r.generator || {};
-        const parent = g.parent || '';
-        const key = `${g.name}|${g.category}|${parent}`;
+        const key = g.groupId || `${g.name}|${g.category || ''}`;
         if (!groups[key]) groups[key] = [];
         groups[key].push(r);
       }
 
       for (const groupItems of Object.values(groups)) {
-        let totalWeight = 0;
-        for (const r of groupItems) {
-          if (r.generator && r.generator.weight != null) totalWeight += parseFloat(r.generator.weight);
-        }
+        let weighted = groupItems.filter(r => r.generator?.weight != null);
+        let totalWeight = weighted.reduce((sum, r) => sum + parseFloat(r.generator.weight), 0);
 
         for (const r of groupItems) {
           const g = r.generator || {};
           let k = 1;
-          if (g.chance != null) k = parseFloat(g.chance);
-          if (totalWeight && g.weight != null) k = parseFloat(g.weight) / totalWeight;
-          if (g.parent_props && g.parent_props.chance != null) k *= parseFloat(g.parent_props.chance);
+
+          if (g.weight != null && totalWeight > 0) {
+            k = parseFloat(g.weight) / totalWeight;
+          } else if (g.chance != null) {
+            k = parseFloat(g.chance);
+          }
+
+          if (g.parent_probability != null) k *= g.parent_probability;
+
           items[r.name] = {...r, probability: k};
           count++;
           last_name = r.name;
