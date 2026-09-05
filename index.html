@@ -1470,8 +1470,14 @@ function popupOnClick(e) {
 
       if (r.generator) tooltip += `\n---\n${JSON.stringify(r.generator)}`;
 
-      // there are 4 colors in ascending brightness, color 5 (pink) is reserved
-      let color = Math.round((r.probability||1)*4);
+      tooltip += `\nPROBABILITY: ${r.probability}`;
+
+      let p = r.probability === undefined ? 1 : r.probability;
+
+      // there are colors 1..4 in ascending brightness, color 5 (pink) is reserved
+
+      let color = p>=1 ? 4 : (p>=.5 ? 3 : ( p>=.25 ? 2 : 1));
+
 
       container.appendChild(createTag(color, r.name, title, tooltip, getItemAction(r.name)));
 
