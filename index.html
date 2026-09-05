@@ -1067,71 +1067,58 @@ function renderItem(feature, extended=false, verbose=false) {
 
   function getGeneratorItems(generatorName, rank, diff, visited={}) {
     let items = [];
-
     if (visited[generatorName]) {
       console.log('already visited', generatorName);
       return [];
     }
-
     visited[generatorName] = true;
-
-    if (!markers.generators[generatorName]) {
-      generatorName = markers.prototypes[generatorName] && markers.prototypes[generatorName].proto;
-    }
-
-    let generators = markers.generators[generatorName]||[];
-
-    // pre-filter ranks
+    if (!markers.generators[generatorName]) generatorName = markers.prototypes[generatorName] && markers.prototypes[generatorName].proto;
+    let generators = markers.generators[generatorName] || [];
     let best_rank = null;
     for (const generator of generators) {
-      if (generator.rank && rank_score[current_rank] >= rank_score[generator.rank.split('::').pop()]) best_rank = generator.rank;
+      if (!generator.rank) continue;
+      for (const r of generator.rank.split(',').map(x => x.trim().split('::').pop())) {
+        if (rank_score[rank] >= rank_score[r] && (!best_rank || rank_score[r] > rank_score[best_rank])) best_rank = r;
+      }
     }
-
-    let categories = {};
-    let index = 0;
-
     for (const generator of generators) {
-      if (generator.rank && best_rank && generator.rank!=best_rank) continue;
-
-      if (generator.groups) index++;
-
+      if (generator.rank) {
+        const ranks = generator.rank.split(',').map(x => x.trim().split('::').pop());
+        if (!ranks.includes(best_rank)) continue;
+      }
       for (const group of (generator.groups || [])) {
-
-        if (group.category) {
-          if (categories[group.category]) {
-            continue; // filters out repeating consumables category. NB! maybe need to stack them
-          }
-          categories[group.category] = true;
-        }
-
-        for (const [name, props] of Object.entries(group.items||{})) {
-          if (group.category=='SubItemGenerator') {
-            items.push(...getGeneratorItems(name, rank, diff, visited));
+        for (const [name, props] of Object.entries(group.items || {})) {
+          if (group.category === 'SubItemGenerator') {
+            const subItems = getGeneratorItems(name, rank, diff, {...visited});
+            const parentProps = {...props};
+            for (const item of subItems) {
+              item.generator = {...item.generator, parent: generatorName, parent_props: parentProps};
+              items.push(item);
+            }
           } else {
-            items.push({name: normalize_name(name), generator: {name: generatorName, ...props} });
+            items.push({
+              name: normalize_name(name),
+              generator: {name: generatorName, category: group.category, ...props}
+            });
           }
         }
       }
-
     }
     return items;
   }
 
   if (o.spawns) {
-
     let count = 0;
     let last_name = null;
 
-    // there's only one matching rank, update it first
     for (let generatorName of o.spawns) {
       let rank = null;
       if (generatorName.includes(':')) {
         [rank, generatorName] = generatorName.split(':');
-        if (rank_score[current_rank]>=rank_score[rank]) matching_rank = rank;
+        if (rank_score[current_rank] >= rank_score[rank]) matching_rank = rank;
       }
     }
 
-    // now get generator items
     for (let generatorName of o.spawns) {
       let rank = null;
       if (generatorName.includes(':')) {
@@ -1141,29 +1128,37 @@ function renderItem(feature, extended=false, verbose=false) {
 
       let generatedItems = getGeneratorItems(generatorName, rank || current_rank, diff);
 
-      // find total weight grouped by generator name
-      let totalWeight = 0;
+      //if (o.sid == '3694FD384E122A0516FE5AA520B32180') console.log('generatedItems', JSON.stringify(generatedItems, null, 2));
+
+      let groups = {};
       for (const r of generatedItems) {
-        if (r.generator.weight) {
-          totalWeight += parseFloat(r.generator.weight);
+        const g = r.generator || {};
+        const parent = g.parent || '';
+        const key = `${g.name}|${g.category}|${parent}`;
+        if (!groups[key]) groups[key] = [];
+        groups[key].push(r);
+      }
+
+      for (const groupItems of Object.values(groups)) {
+        let totalWeight = 0;
+        for (const r of groupItems) {
+          if (r.generator && r.generator.weight != null) totalWeight += parseFloat(r.generator.weight);
+        }
+
+        for (const r of groupItems) {
+          const g = r.generator || {};
+          let k = 1;
+          if (g.chance != null) k = parseFloat(g.chance);
+          if (totalWeight && g.weight != null) k = parseFloat(g.weight) / totalWeight;
+          if (g.parent_props && g.parent_props.chance != null) k *= parseFloat(g.parent_props.chance);
+          items[r.name] = {...r, probability: k};
+          count++;
+          last_name = r.name;
         }
       }
-
-      // group duplicates by item name, fill the output, and add probability
-      for (const r of generatedItems) {
-        let k = 1;
-        let g = r.generator || {};
-        if (g.chance) k = parseFloat(g.chance);
-        if (totalWeight && g.weight) k = parseFloat(g.weight)/totalWeight;
-        items[r.name] = { ...r, probability: k };
-        count ++;
-        last_name = r.name;
-      }
     }
 
-    if (count==1) {
-      info.title = translate_item(last_name);
-    }
+    if (count == 1) info.title = translate_item(last_name);
   }
 
   // add PDA description
