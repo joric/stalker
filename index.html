@@ -929,8 +929,11 @@ function renderPhoto(o) {
 }
 
 function get_icon(name) {
+  // there are some issues with icons
   name = (name||'').replace('Antirad','AntiRad');
-  name = name.replace('NVG_NPC_Gen','NVG_Gen'); // fixes bread icon in 2.0
+  name = name.replace('NVG_NPC_Gen','NVG_Gen'); // 3694FD384E122A0516FE5AA520B32180
+  name = name.replace('NPC_HeavyExoskeleton_Spark_Armor','HeavyExoskeleton_Svoboda_Armor'); // 3694FD384E122A0516FE5AA520B32180
+
   if (markers.prototypes[name] && markers.prototypes[name].icon) {
     return `images/icons${markers.prototypes[name].icon}.png`;
   }
