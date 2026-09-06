@@ -929,10 +929,17 @@ function renderPhoto(o) {
 }
 
 function get_icon(name) {
-  // there are some issues with icons
-  name = (name||'').replace('Antirad','AntiRad');
-  name = name.replace('NVG_NPC_Gen','NVG_Gen'); // 3694FD384E122A0516FE5AA520B32180
-  name = name.replace('NPC_HeavyExoskeleton_Spark_Armor','HeavyExoskeleton_Svoboda_Armor'); // 3694FD384E122A0516FE5AA520B32180
+  name = name || '';
+
+  // some issues with icons, mostly SID 3694FD384E122A0516FE5AA520B32180 spawners (spark)
+  const remap = {
+    'Antirad': 'AntiRad',
+    'NVG_NPC_Gen': 'NVG_Gen',
+    'NPC_Anomaly_Spark_Armor': 'HeavyAnomaly_Spark_Armor',
+    'NPC_HeavyExoskeleton_Spark_Armor': 'HeavyExoskeleton_Svoboda_Armor',
+  };
+
+  Object.entries(remap).forEach(([k,v])=>name=name.replaceAll(k,v));
 
   if (markers.prototypes[name] && markers.prototypes[name].icon) {
     return `images/icons${markers.prototypes[name].icon}.png`;
