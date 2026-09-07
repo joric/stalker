@@ -2259,9 +2259,11 @@ function addHeightmap(geojson) {
     let elevation = geometry.properties.e;
     let elevationDisplay = elevation.toFixed(2);
 
+    let color = elevation>=0 ? '#b8853f' : '#e0b070';
+
     geometry.setSymbol({
-      lineColor: '#fff',
-      lineWidth: k * 4,
+      lineColor: color,
+      lineWidth: 1.5,
       lineOpacity: 0.75,
     });
 
