@@ -137,6 +137,7 @@ let icons = {};
 let lang = {};
 let markers = {};
 let regions = {};
+let heightmap = {};
 
 let actors_lookup = {};
 let items_lookup = {};
@@ -549,6 +550,7 @@ function addMarkers(data) {
 
   markersData = data;
 
+  addHeightmap(heightmap);
   addLines(data);
   addRegions(regions);
   addCircles(data);
@@ -706,22 +708,18 @@ function loadMarkers(data) {
 }
 
 function addHandler(layer) {
-  const originalShow = layer.show;
-  const originalHide = layer.hide;
+  if (!layer.__originalShow) {
+    layer.__originalShow = layer.show;
+    layer.__originalHide = layer.hide;
+  }
 
-  // Override the show method
-  layer.show = function () {
-    // Call the original show method
-    originalShow.call(this);
-    // Fire a custom 'visibilitychange' event
+  layer.show = function (t) {
+    this.__originalShow.call(this);
     this.fire('visibilitychange', { visible: true });
   };
 
-  // Override the hide method
-  layer.hide = function () {
-    // Call the original hide method
-    originalHide.call(this);
-    // Fire a custom 'visibilitychange' event
+  layer.hide = function (t) {
+    this.__originalHide.call(this);
     this.fire('visibilitychange', { visible: false });
   };
 
@@ -729,6 +727,8 @@ function addHandler(layer) {
   layer.on('visibilitychange', function (e) {
     let group = e.target.getId().toLowerCase();
     let show = e.visible;
+
+    //console.log('===', e.target.getId(), e.visible);
 
     if (show) {
       settings.activeItems[group] = true;
@@ -2078,6 +2078,7 @@ function scaleGeoJSON(geojson, scaleFactor, origin) {
 
 
 function updateView(e) {
+
   let zoom = map.getZoom();
   if (settings.searchText!='') {
     return;
@@ -2087,6 +2088,7 @@ function updateView(e) {
 
   for(const [layerName, zoomLevel] of Object.entries(zoomGroups)) {
     let layer = groupLayer.getLayer(capitalize(layerName));
+
     if (layer) {
       let [minZoom, maxZoom] = zoomLevel;
       if (zoom>=minZoom+0.5 && zoom < maxZoom+0.5) {
@@ -2098,6 +2100,10 @@ function updateView(e) {
       }
     }
   }
+
+  let layerId = 'Heightmap'
+  let visible = settings.activeItems[layerId.toLowerCase()] == true ? true : false;
+  console.log('updateview state: visible', visible, layerId);
 
 }
 
@@ -2225,6 +2231,55 @@ function addRegions(geojson) {
   addHandler(layer);
   layer.addTo(groupLayer);
 }
+
+
+function addHeightmap(geojson) {
+  let layerId = 'Heightmap'
+  let visible = settings.activeItems[layerId.toLowerCase()] === true ? true : false;
+  let layer = new maptalks.LineStringLayer(layerId, heightmap, { visible: visible });
+
+  let p = {
+    "side": 2048,
+    "min_m": -60.5341796875,
+    "max_m": 61.1845703125,
+    "world_uu": 812900,
+    "step_m": 0.47732843137254904,
+    "metres_per_pixel": 3.96923828125
+  };
+
+  let geometries = layer.getGeometries();
+
+  geometries.forEach(function(geometry) {
+
+    let k = (geometry.properties.e - p.min_m) / (p.max_m - p.min_m);
+    
+    // Clamp k to [0, 1]
+    k = Math.max(0, Math.min(1, k));
+
+    let elevation = geometry.properties.e;
+    let elevationDisplay = elevation.toFixed(2);
+
+    geometry.setSymbol({
+      lineColor: '#fff',
+      lineWidth: k * 4,
+      lineOpacity: 0.75,
+    });
+
+    // Create and add tooltip using ui.ToolTip
+    let tooltip = new maptalks.ui.ToolTip(`${elevationDisplay} m`, {});
+    
+    // Add the tooltip to the geometry
+    tooltip.addTo(geometry);
+  });
+
+  layer.addTo(groupLayer);
+
+  addHandler(layer);
+
+  console.log('create state: visible', visible, layerId);
+
+}
+
 
 function saveSettings() {
   localStorage.setItem(localDataName, JSON.stringify(localData));
@@ -2405,6 +2460,7 @@ function filterItems() {
       if (res){
 
         if (layer._id=='Circles') continue;
+        if (layer._id=='Heightmap') continue;
 
         if (res==2) {
           target = marker;
@@ -2601,10 +2657,11 @@ window.onload = function(event) {
       'data/icons.json',
       'data/regions.json',
       'data/markers.json',
+      'data/heightmap.json',
     ].map(url=>fetch(url).then(r=>r.json()));
 
     Promise.all(promises).then(data => {
-      [types, icons, regions, markers] = data;
+      [types, icons, regions, markers, heightmap] = data;
 
       console.log('Total markers:', markers.features.length)
 
@@ -2788,6 +2845,11 @@ function addNoteClick() {
     saveSettings();
   }
 }
+
+window.addNoteClick = addNoteClick;
+window.loadLocalData = loadLocalData;
+window.saveLocalData = saveLocalData;
+window.resetLocalData = resetLocalData;
 
 </script>
 
