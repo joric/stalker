@@ -2252,30 +2252,31 @@ function addHeightmap(geojson) {
     "metres_per_pixel": 3.96923828125
   };
 
+  const THEMES = {
+    paper: { bg: '#faf8f3', minor: '#8a6038', major: '#5c3a1c' },
+    dark:  { bg: '#16130f', minor: '#b8853f', major: '#e0b070' },
+  };
+  let theme = THEMES.dark;
+
+  const contourCache = {};
+  let contourOpacity = 0.85;
+
+  function symbolFor(isIndex) {
+    return {
+      lineColor: isIndex ? theme.major : theme.minor,
+      lineWidth: isIndex ? 1.8 : 1,
+      lineOpacity: contourOpacity,
+    };
+  }
+
   let geometries = layer.getGeometries();
 
+  geometries.forEach(g => g.setSymbol(symbolFor(g.getProperties().i === 1)));
+
   geometries.forEach(function(geometry) {
-
-    let k = (geometry.properties.e - p.min_m) / (p.max_m - p.min_m);
-    
-    // Clamp k to [0, 1]
-    k = Math.max(0, Math.min(1, k));
-
     let elevation = geometry.properties.e;
     let elevationDisplay = elevation.toFixed(2);
-
-    let color = elevation>=0 ? '#b8853f' : '#e0b070';
-
-    geometry.setSymbol({
-      lineColor: color,
-      lineWidth: 2.0,
-      lineOpacity: 0.75,
-    });
-
-    // Create and add tooltip using ui.ToolTip
     let tooltip = new maptalks.ui.ToolTip(`${elevationDisplay} m`, {});
-    
-    // Add the tooltip to the geometry
     tooltip.addTo(geometry);
   });
 
