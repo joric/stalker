@@ -319,6 +319,16 @@ function loadMap() {
         tileSystem: [1*xscale, -1*yscale, left, top],
       }),
 
+      new maptalks.TileLayer('relief', {
+        maxAvailableZoom: 1,
+        urlTemplate: `images/relief/{z}/{y}/{x}.webp`,
+        repeatWorld: false,
+        tileSize: 512,
+        visible: settings.baseLayer == 'relief',
+
+        tileSystem: [1*xscale, -1*yscale, left, top],
+      }),
+
     ]),
 
     zoomControl: {
@@ -2100,11 +2110,6 @@ function updateView(e) {
       }
     }
   }
-
-  let layerId = 'Heightmap'
-  let visible = settings.activeItems[layerId.toLowerCase()] == true ? true : false;
-  console.log('updateview state: visible', visible, layerId);
-
 }
 
 function isPointInsidePolygon(point, polyPoints) {
@@ -2263,7 +2268,7 @@ function addHeightmap(geojson) {
 
     geometry.setSymbol({
       lineColor: color,
-      lineWidth: 1.5,
+      lineWidth: 2.0,
       lineOpacity: 0.75,
     });
 
@@ -2274,12 +2279,8 @@ function addHeightmap(geojson) {
     tooltip.addTo(geometry);
   });
 
-  layer.addTo(groupLayer);
-
   addHandler(layer);
-
-  console.log('create state: visible', visible, layerId);
-
+  layer.addTo(groupLayer);
 }
 
 
