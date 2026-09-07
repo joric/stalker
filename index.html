@@ -2276,7 +2276,7 @@ function addHeightmap(geojson) {
   geometries.forEach(function(geometry) {
     let elevation = geometry.properties.e;
     let elevationDisplay = elevation.toFixed(2);
-    let tooltip = new maptalks.ui.ToolTip(`${elevationDisplay} m`, {});
+    let tooltip = new maptalks.ui.ToolTip(`${elevationDisplay} m`, {showTimeout: 0});
     tooltip.addTo(geometry);
   });
 
