@@ -2405,7 +2405,10 @@ function passesFilter(marker) {
   if (!text) return true;
 
   let terms = text.split(' ');
-  let o = marker.feature.properties;
+  let o = marker.feature?.properties;
+
+  if (!o) return false;
+
   let info = renderItem(marker.feature, true);
 
   // little hack before fuse.js, use 2 for exact match
