@@ -264,6 +264,14 @@ let baseLayers = [
     repeatWorld: false,
     tileSize: 512,
   }),
+
+  new maptalks.TileLayer('blank', {
+    maxAvailableZoom: 1,
+    urlTemplate: `data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs=`,
+    repeatWorld: false,
+    tileSize: 512,
+  }),
+
 ];
 
 function loadMap() {
@@ -513,7 +521,7 @@ function addCircles(markers) {
       let color = o.type.includes('Hub') ? '#e8a514' : '#fff';
 
       //let numberOfShellPoints = Math.min(60, ~~(o.radius / 200));
-      var circle = new maptalks.Circle([x, y, 0], o.radius, {
+      var circle = new maptalks.Circle([x, y, z], o.radius, {
         symbol: {...defaultSymbol, lineColor: color, polygonFill: color},
         properties: {
           //numberOfShellPoints: numberOfShellPoints,
