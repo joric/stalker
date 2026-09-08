@@ -196,6 +196,76 @@ class CustomTooltip extends maptalks.ui.ToolTip {
     */
 }
 
+function updateBaseLayer(layer) {
+  if (layer.getId()=='diegetic') {
+    let w = 812900;
+    let h = w;
+    let xscale = 1/0.975;
+    let yscale = 1/1.08;
+    let dx = -11500;
+    let dy = 73000;
+    layer.config('tileSystem', [1*xscale, -1*yscale, dx, dy]);
+  }
+}
+
+let baseLayers = [
+  new maptalks.TileLayer('T_DLCWorldMap_UDIM', {
+    maxAvailableZoom: 5,
+    urlTemplate: `${tileset_base}/extras/dlc/{z}/{y}/{x}.webp`,
+    repeatWorld: false,
+    tileSize: 512,
+  }),
+
+  new maptalks.TileLayer('T_WorldMap_UDIM', {
+    maxAvailableZoom: 7,
+    urlTemplate: `${tileset_base}/tiles/{z}/{x}/{y}.jpg`,
+    repeatWorld: false,
+    tileSize: 512,
+  }),
+
+  new maptalks.TileLayer('T_GLOBAL_MAP_LEGEND', {
+    maxAvailableZoom: 4,
+    urlTemplate: `${tileset_base}/extras/wl/{z}/{x}/{y}.png`,
+    repeatWorld: false,
+    tileSize: 512,
+  }),
+
+  new maptalks.TileLayer('T_GLOBAL_MAP_BASE', {
+    maxAvailableZoom: 5,
+    urlTemplate: `${tileset_base}/extras/wb/{z}/{x}/{y}.jpg`,
+    repeatWorld: false,
+    tileSize: 512,
+  }),
+
+  new maptalks.TileLayer('T_WorldMap_LDScheme', {
+    maxAvailableZoom: 3,
+    urlTemplate: `${tileset_base}/extras/ld/{z}/{x}/{y}.png`,
+    repeatWorld: false,
+    tileSize: 512,
+  }),
+
+  new maptalks.TileLayer('topographic', {
+    maxAvailableZoom: 6,
+    urlTemplate: `${tileset_base}/extras/topographic/{z}/{y}/{x}.webp`,
+    repeatWorld: false,
+    tileSize: 512,
+  }),
+
+  new maptalks.TileLayer('diegetic', {
+    maxAvailableZoom: 1,
+    urlTemplate: `${tileset_base}/extras/diegetic/{z}/{y}/{x}.webp`,
+    repeatWorld: false,
+    tileSize: 512,
+  }),
+
+  new maptalks.TileLayer('relief', {
+    maxAvailableZoom: 1,
+    urlTemplate: `images/relief/{z}/{y}/{x}.webp`,
+    repeatWorld: false,
+    tileSize: 512,
+  }),
+];
+
 function loadMap() {
 
   if (!localData[mapId]) {
@@ -208,7 +278,7 @@ function loadMap() {
 
   settings = localData[mapId];
 
-  settings.baseLayer = settings.baseLayer || 'default';
+  settings.baseLayer = settings.baseLayer || 'T_DLCWorldMap_UDIM';
   settings.language = settings.language || 'en';
   settings.searchText = settings.searchText || '';
   settings.rank = settings.rank || 'Master';
@@ -223,21 +293,15 @@ function loadMap() {
   let center = [w/2, h/2];
   let [left,top,right,bottom] = [0, 0, w, h];
 
-  let xscale = 1.0;
-  let yscale = 1.0;
-
-  if (settings.baseLayer=='diegetic') {
-    xscale = 1/0.975;
-    yscale = 1/1.08;
-    let dx = -11500;
-    let dy = 73000;
-    [left,top,right,bottom] = [dx, dy, w+dx, h+dy];
-  }
-
-
   if (!settings.center) {
     [settings.zoom, settings.pitch, settings.bearing, settings.center] = [startZoom, startPitch, 0, center];
   }
+
+  baseLayers.forEach(layer => layer.on('show', () => updateBaseLayer(layer)));
+  baseLayers.forEach( layer => {
+    layer[layer.getId() === settings.baseLayer ? 'show' : 'hide']();
+    updateBaseLayer(layer);
+  });
 
   map = new maptalks.Map('map', {
 
@@ -259,77 +323,7 @@ function loadMap() {
       resolutions: Array.from({length: maxZoom + 1},(_,i) => w / tileSize / (1<<i)), // mandatory zoom levels
     },
 
-    baseLayer: new maptalks.GroupTileLayer('Base TileLayer', [
-
-      new maptalks.TileLayer('T_DLCWorldMap_UDIM', {
-        maxAvailableZoom: 5,
-        urlTemplate: `${tileset_base}/extras/dlc/{z}/{y}/{x}.webp`,
-        repeatWorld: false,
-        tileSize: 512,
-        visible: settings.baseLayer == 'T_DLCWorldMap_UDIM' || settings.baseLayer == 'default',
-      }),
-
-      new maptalks.TileLayer('T_WorldMap_UDIM', {
-        maxAvailableZoom: 7,
-        urlTemplate: `${tileset_base}/tiles/{z}/{x}/{y}.jpg`,
-        repeatWorld: false,
-        tileSize: 512,
-        visible: settings.baseLayer == 'T_WorldMap_UDIM',
-      }),
-
-      new maptalks.TileLayer('T_GLOBAL_MAP_LEGEND', {
-        maxAvailableZoom: 4,
-        urlTemplate: `${tileset_base}/extras/wl/{z}/{x}/{y}.png`,
-        repeatWorld: false,
-        tileSize: 512,
-        visible: settings.baseLayer == 'T_GLOBAL_MAP_LEGEND',
-      }),
-
-      new maptalks.TileLayer('T_GLOBAL_MAP_BASE', {
-        maxAvailableZoom: 5,
-        urlTemplate: `${tileset_base}/extras/wb/{z}/{x}/{y}.jpg`,
-        repeatWorld: false,
-        tileSize: 512,
-        visible: settings.baseLayer == 'T_GLOBAL_MAP_BASE',
-      }),
-
-      new maptalks.TileLayer('T_WorldMap_LDScheme', {
-        maxAvailableZoom: 3,
-        urlTemplate: `${tileset_base}/extras/ld/{z}/{x}/{y}.png`,
-        repeatWorld: false,
-        tileSize: 512,
-        visible: settings.baseLayer == 'T_WorldMap_LDScheme',
-      }),
-
-      new maptalks.TileLayer('topographic', {
-        maxAvailableZoom: 6,
-        urlTemplate: `${tileset_base}/extras/topographic/{z}/{y}/{x}.webp`,
-        repeatWorld: false,
-        tileSize: 512,
-        visible: settings.baseLayer == 'topographic',
-      }),
-
-      new maptalks.TileLayer('diegetic', {
-        maxAvailableZoom: 1,
-        urlTemplate: `${tileset_base}/extras/diegetic/{z}/{y}/{x}.webp`,
-        repeatWorld: false,
-        tileSize: 512,
-        visible: settings.baseLayer == 'diegetic',
-
-        tileSystem: [1*xscale, -1*yscale, left, top],
-      }),
-
-      new maptalks.TileLayer('relief', {
-        maxAvailableZoom: 1,
-        urlTemplate: `images/relief/{z}/{y}/{x}.webp`,
-        repeatWorld: false,
-        tileSize: 512,
-        visible: settings.baseLayer == 'relief',
-
-        tileSystem: [1*xscale, -1*yscale, left, top],
-      }),
-
-    ]),
+    baseLayer: new maptalks.GroupTileLayer('Base TileLayer', baseLayers),
 
     zoomControl: {
       //position  : 'bottom-right',
@@ -343,28 +337,10 @@ function loadMap() {
 
     //maxExtent: extent,
 
-    /*
-    // overview is broken, due to a flat projection I guess
-    overviewControl: {
-      position: 'bottom-left',
-      size: [240,135],
-      level: 10,
-      symbol: {
-
-        'lineColor': '#fff',    // Border color
-        'lineWidth': 1.5,            // Border width
-        'polygonFill': '#fff',  // Fill color
-        'polygonOpacity': 0.0,      // Fill opacity
-        'lineOpacity': 0.5,
-      },
-    },
-    */
-
     attribution: {
       //position: {top: -50},
     },
   });
-
 
   // Function to handle zooming
   function handleZoom(event) {
