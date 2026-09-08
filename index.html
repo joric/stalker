@@ -113,7 +113,7 @@ let zoomGroups = {
 let foundOpacity = 0.25;
 let arrowStyle = [2,3];
 
-let scaleZ = 0.1; // postprocess coordinates because enableAltitude and heightFactor doesn't seem to work at all
+let scaleZ = 1.0; // postprocess coordinates because enableAltitude and heightFactor doesn't seem to work at all
 
 //weird shit's happening. lines seem to be flat rectangles so they dissapear at certain camera angles
 let enableTeleportLines = true;
@@ -297,9 +297,9 @@ function loadMap() {
     [settings.zoom, settings.pitch, settings.bearing, settings.center] = [startZoom, startPitch, 0, center];
   }
 
-  baseLayers.forEach(layer => layer.on('show', () => updateBaseLayer(layer)));
   baseLayers.forEach( layer => {
     layer[layer.getId() === settings.baseLayer ? 'show' : 'hide']();
+    layer.on('show', () => updateBaseLayer(layer));
     updateBaseLayer(layer);
   });
 
@@ -508,10 +508,12 @@ function addCircles(markers) {
     let o = m.marker.feature.properties;
     if (o.radius) {
 
+      let [x, y, z] = m.marker.feature.geometry.coordinates;
+
       let color = o.type.includes('Hub') ? '#e8a514' : '#fff';
 
       //let numberOfShellPoints = Math.min(60, ~~(o.radius / 200));
-      var circle = new maptalks.Circle(m.marker.getCoordinates(), o.radius, {
+      var circle = new maptalks.Circle([x, y, 0], o.radius, {
         symbol: {...defaultSymbol, lineColor: color, polygonFill: color},
         properties: {
           //numberOfShellPoints: numberOfShellPoints,
@@ -2214,29 +2216,15 @@ function addRegions(geojson) {
 }
 
 
-function addHeightmap(geojson) {
+function addHeightmap(heightmap) {
   let layerId = 'Heightmap'
   let visible = settings.activeItems[layerId.toLowerCase()] === true ? true : false;
-  let layer = new maptalks.LineStringLayer(layerId, heightmap, { visible: visible });
-
-  let p = {
-    "side": 2048,
-    "min_m": -60.5341796875,
-    "max_m": 61.1845703125,
-    "world_uu": 812900,
-    "step_m": 0.47732843137254904,
-    "metres_per_pixel": 3.96923828125
-  };
-
   const THEMES = {
     paper: { bg: '#faf8f3', minor: '#8a6038', major: '#5c3a1c' },
     dark:  { bg: '#16130f', minor: '#b8853f', major: '#e0b070' },
   };
   let theme = THEMES.dark;
-
-  const contourCache = {};
   let contourOpacity = 0.85;
-
   function symbolFor(isIndex) {
     return {
       lineColor: isIndex ? theme.major : theme.minor,
@@ -2245,15 +2233,26 @@ function addHeightmap(geojson) {
     };
   }
 
-  let geometries = layer.getGeometries();
+  let geometries = [];
+  for (const feature of heightmap.features) {
+    if (feature.geometry.type !== 'LineString') continue;
+    const coordinates = feature.geometry.coordinates;
+    const properties = feature.properties;
+    const z = properties.e || properties.height || properties.altitude || 0;
+    const coordinatesWithZ = coordinates.map(coord => [coord[0], coord[1], z * 100]);
+    const symbol = symbolFor(properties.i === 1);
+    // properties + symbol go inside the options object, not as a bare second arg
+    const line = new maptalks.LineString(coordinatesWithZ, { symbol, properties });
+    geometries.push(line); // push the geometry itself, not a wrapper
+  }
 
-  geometries.forEach(g => g.setSymbol(symbolFor(g.getProperties().i === 1)));
+  let layer = new maptalks.LineStringLayer(layerId, geometries, { visible: visible });
 
-  geometries.forEach(function(geometry) {
-    let elevation = geometry.properties.e;
+  geometries.forEach(function(line) {
+    let elevation = line.getProperties().e;
     let elevationDisplay = elevation.toFixed(2);
-    let tooltip = new maptalks.ui.ToolTip(`${elevationDisplay} m`, {showTimeout: 0});
-    tooltip.addTo(geometry);
+    let tooltip = new maptalks.ui.ToolTip(`${elevationDisplay} m`, { showTimeout: 0 });
+    tooltip.addTo(line); // addTo expects the geometry, not a wrapper object
   });
 
   addHandler(layer);
