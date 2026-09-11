@@ -6,6 +6,7 @@ Converts Stalker 2 ".bin" configs back into the human-readable ".cfg" text forma
 
 * Based on JSON Converter by sdwvit: https://github.com/sdwvit/S2CfgToJSON
 * Binary reader PR by thexii: https://github.com/sdwvit/S2CfgToJSON/pull/1
+* Updated for Version 2.0.5 binary format changes
 
 Usage:
     python3 bin2cfg.py input.cfg.bin [output.cfg]
@@ -19,11 +20,6 @@ If the input path is a directory, every "*.cfg.bin" file found in it
 (recursively) is converted. By default each converted ".cfg" file is
 written right next to its source ".cfg.bin" file. Pass -o/--output-dir
 to instead mirror the directory tree under a separate output root.
-
-Updates:
-
-* 2026-08-26: Preserved numeric literals, fixed float infinity, added progress
-
 """
 
 from __future__ import annotations
@@ -340,8 +336,8 @@ def get_binary_string(index: int, string_pool: List[str]) -> str:
     return ""
 
 
-def read_binary_header(reader: BinaryCursor) -> List[str]:
-    reader.read_uint32()  # version
+def read_binary_header(reader: BinaryCursor) -> Tuple[int, List[str]]:
+    version = reader.read_uint32()
     string_count = reader.read_int32()
     string_pool: List[str] = []
     reader.read_uint32()  # reserved
@@ -364,14 +360,21 @@ def read_binary_header(reader: BinaryCursor) -> List[str]:
         else:
             string_pool.append("")
 
-    return string_pool
+    return version, string_pool
 
 
-def skip_post_pool_padding(reader: BinaryCursor) -> None:
-    if reader.position + 9 <= reader.length:
-        reader.read_uint32()
-        reader.read_uint32()
-        reader.read_byte()
+def skip_post_pool_padding(reader: BinaryCursor, version: int) -> None:
+    if version >= 2:
+        if reader.position + 13 <= reader.length:
+            reader.read_uint32()
+            reader.read_uint32()
+            reader.read_uint32()
+            reader.read_byte()
+    else:
+        if reader.position + 9 <= reader.length:
+            reader.read_uint32()
+            reader.read_uint32()
+            reader.read_byte()
 
 
 class BinaryBlock:
@@ -383,18 +386,33 @@ class BinaryBlock:
         self.position = position
 
 
-def read_binary_cfg_config(reader: BinaryCursor, pool_size: int) -> BinaryBlock:
+def read_binary_cfg_config(reader: BinaryCursor, pool_size: int, version: int) -> BinaryBlock:
     position = reader.position
     values: List[int] = []
 
-    while reader.position + 4 <= reader.length:
-        value = reader.read_int32()
-        if value <= 0:
-            break
-        if value > pool_size:
-            reader.position -= 4
-            break
-        values.append(value)
+    if version >= 2:
+        # 2.0.5 config block format
+        name_idx = reader.read_int32()
+        type_idx = reader.read_int32()
+        val_idx = reader.read_int32()
+
+        values = [name_idx, type_idx, val_idx]
+
+        if val_idx == 0:
+            values.append(reader.read_int32())
+        else:
+            values.append(reader.read_int32())
+            values.append(reader.read_int32())
+    else:
+        # Pre-2.0.5 config block format
+        while reader.position + 4 <= reader.length:
+            value = reader.read_int32()
+            if value <= 0:
+                break
+            if value > pool_size:
+                reader.position -= 4
+                break
+            values.append(value)
 
     last_byte = reader.read_byte()
     return BinaryBlock(values, last_byte, position)
@@ -414,9 +432,15 @@ def read_binary_link_pair(reader: BinaryCursor) -> Tuple[str, Optional[str]]:
     return parent_name, ref_path
 
 
-def read_binary_struct(reader: BinaryCursor, string_pool: List[str]) -> Node:
-    block = read_binary_cfg_config(reader, len(string_pool))
-    name = get_binary_string(block.values[1], string_pool) if len(block.values) > 1 else ""
+def read_binary_struct(reader: BinaryCursor, string_pool: List[str], version: int) -> Node:
+    block = read_binary_cfg_config(reader, len(string_pool), version)
+    
+    if version >= 2:
+        name_idx = block.values[0] if len(block.values) > 0 else 0
+    else:
+        name_idx = block.values[1] if len(block.values) > 1 else 0
+        
+    name = get_binary_string(name_idx, string_pool) if name_idx else ""
     node = Node(name)
 
     if block.last_byte > 0 and block.last_byte in (1, 5, 7):
@@ -428,22 +452,33 @@ def read_binary_struct(reader: BinaryCursor, string_pool: List[str]) -> Node:
 
     fields_count = reader.read_int32()
     for current_field in range(fields_count):
-        field_block = read_binary_cfg_config(reader, len(string_pool))
-        if len(field_block.values) <= 1:
-            continue
+        field_block = read_binary_cfg_config(reader, len(string_pool), version)
+        
+        if version >= 2:
+            if len(field_block.values) < 3:
+                continue
+            field_name = get_binary_string(field_block.values[0], string_pool)
+            n_values = len(field_block.values)
+            is_struct = (n_values == 4)
+            has_value = (n_values == 5)
+        else:
+            if len(field_block.values) <= 1:
+                continue
+            field_name = get_binary_string(field_block.values[0], string_pool)
+            n_values = len(field_block.values)
+            is_struct = (n_values == 2)
+            has_value = (n_values in (3, 4))
 
-        field_name = get_binary_string(field_block.values[0], string_pool)
-        n_values = len(field_block.values)
-        if n_values == 2:
+        if is_struct:
             reader.position = field_block.position
-            nested = read_binary_struct(reader, string_pool)
+            nested = read_binary_struct(reader, string_pool, version)
             assign_field(
                 node,
                 field_name,
                 "" if is_empty_nested_struct(nested) else nested,
                 current_field,
             )
-        elif n_values in (3, 4):
+        elif has_value:
             raw_value = get_binary_string(field_block.values[2], string_pool).strip()
             assign_field(node, field_name, parse_value(raw_value), current_field, raw=raw_value)
 
@@ -455,8 +490,8 @@ def read_binary_cfg(data: bytes) -> List[Node]:
     if reader.length < 12:
         return []
 
-    string_pool = read_binary_header(reader)
-    skip_post_pool_padding(reader)
+    version, string_pool = read_binary_header(reader)
+    skip_post_pool_padding(reader, version)
 
     roots: List[Node] = []
     while reader.position < reader.length:
@@ -464,7 +499,7 @@ def read_binary_cfg(data: bytes) -> List[Node]:
             break
         childs_count = reader.read_int32()
         for _ in range(childs_count):
-            root = read_binary_struct(reader, string_pool)
+            root = read_binary_struct(reader, string_pool, version)
             root.__internal__.isRoot = True
             roots.append(root)
 

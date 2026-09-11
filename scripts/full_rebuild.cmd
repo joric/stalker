@@ -1,7 +1,19 @@
 @echo off
 set out=C:\Temp\Exports
 
-rmdir /s /q "%out%\Stalker2" 2>nul
+if not exist "%out%\Stalker2" goto :skip_backup
+set "postfix_count=1"
+
+:backup_loop
+if exist "%out%\Stalker2_%postfix_count%" (
+    set /a postfix_count+=1
+    goto :backup_loop
+)
+
+move "%out%\Stalker2" "%out%\Stalker2_%postfix_count%"
+
+:skip_backup
+
 del /q missing_*.txt 2>nul
 del /q cache.json 2>nul
 

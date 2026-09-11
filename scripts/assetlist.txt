@@ -1,10 +1,9 @@
-# game data is packed to bin since 1.6, use https://www.nexusmods.com/stalker2heartofchornobyl/mods/1653
-
 [Text]
 Stalker2/Content/_Stalker_2/maps/_Stalker2_WorldMap/WorldMap_WP.umap
 Stalker2/Plugins/GameFeatures/S2_DLC1/Content/CB/_Stalker_2/maps/_Stalker2_WorldMap/WorldMap_WP/_Generated_/*.umap
 
 [Texture]
+Stalker2/Content/LevelBitmaps/T_Regions_Map.*
 Stalker2/Content/GameLite/FPS_Game/UI/UIIcons/Markers/*
 Stalker2/Content/GameLite/FPS_Game/UIRemaster/UITextures/WorldMap/RegionMarker/*
 Stalker2/Content/GameLite/FPS_Game/UIRemaster/UITextures/Inventory/*
