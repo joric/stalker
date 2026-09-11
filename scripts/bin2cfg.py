@@ -7,6 +7,7 @@ Converts Stalker 2 ".bin" configs back into the human-readable ".cfg" text forma
 * Based on JSON Converter by sdwvit: https://github.com/sdwvit/S2CfgToJSON
 * Binary reader PR by thexii: https://github.com/sdwvit/S2CfgToJSON/pull/1
 * Updated for Version 2.0.5 binary format changes
+* Fixed field duplication when using refkey inheritance
 
 Usage:
     python3 bin2cfg.py input.cfg.bin [output.cfg]
@@ -21,7 +22,6 @@ If the input path is a directory, every "*.cfg.bin" file found in it
 written right next to its source ".cfg.bin" file. Pass -o/--output-dir
 to instead mirror the directory tree under a separate output root.
 """
-
 from __future__ import annotations
 
 import re
@@ -123,7 +123,9 @@ class Node:
         self._raw_literals[str(key)] = raw
 
     # serialization -----------------------------------------------------
-    def to_string(self) -> str:
+    def to_string(self, known_roots: dict = None) -> str:
+        if known_roots is None:
+            known_roots = {}
         text = f"{self.__internal__.rawName} : " if self.__internal__.isRoot else ""
         text += "struct.begin"
         refs = self.__internal__.to_string()
@@ -131,8 +133,25 @@ class Node:
             text += f" {{{refs}}}"
         text += "\n"
 
+        parent_node = None
+        if self.__internal__.refkey:
+            ref_str = str(self.__internal__.refkey)
+            for lookup_key in (ref_str, f"[{ref_str}]", ref_str.strip("[]")):
+                if lookup_key in known_roots:
+                    parent_node = known_roots[lookup_key]
+                    break
+
         rendered_lines = []
         for key, value in self.entries():
+
+            if parent_node and key in parent_node:
+                parent_val = parent_node[key]
+                if isinstance(value, Node) and isinstance(parent_val, Node):
+                    if value.to_string(known_roots) == parent_val.to_string(known_roots):
+                        continue
+                elif value == parent_val:
+                    continue
+
             name_already_rendered = isinstance(value, Node) and value.__internal__.isRoot
             use_asterisk = bool(self.__internal__.isArray and self.__internal__.useAsterisk)
 
@@ -147,7 +166,7 @@ class Node:
             if isinstance(value, Node) and value.__internal__.removenode:
                 rendered_value = REMOVE_NODE
             elif isinstance(value, Node):
-                rendered_value = value.to_string()
+                rendered_value = value.to_string(known_roots)
             else:
                 rendered_value = render_literal(self, key, value)
 
@@ -515,7 +534,14 @@ def convert(input_path: Path, output_path: Path, *, verbose: bool = True) -> Tup
     """Converts one .cfg.bin file to text. Returns (num_roots, output_char_count)."""
     data = input_path.read_bytes()
     roots = read_binary_cfg(data)
-    text = "\n".join(root.to_string() for root in roots)
+
+    known_roots = {}
+    for root in roots:
+        if root.__internal__.rawName:
+            known_roots[root.__internal__.rawName] = root
+
+    text = "\n".join(root.to_string(known_roots) for root in roots)
+
     output_path.write_text(text, encoding="utf-8")
     if verbose:
         print(f"Parsed {len(roots)} root struct(s).")
