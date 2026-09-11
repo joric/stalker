@@ -2,13 +2,11 @@
 
 rem download CUE4Parse.CLI here: https://github.com/joric/CUE4Parse.CLI
 
+for /f "usebackq delims=" %%a in (".env") do set %%a
+
 set exe=cue4parse
 
-set out=C:\Temp\Exports
-set root=E:\Games\S.T.A.L.K.E.R. 2.Heart.of.Chornobyl.Ultimate.Editon
-set mappings=%root%\Stalker2.usmap
-
-set options=-i "%root%" -m "%mappings%" -g GAME_UE5_5 -o %out%
+set options=-i "%GAME_DIR%" -m "%MAPPINGS_FILE%" -g GAME_UE5_5 -o %EXPORT_DIR%
 
 %exe% %options% -c assetlist.txt || exit
 
