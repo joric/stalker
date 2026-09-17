@@ -3,9 +3,7 @@
     "name": "Stalker 2",
     "size": 812900,
     "root": "",
-    "tilesetBase1": "images/stalker2_tileset",
-    "tilesetBase0": "https://joric.github.io/stalker2_tileset",
-    "tilesetBase": "submodules/stalker2_tileset",
+    "tilesetBase": "https://joric.github.io/stalker2_tileset/",
     "worlds": {
       "default": {
         "baseLayers": [
