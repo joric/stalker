@@ -2460,9 +2460,6 @@ function filterItems() {
       let res = passesFilter(marker); // circles layer may have duplicate markers, breaks return result
       if (res){
 
-        //if (layer._id=='Circles') continue;
-        if (layer._id=='Heightmap') continue;
-
         if (res==2) {
           target = marker;
           targets += 1;
@@ -2470,7 +2467,7 @@ function filterItems() {
 
         marker.show();
         let parent = marker.getLayer();
-        if (parent && !parent.isVisible())
+        if (parent && !parent.isVisible() && !['Heightmap','Circles'].includes(parent._id))
           parent.show();
           count += 1;
       } else {
