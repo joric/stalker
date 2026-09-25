@@ -98,6 +98,9 @@ let fuse = null;
 let dedup = {};
 let settings = {};
 
+let quickFilterString = '';
+let quickFilter = false;
+
 let zoomGroups = {
   'notes':[-99,99],
   'polygons':[-99,4], 'regions':[0,2],
@@ -2080,6 +2083,8 @@ function updateView(e) {
     return;
   }
 
+  if (quickFilter) return;
+
   //console.log(selectedMarker, selectedMarker?._layer);
 
   for(const [layerName, zoomLevel] of Object.entries(zoomGroups)) {
@@ -2347,6 +2352,9 @@ async function fuzzySearch(s, limit=256) {
   const cmpAlphaNum2 = (a,b) => a.localeCompare(b, 'en', { numeric: true });
   result.sort( (a,b)=> a.score - b.score || cmpAlphaNum2(a.item.info.title||'', b.item.info.title||'') ) ;
 
+  quickFilterString = s;
+  quickFilter = false;
+
   return result;
 }
 
@@ -2409,6 +2417,8 @@ function getSearchText(o, info) {
 function passesFilter(marker) {
   // will be replaced with fuzzy search
   let text = settings.searchText && settings.searchText.toLowerCase() || '';
+
+  if (quickFilterString) text = quickFilterString;
 
   if (!text) return true;
 
@@ -2476,6 +2486,8 @@ function filterItems() {
 function clearFilter() {
   searchControl._input.value = '';
   settings.searchText = '';
+  quickFilterString = '';
+  quickFilter = false;
   filterItems();
 }
 
@@ -2621,6 +2633,12 @@ window.onload = function(event) {
     searchCallback: query => fuzzySearch(query),
     searchRenderItem: searchRenderItem,
     searchOnSelect: fuseResult => {
+
+      if (quickFilterString && !quickFilter) {
+        filterItems();
+        quickFilter = true;
+      }
+
       jumpToLocation(fuseResult.item.sid, false);
       //console.log('search result:', fuseResult.item);
     },
@@ -2628,6 +2646,7 @@ window.onload = function(event) {
 
 
   searchControl._handleSubmit = function() {
+    quickFilter = false;
     updateSearch(searchControl._input.value);
   }
 
