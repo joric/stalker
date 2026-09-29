@@ -298,8 +298,9 @@ function loadMap() {
 
   if ( (settings.gameVersion ?? 0) < 206 ) {
     settings.baseLayer = 'T_DLCWorldMap_UDIM';
-    settings.gameVersion = gameVersion;
   }
+
+  settings.gameVersion = gameVersion;
 
   //console.log('current zoom:', settings.zoom);
   let scrollWheelZoom = true; // maptalks uses fractional zoom by default
