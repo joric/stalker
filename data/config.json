@@ -2,7 +2,6 @@
   "s2": {
     "name": "Stalker 2",
     "size": 812900,
-    "root": "",
     "tilesetBase": "https://joric.github.io/stalker2_tileset/",
     "filter": ["regions"],
     "localization": {
@@ -16,6 +15,22 @@
     },
     "worlds": {
       "default": {
+        "regions": [
+          {
+            "name": "T_Regions_Map",
+            "url": "scripts/regions.json",
+            "image": "scripts/T_Regions_Map.png",
+            "skip_color": "#0000ff",
+            "size": 812900,
+            "simplify": "5%"
+          }
+        ],
+        "markers": [
+          {
+            "types": "data/types2.json",
+            "icons": "data/icons2.json"
+          }
+        ],
         "baseLayers": [
           {
             "name": "T_DLCWorldMap_UDIM",
@@ -66,18 +81,6 @@
             "urlTemplate": "extras/ld/{z}/{x}/{y}.png",
             "tileSize": 512,
             "maxAvailableZoom": 3
-          }
-        ],
-        "regions": [
-          {
-            "name": "T_Regions_Map",
-            "url": "scripts/regions.json"
-          }
-        ],
-        "markers": [
-          {
-            "types": "data/types2.json",
-            "icons": "data/icons2.json"
           }
         ]
       }

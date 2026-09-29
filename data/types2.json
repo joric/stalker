@@ -22,7 +22,7 @@
             "EMarkerType::CardLock":          { "icon": "circle-dot",       "category": "sid_misc_pda_hint_Controls",           "group": "actors",   "title": "sid_misc_hint_door_open" },
             "EMarkerType::Chest":             { "icon": "chest",            "category": "sid_misc_pda_hint_PlayerMarkers",      "group": "notes" },
             "EMarkerType::CodeLock":          { "icon": "circle-dot",       "category": "sid_misc_pda_hint_Controls",           "group": "actors",   "title": "sid_misc_hint_entercode" },
-            "EMarkerType::Container":         { "icon": "box",              "category": "sid_misc_pda_map_playerTags_habar",    "group": "misc",     "title": "sid_effects_general_container_name" },
+            "EMarkerType::Container":         { "icon": "box",              "category": "codelock", "title": "sid_misc_pda_map_playerTags_habar",    "group": "misc",     "title": "sid_effects_general_container_name" },
             "EMarkerType::Danger":            { "icon": "danger",           "category": "sid_misc_pda_hint_PlayerMarkers",      "group": "notes" },
             "EMarkerType::Door":              { "icon": "circle",           "category": "sid_misc_pda_hint_Controls",           "group": "actors",   "title": "sid_journal_stage_E11_MQ01_enter_the_room" },
             "EMarkerType::DynamicObject":     { "icon": "lock",             "category": "sid_misc_pda_hint_Controls",           "group": "actors",   "title": "sid_misc_hint_cantopen" },
@@ -58,8 +58,8 @@
             "^Gun":                           { "icon": "repair",  "category": "sid_misc_pda_reward_weapon",               "group": "items" },
             "Armor":                          { "icon": "repair",  "category": "sid_misc_pda_reward_armor",                "group": "items" },
             "PDA|Note":                       { "icon": "message", "category": "sid_questItemprototypes_BasePDA_name",      "group": "items" },
-            "QuestItem_Fuse":                 { "icon": "yen",     "category": "sid_misc_pda_map_playerTags_habar",         "group": "actors" },
-            "QuestItem_Key|Tamplate_Key":     { "icon": "yen",     "category": "sid_misc_pda_map_playerTags_habar",         "group": "actors" },
+            "QuestItem_Fuse":                 { "icon": "yen",     "category": "fuse", "title": "sid_misc_pda_map_playerTags_habar",         "group": "actors" },
+            "QuestItem_Key|Tamplate_Key":     { "icon": "yen",     "category": "key", "title": "sid_misc_pda_map_playerTags_habar",         "group": "actors" },
             "TemplateAmmo":                   { "icon": "repair",  "category": "sid_misc_pda_reward_ammo_grenades",         "group": "items" },
             "TemplateArtifact":               { "icon": "bag",     "category": "sid_misc_pda_reward_artifacts",             "group": "misc" }
           }
@@ -93,17 +93,19 @@
           "name": {
             "Bloodsucker":  { "icon": "claws",      "category": "sid_npc_name_mutant",           "group": "enemies",  "title": "sid_misc_statisticspack_pda_statictics_mutant_bloodsucker" },
             "DLC01_Zulus":  { "icon": "soldier",    "category": "NPC",                           "group": "actors" },
-            "Faust":        { "icon": "guide",      "category": "NPC",                           "group": "locations" },
-            "Guider":       { "icon": "guide",      "category": "sid_misc_pda_Map_MarkerGuide",   "group": "bases",    "title": "sid_misc_pda_Map_MarkerGuide" },
+            "Faust":        { "icon": "soldier",    "category": "NPC",                           "group": "actors" },
             "HumanBase":    { "icon": "soldier",    "category": "NPC",                           "group": "misc",     "title": "NPC" },
             "MainQuest":    { "icon": "quest",      "category": "sid_misc_answer_sidequest",     "group": "actors",   "title": "NPC" },
             "Mavka":        { "icon": "soldier",    "category": "NPC",                           "group": "actors" },
-            "Medic":        { "icon": "medic",      "category": "sid_misc_pda_Map_MarkerMedic",   "group": "bases",    "title": "sid_misc_pda_Map_MarkerMedic" },
-            "QuestGiver":   { "icon": "quest-giver","category": "sid_misc_answer_sidequest",     "group": "actors",   "title": "NPC" },
             "QuestNPCBase": { "icon": "soldier",    "category": "NPC",                           "group": "misc",     "title": "NPC" },
+            "^(GeneralZombie|Bloodsucker|Chimera|Controller|PseudoDog|Deer|Pseudogiant|Burer|Poltergeist|Bayun|Flesh|Blinddog|Tushkan|Boar|ZombieFoster|Rat|Snork)": { "icon": "claws",     "category": "sid_npc_name_mutant",       "group": "enemies" }
+          },
+          "subtype": {
+            "QuestGiver":   { "icon": "quest-giver","category": "sid_misc_answer_sidequest",     "group": "actors",   "title": "NPC" },
             "Technician":   { "icon": "technician", "category": "sid_misc_pda_Map_MarkerTechnician","group": "bases", "title": "sid_misc_pda_Map_MarkerTechnician" },
             "Trader":       { "icon": "trader",     "category": "sid_misc_pda_Map_MarkerTrader", "group": "bases",    "title": "sid_misc_pda_Map_MarkerTrader" },
-            "^(GeneralZombie|Bloodsucker|Chimera|Controller|PseudoDog|Deer|Pseudogiant|Burer|Poltergeist|Bayun|Flesh|Blinddog|Tushkan|Boar|ZombieFoster|Rat|Snork)": { "icon": "claws",     "category": "sid_npc_name_mutant",       "group": "enemies" }
+            "Medic":        { "icon": "medic",      "category": "sid_misc_pda_Map_MarkerMedic",   "group": "bases",    "title": "sid_misc_pda_Map_MarkerMedic" },
+            "Guider":       { "icon": "guide",      "category": "sid_misc_pda_Map_MarkerGuide",   "group": "bases",    "title": "sid_misc_pda_Map_MarkerGuide" }
           }
         }
       },
@@ -120,7 +122,7 @@
       "ESpawnType::Trigger":              { "icon": "exclamation", "category": "Trigger",                                         "group": "helpers" },
       "ESpawnType::WeatherSelection":     { "icon": "exclamation", "category": "Daily Schedule Zone",                             "group": "helpers" },
       "EQuestNodeType::SetJournal":       { "icon": "quest",       "category": "sid_misc_answer_sidequest",                       "group": "actors",   "title": "sid_misc_pda_TopPanel_Journal" },
-      "EQuestNodeType::TeleportCharacter":{ "icon": "circle-locked","category": "sid_misc_pda_Map_MarkerLocation",                "group": "misc",     "title": "sid_npc_name_tocka" }
+      "EQuestNodeType::TeleportCharacter":{ "icon": "circle-locked","category": "teleport", "title": "sid_misc_pda_Map_MarkerLocation",                "group": "misc",     "title": "sid_npc_name_tocka" }
     }
   }
 }
