@@ -116,8 +116,6 @@ let zoomGroups = {
 let foundOpacity = 0.25;
 let arrowStyle = [2,3];
 
-let gameVersion = 206;
-
 let scaleZ = 1.0; // postprocess coordinates because enableAltitude and heightFactor doesn't seem to work at all
 
 //weird shit's happening. lines seem to be flat rectangles so they dissapear at certain camera angles
@@ -295,6 +293,8 @@ function loadMap() {
   settings.language = settings.language || 'en';
   settings.searchText = settings.searchText || '';
   settings.rank = settings.rank || 'Master';
+
+  let gameVersion = 206;
 
   if ( (settings.gameVersion ?? 0) < 206 ) {
     settings.baseLayer = 'T_DLCWorldMap_UDIM';
