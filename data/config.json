@@ -9,28 +9,12 @@
       "key": "ST_S2BaseGameLocalization",
       "files": {
         "en": "Localization_EN.json",
-        "ua": "Localization_UA.json",
+        "uk": "Localization_UA.json",
         "ru": "Localization_RU.json"
       }
     },
     "worlds": {
       "default": {
-        "regions": [
-          {
-            "name": "T_Regions_Map",
-            "url": "scripts/regions.json",
-            "image": "scripts/T_Regions_Map.png",
-            "skip_color": "#0000ff",
-            "size": 812900,
-            "simplify": "5%"
-          }
-        ],
-        "markers": [
-          {
-            "types": "data/types2.json",
-            "icons": "data/icons2.json"
-          }
-        ],
         "baseLayers": [
           {
             "name": "T_DLCWorldMap_UDIM",
@@ -81,6 +65,16 @@
             "urlTemplate": "extras/ld/{z}/{x}/{y}.png",
             "tileSize": 512,
             "maxAvailableZoom": 3
+          }
+        ],
+        "regions": [
+          {
+            "name": "T_Regions_Map",
+            "url": "scripts/regions.json",
+            "image": "scripts/T_Regions_Map.png",
+            "skip_color": "#0000ff",
+            "size": 812900,
+            "simplify": "5%"
           }
         ]
       }
