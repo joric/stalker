@@ -2,6 +2,7 @@
   "categories": {
     "armor": { "title": "sid_misc_pda_reward_armor" },
     "anomaly": { "title": "sid_misc_pda_map_playerTags_anomaly" },
+    "ammo": { "title": "sid_misc_pda_reward_ammo_grenades" },
     "archAnomaly": { "title": "sid_misc_pda_Map_ArchAnomaly" },
     "artifact": { "title": "sid_misc_pda_reward_artifacts" },
     "bed": { "title": "sid_misc_pda_Map_MarkerBed" },
@@ -10,13 +11,14 @@
     "controls": { "title": "sid_misc_pda_hint_Controls" },
     "deadBody": { "title": "sid_npc_name_mertvec" },
     "dolg": { "title": "sid_character_dolgovec_0" },
+    "detector": { "title": "sid_misc_controlsSettings_equipment_detector_MLI" },
     "freedom": { "title": "sid_character_freedom_leader_0" },
     "journal": { "title": "sid_misc_answer_sidequest" },
     "noon": { "title": "sid_character_poldenec_0" },
     "guide": { "title": "sid_misc_pda_Map_MarkerGuide" },
     "key": { "title": "sid_questItemprototypes_QuestItem_Key_DoorNew_name" },
     "props": { "title": "sid_misc_modIO_LMB_props" },
-    "hub": { "title": "sid_misc_LEGACY_pda_Map_MarkerFriendlyAreaDefault" },
+    "camp": { "title": "sid_misc_pda_Map_MarkerCamp" },
     "location": { "title": "sid_misc_pda_Map_MarkerLocation" },
     "medic": { "title": "sid_misc_pda_Map_MarkerMedic" },
     "mutant": { "title": "sid_npc_name_mutant" },
@@ -37,10 +39,9 @@
   },
 
   "groups": {
-    "anomalies": { "title": "sid_misc_pda_map_playerTags_anomaly" },
     "locations": { "title": "sid_misc_pda_Map_MarkerLocation" },
-    "NPCs": { "title": "NPCs" },
     "items": { "title": "sid_misc_pda_Map_MarkerPlayerLandmarkHabar" },
+    "NPCs": { "title": "NPCs" },
     "misc": { "title": "sid_misc_misc_miscellaneous" }
   },
 
@@ -94,7 +95,7 @@
       "type": {
         "EQuestNodeType::SetJournal": { "category": "journal", "group": "misc", "icon": "quest" },
         "EQuestNodeType::TeleportCharacter": { "category": "teleport", "group": "misc", "icon": "circle-locked" },
-        "ESpawnType::ALifeGroup": { "category": "Alife Group", "group": "misc", "icon": "question" },
+        "ESpawnType::ALifeGroup": { "category": "Alife Group", "group": "NPCs", "icon": "question" },
         "ESpawnType::Anomaly": { "category": "anomaly", "group": "misc", "icon": "artifact" },
         "ESpawnType::AnomalySpawner": { "category": "anomaly", "group": "misc", "icon": "artifact" },
         "ESpawnType::ArtifactSpawner": { "category": "artifact", "group": "items", "icon": "bag" },
@@ -114,7 +115,7 @@
           "match": {
             "name": {
               "EMarkerType::Anomaly": { "category": "anomaly", "group": "notes", "icon": "anomaly" },
-              "EMarkerType::Bed": { "category": "bed", "group": "misc", "icon": "bed" },
+              "EMarkerType::Bed": { "category": "bed", "group": "locations", "icon": "bed" },
               "EMarkerType::Button": { "category": "controls", "group": "misc", "icon": "circle-dot" },
               "EMarkerType::CardLock": { "category": "controls", "group": "misc", "icon": "circle-dot" },
               "EMarkerType::Chest": { "category": "sid_misc_pda_hint_PlayerMarkers", "group": "notes", "icon": "chest" },
@@ -127,7 +128,7 @@
               "EMarkerType::FusePanel": { "category": "controls", "group": "misc", "icon": "circle-dot" },
               "EMarkerType::Generator": { "category": "controls", "group": "misc", "icon": "circle-dot" },
               "EMarkerType::InteractableNote": { "category": "note", "group": "misc", "icon": "message" },
-              "EMarkerType::InteractablePDA": { "category": "PDA", "group": "misc", "icon": "message" },
+              "EMarkerType::InteractablePDA": { "category": "PDA", "group": "items", "icon": "message" },
               "EMarkerType::InteractableUSB": { "category": "note", "group": "misc", "icon": "message" },
               "EMarkerType::Latch": { "category": "controls", "group": "misc", "icon": "circle-dot" },
               "EMarkerType::Lever": { "category": "controls", "group": "misc", "icon": "circle-dot" },
@@ -136,7 +137,7 @@
               "EMarkerType::Photos": { "category": "photo", "group": "misc", "icon": "question" },
               "EMarkerType::PlayerStorage": { "category": "playerStorage", "group": "locations", "icon": "storage" },
               "EMarkerType::Radiation": { "category": "sid_misc_pda_hint_PlayerMarkers", "group": "notes", "icon": "radiation-marker" },
-              "EMarkerType::Scanner": { "category": "scanner", "group": "items", "icon": "scanner" },
+              "EMarkerType::Scanner": { "category": "scanner", "group": "misc", "icon": "scanner" },
               "EMarkerType::Teleport": { "category": "controls", "group": "misc", "icon": "circle-dot" },
               "EMarkerType::TeleportTarget": { "category": "location", "group": "misc", "icon": "circle-locked" },
               "EMarkerType::Trap": { "category": "controls", "group": "misc", "icon": "unlocked" },
@@ -146,22 +147,29 @@
           }
         },
         "ESpawnType::DailyScheduleZone": { "category": "schedule", "group": "misc", "icon": "exclamation" },
-        "ESpawnType::DeadBody": { "category": "deadBody", "group": "items", "icon": "skull" },
+        "ESpawnType::DeadBody": { "category": "deadBody", "group": "NPCs", "icon": "skull" },
         "ESpawnType::ElectroAnomaly": { "category": "anomaly", "group": "misc", "icon": "artifact" },
-        "ESpawnType::Hub": { "category": "hub", "color": "#e8a514", "group": "locations", "icon": "camp" },
+        "ESpawnType::Hub": { "category": "camp", "color": "#e8a514", "group": "locations", "icon": "camp" },
         "ESpawnType::Item": {
+          "group": "misc",
           "category": "misc",
           "match": {
-            "name": {
-              "(Helmet|Mask|Goggles)": { "category": "armor", "group": "items", "icon": "repair" },
-              "(TemplateConsumable|Energetic)": { "category": "consumable", "group": "items", "icon": "box" },
-              "^Gun": { "category": "weapon", "group": "items", "icon": "repair" },
-              "Armor": { "category": "armor", "group": "items", "icon": "repair" },
+            "proto": {
+              "HugeMagTemplate": { "category": "weapon", "group": "items", "icon": "repair" },
+              "^Gun|Template(Sniper|Rifle|Pistol|Shotgun|SMG|DMR)": { "category": "weapon", "group": "items", "icon": "repair" },
+              "^Template(Helmet|Mask|NightVisionGoggles|Binoculars)": { "category": "armor", "group": "items", "icon": "repair" },
+              "TemplateArmor": { "category": "armor", "group": "items", "icon": "repair" },
               "PDA|Note": { "category": "PDA", "group": "items", "icon": "message" },
               "QuestItem_Fuse": { "category": "fuse", "group": "items", "icon": "yen" },
-              "QuestItem_Key|Tamplate_Key|_Key_": { "category": "key", "group": "items", "icon": "yen" },
-              "TemplateAmmo": { "category": "sid_misc_pda_reward_ammo_grenades", "group": "items", "icon": "repair" },
-              "TemplateArtifact": { "category": "sid_misc_pda_reward_artifacts", "group": "misc", "icon": "bag" }
+              "QuestItem_Key|Tamplate_Key|_Key_|_USB_": { "category": "key", "group": "misc", "icon": "yen" },
+              "TemplateAmmo": { "category": "ammo", "group": "items", "icon": "box" },
+              "TemplateDetector": { "category": "detector", "group": "items", "icon": "repair" },
+              "Scanner": { "category": "detector", "group": "items", "icon": "repair" },
+              "TemplateArtifact": { "category": "artifact", "group": "items", "icon": "bag" },
+              "(TemplateConsumable|Energetic)": { "category": "consumable", "group": "items", "icon": "box" }
+            },
+            "ammo_type": {
+              "^EAmmoType": { "category": "ammo", "group": "items", "icon": "box" }
             }
           }
         },
@@ -179,13 +187,13 @@
             }
           }
         },
-        "ESpawnType::LairSpawner": { "category": "lair", "group": "misc", "icon": "cave" },
+        "ESpawnType::LairSpawner": { "category": "lair", "group": "NPCs", "icon": "cave" },
         "ESpawnType::LightningBallAnomaly": { "category": "anomaly", "group": "misc", "icon": "artifact" },
         "ESpawnType::Marker": {
           "match": {
             "name": {
-              "EMarkerType::ArchAnomaly": { "category": "archAnomaly", "group": "locations", "icon": "arch_anomaly" },
-              "EMarkerType::Hub": { "category": "hub", "color": "#e8a514", "group": "locations", "icon": "camp" },
+              "EMarkerType::ArchAnomaly": { "category": "archAnomaly", "group": "misc", "icon": "arch_anomaly" },
+              "EMarkerType::Hub": { "category": "camp", "color": "#e8a514", "group": "locations", "icon": "camp" },
               "EMarkerType::Location": { "category": "location", "group": "locations", "icon": "location" },
               "EMarkerType::RegionMarker": { "category": "region", "group": "locations", "icon": "region", "regionMarker": true }
             }
@@ -194,18 +202,18 @@
         "ESpawnType::MoveToPath": { "category": "misc", "group": "misc", "icon": "exclamation" },
         "ESpawnType::Obj": {
           "category": "soldiers",
-          "group": "misc",
+          "group": "NPCs",
           "icon": "soldier",
           "match": {
             "name": {
-              "Bloodsucker": { "category": "mutant", "group": "misc", "icon": "claws" },
+              "Bloodsucker": { "category": "mutant", "group": "NPCs", "icon": "claws" },
               "DLC01_Zulus": { "category": "dolg", "group": "NPCs", "icon": "soldier" },
               "Faust": { "category": "noon", "group": "NPCs", "icon": "soldier" },
               "HumanBase": { "category": "NPC", "group": "NPCs", "icon": "soldier" },
               "MainQuest": { "category": "quest", "group": "NPCs", "icon": "quest" },
               "Mavka": { "category": "freedom", "group": "NPCs", "icon": "soldier" },
               "QuestNPCBase": { "category": "NPC", "group": "NPCs", "icon": "soldier" },
-              "^(GeneralZombie|Bloodsucker|Chimera|Controller|PseudoDog|Deer|Pseudogiant|Burer|Poltergeist|Bayun|Flesh|Blinddog|Tushkan|Boar|ZombieFoster|Rat|Snork)": { "category": "mutant", "group": "misc", "icon": "claws" }
+              "^(GeneralZombie|Bloodsucker|Chimera|Controller|PseudoDog|Deer|Pseudogiant|Burer|Poltergeist|Bayun|Flesh|Blinddog|Tushkan|Boar|ZombieFoster|Rat|Snork)": { "category": "mutant", "group": "NPCs", "icon": "claws" }
             },
             "subtype": {
               "Guider": { "category": "guide", "group": "locations", "icon": "guide" },
@@ -218,15 +226,15 @@
         },
         "ESpawnType::OnlineModifierZone": { "category": "modifiers", "group": "misc", "icon": "exclamation" },
         "ESpawnType::PackOfItems": { "category": "props", "group": "items", "icon": "box" },
-        "ESpawnType::Patrol": { "category": "patrol", "group": "misc", "icon": "soldier" },
+        "ESpawnType::Patrol": { "category": "patrol", "group": "NPCs", "icon": "soldier" },
         "ESpawnType::PillowAnomaly": { "category": "anomaly", "group": "misc", "icon": "artifact" },
         "ESpawnType::PsyAnomaly": { "category": "anomaly", "group": "misc", "icon": "artifact" },
         "ESpawnType::Radiation": { "category": "radiation", "group": "misc", "icon": "radiation" },
         "ESpawnType::SafeZone": { "category": "safezone", "group": "misc", "icon": "exclamation" },
         "ESpawnType::Shelter": { "category": "shelter", "group": "misc", "icon": "rest" },
         "ESpawnType::SoapBubbleAnomaly": { "category": "anomaly", "group": "misc", "icon": "artifact" },
-        "ESpawnType::Squad": { "category": "Squads", "group": "misc", "icon": "soldier" },
-        "ESpawnType::Trigger": { "category": "Trigger", "group": "misc", "icon": "exclamation" },
+        "ESpawnType::Squad": { "category": "squads", "group": "NPCs", "icon": "soldier" },
+        "ESpawnType::Trigger": { "category": "trigger", "group": "misc", "icon": "exclamation" },
         "ESpawnType::WeatherSelection": { "category": "schedule", "group": "misc", "icon": "exclamation" }
       }
     }
