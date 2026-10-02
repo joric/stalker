@@ -18,6 +18,12 @@
       "default": {
         "baseLayers": [
           {
+            "name": "T_DLCWorldMap_UDIM (mod)",
+            "urlTemplate": "extras/dlc_mod/{z}/{y}/{x}.webp",
+            "tileSize": 512,
+            "maxAvailableZoom": 5
+          },
+          {
             "name": "T_DLCWorldMap_UDIM",
             "urlTemplate": "extras/dlc/{z}/{y}/{x}.webp",
             "tileSize": 512,
