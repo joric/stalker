@@ -1988,10 +1988,12 @@ function addMarker(feature) {
   let info = renderItem(feature);
   let group = info.group;
 
+  let draggable = o.sid && o.sid.startsWith('FF');
+
   var marker = new maptalks.Marker(c, {
     symbol: getSymbol(o, info),
-    draggable: o.sid && o.sid.startsWith('FF'),
-    cursor: 'pointer'
+    draggable: draggable,
+    cursor: draggable ? 'move' : 'pointer',
   });
 
   marker.feature = feature;
