@@ -6,7 +6,9 @@
     "archAnomaly": { "title": "sid_misc_pda_Map_ArchAnomaly" },
     "artifact": { "title": "sid_misc_pda_reward_artifacts" },
     "bed": { "title": "sid_misc_pda_Map_MarkerBed" },
-    "contextualAction": { "title": "Contextual Action" },
+    "contextualAction": { "title": "CA: Unsorted" },
+    "bonfire": { "title": "CA: Bonfire" },
+    "sitting": { "title": "CA: Sitting" },
     "consumable": { "title": "sid_misc_pda_reward_food_drink" },
     "controls": { "title": "sid_misc_pda_hint_Controls" },
     "deadBody": { "title": "sid_npc_name_mertvec" },
@@ -27,7 +29,7 @@
     "shelter": { "title": "sid_misc_pda_Map_MarkerShellter" },
     "quest": { "title": "sid_misc_answer_sidequest" },
     "questGiver": { "title": "sid_misc_answer_sidequest" },
-    "region": { "title": "sid_misc_pda_hint_region" },
+    "region": { "title": "sid_misc_pda_hint_region", "default": true, "zoom": [0,4] },
     "stash": { "title": "sid_misc_pda_Map_MarkerCache" },
     "trader": { "title": "sid_misc_pda_Map_MarkerTrader" },
     "photo": { "title": "sid_misc_QIO_Photo" },
@@ -43,7 +45,7 @@
     "locations": { "title": "sid_tutorial_tutorial_map_marker_head" },
     "items": { "title": "sid_misc_pda_Map_MarkerPlayerLandmarkHabar" },
     "NPCs": { "title": "NPCs" },
-    "misc": { "title": "sid_misc_misc_miscellaneous" }
+    "misc": { "title": "misc" }
   },
 
   "icons": {
@@ -107,8 +109,8 @@
           "icon": "exclamation",
           "match": {
             "name": {
-              "_bonfire|_sit_barrel": { "category": "contextualAction", "group": "misc", "icon": "fire" },
-              "_pee|_sit|_stand|_lie|_sleep": { "category": "contextualAction", "group": "misc", "icon": "exclamation" }
+              "_bonfire|_sit_barrel": { "category": "bonfire", "group": "misc", "icon": "fire" },
+              "_pee|_sit|_stand|_lie|_sleep": { "category": "sitting", "group": "misc", "icon": "exclamation" }
             }
           }
         },

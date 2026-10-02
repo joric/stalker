@@ -2759,7 +2759,7 @@ function updateMarker(sid, title, name) {
   let group = 'notes';
   let markerLayer = groupLayer.getLayer(capitalize(group));
 
-  for (marker of markerLayer._geoList) {
+  for (const marker of markerLayer._geoList) {
     let o = marker.feature.properties;
 
     if (sid != o.sid) continue;
@@ -2776,7 +2776,7 @@ function updateMarker(sid, title, name) {
 
     let loc = marker.getCoordinates();
 
-    for (f of localData.customMarkers.features) {
+    for (const f of localData.customMarkers.features) {
       if (sid == f.properties.sid) {
         f.geometry.coordinates = [loc.x, loc.y, 0];
         f.properties.title = o.title;
@@ -2796,7 +2796,7 @@ function deleteMarker(sid) {
   let group = 'notes';
   let markerLayer = groupLayer.getLayer(capitalize(group));
 
-  for (marker of markerLayer._geoList) {
+  for (const marker of markerLayer._geoList) {
     let o = marker.feature.properties;
     if (sid != o.sid) continue;
     marker.remove();
@@ -2852,7 +2852,7 @@ function addNote(e, title) {
   localData.customMarkers.features.push(feature); // for local data
 }
 
-function addNoteClick() {
+function addNoteClick(e) {
   // sid_misc_pda_hint_DeleteSelectedLandmark
   let title = prompt(lang['sid_misc_pda_hint_CreatePlayerLandmark']||'Add marker:', lang['sid_misc_pda_hint_SetFollowMarkerHint']||'Note');
   if (title) {
