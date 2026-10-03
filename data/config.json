@@ -2,8 +2,6 @@
   "s2": {
     "name": "S.T.A.L.K.E.R. 2",
     "size": 812900,
-    "tilesetBase": "https://joric.github.io/stalker2_tileset/",
-
     "localization": {
       "path": "data/Localization/",
       "key": "ST_S2BaseGameLocalization",
@@ -18,7 +16,7 @@
       "default": {
         "baseLayers": [
           {
-            "name": "T_DLCWorldMap_UDIM.dlc_nofog",
+            "name": "T_DLCWorldMap_UDIM.nofog",
             "urlTemplate": "https://joric.github.io/stalker2_extras/tiles/dlc_nofog/{z}/{y}/{x}.webp",
             "tileSize": 512,
             "maxAvailableZoom": 5
@@ -37,43 +35,43 @@
           },
           {
             "name": "T_DLCWorldMap_UDIM",
-            "urlTemplate": "extras/dlc/{z}/{y}/{x}.webp",
+            "urlTemplate": "https://joric.github.io/stalker2_tileset/extras/dlc/{z}/{y}/{x}.webp",
             "tileSize": 512,
             "maxAvailableZoom": 5
           },
           {
             "name": "T_WorldMap_UDIM",
-            "urlTemplate": "tiles/{z}/{x}/{y}.jpg",
+            "urlTemplate": "https://joric.github.io/stalker2_tileset/tiles/{z}/{x}/{y}.jpg",
             "tileSize": 512,
             "maxAvailableZoom": 7
           },
           {
             "name": "T_GLOBAL_MAP_LEGEND",
-            "urlTemplate": "extras/wl/{z}/{x}/{y}.png",
+            "urlTemplate": "https://joric.github.io/stalker2_tileset/extras/wl/{z}/{x}/{y}.png",
             "tileSize": 512,
             "maxAvailableZoom": 4
           },
           {
             "name": "T_GLOBAL_MAP_BASE",
-            "urlTemplate": "extras/wb/{z}/{x}/{y}.jpg",
+            "urlTemplate": "https://joric.github.io/stalker2_tileset/extras/wb/{z}/{x}/{y}.jpg",
             "tileSize": 512,
             "maxAvailableZoom": 5
           },
           {
             "name": "T_WorldMap_LDScheme",
-            "urlTemplate": "extras/ld/{z}/{x}/{y}.png",
+            "urlTemplate": "https://joric.github.io/stalker2_tileset/extras/ld/{z}/{x}/{y}.png",
             "tileSize": 512,
             "maxAvailableZoom": 3
           },
           {
             "name": "topographic",
-            "urlTemplate": "extras/topographic/{z}/{y}/{x}.webp",
+            "urlTemplate": "https://joric.github.io/stalker2_tileset/extras/topographic/{z}/{y}/{x}.webp",
             "tileSize": 512,
             "maxAvailableZoom": 6
           },
           {
             "name": "diegetic",
-            "urlTemplate": "extras/diegetic/{z}/{y}/{x}.webp",
+            "urlTemplate": "https://joric.github.io/stalker2_tileset/extras/diegetic/{z}/{y}/{x}.webp",
             "tileSize": 512,
             "maxAvailableZoom": 1
           }
@@ -81,7 +79,7 @@
         "overlays": [
           {
             "name": "Stalker 1 Overlay",
-            "urlTemplate": "extras/ld/{z}/{x}/{y}.png",
+            "urlTemplate": "https://joric.github.io/stalker2_tileset/extras/ld/{z}/{x}/{y}.png",
             "tileSize": 512,
             "maxAvailableZoom": 3
           }
