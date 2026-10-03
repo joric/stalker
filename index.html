@@ -424,6 +424,15 @@ function loadMap() {
     visible : false,
   }).addTo(map);
 
+  new maptalks.TileLayer('dlc_ug_overlay', {
+    maxAvailableZoom: 5,
+    urlTemplate: `https://joric.github.io/stalker2_extras/tiles/dlc_ug_overlay/{z}/{y}/{x}.webp`,
+    //urlTemplate: `../stalker2_extras/tiles/dlc_ug_overlay/{z}/{y}/{x}.webp`,
+    repeatWorld: false,
+    tileSize: 512,
+    visible : false,
+  }).addTo(map);
+
   groupLayer = new maptalks.GroupGLLayer('Features',[], {
     enableAltitude: enableAltitude,
     sortByDistanceToCamera: true,
