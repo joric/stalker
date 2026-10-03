@@ -16,14 +16,14 @@
       "default": {
         "baseLayers": [
           {
-            "name": "T_DLCWorldMap_UDIM.nofog",
-            "urlTemplate": "https://joric.github.io/stalker2_extras/tiles/dlc_nofog/{z}/{y}/{x}.webp",
+            "name": "T_ZU_UndergroundMapDLC_UDIM",
+            "urlTemplate": "https://joric.github.io/stalker2_extras/tiles/dlc_ug/{z}/{y}/{x}.webp",
             "tileSize": 512,
             "maxAvailableZoom": 5
           },
           {
-            "name": "T_ZU_UndergroundMapDLC_UDIM",
-            "urlTemplate": "https://joric.github.io/stalker2_extras/tiles/dlc_ug/{z}/{y}/{x}.webp",
+            "name": "T_DLCWorldMap_UDIM.nofog",
+            "urlTemplate": "https://joric.github.io/stalker2_extras/tiles/dlc_nofog/{z}/{y}/{x}.webp",
             "tileSize": 512,
             "maxAvailableZoom": 5
           },

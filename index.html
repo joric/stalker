@@ -212,16 +212,16 @@ function updateBaseLayer(layer) {
 }
 
 let baseLayers = [
-  new maptalks.TileLayer('T_DLCWorldMap_UDIM.dlc_nofog', {
+  new maptalks.TileLayer('T_ZU_UndergroundMapDLC_UDIM', {
     maxAvailableZoom: 5,
-    urlTemplate: `https://joric.github.io/stalker2_extras/tiles/dlc_nofog/{z}/{y}/{x}.webp`,
+    urlTemplate: `https://joric.github.io/stalker2_extras/tiles/dlc_ug/{z}/{y}/{x}.webp`,
     repeatWorld: false,
     tileSize: 512,
   }),
 
-  new maptalks.TileLayer('T_ZU_UndergroundMapDLC_UDIM', {
+  new maptalks.TileLayer('T_DLCWorldMap_UDIM.nofog', {
     maxAvailableZoom: 5,
-    urlTemplate: `https://joric.github.io/stalker2_extras/tiles/dlc_ug/{z}/{y}/{x}.webp`,
+    urlTemplate: `https://joric.github.io/stalker2_extras/tiles/dlc_nofog/{z}/{y}/{x}.webp`,
     repeatWorld: false,
     tileSize: 512,
   }),
@@ -315,10 +315,10 @@ function loadMap() {
   settings.searchText = settings.searchText || '';
   settings.rank = settings.rank || 'Master';
 
-  let gameVersion = 207;
+  let gameVersion = 2061;
 
   if ( (settings.gameVersion ?? 0) < gameVersion ) {
-    settings.baseLayer = 'T_DLCWorldMap_UDIM.dlc_nofog';
+    settings.baseLayer = 'T_ZU_UndergroundMapDLC_UDIM';
   }
 
   settings.gameVersion = gameVersion;
