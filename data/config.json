@@ -22,13 +22,6 @@
             "maxAvailableZoom": 5
           },
           {
-            "name": "dlc_ug_overlay",
-            "urlTemplate": "https://joric.github.io/stalker2_extras/tiles/dlc_ug_overlay/{z}/{y}/{x}.webp",
-            "tileSize": 512,
-            "maxAvailableZoom": 5,
-            "overlay": true
-          },
-          {
             "name": "T_ZU_UndergroundMapDLC_UDIM",
             "urlTemplate": "https://joric.github.io/stalker2_extras/tiles/dlc_ug/{z}/{y}/{x}.webp",
             "tileSize": 512,
@@ -85,8 +78,11 @@
           },
           {
             "name": "diegetic",
-            "bounds": {"left": -12043.0424, "top": 80842.1161, "right": 823676.2491, "bottom": 819222.3155},
-            "urlTemplate": "https://joric.github.io/stalker2_tileset/extras/diegetic/{z}/{y}/{x}.webp",
+            "overlayBounds": {"left": -12043.0424, "top": 80842.1161, "right": 823676.2491, "bottom": 819222.3155},
+            "overlay": true,
+            "comment": "layer tileSystem ratio somehow leaks to the entire map so don't use non-uniform overlay tile layers (image layers okay)",
+            "urlTemplate1": "https://joric.github.io/stalker2_tileset/extras/diegetic/{z}/{y}/{x}.webp",
+            "url": "images/diegetic.png",
             "tileSize": 512,
             "maxAvailableZoom": 1
           },
@@ -95,6 +91,13 @@
             "urlTemplate": "https://joric.github.io/stalker2_tileset/extras/s1/{z}/{x}/{y}.png",
             "tileSize": 512,
             "maxAvailableZoom": 3,
+            "overlay": true
+          },
+          {
+            "name": "dlc_ug_overlay",
+            "urlTemplate": "https://joric.github.io/stalker2_extras/tiles/dlc_ug_overlay/{z}/{y}/{x}.webp",
+            "tileSize": 512,
+            "maxAvailableZoom": 5,
             "overlay": true
           }
         ],
